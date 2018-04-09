@@ -1,0 +1,194 @@
+<?php
+
+if (!defined('BASEPATH'))
+    exit('No direct script access allowed');
+
+class Push_message extends CI_Controller {
+
+    public function __construct() {
+        parent::__construct();
+        
+        $this->load->database();
+        $this->load->helper('url');
+        
+        $this->load->model('login_model');
+        $this->load->library('session');
+        if($this->login_model->check_session()){
+            redirect('/admin_login/index');
+        }
+
+        $this->load->library('grocery_CRUD');
+        $this->output->set_template('theme1');
+    }
+
+    public function _crud_view($output = null)
+    {
+        $this->load->view('default_view.php',$output);
+    }
+
+    public function index($params = null) {
+        
+        $crud = new grocery_CRUD();
+        $crud->set_theme('flexigrid');
+        $crud->set_table('message');
+
+        $crud->required_fields(array('headLine', 'body', 'recipient'));       
+        $crud->columns('headLine', 'body', 'creationDtTm');
+        $crud->field_type("createdBy", "hidden");
+        $crud->field_type("updatedBy", "hidden");
+        $crud->field_type("creationDtTm", "hidden");
+        $crud->field_type("updateDtTm", "hidden");
+
+        
+        $skyids = $this->get_eblSkyIds();
+
+        $crud->field_type('recipient','multiselect', $skyids);
+
+        $crud->display_as('headLine', 'Message Headline');
+        $crud->display_as('body', 'Message Details');
+        $crud->display_as('creationDtTm', 'Publish Date');
+
+        $crud->callback_before_insert(array($this,'make_postarray'));
+        $crud->callback_after_insert(array($this,'push_notification'));
+
+        $output = $crud->render();
+
+        if (isset($params)) {
+            if ($params == 'read') {
+                $output->page_title = "Notification";
+                $this->_crud_view($output);
+            } else if ($params == 'add') {
+                $output->page_title = "Add Notification";
+                $this->_crud_view($output);
+            } else if ($params == 'edit') {
+                $output->page_title = "Edit Notification";
+                $this->_crud_view($output);
+            } else {
+                $output->page_title = "Notification";
+                $this->_crud_view($output);
+            }
+        } else {
+            $output->page_title = "Notification";
+            $this->_crud_view($output);
+        }
+    }
+
+
+
+
+    function make_postarray($post_array){
+
+        $post_array['createdBy'] = 1;
+        $post_array['updatedBy'] = 0;
+        $post_array['creationDtTm'] = date("Y-m-d H:i:s");
+
+        return $post_array;
+    }
+
+
+
+
+
+    function get_eblSkyIds(){
+	   
+        $this->db->select('skyId, eblSkyId');
+        $this->db->from('apps_users');
+        $query = $this->db->get();
+        $skyids = $query->result();
+
+        if($skyids){
+            foreach($skyids as $key => $value){
+                $data[$value->skyId] = $value->eblSkyId;
+            }
+            return $data;
+        }
+
+        else{
+            $data[] = "No User Created";
+            return $data;
+        }
+    }
+
+
+    function push_notification($post_array)
+    {
+        $skyids = $post_array['recipient'];
+        $ids = explode(",", $skyids);
+
+        $this->db->select('gcmRegId');
+        $this->db->from('gcm_users');
+        $this->db->where_in('skyId', $ids);
+        $query = $this->db->get();
+        $regids = $query->result();
+
+        $gcmRegIds = array();
+
+
+        foreach($regids as $key => $value){
+            //$data[$value->skyId] = $value->eblSkyId;
+            array_push($gcmRegIds, $value->gcmRegId);
+        }
+
+        $message = $post_array['headLine'];
+        $message_array = array('message' => $message);
+
+        $url = 'https://android.googleapis.com/gcm/send';
+
+
+        $fields = array(
+            'registration_ids' => $gcmRegIds,
+            'data' => $message_array,
+        );
+
+        //define('GOOGLE_API_KEY', 'AIzaSyCNXdUDxJLqsxxufjQdzxiAv4cA5YZCHrA'); // 1st key
+	    //define('GOOGLE_API_KEY', 'AIzaSyD3Ftl3Kuo0Ukc7QTmctyo1NMPPn0Qo-cQ'); // 2nd key
+        define('GOOGLE_API_KEY', 'AIzaSyB-gYLbBY8B2fCydGus3ejakSJIoTRJda4'); // 3rd key 
+
+        $headers = array(
+            'Authorization:key=' . GOOGLE_API_KEY,
+            'Content-Type: application/json'
+        );
+
+
+        echo json_encode($fields);
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
+
+        $result = curl_exec($ch);
+
+        if($result === false){
+            die('Curl failed ' . curl_error());
+        }
+        curl_close($ch);
+        //return $result;
+
+        $this->db->order_by("messageId", "desc");
+        $query = $this->db->get('message');
+        $row = $query->row_array();
+
+        $skyids = explode(",", $row['recipient']);
+
+
+        $logdata['messageId'] = $row['messageId'];
+        $logdata['serverReferenceNo'] = $result;
+        $logdata['isActiveApps'] = 1;
+        $logdata['isActive'] = 1;
+        $logdata['createdBy'] = 1;
+        $logdata['updatedBy'] = 0;
+        $logdata['creationDtTm'] = $row['creationDtTm'];
+        $logdata['updateDtTm'] = NULL;
+
+        foreach($skyids as $key => $value){
+            $logdata['skyId'] = $value;
+            $this->db->insert('message_log', $logdata);
+        }
+    }
+ }
+
+
+
+

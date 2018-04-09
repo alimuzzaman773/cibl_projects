@@ -1,0 +1,41 @@
+<?php defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Welcome extends CI_Controller
+{
+
+  public function __construct() {
+        parent::__construct();              
+        $this->load->database();
+    }
+
+
+    public function index()
+    {
+        $file = APPPATH . "libraries/Pending.csv";
+        $source = fopen($file, 'r') or die("Problem open file");
+        while (($data = fgetcsv($source, 1000, ",")) !== FALSE) {
+
+            $customer_id = $data[0];
+            $create_date = $data[1];
+            $create_by = $data[2];
+            $branch_code = $data[3];
+
+            $timestamp = strtotime($create_date);
+            $date_time= date('Y-m-d H:i:s', $timestamp);
+
+
+            $data1['createdDtTm'] = $date_time;
+            $data1['createdBy'] = $create_by;
+            $data1['homeBranchCode'] = $branch_code;
+
+            $this->db->where('cfId', $customer_id)
+                ->update('apps_users', $data1);
+
+           //print_r($data1);
+
+        }
+        fclose($source);
+    }
+
+
+}
