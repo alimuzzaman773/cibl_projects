@@ -16,7 +16,7 @@
  * @package    	grocery CRUD
  * @copyright  	Copyright (c) 2010 through 2014, John Skoumbourdis
  * @license    	https://github.com/scoumbourdis/grocery-crud/blob/master/license-grocery-crud.txt
- * @version    	1.5.0
+ * @version    	1.6.1
  * @author     	John Skoumbourdis <scoumbourdisj@gmail.com>
  */
 
@@ -468,22 +468,22 @@ class grocery_CRUD_Field_Types
  *
  * @package    	grocery CRUD
  * @author     	John Skoumbourdis <scoumbourdisj@gmail.com>
- * @version    	1.5.0
+ * @version    	1.6.1
  * @link		http://www.grocerycrud.com/documentation
  */
 class grocery_CRUD_Model_Driver extends grocery_CRUD_Field_Types
 {
 	/**
-	 * @var grocery_CRUD_Model
+	 * @var Grocery_crud_model
 	 */
 	public $basic_model = null;
 
 	protected function set_default_Model()
 	{
 		$ci = &get_instance();
-		$ci->load->model('grocery_CRUD_Model');
+		$ci->load->model('Grocery_crud_model');
 
-		$this->basic_model = new grocery_CRUD_Model();
+		$this->basic_model = new Grocery_crud_model();
 	}
 
 	protected function get_total_results()
@@ -533,10 +533,19 @@ class grocery_CRUD_Model_Driver extends grocery_CRUD_Field_Types
 		return $this->basic_model->get_total_results();
 	}
 
+    protected function filter_data_from_xss($post_data) {
+        foreach ($post_data as $field_name => $rawData) {
+            if (!is_array($rawData)) {
+                $post_data[$field_name] = filter_var(strip_tags($rawData));
+            }
+        }
+        return $post_data;
+    }
+
 	public function set_model($model_name)
 	{
 		$ci = &get_instance();
-		$ci->load->model('grocery_CRUD_Model');
+		$ci->load->model('Grocery_crud_model');
 
 		$ci->load->model($model_name);
 
@@ -553,6 +562,8 @@ class grocery_CRUD_Model_Driver extends grocery_CRUD_Field_Types
 
 	protected function set_ajax_list_queries($state_info = null)
 	{
+        $field_types = $this->get_field_types();
+
 		if(!empty($state_info->per_page))
 		{
 			if(empty($state_info->page) || !is_numeric($state_info->page) )
@@ -583,9 +594,16 @@ class grocery_CRUD_Model_Driver extends grocery_CRUD_Field_Types
 
                     if (isset($temp_relation[$search_field])) {
                         if (is_array($temp_relation[$search_field])) {
+                            $temp_where_query_array = [];
+
                             foreach ($temp_relation[$search_field] as $relation_field) {
-                                $this->or_like($relation_field , $search_text);
+                                $escaped_text = $this->basic_model->escape_str($search_text);
+                                $temp_where_query_array[] = $relation_field . ' LIKE \'%' . $escaped_text . '%\'';
                             }
+                            if (!empty($temp_where_query_array)) {
+                                $this->where('(' . implode(' OR ', $temp_where_query_array) . ')', null);
+                            }
+
                         } else {
                             $this->like($temp_relation[$search_field] , $search_text);
                         }
@@ -615,6 +633,7 @@ class grocery_CRUD_Model_Driver extends grocery_CRUD_Field_Types
 					$this->like($state_info->search->field , $state_info->search->text);
 				}
 			}
+            // Search all field
 			else
 			{
 				$columns = $this->get_columns();
@@ -625,6 +644,9 @@ class grocery_CRUD_Model_Driver extends grocery_CRUD_Field_Types
 					foreach($this->where as $where)
 						$this->basic_model->having($where[0],$where[1],$where[2]);
 
+                $temp_where_query_array = [];
+                $basic_table = $this->get_table();
+
 				foreach($columns as $column)
 				{
 					if(isset($temp_relation[$column->field_name]))
@@ -633,23 +655,32 @@ class grocery_CRUD_Model_Driver extends grocery_CRUD_Field_Types
 						{
 							foreach($temp_relation[$column->field_name] as $search_field)
 							{
-								$this->or_like($search_field, $search_text);
+                                $escaped_text = $this->basic_model->escape_str($search_text);
+                                $temp_where_query_array[] = $search_field . ' LIKE \'%' . $escaped_text . '%\'';
 							}
 						}
 						else
 						{
-							$this->or_like($temp_relation[$column->field_name], $search_text);
+                            $escaped_text = $this->basic_model->escape_str($search_text);
+                            $temp_where_query_array[] = $temp_relation[$column->field_name] . ' LIKE \'%' . $escaped_text . '%\'';
 						}
 					}
 					elseif(isset($this->relation_n_n[$column->field_name]))
 					{
 						//@todo have a where for the relation_n_n statement
 					}
-					else
-					{
-						$this->or_like($column->field_name, $search_text);
+					elseif (
+					    isset($field_types[$column->field_name]) &&
+                        !in_array($field_types[$column->field_name]->type, array('date', 'datetime', 'timestamp'))
+                    ) {
+                        $escaped_text = $this->basic_model->escape_str($search_text);
+                        $temp_where_query_array[] =  '`' . $basic_table . '`.' . $column->field_name . ' LIKE \'%' . $escaped_text . '%\'';
 					}
 				}
+
+                if (!empty($temp_where_query_array)) {
+                    $this->where('(' . implode(' OR ', $temp_where_query_array) . ')', null);
+                }
 			}
 		}
 	}
@@ -746,7 +777,7 @@ class grocery_CRUD_Model_Driver extends grocery_CRUD_Field_Types
 				if(isset($this->validation_rules[$field_name]))
 				{
 					$rule = $this->validation_rules[$field_name];
-					$form_validation->set_rules($rule['field'],$rule['label'],$rule['rules']);
+					$form_validation->set_rules($rule['field'],$rule['label'],$rule['rules'],$rule['errors']);
 				}
 			}
 
@@ -861,7 +892,7 @@ class grocery_CRUD_Model_Driver extends grocery_CRUD_Field_Types
 				if(isset($this->validation_rules[$field_name]))
 				{
 					$rule = $this->validation_rules[$field_name];
-					$form_validation->set_rules($rule['field'],$rule['label'],$rule['rules']);
+					$form_validation->set_rules($rule['field'],$rule['label'],$rule['rules'],$rule['errors']);
 				}
 			}
 
@@ -890,6 +921,10 @@ class grocery_CRUD_Model_Driver extends grocery_CRUD_Field_Types
 		if($validation_result->success)
 		{
 			$post_data = $state_info->unwrapped_data;
+
+            if ($this->config->xss_clean) {
+                $post_data = $this->filter_data_from_xss($post_data);
+            }
 
 			$add_fields = $this->get_add_fields();
 
@@ -1008,6 +1043,10 @@ class grocery_CRUD_Model_Driver extends grocery_CRUD_Field_Types
 		{
 			$post_data 		= $state_info->unwrapped_data;
 			$primary_key 	= $state_info->primary_key;
+
+            if ($this->config->xss_clean) {
+                $post_data = $this->filter_data_from_xss($post_data);
+            }
 
 			if($this->callback_update === null)
 			{
@@ -1150,17 +1189,19 @@ class grocery_CRUD_Model_Driver extends grocery_CRUD_Field_Types
 
 	protected function _get_field_names_to_search(array $relation_values)
 	{
-		if(!strstr($relation_values[2],'{'))
+		if(!strstr($relation_values[2],'{')) {
 			return $this->_unique_join_name($relation_values[0]).'.'.$relation_values[2];
-		else
-		{
+		} else {
 			$relation_values[2] = ' '.$relation_values[2].' ';
 			$temp1 = explode('{',$relation_values[2]);
 			unset($temp1[0]);
 
 			$field_names_array = array();
-			foreach($temp1 as $field)
-				list($field_names_array[]) = explode('}',$field);
+			foreach($temp1 as $field) {
+				list($field_name) = explode('}',$field);
+				$field_name = $this->_unique_join_name($relation_values[0]).'.'. $field_name;
+				$field_names_array[] = $field_name;
+			}
 
 			return $field_names_array;
 		}
@@ -1341,7 +1382,28 @@ class grocery_CRUD_Model_Driver extends grocery_CRUD_Field_Types
 		return $values;
 	}
 
-	protected function get_relation_n_n_selection_array($primary_key_value, $field_info)
+    protected function get_clone_values($primary_key_value)
+    {
+        $values = $this->basic_model->get_edit_values($primary_key_value);
+
+        $types 	= $this->get_field_types();
+        foreach ($values as $fieldName => $fieldType) {
+            if ($types[$fieldName . '']->crud_type == 'upload_file') {
+                $values->$fieldName = '';
+            }
+        }
+
+        if(!empty($this->relation_n_n)) {
+            foreach($this->relation_n_n as $field_name => $field_info) {
+                $values->$field_name = $this->get_relation_n_n_selection_array($primary_key_value, $field_info);
+            }
+        }
+
+        return $values;
+    }
+
+
+    protected function get_relation_n_n_selection_array($primary_key_value, $field_info)
 	{
 		return $this->basic_model->get_relation_n_n_selection_array($primary_key_value, $field_info);
 	}
@@ -1383,7 +1445,13 @@ class grocery_CRUD_Model_Driver extends grocery_CRUD_Field_Types
 				header('Access-Control-Allow-Headers: X-File-Name, X-File-Type, X-File-Size');
 
 				$allowed_files = $this->config->file_upload_allow_file_types;
-				$reg_exp = '/(\\.|\\/)('.$allowed_files.')$/i';
+
+		                $reg_exp = '';
+		                if(!empty($upload_info->allowed_file_types)){
+		                    $reg_exp = '/(\\.|\\/)('.$upload_info->allowed_file_types.')$/i';
+		                }else{
+		                    $reg_exp = '/(\\.|\\/)('.$allowed_files.')$/i';
+		                }
 
 				$max_file_size_ui = $this->config->file_upload_max_file_size;
 				$max_file_size_bytes = $this->_convert_bytes_ui_to_bytes($max_file_size_ui);
@@ -1511,7 +1579,7 @@ class grocery_CRUD_Model_Driver extends grocery_CRUD_Field_Types
  *
  * @package    	grocery CRUD
  * @author     	John Skoumbourdis <scoumbourdisj@gmail.com>
- * @version    	1.5.0
+ * @version    	1.6.1
  */
 class grocery_CRUD_Layout extends grocery_CRUD_Model_Driver
 {
@@ -1549,6 +1617,7 @@ class grocery_CRUD_Layout extends grocery_CRUD_Model_Driver
 
 		$data->total_results = $this->get_total_results();
 
+        $data->dialog_forms = $this->config->dialog_forms;
 		$data->columns 				= $this->get_columns();
 
 		$data->success_message		= $this->get_success_message_at_list($state_info);
@@ -1556,6 +1625,7 @@ class grocery_CRUD_Layout extends grocery_CRUD_Model_Driver
 		$data->primary_key 			= $this->get_primary_key();
 		$data->add_url				= $this->getAddUrl();
 		$data->edit_url				= $this->getEditUrl();
+		$data->clone_url			= $this->getCloneUrl();
 		$data->delete_url			= $this->getDeleteUrl();
         $data->delete_multiple_url	= $this->getDeleteMultipleUrl();
 		$data->read_url				= $this->getReadUrl();
@@ -1569,6 +1639,7 @@ class grocery_CRUD_Layout extends grocery_CRUD_Model_Driver
 
 		$data->unset_add			= $this->unset_add;
 		$data->unset_edit			= $this->unset_edit;
+		$data->unset_clone			= $this->unset_clone;
 		$data->unset_read			= $this->unset_read;
 		$data->unset_delete			= $this->unset_delete;
 		$data->unset_export			= $this->unset_export;
@@ -1590,6 +1661,7 @@ class grocery_CRUD_Layout extends grocery_CRUD_Model_Driver
 			$data->list[$num_row]->edit_url = $data->edit_url.'/'.$row->{$data->primary_key};
 			$data->list[$num_row]->delete_url = $data->delete_url.'/'.$row->{$data->primary_key};
 			$data->list[$num_row]->read_url = $data->read_url.'/'.$row->{$data->primary_key};
+            $data->list[$num_row]->clone_url = $data->clone_url.'/'.$row->{$data->primary_key};
 		}
 
 		if(!$ajax)
@@ -1604,6 +1676,10 @@ class grocery_CRUD_Layout extends grocery_CRUD_Model_Driver
 			$this->set_echo_and_die();
 			$this->_theme_view('list.php',$data);
 		}
+
+        if (!empty($this->upload_fields)) {
+            $this->load_js_fancybox();
+        }
 	}
 
 	protected function exportToExcel($state_info = null)
@@ -1823,7 +1899,38 @@ class grocery_CRUD_Layout extends grocery_CRUD_Model_Driver
 		$this->_get_ajax_results();
 	}
 
-	protected function showEditForm($state_info)
+    protected function showCloneForm($state_info)
+    {
+        $this->set_js_lib($this->default_javascript_path.'/'.grocery_CRUD::JQUERY);
+
+        $data 				= $this->get_common_data();
+        $data->types 		= $this->get_field_types();
+
+        $data->field_values = $this->get_edit_values($state_info->primary_key);
+
+        $data->add_url		= $this->getAddUrl();
+        $data->list_url 	= $this->getListUrl();
+        $data->update_url	= $this->getInsertUrl();
+        $data->delete_url	= $this->getDeleteUrl($state_info);
+        $data->read_url		= $this->getReadUrl($state_info->primary_key);
+        $data->input_fields = $this->get_edit_input_fields($data->field_values);
+        $data->unique_hash			= $this->get_method_hash();
+
+        $data->fields 		= $this->get_edit_fields();
+        $data->hidden_fields	= $this->get_edit_hidden_fields();
+        $data->unset_back_to_list	= $this->unset_back_to_list;
+
+        $data->validation_url	= $this->getValidationInsertUrl();
+        $data->is_ajax 			= $this->_is_ajax();
+
+        $this->_theme_view('edit.php',$data);
+        $this->_inline_js("var js_date_format = '".$this->js_date_format."';");
+
+        $this->_get_ajax_results();
+    }
+
+
+    protected function showEditForm($state_info)
 	{
 		$this->set_js_lib($this->default_javascript_path.'/'.grocery_CRUD::JQUERY);
 
@@ -1833,7 +1940,6 @@ class grocery_CRUD_Layout extends grocery_CRUD_Model_Driver
 		$data->field_values = $this->get_edit_values($state_info->primary_key);
 
 		$data->add_url		= $this->getAddUrl();
-
 		$data->list_url 	= $this->getListUrl();
 		$data->update_url	= $this->getUpdateUrl($state_info);
 		$data->delete_url	= $this->getDeleteUrl($state_info);
@@ -2111,10 +2217,14 @@ class grocery_CRUD_Layout extends grocery_CRUD_Model_Driver
 		}
 
 		if ($this->unset_bootstrap) {
-			unset($js_files[sha1($this->default_theme_path.'/twitter-bootstrap/js/libs/bootstrap/bootstrap.min.js')]);
-			unset($js_files[sha1($this->default_theme_path.'/twitter-bootstrap/js/libs/bootstrap/application.js')]);
-			unset($css_files[sha1($this->default_theme_path.'/twitter-bootstrap/css/bootstrap-responsive.min.css')]);
-			unset($css_files[sha1($this->default_theme_path.'/twitter-bootstrap/css/bootstrap.min.css')]);
+			unset($js_files[sha1($this->default_theme_path.'/bootstrap/js/bootstrap/dropdown.js')]);
+			unset($js_files[sha1($this->default_theme_path.'/bootstrap/js/bootstrap/modal.js')]);
+			unset($js_files[sha1($this->default_theme_path.'/bootstrap/js/bootstrap/dropdown.min.js')]);
+			unset($js_files[sha1($this->default_theme_path.'/bootstrap/js/bootstrap/modal.min.js')]);
+			unset($css_files[sha1($this->default_theme_path.'/bootstrap/css/bootstrap/bootstrap.css')]);
+			unset($css_files[sha1($this->default_theme_path.'/bootstrap/css/bootstrap/bootstrap.min.css')]);
+            unset($css_files[sha1($this->default_theme_path.'/bootstrap-v4/css/bootstrap/bootstrap.css')]);
+            unset($css_files[sha1($this->default_theme_path.'/bootstrap-v4/css/bootstrap/bootstrap.min.css')]);
 		}
 
 		if($this->echo_and_die === false)
@@ -2183,21 +2293,25 @@ class grocery_CRUD_Layout extends grocery_CRUD_Model_Driver
 
 	protected function get_true_false_input($field_info,$value)
 	{
-		$this->set_css($this->default_css_path.'/jquery_plugins/uniform/uniform.default.css');
-		$this->set_js_lib($this->default_javascript_path.'/jquery_plugins/jquery.uniform.min.js');
-		$this->set_js_config($this->default_javascript_path.'/jquery_plugins/config/jquery.uniform.config.js');
-
 		$value_is_null = empty($value) && $value !== '0' && $value !== 0 ? true : false;
 
 		$input = "<div class='pretty-radio-buttons'>";
 
 		$true_string = is_array($field_info->extras) && array_key_exists(1,$field_info->extras) ? $field_info->extras[1] : $this->default_true_false_text[1];
 		$checked = $value === '1' || ($value_is_null && $field_info->default === '1') ? "checked = 'checked'" : "";
-		$input .= "<label><input id='field-{$field_info->name}-true' class='radio-uniform'  type='radio' name='{$field_info->name}' value='1' $checked /> ".$true_string."</label> ";
+		$input .=
+			"<div class=\"radio\"><label>
+				<input id='field-{$field_info->name}-true' type=\"radio\" name=\"{$field_info->name}\" value=\"1\" $checked />
+				$true_string
+			 </label> </div>";
 
 		$false_string =  is_array($field_info->extras) && array_key_exists(0,$field_info->extras) ? $field_info->extras[0] : $this->default_true_false_text[0];
 		$checked = $value === '0' || ($value_is_null && $field_info->default === '0') ? "checked = 'checked'" : "";
-		$input .= "<label><input id='field-{$field_info->name}-false' class='radio-uniform' type='radio' name='{$field_info->name}' value='0' $checked /> ".$false_string."</label>";
+		$input .=
+			"<div class=\"radio\"><label>
+				<input id='field-{$field_info->name}-false' type=\"radio\" name=\"{$field_info->name}\" value=\"0\" $checked />
+				$false_string
+			 </label> </div>";
 
 		$input .= "</div>";
 
@@ -2209,8 +2323,18 @@ class grocery_CRUD_Layout extends grocery_CRUD_Model_Driver
 		$value = !is_string($value) ? '' : str_replace('"',"&quot;",$value);
 
 		$extra_attributes = '';
-		if(!empty($field_info->db_max_length))
-			$extra_attributes .= "maxlength='{$field_info->db_max_length}'";
+		if (!empty($field_info->db_max_length)) {
+
+            if (in_array($field_info->type, array("decimal", "float"))) {
+                $decimal_lentgh = explode(",", $field_info->db_max_length);
+                $decimal_lentgh = ((int)$decimal_lentgh[0]) + 1;
+
+                $extra_attributes .= "maxlength='" . $decimal_lentgh . "'";
+            } else {
+                $extra_attributes .= "maxlength='{$field_info->db_max_length}'";
+            }
+
+        }
 		$input = "<input id='field-{$field_info->name}' class='form-control' name='{$field_info->name}' type='text' value=\"$value\" $extra_attributes />";
 		return $input;
 	}
@@ -2247,7 +2371,7 @@ class grocery_CRUD_Layout extends grocery_CRUD_Model_Driver
 		}
 		else
 		{
-			$input = "<textarea id='field-{$field_info->name}' name='{$field_info->name}'>$value</textarea>";
+			$input = "<textarea id='field-{$field_info->name}' name='{$field_info->name}' class='form-control'>$value</textarea>";
 		}
 		return $input;
 	}
@@ -2959,7 +3083,7 @@ class grocery_CRUD_Layout extends grocery_CRUD_Model_Driver
  *
  * @package    	grocery CRUD
  * @author     	John Skoumbourdis <scoumbourdisj@gmail.com>
- * @version    	1.5.0
+ * @version    	1.6.1
  */
 class grocery_CRUD_States extends grocery_CRUD_Layout
 {
@@ -2969,9 +3093,9 @@ class grocery_CRUD_States extends grocery_CRUD_Layout
     const STATE_EDIT = 3;
     const STATE_DELETE = 4;
     const STATE_INSERT = 5;
-
     const STATE_READ = 18;
-    const STATE_DELETE_MULTIPLE = '19';
+    const STATE_DELETE_MULTIPLE = 19;
+    const STATE_CLONE = 20;
 
 	protected $states = array(
 		0	=> 'unknown',
@@ -2993,7 +3117,8 @@ class grocery_CRUD_States extends grocery_CRUD_Layout
 		16  => 'export',
 		17  => 'print',
 		18  => 'read',
-        19  => 'delete_multiple'
+        19  => 'delete_multiple',
+        20  => 'clone'
 	);
 
     public function getStateInfo()
@@ -3040,6 +3165,15 @@ class grocery_CRUD_States extends grocery_CRUD_Layout
                 }
                 break;
 
+            case self::STATE_CLONE:
+                if ($first_parameter !== null) {
+                    $state_info = (object) array('primary_key' => $first_parameter);
+                } else {
+                    throw new Exception('On the state "clone" the Primary key cannot be null', 20);
+                    die();
+                }
+                break;
+
             case self::STATE_INSERT:
                 if(!empty($_POST))
                 {
@@ -3074,13 +3208,15 @@ class grocery_CRUD_States extends grocery_CRUD_Layout
             case 16: //export to excel
             case 17: //print
                 $state_info = (object)array();
-                if(!empty($_POST['per_page']))
+                $data = !empty($_POST) ? $_POST : $_GET;
+
+                if(!empty($data['per_page']))
                 {
-                    $state_info->per_page = is_numeric($_POST['per_page']) ? $_POST['per_page'] : null;
+                    $state_info->per_page = is_numeric($data['per_page']) ? $data['per_page'] : null;
                 }
-                if(!empty($_POST['page']))
+                if(!empty($data['page']))
                 {
-                    $state_info->page = is_numeric($_POST['page']) ? $_POST['page'] : null;
+                    $state_info->page = is_numeric($data['page']) ? $data['page'] : null;
                 }
                 //If we request an export or a print we don't care about what page we are
                 if($state_code === 16 || $state_code === 17)
@@ -3088,29 +3224,29 @@ class grocery_CRUD_States extends grocery_CRUD_Layout
                     $state_info->page = 1;
                     $state_info->per_page = 1000000; //a very big number!
                 }
-                if(!empty($_POST['order_by'][0]))
+                if(!empty($data['order_by'][0]))
                 {
-                    $state_info->order_by = $_POST['order_by'];
+                    $state_info->order_by = $data['order_by'];
                 }
-                if(!empty($_POST['search_text']))
+                if(!empty($data['search_text']))
                 {
-                    if(empty($_POST['search_field']))
+                    if(empty($data['search_field']))
                     {
-                        $search_text = strip_tags($_POST['search_field']);
-                        $state_info->search = (object)array('field' => null , 'text' => $_POST['search_text']);
+                        $search_text = strip_tags($data['search_field']);
+                        $state_info->search = (object)array('field' => null , 'text' => $data['search_text']);
                     }
                     else
                     {
-                        if (is_array($_POST['search_field'])) {
+                        if (is_array($data['search_field'])) {
                             $search_array = array();
-                            foreach ($_POST['search_field'] as $search_key => $search_field_name) {
-                                $search_array[$search_field_name] = !empty($_POST['search_text'][$search_key]) ? $_POST['search_text'][$search_key] : '';
+                            foreach ($data['search_field'] as $search_key => $search_field_name) {
+                                $search_array[$search_field_name] = !empty($data['search_text'][$search_key]) ? $data['search_text'][$search_key] : '';
                             }
                             $state_info->search	= $search_array;
                         } else {
                             $state_info->search	= (object)array(
-                                'field' => strip_tags($_POST['search_field']) ,
-                                'text' => $_POST['search_text'] );
+                                'field' => strip_tags($data['search_field']) ,
+                                'text' => $data['search_text'] );
                         }
                     }
                 }
@@ -3310,6 +3446,15 @@ class grocery_CRUD_States extends grocery_CRUD_Layout
 			return $this->state_url('update_validation/'.$primary_key);
 	}
 
+    protected function getCloneUrl($primary_key = null)
+    {
+        if ($primary_key === null) {
+            return $this->state_url('clone');
+        } else {
+            return $this->state_url('clone/' . $primary_key);
+        }
+    }
+
 	protected function getEditUrl($primary_key = null)
 	{
 		if($primary_key === null)
@@ -3388,7 +3533,7 @@ class grocery_CRUD_States extends grocery_CRUD_Layout
  * @package    	grocery CRUD
  * @copyright  	Copyright (c) 2010 through 2014, John Skoumbourdis
  * @license    	https://github.com/scoumbourdis/grocery-crud/blob/master/license-grocery-crud.txt
- * @version    	1.5.0
+ * @version    	1.6.1
  * @author     	John Skoumbourdis <scoumbourdisj@gmail.com>
  */
 
@@ -3411,7 +3556,7 @@ class Grocery_CRUD extends grocery_CRUD_States
 	 *
 	 * @var	string
 	 */
-	const	VERSION = "1.5.0";
+	const	VERSION = "1.6.1";
 
 	const	JQUERY 			= "jquery-1.11.1.min.js";
 	const	JQUERY_UI_JS 	= "jquery-ui-1.10.3.custom.min.js";
@@ -3480,9 +3625,11 @@ class Grocery_CRUD extends grocery_CRUD_States
 	protected $unset_export			= false;
 	protected $unset_print			= false;
 	protected $unset_back_to_list	= false;
+    protected $unset_clone			= false;
 	protected $unset_columns		= null;
 	protected $unset_add_fields 	= null;
 	protected $unset_edit_fields	= null;
+    protected $unset_clone_fields	= null;
 	protected $unset_read_fields	= null;
 
 	/* Callbacks */
@@ -3495,20 +3642,25 @@ class Grocery_CRUD extends grocery_CRUD_States
 	protected $callback_before_delete 	= null;
 	protected $callback_after_delete 	= null;
 	protected $callback_delete 			= null;
+    protected $callback_before_clone 	= null;
+	protected $callback_after_clone 	= null;
+	protected $callback_clone 			= null;
 	protected $callback_column			= array();
 	protected $callback_add_field		= array();
 	protected $callback_edit_field		= array();
+	protected $callback_read_field		= array();
+	protected $callback_clone_field		= array();
 	protected $callback_upload			= null;
 	protected $callback_before_upload	= null;
 	protected $callback_after_upload	= null;
 
-	protected $default_javascript_path				= null; //autogenerate, please do not modify
-	protected $default_css_path						= null; //autogenerate, please do not modify
-	protected $default_texteditor_path 				= null; //autogenerate, please do not modify
-	protected $default_theme_path					= null; //autogenerate, please do not modify
-	protected $default_language_path				= 'assets/grocery_crud/languages';
-	protected $default_config_path					= 'assets/grocery_crud/config';
-	protected $default_assets_path					= 'assets/grocery_crud';
+	protected $default_javascript_path	= null; //autogenerate, please do not modify
+	protected $default_css_path			= null; //autogenerate, please do not modify
+	protected $default_texteditor_path 	= null; //autogenerate, please do not modify
+	protected $default_theme_path		= null; //autogenerate, please do not modify
+	protected $default_language_path	= 'assets/grocery_crud/languages';
+	protected $default_config_path		= 'assets/grocery_crud/config';
+	protected $default_assets_path		= 'assets/grocery_crud';
 
 	/**
 	 *
@@ -3552,13 +3704,14 @@ class Grocery_CRUD extends grocery_CRUD_States
 	 * @access	public
 	 * @param	mixed
 	 * @param	string
+      * @oaram array
 	 * @return	void
 	 */
-	function set_rules($field, $label = '', $rules = '')
+	function set_rules($field, $label = '', $rules = '', $errors = array())
 	{
 		if(is_string($field))
 		{
-			$this->validation_rules[$field] = array('field' => $field, 'label' => $label, 'rules' => $rules);
+			$this->validation_rules[$field] = array('field' => $field, 'label' => $label, 'rules' => $rules, 'errors' => $errors);
 		}elseif(is_array($field))
 		{
 			foreach($field as $num_field => $field_array)
@@ -3685,6 +3838,7 @@ class Grocery_CRUD extends grocery_CRUD_States
 	public function unset_add()
 	{
 		$this->unset_add = true;
+        $this->unset_clone = true;
 
 		return $this;
 	}
@@ -3724,10 +3878,10 @@ class Grocery_CRUD extends grocery_CRUD_States
 
 		return $this;
 	}
-	
+
 	/**
 	 * Just an alias to unset_read
-	 * 
+	 *
 	 * @return	void
 	 * */
 	public function unset_view()
@@ -3769,6 +3923,7 @@ class Grocery_CRUD extends grocery_CRUD_States
 	{
 		$this->unset_add 	= true;
 		$this->unset_edit 	= true;
+        $this->unset_clone = true;
 		$this->unset_delete = true;
 		$this->unset_read	= true;
 		$this->unset_export = true;
@@ -3814,6 +3969,7 @@ class Grocery_CRUD extends grocery_CRUD_States
 
 		$this->unset_add_fields = $args;
 		$this->unset_edit_fields = $args;
+        $this->unset_clone_fields = $args;
 		$this->unset_read_fields = $args;
 
 		return $this;
@@ -3847,6 +4003,19 @@ class Grocery_CRUD extends grocery_CRUD_States
 		return $this;
 	}
 
+    public function unset_clone_fields()
+	{
+		$args = func_get_args();
+
+		if (isset($args[0]) && is_array($args[0])) {
+			$args = $args[0];
+		}
+
+		$this->unset_clone_fields = $args;
+
+		return $this;
+	}
+
 	public function unset_read_fields()
 	{
 		$args = func_get_args();
@@ -3873,6 +4042,26 @@ class Grocery_CRUD extends grocery_CRUD_States
 
 		return $this;
 	}
+
+    /**
+     * Unsets everything that has to do with buttons or links with clone
+     * @access	public
+     * @return	void
+     */
+    public function unset_clone()
+    {
+        $this->unset_clone = true;
+
+        return $this;
+    }
+
+    public function set_clone()
+    {
+        $this->unset_clone = false;
+        $this->unset_add = false;
+
+        return $this;
+    }
 
 	/**
 	 *
@@ -3995,8 +4184,7 @@ class Grocery_CRUD extends grocery_CRUD_States
 	{
 		list($php_day, $php_month, $php_year) = array('d','m','Y');
 		list($js_day, $js_month, $js_year) = array('dd','mm','yy');
-		list($ui_day, $ui_month, $ui_year) = array('dd','mm','yyyy');
-//@todo ui_day, ui_month, ui_year has to be lang strings
+		list($ui_day, $ui_month, $ui_year) = array($this->l('ui_day'), $this->l('ui_month'), $this->l('ui_year'));
 
 		$date_format = $this->config->date_format;
 		switch ($date_format) {
@@ -4373,6 +4561,7 @@ class Grocery_CRUD extends grocery_CRUD_States
 		$this->config->paging_options		= $ci->config->item('grocery_crud_paging_options');
         $this->config->default_theme        = $ci->config->item('grocery_crud_default_theme');
         $this->config->environment          = $ci->config->item('grocery_crud_environment');
+        $this->config->xss_clean            = $ci->config->item('grocery_crud_xss_clean');
 
 		/** Initialize default paths */
 		$this->default_javascript_path				= $this->default_assets_path.'/js';
@@ -4699,6 +4888,27 @@ class Grocery_CRUD extends grocery_CRUD_States
 
                 break;
 
+
+            case grocery_CRUD_States::STATE_CLONE:
+                if ($this->unset_clone) {
+                    throw new Exception('You don\'t have permissions for this operation', 14);
+                    die();
+                }
+
+                if ($this->theme === null) {
+                    $this->set_theme($this->default_theme);
+                }
+                $this->setThemeBasics();
+
+                $this->set_basic_Layout();
+
+                $state_info = $this->getStateInfo();
+
+                $this->showCloneForm($state_info);
+
+                break;
+
+
 		}
 
 		return $this->get_layout();
@@ -4816,6 +5026,41 @@ class Grocery_CRUD extends grocery_CRUD_States
 		return $this;
 	}
 
+    /**
+     * @param null $callback
+     * @return $this
+     */
+	public function callback_before_clone($callback = null)
+	{
+		$this->callback_before_clone = $callback;
+
+		return $this;
+	}
+
+    /**
+     * @param null $callback
+     * @return $this
+     */
+	public function callback_after_clone($callback = null)
+	{
+   		$this->callback_after_clone = $callback;
+
+   		return $this;
+	}
+
+    /**
+     * @param null $callback
+     * @return $this
+     */
+	public function callback_clone($callback = null)
+	{
+   		$this->callback_clone = $callback;
+
+   		return $this;
+	}
+
+
+
 	/**
 	 *
 	 * Enter description here ...
@@ -4839,6 +5084,7 @@ class Grocery_CRUD extends grocery_CRUD_States
 	{
 		$this->callback_add_field[$field] = $callback;
 		$this->callback_edit_field[$field] = $callback;
+        $this->callback_read_field[$field] = $callback;
 
 		return $this;
 	}
@@ -4868,6 +5114,18 @@ class Grocery_CRUD extends grocery_CRUD_States
 
 		return $this;
 	}
+
+    /**
+     * @param $field
+     * @param mixed|callable|null $callback
+     * @return $this
+     */
+    public function callback_read_field($field, $callback = null)
+    {
+        $this->callback_read_field[$field] = $callback;
+
+        return $this;
+    }
 
 	/**
 	 *
@@ -5137,7 +5395,7 @@ class Grocery_CRUD extends grocery_CRUD_States
 	 * @param string $upload_path
      * @return Grocery_CRUD
 	 */
-	public function set_field_upload($field_name, $upload_dir = '')
+	public function set_field_upload($field_name, $upload_dir = '', $allowed_file_types = '')
 	{
 		$upload_dir = !empty($upload_dir) && substr($upload_dir,-1,1) == '/'
 						? substr($upload_dir,0,-1)
@@ -5153,6 +5411,7 @@ class Grocery_CRUD extends grocery_CRUD_States
 		$this->upload_fields[$field_name] = (object) array(
 				'field_name' => $field_name,
 				'upload_path' => $upload_dir,
+				'allowed_file_types' => $allowed_file_types,
 				'encrypted_field_name' => $this->_unique_field_name($field_name));
 		return $this;
 	}

@@ -5,42 +5,36 @@ if (!defined('BASEPATH'))
 
 class News_events extends CI_Controller {
 
-    public function __construct() {
+    function __construct() {
         parent::__construct();
-        date_default_timezone_set('Asia/Dhaka');
 
-        $this->load->database();
-        $this->load->helper('url');
-
-        $this->load->model('login_model');
-        $this->load->library('session');
-        if ($this->login_model->check_session()) {
-            redirect('/admin_login/index');
-        }
+        $this->load->library("my_session");
+        $this->my_session->checkSession();
 
         $this->load->library('grocery_CRUD');
-        $this->output->set_template('theme1');
     }
 
-    public function _crud_view($output = null) {
-        $this->load->view('default_view.php', $output);
-    }
-
-    public function index($params = null) {
-
-        $moduleCodes = $this->session->userdata('contentSetupModules');
-        $moduleCodes = explode("|", $moduleCodes);
-        $index = array_search(newsEvents, $moduleCodes);
-        if ($index > -1) {
-
-
+    function index() {
+        try {
             $crud = new grocery_CRUD();
-            $crud->set_theme('flexigrid');
+            $crud->set_theme(TABLE_THEME);
+            $crud->set_subject('News Events');
             $crud->set_table('news_events');
 
+            $crud->required_fields('newsEventsHeadline', 'newsEventsDetails', 'publishDate', 'expiryDate');
 
             $crud->columns('newsEventsHeadline', 'newsEventsDetails', 'publishDate', 'expiryDate', 'isActive');
 
+            $time = date("Y-m-d H:i:s");
+            $creatorId = $this->my_session->userId;
+
+            $crud->add_fields('newsEventsHeadline', 'newsEventsDetails', 'publishDate', 'expiryDate', 'isActive', 'creationDtTm', 'updateDtTm');
+            $crud->edit_fields('newsEventsHeadline', 'newsEventsDetails', 'publishDate', 'expiryDate', 'isActive', 'updateDtTm');
+
+            $crud->change_field_type('creationDtTm', 'hidden', $time);
+            $crud->change_field_type('updateDtTm', 'hidden', $time);
+            $crud->change_field_type('createdBy', 'hidden', $creatorId);
+            $crud->change_field_type('updatedBy', 'hidden', $creatorId);
 
             $crud->display_as('newsEventsHeadline', 'News & Events Headline');
             $crud->display_as('newsEventsDetails', 'News & Events  Details');
@@ -48,59 +42,18 @@ class News_events extends CI_Controller {
             $crud->display_as('expiryDate', 'Expiry Date');
             $crud->display_as('isActive', 'Is Active');
 
-
-            $crud->field_type("createdBy", "hidden");
-            $crud->field_type("updatedBy", "hidden");
-            $crud->field_type("creationDtTm", "hidden");
-            $crud->field_type('updateDtTm', 'hidden');
-
-
-            $crud->callback_before_insert(array($this, 'add_data'));
-            $crud->callback_before_update(array($this, 'update_data'));
-            $crud->required_fields('newsEventsHeadline', 'newsEventsDetails', 'publishDate', 'expiryDate');
-
+            $crud->unset_delete();
 
             $output = $crud->render();
+            $output->css = "";
+            $output->js = "";
+            $output->pageTitle = "News Events";
+            $output->base_url = base_url();
 
-            if (isset($params)) {
-                if ($params == 'read') {
-                    $output->page_title = "News & Events";
-                    $this->_crud_view($output);
-                } else if ($params == 'add') {
-                    $output->page_title = "Add News & Events";
-                    $this->_crud_view($output);
-                } else if ($params == 'edit') {
-                    $output->page_title = "Edit News & Events";
-                    $this->_crud_view($output);
-                } else {
-                    $output->page_title = "News & Events";
-                    $this->_crud_view($output);
-                }
-            } else {
-                $output->page_title = "News & Events";
-                $this->_crud_view($output);
-            }
-        } else {
-            echo "not allowed";
-            die();
+            $output->body_template = "news_events/index.php";
+            $this->load->view("site_template.php", $output);
+        } catch (Exception $e) {
+            show_error($e->getMessage() . ' --- ' . $e->getTraceAsString());
         }
     }
-
-    function add_data($post_array) {
-        $post_array['createdBy'] = $this->session->userdata('adminUserId');
-        ;
-        $post_array['updatedBy'] = $this->session->userdata('adminUserId');
-        ;
-        $post_array['creationDtTm'] = input_date();
-        $post_array['updateDtTm'] = input_date();
-        return $post_array;
-    }
-
-    function update_data($post_array) {
-        $post_array['updatedBy'] = $this->session->userdata('adminUserId');
-        ;
-        $post_array['updateDtTm'] = input_date();
-        return $post_array;
-    }
-
 }

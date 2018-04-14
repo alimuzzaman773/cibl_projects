@@ -1,0 +1,38 @@
+.ui-autocomplete-loading {
+    background: white url('images/ui-anim_basic_16x16.gif') right center no-repeat;
+}
+
+.mb {
+    margin-bottom: 10px;
+}
+
+.border-bottom{
+    border-bottom: 1px solid #ccc;
+}
+
+.containermodal {
+    display:    none;
+    position:   fixed;
+    z-index:    1000;
+    top:        0;
+    left:       0;
+    height:     100%;
+    width:      100%;
+    opacity: 0.8;
+    background: #000000 
+        url('images/flyingdots.gif') 
+        50% 50% 
+        no-repeat;
+}
+
+.loadingpage {
+    overflow: hidden;   
+}
+
+label.error{
+    color : red;
+}
+
+input.error, select.error, input[type='checkbox'].error,input[type='radio'].error{
+    /*  border: 1px solid red;*/
+}

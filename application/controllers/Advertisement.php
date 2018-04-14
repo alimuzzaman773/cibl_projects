@@ -5,96 +5,64 @@ if (!defined('BASEPATH'))
 
 class Advertisement extends CI_Controller {
 
-    public function __construct() {
+    function __construct() {
         parent::__construct();
-        date_default_timezone_set('Asia/Dhaka');
 
-        $this->load->database();
-        $this->load->helper('url');
-
-        $this->load->model('login_model');
-        $this->load->library('session');
-        if ($this->login_model->check_session()) {
-            redirect('/admin_login/index');
-        }
-
+        $this->load->library("my_session");
+        $this->my_session->checkSession();
 
         $this->load->library('grocery_CRUD');
-        $this->output->set_template('theme1');
     }
 
-    public function _crud_view($output = null) {
-        $this->load->view('default_view.php', $output);
-    }
-
-    public function index($params = null, $id = null) {
-
-        $moduleCodes = $this->session->userdata('contentSetupModules');
-        $moduleCodes = explode("|", $moduleCodes);
-        $index = array_search(advertisement, $moduleCodes);
-        if ($index > -1) {
-
-
+    function index() {
+        try {
             $crud = new grocery_CRUD();
+            $crud->set_theme(TABLE_THEME);
+            $crud->set_subject('Advertisement');
             $crud->set_table('advertisement');
+
             $crud->required_fields('advertisementName', 'addvertisementImage', 'advertisementCode');
             $this->load->config('grocery_crud');
             $this->config->set_item('grocery_crud_file_upload_allow_file_types', 'gif|jpeg|jpg|png');
 
             $crud->columns('advertisementCode', 'advertisementName', 'addvertisementImage');
+
+            $time = date("Y-m-d H:i:s");
+            $creatorId = $this->my_session->userId;
+
+            $crud->add_fields('advertisementCode', 'advertisementName', 'addvertisementImage', 'creationDtTm', 'updateDtTm');
+            $crud->edit_fields('advertisementCode', 'advertisementName', 'addvertisementImage', 'updateDtTm');
+
+            $crud->change_field_type('creationDtTm', 'hidden', $time);
+            $crud->change_field_type('updateDtTm', 'hidden', $time);
+            $crud->change_field_type('createdBy', 'hidden', $creatorId);
+            $crud->change_field_type('updatedBy', 'hidden', $creatorId);
+
             $crud->display_as('advertisementName', 'Advertisement Name')
                     ->display_as('advertisementCode', 'Advertisement Code')
                     ->display_as('addvertisementImage', 'Advertisement Image(720 X 90)');
 
-
-            $crud->field_type("createdBy", "hidden");
-            $crud->field_type("updatedBy", "hidden");
-            $crud->field_type("creationDtTm", "hidden");
-            $crud->field_type('updateDtTm', 'hidden');
-
-
-            $crud->callback_before_insert(array($this, 'add_data'));
-            $crud->callback_before_update(array($this, 'update_data'));
-
-
-
             $crud->callback_after_upload(array($this, 'addvertisementImage_callback_after_upload'));
             $crud->set_field_upload('addvertisementImage', 'assets/uploads/advertisement');
-
 
             $crud->callback_after_insert(array($this, 'imageTransfer'));
             $crud->callback_after_update(array($this, 'imageTransfer'));
 
-
-
+            $crud->unset_delete();
 
             $output = $crud->render();
+            $output->css = "";
+            $output->js = "";
+            $output->pageTitle = "Advertisement";
+            $output->base_url = base_url();
 
-            if (isset($params)) {
-                if ($params == 'read') {
-                    $output->page_title = "EBL Advertisement Setup";
-                    $this->_crud_view($output);
-                    //$this->load->view('view_atm.php', $output);
-                } else if ($params == 'add') {
-                    $output->page_title = "Add New Advertisement";
-                    $this->_crud_view($output);
-                } else if ($params == 'edit') {
-                    $output->page_title = "Edit Advertisement";
-                    $this->_crud_view($output);
-                } else {
-                    $output->page_title = "EBL Advertisement ";
-                    $this->_crud_view($output);
-                }
-            } else {
-                $output->page_title = "EBL Advertisement Setup";
-                $this->_crud_view($output);
-            }
-        } else {
-            echo "not allowed";
-            die();
+            $output->body_template = "advertisement/index.php";
+            $this->load->view("site_template.php", $output);
+        } catch (Exception $e) {
+            show_error($e->getMessage() . ' --- ' . $e->getTraceAsString());
         }
     }
-
+    
     function addvertisementImage_callback_after_upload($uploader_response, $field_info, $files_to_upload) {
         $this->load->library('image_moo');
 
@@ -107,12 +75,11 @@ class Advertisement extends CI_Controller {
     }
 
     function imageTransfer($str) {
+        $uploadImage = $this->input->post('addvertisementImage');
+        if (!empty($uploadImage)) {
 
-
-        if (!empty($_POST['addvertisementImage'])) {
-
-            $url = 'http://192.168.5.81/eblapi/image_save/imageSave';
-            $postData = array('imageName' => $_POST['addvertisementImage'], 'folderName' => 'advertisement');
+            $url = API_SERVER_PATH;
+            $postData = array('imageName' => $uploadImage, 'folderName' => 'advertisement');
 
             $handle = curl_init();
             curl_setopt($handle, CURLOPT_URL, $url);
@@ -125,23 +92,6 @@ class Advertisement extends CI_Controller {
 
             return true;
         }
-    }
-
-    function add_data($post_array) {
-        $post_array['createdBy'] = $this->session->userdata('adminUserId');
-        ;
-        $post_array['updatedBy'] = $this->session->userdata('adminUserId');
-        ;
-        $post_array['creationDtTm'] = input_date();
-        $post_array['updateDtTm'] = input_date();
-        return $post_array;
-    }
-
-    function update_data($post_array) {
-        $post_array['updatedBy'] = $this->session->userdata('adminUserId');
-        ;
-        $post_array['updateDtTm'] = input_date();
-        return $post_array;
     }
 
 }

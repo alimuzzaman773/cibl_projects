@@ -4,11 +4,8 @@ class Login_model extends CI_Model {
 
     function __construct() {
         parent::__construct();
-        date_default_timezone_set('Asia/Dhaka');
 
-        $this->load->database();
-        $this->load->helper('url');
-        $this->load->library('session');
+        $this->load->library('my_session');
         //$this->load->library('Crypter');
         $this->load->library('BOcrypter');
     }
@@ -36,7 +33,6 @@ class Login_model extends CI_Model {
     }
 
     public function checkLoginTable($data) { // check if the user is already logged in
-
         $this->db->where($data);
         $query = $this->db->get('login_appsuser');
         return $query->row_array();

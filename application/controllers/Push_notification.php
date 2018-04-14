@@ -5,37 +5,36 @@ if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
 class Push_notification extends CI_Controller {
-
-    public function __construct() {
+    
+    function __construct() {
         parent::__construct();
-        date_default_timezone_set('Asia/Dhaka');
 
-        $this->load->database();
-        $this->load->helper('url');
+        $this->load->library("my_session");
+        $this->my_session->checkSession();
+
         $this->load->model('push_notification_model');
-        $this->load->library('session');
-
-        $this->load->model('login_model');
-        if ($this->login_model->check_session()) {
-            redirect('/admin_login/index');
-        }
     }
 
     public function index() {
+        
+        $data['pageTitle'] = "Push Notification";
+        $data['sentMessages'] = json_encode($this->push_notification_model->getAllMessages());
+        $data['body_template'] = "push_notification/view_all_messages.php";
+        $this->load->view("site_template.php", $data);
 
-        $moduleCodes = $this->session->userdata('contentSetupModules');
-        $moduleCodes = explode("|", $moduleCodes);
-        $index = array_search(notification, $moduleCodes);
-        if ($index > -1) {
-
-
-            $data['sentMessages'] = json_encode($this->push_notification_model->getAllMessages());
-            $this->output->set_template('theme2');
-            $this->load->view('push_notification/view_all_messages.php', $data);
-        } else {
-            echo "not allowed";
-            die();
-        }
+//        $moduleCodes = $this->session->userdata('contentSetupModules');
+//        $moduleCodes = explode("|", $moduleCodes);
+//        $index = array_search(notification, $moduleCodes);
+//        if ($index > -1) {
+//
+//
+//            $data['sentMessages'] = json_encode($this->push_notification_model->getAllMessages());
+//            $this->output->set_template('theme2');
+//            $this->load->view('push_notification/view_all_messages.php', $data);
+//        } else {
+//            echo "not allowed";
+//            die();
+//        }
     }
 
     public function writeMessage() {

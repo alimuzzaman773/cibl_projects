@@ -1,0 +1,16 @@
+  .breadcrum {
+	color: #0000FF;
+	display: inline-block;
+	margin-left: 25px;
+	padding-top: 10px;
+	font-size: 20px;
+}
+
+
+  .loginstatus {
+	color: #FFFF00;
+	display: inline-block;
+	margin-left: 25px;
+	padding-top: 10px;
+	font-size: 15px;
+}

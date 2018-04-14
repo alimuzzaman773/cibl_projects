@@ -46,7 +46,7 @@ class Admin_users_model_maker extends CI_Model {
         $query = $this->db->get();
         return $query->row_array();
     }
-
+    
     public function checkUsernamePassword($data) {
         $this->db->select('admin_users.*, admin_users_group.*');
         $this->db->from('admin_users');
@@ -55,7 +55,7 @@ class Admin_users_model_maker extends CI_Model {
         $this->db->where('admin_users.isActive', 1);
         $this->db->where('admin_users_group.isActive', 1);
         $query = $this->db->get();
-        return $query->row_array();
+        return $query->num_rows() > 0 ?$query : false;
     }
 
     public function getUserEmail($username, $email) {

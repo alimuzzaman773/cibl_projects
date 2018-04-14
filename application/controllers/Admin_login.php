@@ -7,11 +7,8 @@ class Admin_login extends CI_Controller {
 
     function __construct() {
         parent::__construct();
-        date_default_timezone_set('Asia/Dhaka');
 
-        $this->load->database();
-        $this->load->helper('url');
-        $this->load->library('session');
+        $this->load->library('my_session');
         $this->load->library('BOcrypter');
         $this->load->model('login_model');
         $this->load->model('admin_users_model_maker');
@@ -19,15 +16,44 @@ class Admin_login extends CI_Controller {
     }
 
     public function index() {
-        $data['message'] = "";
-        $this->load->view('admin_login/login_view.php', $data);
+        $data['css'] = "";
+        $data['js'] = "";
+        $data['base_url'] = base_url();
+
+        $data['css_files'] = array();
+        $data['js_files'] = array();
+
+        if ($this->my_session->logged_in):
+            redirect(base_url() . "admin_login/dashboard");
+        endif;
+        $data['pageTitle'] = "Login";
+        $data['body_template'] = "login.php";
+        $this->load->view("site_template.php", $data);
+
+//        $data['message'] = "";
+//        $this->load->view('admin_login/login_view.php', $data);
     }
 
     public function checkUserDetails() {
 
         /* Post Method update for Security 28 aug 16 */
-        $input_user = $this->input->post('username', true);
-        $input_pass = $this->input->post('password', true);
+        $username = $this->input->post('username', true);
+        $password = $this->input->post('password', true);
+
+        $result = $this->my_session->log_in($username, $password);
+
+        if ($result === false || $result === true) {
+            redirect(base_url());
+        }
+
+        if (is_array($result) && $result['success'] == true && (int) $result['forgotPassword'] != 0) {
+            $data['message'] = "";
+            $this->load->view('admin_login/change_password_view.php', $data);
+        }
+
+        redirect(base_url());
+        die();
+
 
         if ($input_user && $input_pass) {
 
@@ -89,23 +115,29 @@ class Admin_login extends CI_Controller {
         }
     }
 
-    public function dashboard() {
-        if ($this->login_model->check_session()) {
-            redirect('/admin_login/index');
-        } else {
-            $this->output->set_template('theme2');
-            $this->load->view('dashboard.php');
-        }
+    function dashboard() {
+        $data['pageTitle'] = "Dashboard";
+        $data['body_template'] = "dashboard.php";
+        $this->load->view("site_template.php", $data);
     }
 
-    public function logout() {
-        $this->login_model->delete_session();
-        redirect('/admin_login/index');
+    function logout() {
+        $this->load->library('my_session');
+        $this->my_session->log_out();
+        redirect(base_url());
     }
 
     public function forgotPassword() {
-        $data['message'] = "";
-        $this->load->view('admin_login/forgot_password_view.php', $data);
+        $data['pageTitle'] = "Forgot Password";
+        $data['base_url'] = base_url();
+
+        $data['css_files'] = array();
+        $data['js_files'] = array();
+
+        $data['body_template'] = "forgot_password.php";
+        $this->load->view('site_template.php', $data);
+//        $data['message'] = "";
+//        $this->load->view('admin_login/forgot_password_view.php', $data);
     }
 
     public function changePassword() {
