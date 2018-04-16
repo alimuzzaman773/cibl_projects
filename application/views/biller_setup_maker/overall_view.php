@@ -18,7 +18,8 @@
                 <table class="table table-bordered table-condensed table-striped table-hover" >          
                     <thead>
                         <tr class="bg-primary">
-                            <th>SL#</th>
+                            <th class="text-center hidden"><input type="checkbox" id="selectAll" data-ng-model="selectAll" /></th>
+                            <th>SL#</th>                            
                             <th>Biller Name</th>
                             <th>CIF ID</th>
                             <th>Biller Code</th>
@@ -31,14 +32,17 @@
                     </thead>
                     <tbody>
                         <tr data-ng-repeat="i in biller_data track by $index">
+                            <td class="text-center hidden"><input type="checkbox" id="selectAll" data-ng-model="i.isChecked" data-ng-true-value="true" data-ng-false-value="false" /></td>
                             <td>{{($index + 1)}}</td>
                             <td>{{i.billerName}}</td>
                             <td>{{i.cfId}}</td>
                             <td>{{i.billerCode}}</td>
                             <td>{{i.billerOrder}}</td>
                             <td>{{i.billTypeName}}</td>
-                            <td></td>
-                            <td></td>
+                            <td>{{i.checkerAction}}</td>
+                            <td>
+                                <span data-ng-class="{'text-success': i.isActive=1, 'text-warning': i.isActive=0}">{{i.isActive=1 ? 'Active' : 'Inactive'}}</span>
+                            </td>
                             <td>
                                 <div class="dropdown pull-right">
                                     <button class="btn btn-primary btn-xs dropdown-toggle" type="button" data-toggle="dropdown">
@@ -51,8 +55,13 @@
                                             </a>
                                         </li> 
                                         <li>
-                                            <a href="">
-                                                <i class="glyphicon glyphicon-pencil"></i> Edit
+                                            <a data-ng-click="activate(i.billerId);">
+                                                <i class="glyphicon glyphicon-ok"></i> Active
+                                            </a>
+                                        </li>
+                                         <li>
+                                            <a data-ng-click="deactivate(i.billerId);">
+                                                <i class="glyphicon glyphicon-remove"></i> Inactive
                                             </a>
                                         </li>
                                     </ul>
@@ -76,5 +85,5 @@ ci_add_js(asset_url() . 'app/biller_setup/biller_module.js');
 
 <script type="text/javascript" charset="utf-8">
     var app = app || {};
-    var billerData = <?= $billerData ?>;
+    app.billerData = <?= $billerData ?>;
 </script>

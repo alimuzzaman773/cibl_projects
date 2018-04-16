@@ -46,16 +46,13 @@ class Biller_setup_maker extends CI_Controller {
         $data['billerCode'] = $this->input->post('billerCode');
         $data['billerOrder'] = $this->input->post('billerOrder');
 
-
         $data['suggestion'] = $this->input->post('suggestion');
         $data['referenceRegex'] = $this->input->post('referenceRegex');
         $data['referenceMatch'] = $this->input->post('referenceMatch');
         $data['amountMessage'] = $this->input->post('amountMessage');
         $data['amountRegex'] = $this->input->post('amountRegex');
         $data['amountMatch'] = $this->input->post('amountMatch');
-        $data['referenceMessage'] = $this->input->post('referenceMessage');
-
-
+        $data['referenceMessage'] = $this->input->post('suggestion');
 
         $data['billTypeCode'] = $this->input->post('billTypeCode');
         $data['mcStatus'] = 0;
@@ -63,22 +60,26 @@ class Biller_setup_maker extends CI_Controller {
         $data['makerActionCode'] = 'add';
         $data['makerActionDt'] = date("y-m-d");
         $data['makerActionTm'] = date("G:i:s");
-        $data['makerActionBy'] = $this->session->userdata('adminUserId');
+        $data['makerActionBy'] = $this->my_session->userId;
         //$data['isLocked'] = 0;
         $data['isPublished'] = 0;
         $data['isActive'] = 1;
 
-        $data['createdBy'] = $this->session->userdata('adminUserId');
-        $data['createdDtTm'] = input_date();
+        $data['createdBy'] = $this->my_session->userId;
+        $data['createdDtTm'] = date("Y-m-d H:i:s");
 
         $billerNameCheck = $this->biller_setup_model_maker->getBillerByCode($data['billerCode']);
 
         if (!empty($billerNameCheck)) {
-            $this->output->set_template('theme2');
+            
             $data['message'] = 'The biller with code "' . $data['billerCode'] . '" already exists';
             $data['billTypes'] = $this->biller_setup_model_maker->getAllBillTypes();
             $data['selectedActionName'] = $data['makerAction'];
-            $this->load->view('biller_setup_maker/add_biller.php', $data);
+
+            $data["pageTitle"] = "Add Biller";
+            $data["body_template"] = "biller_setup_maker/add_biller.php";
+            $this->load->view('site_template.php', $data);
+            
         } else {
             $this->biller_setup_model_maker->insertBillerInfo($data);
             redirect('Biller_setup_maker');
@@ -137,14 +138,13 @@ class Biller_setup_maker extends CI_Controller {
         $data['referenceMessage'] = $this->input->post('suggestion');
 
 
-
         $data['billTypeCode'] = $this->input->post('billTypeCode');
         $data['mcStatus'] = 0;
         $data['makerAction'] = $this->input->post('selectedActionName');
         $data['makerActionCode'] = 'edit';
         $data['makerActionDt'] = date("y-m-d");
         $data['makerActionTm'] = date("G:i:s");
-        $data['makerActionBy'] = $this->session->userdata('adminUserId');
+        $data['makerActionBy'] = $this->my_session->userId;
 
 
         // echo "<pre>";
@@ -166,83 +166,86 @@ class Biller_setup_maker extends CI_Controller {
     }
 
     public function billerActive() {
-        $moduleCodes = $this->session->userdata('moduleCodes');
-        $actionCodes = $this->session->userdata('actionCodes');
-        $moduleCodes = explode("|", $moduleCodes);
-        $actionCodes = explode("#", $actionCodes);
-        $index = array_search(biller_setup_module, $moduleCodes);
-        if ($index > -1) {
-            $moduleWiseActionCodes = $actionCodes[$index];
-            if (strpos($moduleWiseActionCodes, "active") > -1) {
+//        $moduleCodes = $this->session->userdata('moduleCodes');
+//        $actionCodes = $this->session->userdata('actionCodes');
+//        $moduleCodes = explode("|", $moduleCodes);
+//        $actionCodes = explode("#", $actionCodes);
+//        $index = array_search(biller_setup_module, $moduleCodes);
+//        if ($index > -1) {
+//            $moduleWiseActionCodes = $actionCodes[$index];
+//            if (strpos($moduleWiseActionCodes, "active") > -1) {
 
-                $billerId = explode("|", $_POST['billerId']);
-                $billerIdString = $_POST['billerId'];
-                $checkData = $this->chkPermission($billerId);
 
-                if (strcmp($billerIdString, $checkData) == 0) {
-                    $selectedActionName = $_POST['selectedActionName'];
-                    foreach ($billerId as $index => $value) {
-                        $updateData = array("billerId" => $value,
-                            "isActive" => 1,
-                            "mcStatus" => 0,
-                            "makerAction" => $selectedActionName,
-                            "makerActionCode" => 'active',
-                            "makerActionDt" => date("y-m-d"),
-                            "makerActionTm" => date("G:i:s"),
-                            "makerActionBy" => $this->session->userdata('adminUserId'));
-                        $updateArray[] = $updateData;
-                    }
-                    $this->db->update_batch('biller_setup_mc', $updateArray, 'billerId');
-                    echo 1;
-                } else {
-                    echo 2;
-                }
+        $billerId = explode("|", $this->input->post('billerId', true));
+        $billerIdString = $this->input->post('billerId', true);
+        $checkData = $this->chkPermission($billerId);
+
+        if (strcmp($billerIdString, $checkData) == 0) {
+            $selectedActionName = $this->input->post('selectedActionName', true);
+            foreach ($billerId as $index => $value) {
+                $updateData = array(
+                    "billerId" => $value,
+                    "isActive" => 1,
+                    "mcStatus" => 0,
+                    "makerAction" => $selectedActionName,
+                    "makerActionCode" => 'active',
+                    "makerActionDt" => date("Y-m-d"),
+                    "makerActionTm" => date("G:i:s"),
+                    "makerActionBy" => $this->my_session->userId);
+                $updateArray[] = $updateData;
             }
+            $this->db->update_batch('biller_setup_mc', $updateArray, 'billerId');
+            echo 1;
         } else {
-            echo "not allowed";
+            echo 2;
         }
+//            }
+//        } else {
+//            echo "not allowed";
+//        }
     }
 
     public function billerInactive() {
-        $moduleCodes = $this->session->userdata('moduleCodes');
-        $actionCodes = $this->session->userdata('actionCodes');
-        $moduleCodes = explode("|", $moduleCodes);
-        $actionCodes = explode("#", $actionCodes);
-        $index = array_search(biller_setup_module, $moduleCodes);
-        if ($index > -1) {
-            $moduleWiseActionCodes = $actionCodes[$index];
-            if (strpos($moduleWiseActionCodes, "inactive") > -1) {
+//        $moduleCodes = $this->session->userdata('moduleCodes');
+//        $actionCodes = $this->session->userdata('actionCodes');
+//        $moduleCodes = explode("|", $moduleCodes);
+//        $actionCodes = explode("#", $actionCodes);
+//        $index = array_search(biller_setup_module, $moduleCodes);
+//        if ($index > -1) {
+//            $moduleWiseActionCodes = $actionCodes[$index];
+//            if (strpos($moduleWiseActionCodes, "inactive") > -1) {
 
-                $billerId = explode("|", $_POST['billerId']);
-                $billerIdString = $_POST['billerId'];
-                $checkData = $this->chkPermission($billerId);
+        $billerId = explode("|", $this->input->post('billerId', true));
+        $billerIdString = $this->input->post('billerId', true);
+        $checkData = $this->chkPermission($billerId);
 
-                if (strcmp($billerIdString, $checkData) == 0) {
-                    $selectedActionName = $_POST['selectedActionName'];
-                    foreach ($billerId as $index => $value) {
-                        $updateData = array("billerId" => $value,
-                            "isActive" => 0,
-                            "mcStatus" => 0,
-                            "makerAction" => $selectedActionName,
-                            "makerActionCode" => 'active',
-                            "makerActionDt" => date("y-m-d"),
-                            "makerActionTm" => date("G:i:s"),
-                            "makerActionBy" => $this->session->userdata('adminUserId'));
-                        $updateArray[] = $updateData;
-                    }
-                    $this->db->update_batch('biller_setup_mc', $updateArray, 'billerId');
-                    echo 1;
-                } else {
-                    echo 2;
-                }
+        if (strcmp($billerIdString, $checkData) == 0) {
+            $selectedActionName = $this->input->post('selectedActionName', true);
+            foreach ($billerId as $index => $value) {
+                $updateData = array(
+                    "billerId" => $value,
+                    "isActive" => 0,
+                    "mcStatus" => 0,
+                    "makerAction" => $selectedActionName,
+                    "makerActionCode" => 'active',
+                    "makerActionDt" => date("Y-m-d"),
+                    "makerActionTm" => date("G:i:s"),
+                    "makerActionBy" => $this->my_session->userId);
+                $updateArray[] = $updateData;
             }
+            $this->db->update_batch('biller_setup_mc', $updateArray, 'billerId');
+            echo 1;
         } else {
-            echo "not allowed";
+            echo 2;
         }
+//            }
+//        } else {
+//            echo "not allowed";
+//        }
     }
 
     public function chkPermission($data) { // function to check injection
-        $id = $this->session->userdata('adminUserId');
+        $id = $this->my_session->userId;
         $this->db->select('biller_setup_mc.billerId');
         $this->db->where_in('billerId', $data);
         $this->db->where('(biller_setup_mc.makerActionBy = ' . $id . ' OR mcStatus = 1)');
