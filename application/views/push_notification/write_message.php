@@ -1,6 +1,5 @@
 
-<title>Notify to user</title>
-<div class="breadcrum">Write Message</div>
+<h2 class="title-underlined">Write Message</h2>
 
 <div class="container" style="margin-top:50px">
 
@@ -192,8 +191,8 @@
     ko.applyBindings(new vm());
 </script>
 
-
+<!--
 <script>tinymce.init({selector:'textarea'});</script>
-
+-->
 
 </div>

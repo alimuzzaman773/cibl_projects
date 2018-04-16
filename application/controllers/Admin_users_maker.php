@@ -7,18 +7,10 @@ class Admin_users_maker extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
-        date_default_timezone_set('Asia/Dhaka');
-
-        $this->load->database();
-        $this->load->helper('url');
-        $this->load->model('admin_users_model_maker');
-        $this->load->library('session');
+        $this->load->library("my_session");
+        $this->my_session->checkSession();
+        $this->load->model(array('admin_users_model_maker', 'login_model'));
         $this->load->library('BOcrypter');
-
-        $this->load->model('login_model');
-        if ($this->login_model->check_session()) {
-            redirect('/admin_login/index');
-        }
     }
 
     public function index() {

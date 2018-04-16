@@ -4,59 +4,40 @@ class Biller_setup_maker extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
-        date_default_timezone_set('Asia/Dhaka');
-
-        $this->load->helper('url');
-        $this->load->model('biller_setup_model_maker');
-        $this->load->library('session');
-
-        $this->load->model('login_model');
-        if ($this->login_model->check_session()) {
-            redirect('/admin_login/index');
-        }
+        $this->load->library("my_session");
+        $this->my_session->checkSession();
+        $this->load->model(array('biller_setup_model_maker', 'login_model'));
     }
 
     public function index() {
-        $this->output->set_template('theme2');
-        $moduleCodes = $this->session->userdata('moduleCodes');
-        $actionCodes = $this->session->userdata('actionCodes');
-        $actionNames = $this->session->userdata('actionNames');
-        $moduleCodes = explode("|", $moduleCodes);
-        $actionCodes = explode("#", $actionCodes);
-        $actionNames = explode("#", $actionNames);
-        $index = array_search(biller_setup_module, $moduleCodes);
-        if ($index > -1) {
-            $actionCodes = json_encode(explode(",", $actionCodes[$index]));
-            $actionNames = json_encode(explode(",", $actionNames[$index]));
-            $billerData = $this->biller_setup_model_maker->getAllBillers();
 
-            $data['billers'] = json_encode($billerData);
-            $data['actionCodes'] = $actionCodes;
-            $data['actionNames'] = $actionNames;
-            $this->load->view('biller_setup_maker/overall_view.php', $data);
-        } else {
-            echo "not allowed";
-        }
+        $data["billerData"] = json_encode($this->biller_setup_model_maker->getAllBillers());
+        $data["pageTitle"] = "Biller Setup";
+        $data["body_template"] = "biller_setup_maker/overall_view.php";
+        $this->load->view('site_template.php', $data);
     }
 
     public function addNewBiller($selectedActionName = NULL) {
-        $this->output->set_template('theme2');
-        $moduleCodes = $this->session->userdata('moduleCodes');
-        $actionCodes = $this->session->userdata('actionCodes');
-        $moduleCodes = explode("|", $moduleCodes);
-        $actionCodes = explode("#", $actionCodes);
-        $index = array_search(biller_setup_module, $moduleCodes);
-        if ($index > -1) {
-            $moduleWiseActionCodes = $actionCodes[$index];
-            if (strpos($moduleWiseActionCodes, "add") > -1) {
-                $data['billTypes'] = $this->biller_setup_model_maker->getAllBillTypes();
-                $data['selectedActionName'] = $selectedActionName;
-                $data['message'] = "";
-                $this->load->view('biller_setup_maker/add_biller.php', $data);
-            }
-        } else {
-            echo "not allowed";
-        }
+        //  $this->output->set_template('theme2');
+        // $moduleCodes = $this->session->userdata('moduleCodes');
+        //   $actionCodes = $this->session->userdata('actionCodes');
+        // $moduleCodes = explode("|", $moduleCodes);
+        // $actionCodes = explode("#", $actionCodes);
+        //  $index = array_search(biller_setup_module, $moduleCodes);
+        //  if ($index > -1) {
+        //  $moduleWiseActionCodes = $actionCodes[$index];
+        //  if (strpos($moduleWiseActionCodes, "add") > -1) {
+        $data['billTypes'] = $this->biller_setup_model_maker->getAllBillTypes();
+        $data['selectedActionName'] = $selectedActionName;
+        $data['message'] = "";
+
+        $data["pageTitle"] = "Add Biller";
+        $data["body_template"] = "biller_setup_maker/add_biller.php";
+        $this->load->view('site_template.php', $data);
+        //  }
+        //  } else {
+        //      echo "not allowed";
+        //  }
     }
 
     public function insertNewBiller() {
@@ -105,36 +86,38 @@ class Biller_setup_maker extends CI_Controller {
     }
 
     public function editBiller($data, $selectedActionName = NULL, $message = NULL) {
-        $this->output->set_template('theme2');
-        $moduleCodes = $this->session->userdata('moduleCodes');
-        $actionCodes = $this->session->userdata('actionCodes');
-        $moduleCodes = explode("|", $moduleCodes);
-        $actionCodes = explode("#", $actionCodes);
-        $index = array_search(biller_setup_module, $moduleCodes);
-        if ($index > -1) {
-            $moduleWiseActionCodes = $actionCodes[$index];
-            if (strpos($moduleWiseActionCodes, "edit") > -1) {
+        //$this->output->set_template('theme2');
+        //$moduleCodes = $this->session->userdata('moduleCodes');
+        //$actionCodes = $this->session->userdata('actionCodes');
+        //$moduleCodes = explode("|", $moduleCodes);
+        //$actionCodes = explode("#", $actionCodes);
+        //$index = array_search(biller_setup_module, $moduleCodes);
+        //if ($index > -1) {
+        // $moduleWiseActionCodes = $actionCodes[$index];
+        // if (strpos($moduleWiseActionCodes, "edit") > -1) {
 
-                $tableData = $this->biller_setup_model_maker->getBillerById($data);
+        $tableData = $this->biller_setup_model_maker->getBillerById($data);
 
-                // echo "<pre>";
-                // print_r($tableData); die();
+        // echo "<pre>";
+        // print_r($tableData); die();
 
-                $viewData['checkerActionComment'] = $tableData['checkerActionComment'];
-                if ($viewData['checkerActionComment'] != NULL) {
-                    $viewData['reasonModeOfDisplay'] = "display: block; color: red";
-                } else {
-                    $viewData['reasonModeOfDisplay'] = "display: none;";
-                }
-                $viewData['billerData'] = $tableData;
-                $viewData['billTypes'] = $this->biller_setup_model_maker->getAllBillTypes();
-                $viewData['selectedActionName'] = $selectedActionName;
-                $viewData['message'] = $message;
-                $this->load->view('biller_setup_maker/edit_biller.php', $viewData);
-            }
+        $viewData['checkerActionComment'] = $tableData['checkerActionComment'];
+        if ($viewData['checkerActionComment'] != NULL) {
+            $viewData['reasonModeOfDisplay'] = "display: block; color: red";
         } else {
-            echo "not allowed";
+            $viewData['reasonModeOfDisplay'] = "display: none;";
         }
+        $viewData['billerData'] = $tableData;
+        $viewData['billTypes'] = $this->biller_setup_model_maker->getAllBillTypes();
+        $viewData['selectedActionName'] = $selectedActionName;
+        $viewData['message'] = $message;
+
+        $viewData['body_template'] = 'biller_setup_maker/edit_biller.php';
+        $this->load->view('site_template.php', $viewData);
+        //    }
+        //} else {
+        //    echo "not allowed";
+        //}
     }
 
     public function updateBiller() {
