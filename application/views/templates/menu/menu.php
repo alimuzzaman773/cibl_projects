@@ -103,7 +103,7 @@
                         <div class="yamm-content">
                             <div class="row">                                    
                                 <div class="clearfix mb">
-                                    <ul class="col-md-3 col-xs-12 list-unstyled">
+                                    <ul class="col-md-2 col-xs-12 list-unstyled">
                                         <li><p><b>Users/Pin</b></p></li>
                                         <li><a href="<?= base_url() . 'admin_users_maker' ?>">Admin Users</a></li>
                                         <li><a href="<?= base_url() . 'admin_user_group_maker' ?>">Admin User Group</a></li>
@@ -111,7 +111,7 @@
                                         <li><a href="<?= base_url() . 'client_registration/index' ?>">Apps users</a></li>
                                         <li><a href="<?= base_url() . 'pin_generation/viewPinByAction' ?>">Pin</a></li>
                                     </ul>
-                                    <ul class="col-md-3 col-xs-12 list-unstyled">
+                                    <ul class="col-md-2 col-xs-12 list-unstyled">
                                         <li><p><b>Checker</b></p></li>
                                         <li><a href="<?= base_url() . 'admin_user_group_checker' ?>">Admin User Group Authorization</a></li>
                                         <li><a href="<?= base_url() . 'admin_users_checker' ?>">Admin User Authorization</a></li>
@@ -124,19 +124,59 @@
                                         <li><a href="<?= base_url() . 'password_policy_checker' ?>">Password</a></li>
                                         <li><a href="<?= base_url() . 'apps_user_delete_checker' ?>">Apps User Delete Authorization</a></li>
                                     </ul>
-                                    <ul class="col-md-3 col-xs-12 list-unstyled">
+                                    <ul class="col-md-2 col-xs-12 list-unstyled">
                                         <li><p><b>Request Process</b></p></li>
                                         <li><a href="<?= base_url() . 'priority_request_process/getRequests' ?>">Priority</a></li>
                                         <li><a href="<?= base_url() . 'product_request_process/index' ?>">Product</a></li>
                                         <li><a href="<?= base_url() . 'banking_service_request/getRequests' ?>">Banking</a></li>
                                     </ul>
-                                    <ul class="col-md-3 col-xs-12 list-unstyled">
+                                    <ul class="col-md-2 col-xs-12 list-unstyled">
                                         <li><p><b>Configuration</b></p></li>
                                         <li><a href="<?= base_url() . 'validation_setup' ?>">Password Policy</a></li>
                                         <li><a href="<?= base_url() . 'biller_setup_maker' ?>">Biller Setup</a></li>
                                         <li><a href="<?= base_url() . 'routing_number' ?>">Routing Number Setup</a></li>
                                         <li><a href="<?= base_url() . 'bill_type_setup' ?>">Bill Type Setup</a></li>
                                         <li><a href="<?= base_url() . 'transaction_limit_setup_maker' ?>">Transaction Package Limit</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </li>    
+                </ul>
+            </li>
+            <li class="dropdown yamm-fw">
+                <a href="#" id="dropModules" role="button" data-toggle="dropdown">Reports<b class="caret"></b></a>
+                <ul id="dropModules" class="dropdown-menu" role="menu" aria-labelledby="dropModules">                    
+                    <li class="">
+                        <div class="yamm-content">
+                            <div class="row">                                    
+                                <div class="clearfix mb">
+                                    <ul class="col-md-2 col-xs-12 list-unstyled">
+                                        <li><p><b>Apps User Reports</b></p></li>
+                                        <li><a href="<?= base_url() . 'reports/user_status' ?>">Apps Users' Status</a></li>
+                                        <li><a href="<?= base_url() . 'reports/customer_info' ?>">Customer Information</a></li>
+                                        <li><a href="<?= base_url() . 'reports/user_login_info' ?>">User Last Login Information</a></li>
+                                        <li><a href="<?= base_url() . 'reports/fund_transfer' ?>">Fund Transfer</a></li>
+                                        <li><a href="<?= base_url() . 'reports/other_fund_transfer' ?>">Other Fund Transfer</a></li>
+                                    </ul>
+                                    <ul class="col-md-2 col-xs-12 list-unstyled">
+                                        <li><p><b>Admin Reports</b></p></li>
+                                        <li><a href="<?= base_url() . 'reports/id_modification' ?>">Last User ID Modification</a></li>
+                                    </ul>
+                                    <ul class="col-md-2 col-xs-12 list-unstyled">
+                                        <li><p><b>Transaction Reports</b></p></li>
+                                        <li><a href="<?= base_url() . 'reports/fund_transfer' ?>">Fund Transfer</a></li>
+                                        <li><a href="<?= base_url() . 'reports/other_fund_transfer' ?>">Other Fund Transfer</a></li>
+                                    </ul>
+                                     <ul class="col-md-2 col-xs-12 list-unstyled">
+                                        <li><p><b>Billing Report</b></p></li>
+                                        <li><a href="<?= base_url() . 'reports/bill_pay' ?>">Billing Information</a></li>
+                                    </ul>
+                                    <ul class="col-md-2 col-xs-12 list-unstyled">
+                                        <li><p><b>Request Report</b></p></li>
+                                        <li><a href="<?= base_url() . 'reports/priority_request' ?>">Priority Request</a></li>
+                                        <li><a href="<?= base_url() . 'reports/product_request' ?>">Product Request</a></li>
+                                        <li><a href="<?= base_url() . 'reports/banking_request' ?>">Banking Request</a></li>
                                     </ul>
                                 </div>
                             </div>
