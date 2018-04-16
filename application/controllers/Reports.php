@@ -5,17 +5,26 @@ if (!defined('BASEPATH'))
 
 class Reports extends CI_Controller {
 
+//    function __construct() {
+//        parent::__construct();
+//        date_default_timezone_set('Asia/Dhaka');
+//        $this->load->database();
+//        $this->load->helper('url');
+//        $this->load->model('reports_model');
+//        $this->load->model('login_model');
+//        $this->load->library('session');
+//        if ($this->login_model->check_session()) {
+//            redirect('/admin_login/index');
+//        }
+//    }
+    
     function __construct() {
         parent::__construct();
-        date_default_timezone_set('Asia/Dhaka');
-        $this->load->database();
-        $this->load->helper('url');
+
+        $this->load->library("my_session");
+        $this->my_session->checkSession();
+
         $this->load->model('reports_model');
-        $this->load->model('login_model');
-        $this->load->library('session');
-        if ($this->login_model->check_session()) {
-            redirect('/admin_login/index');
-        }
     }
 
     public function rt_test() {
@@ -29,11 +38,11 @@ class Reports extends CI_Controller {
 
     //Active User Report Form Pick
     public function user_status() {
-        $moduleCodes = $this->session->userdata('reportTypeModules');
-        $moduleCodes = explode("|", $moduleCodes);
-        $index = array_search(user_status, $moduleCodes);
-        if ($index > -1) {
-            $this->output->set_template('theme2');
+        //$moduleCodes = $this->session->userdata('reportTypeModules');
+        //$moduleCodes = explode("|", $moduleCodes);
+        //$index = array_search(user_status, $moduleCodes);
+        //if ($index > -1) {
+            //$this->output->set_template('theme2');
             $status = $this->input->get('status');
             try {
                 $data['rows'] = array();
@@ -43,13 +52,15 @@ class Reports extends CI_Controller {
                         $data['rows'] = $r;
                     endif;
                 endif;
-                $this->load->view('reports/user_status', $data);
+                $data['pageTitle'] = "Complaint Info";
+                $data['body_template'] = 'reports/user_status.php';
+                $this->load->view('site_template.php', $data);
             } catch (Exception $e) {
                 echo $e->getMessage();
             }
-        } else {
-            echo "not allowed";
-        }
+        //} else {
+           // echo "not allowed";
+        //}
     }
 
     //Fund transfer Form Adding
