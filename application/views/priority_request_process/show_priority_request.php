@@ -1,5 +1,4 @@
-<title>Priority Request</title>
-<div class="breadcrum">Priority Requests</div>
+<h2 class="title-underlined">Priority Requests</h2>
 
 <div class="container" style="margin-top:50px">
     <form method="post" id="priorityRequestForm" name="priorityRequestForm" action="<?php echo base_url(); ?>priority_request_process/getRequests">
