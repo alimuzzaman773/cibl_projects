@@ -87,7 +87,7 @@ class Help_setup extends CI_Controller {
             $output->pageTitle = "Complaint Info";
             $output->base_url = base_url();
 
-            $output->body_template = "complaint/index.php";
+            $output->body_template = "crud/index.php";
             $this->load->view("site_template.php", $output);
         } catch (Exception $e) {
             show_error($e->getMessage() . ' --- ' . $e->getTraceAsString());
