@@ -23,7 +23,7 @@
 
 
     <button id="writeMessage" data-ng-click="" class="btn btn-success">Write Message</button>
-
+  
 </section>
 
 <?php

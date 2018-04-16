@@ -5,7 +5,7 @@ if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
 class Push_notification extends CI_Controller {
-    
+
     function __construct() {
         parent::__construct();
 
@@ -16,8 +16,7 @@ class Push_notification extends CI_Controller {
     }
 
     public function index() {
-        
-        $data['pageTitle'] = "Push Notification";
+
         $data['sentMessages'] = json_encode($this->push_notification_model->getAllMessages());
         $data['body_template'] = "push_notification/view_all_messages.php";
         $this->load->view("site_template.php", $data);
@@ -42,15 +41,15 @@ class Push_notification extends CI_Controller {
         $moduleCodes = explode("|", $moduleCodes);
         $index = array_search(notification, $moduleCodes);
         if ($index > -1) {
+        
 
-
-            $data['appsUsers'] = json_encode($this->push_notification_model->getAllAppsUsersFroPush());
+        $data['appsUsers'] = json_encode($this->push_notification_model->getAllAppsUsersFroPush());
             $this->output->set_template('theme2');
             $this->load->view('push_notification/write_message.php', $data);
         } else {
             echo "not allowed";
             die();
-        }
+    }
     }
 
     public function sendMessage() {

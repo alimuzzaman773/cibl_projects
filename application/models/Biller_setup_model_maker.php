@@ -4,14 +4,12 @@ class Biller_setup_model_maker extends CI_Model {
 
     function __construct() {
         parent::__construct();
-        date_default_timezone_set('Asia/Dhaka');
-
-        $this->load->database();
+        $this->load->library("my_session");
     }
 
     public function getAllBillers() {
         $this->db->select('biller_setup_mc.*, bill_type.billTypeName');
-        $this->db->where('makerActionBy =', $this->session->userdata('adminUserId'));
+        $this->db->where('makerActionBy =', $this->my_session->userId);
         $this->db->or_where('mcStatus =', 1);
         $this->db->from('biller_setup_mc');
         $this->db->join('bill_type', 'biller_setup_mc.billTypeCode = bill_type.billTypeCode');
