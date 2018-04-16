@@ -4,41 +4,54 @@ class Priority_request_process extends CI_Controller {
 
     function __construct() {
         parent::__construct();
-        date_default_timezone_set('Asia/Dhaka');
 
-        $this->load->helper('url');
-        $this->load->model('priority_request_process_model');
-        $this->load->model('common_model');
+        $this->load->library("my_session");
+        $this->my_session->checkSession();
 
-        $this->load->model('login_model');
-        $this->load->library('session');
-        if ($this->login_model->check_session()) {
-            redirect('/admin_login/index');
-        }
+        $this->load->model(array('priority_request_process_model', 'common_model', 'login_model'));
     }
 
     public function getRequests() {
-        $moduleCodes = $this->session->userdata('serviceRequestModules');
-        $moduleCodes = explode("|", $moduleCodes);
-        $index = array_search(priority_sr, $moduleCodes);
-        if ($index > -1) {
 
+        $moduleName = "Priority";
+        $data['TypeCode'] = isset($_POST['request']) ? $_POST['request'] : "0";
+        $data['service_list'] = $this->priority_request_process_model->getAllServiceTypeByModule($moduleName);
 
-            $moduleName = "Priority";
-            $data['TypeCode'] = isset($_POST['request']) ? $_POST['request'] : "0";
-            $data['service_list'] = $this->priority_request_process_model->getAllServiceTypeByModule($moduleName);
-
-            if ($data['TypeCode'] == "0") {
-                $data['requestList'] = json_encode($this->priority_request_process_model->getAllRequest());
-            } else {
-                $data['requestList'] = json_encode($this->priority_request_process_model->getAllRequestByTypeCode($data['TypeCode']));
-            }
-            $this->output->set_template('theme2');
-            $this->load->view('priority_request_process/show_priority_request', $data);
+        if ($data['TypeCode'] == "0") {
+            $data['requestList'] = json_encode($this->priority_request_process_model->getAllRequest());
         } else {
-            echo "not allowed";
-            die();
+            $data['requestList'] = json_encode($this->priority_request_process_model->getAllRequestByTypeCode($data['TypeCode']));
         }
+
+        $data["pageTitle"]="Priority Request";
+        $data["body_template"] = "priority_request_process/show_priority_request.php";
+        $this->load->view('site_template.php', $data);
+        
+
+
+        /*
+          $moduleCodes = $this->session->userdata('serviceRequestModules');
+          $moduleCodes = explode("|", $moduleCodes);
+          $index = array_search(priority_sr, $moduleCodes);
+          if ($index > -1) {
+
+
+          $moduleName = "Priority";
+          $data['TypeCode'] = isset($_POST['request']) ? $_POST['request'] : "0";
+          $data['service_list'] = $this->priority_request_process_model->getAllServiceTypeByModule($moduleName);
+
+          if ($data['TypeCode'] == "0") {
+          $data['requestList'] = json_encode($this->priority_request_process_model->getAllRequest());
+          } else {
+          $data['requestList'] = json_encode($this->priority_request_process_model->getAllRequestByTypeCode($data['TypeCode']));
+          }
+          $this->output->set_template('theme2');
+          $this->load->view('priority_request_process/show_priority_request', $data);
+          } else {
+          echo "not allowed";
+          die();
+          }
+         * */
     }
 
     public function processRequestById($id) {
