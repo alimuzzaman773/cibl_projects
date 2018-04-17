@@ -44,8 +44,8 @@
                             <td>{{i.isLocked}}</td>
                             <td>{{i.isActive}}</td>
                             <td>{{i.status}}</td>
-                            <td>
-                                <span data-ng-class="{'text-success': i.isActive=1, 'text-warning': i.isActive=0}">{{i.isActive=1 ? 'Active' : 'Inactive'}}</span>
+                            <td>                                
+                                <span data-ng-class="{'text-success': i.isActive=='1', 'text-warning': i.isActive=='0'}">{{i.isActive=='1' ? 'Active' : 'Inactive'}}</span>
                             </td>
                             <td>
                                 <div class="dropdown pull-right">
@@ -59,12 +59,12 @@
                                             </a>
                                         </li> 
                                         <li>
-                                            <a data-ng-click="activate(i.adminUserId);">
+                                            <a data-ng-click="activate(i.adminUserId);" data-ng-if="i.isActive == 0">
                                                 <i class="glyphicon glyphicon-ok"></i> Active
                                             </a>
                                         </li>
                                          <li>
-                                            <a data-ng-click="deactivate(i.adminUserId);">
+                                            <a data-ng-click="deactivate(i.adminUserId);" data-ng-if="i.isActive == 1">
                                                 <i class="glyphicon glyphicon-remove"></i> Inactive
                                             </a>
                                         </li>
