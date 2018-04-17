@@ -6,7 +6,7 @@ class Biller_setup_maker extends CI_Controller {
         parent::__construct();
         $this->load->library("my_session");
         $this->my_session->checkSession();
-        $this->load->model(array('biller_setup_model_maker', 'login_model'));
+        $this->load->model('biller_setup_model_maker');
     }
 
     public function index() {
@@ -18,15 +18,6 @@ class Biller_setup_maker extends CI_Controller {
     }
 
     public function addNewBiller($selectedActionName = NULL) {
-        //  $this->output->set_template('theme2');
-        // $moduleCodes = $this->session->userdata('moduleCodes');
-        //   $actionCodes = $this->session->userdata('actionCodes');
-        // $moduleCodes = explode("|", $moduleCodes);
-        // $actionCodes = explode("#", $actionCodes);
-        //  $index = array_search(biller_setup_module, $moduleCodes);
-        //  if ($index > -1) {
-        //  $moduleWiseActionCodes = $actionCodes[$index];
-        //  if (strpos($moduleWiseActionCodes, "add") > -1) {
         $data['billTypes'] = $this->biller_setup_model_maker->getAllBillTypes();
         $data['selectedActionName'] = $selectedActionName;
         $data['message'] = "";
@@ -34,10 +25,6 @@ class Biller_setup_maker extends CI_Controller {
         $data["pageTitle"] = "Add Biller";
         $data["body_template"] = "biller_setup_maker/add_biller.php";
         $this->load->view('site_template.php', $data);
-        //  }
-        //  } else {
-        //      echo "not allowed";
-        //  }
     }
 
     public function insertNewBiller() {
