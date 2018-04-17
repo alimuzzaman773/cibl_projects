@@ -1,13 +1,9 @@
 var app = app || {};
-var billerModule = angular.module('billerModule',[])
-.controller('billerController',['$scope','$http',function($scope, $http){
+var AdminGroupModule = angular.module('AdminGroupModule',[])
+.controller('AdminGroupController',['$scope','$http',function($scope, $http){
         $scope.biller_data = [];
         
         $scope.activate = function($billerId){
-            if(!confirm("Are you sure?")){
-                return false;
-            }
-            
             var $postBillerId = [];
             if($billerId == undefined){
                 angular.forEach($scope.biller_data,function(v,i){
@@ -49,10 +45,6 @@ var billerModule = angular.module('billerModule',[])
         };
         
         $scope.deactivate = function($billerId){
-            if(!confirm("Are you sure?")){
-                return false;
-            }
-            
             var $postBillerId = [];
             if($billerId == undefined){
                 angular.forEach($scope.biller_data,function(v,i){
@@ -96,8 +88,8 @@ var billerModule = angular.module('billerModule',[])
         };
        
         $scope.init = function(){
-            $scope.biller_data = app.billerData;
+            $scope.group_data = app.groupDatas;
         };
         $scope.init();
 }]);
-app.addModules('billerModule', 'billerModule');
+app.addModules('AdminGroupModule', 'AdminGroupModule');

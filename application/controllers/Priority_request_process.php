@@ -13,134 +13,128 @@ class Priority_request_process extends CI_Controller {
 
     public function getRequests() {
 
-        $moduleName = "Priority";
-        $data['TypeCode'] = isset($_POST['request']) ? $_POST['request'] : "0";
-        $data['service_list'] = $this->priority_request_process_model->getAllServiceTypeByModule($moduleName);
-
-        if ($data['TypeCode'] == "0") {
-            $data['requestList'] = json_encode($this->priority_request_process_model->getAllRequest());
-        } else {
-            $data['requestList'] = json_encode($this->priority_request_process_model->getAllRequestByTypeCode($data['TypeCode']));
-        }
-
-        $data["pageTitle"]="Priority Request";
+        $data['service_list'] = $this->priority_request_process_model->getAllServiceTypeByModule("Priority");
+        $data["pageTitle"] = "Priority Request";
         $data["body_template"] = "priority_request_process/show_priority_request.php";
         $this->load->view('site_template.php', $data);
-        
+    }
 
+    function get_requests_ajax() {
+        $params['limit'] = (int) $this->input->get("limit", true);
+        $params['offset'] = (int) $this->input->get("offset", true);
+        $params['get_count'] = (bool) $this->input->get("get_count", true);
+        $params['type_code'] = $this->input->get("type_code", true);
 
-        /*
-          $moduleCodes = $this->session->userdata('serviceRequestModules');
-          $moduleCodes = explode("|", $moduleCodes);
-          $index = array_search(priority_sr, $moduleCodes);
-          if ($index > -1) {
+        $data['total'] = array();
+        $data['priority_list'] = array();
 
-
-          $moduleName = "Priority";
-          $data['TypeCode'] = isset($_POST['request']) ? $_POST['request'] : "0";
-          $data['service_list'] = $this->priority_request_process_model->getAllServiceTypeByModule($moduleName);
-
-          if ($data['TypeCode'] == "0") {
-          $data['requestList'] = json_encode($this->priority_request_process_model->getAllRequest());
-          } else {
-          $data['requestList'] = json_encode($this->priority_request_process_model->getAllRequestByTypeCode($data['TypeCode']));
-          }
-          $this->output->set_template('theme2');
-          $this->load->view('priority_request_process/show_priority_request', $data);
-          } else {
-          echo "not allowed";
-          die();
-          }
-         * */
+        if ((int) $params['get_count'] > 0) {
+            $countParams = $params;
+            unset($countParams['limit']);
+            unset($countParams['offset']);
+            $countParams['count'] = true;
+            $countRes = $this->priority_request_process_model->getAllRequestByTypeCode($countParams);
+            if ($countRes):
+                $data['total'] = $countRes->row()->total;
+            endif;
+        }
+        $result = $this->priority_request_process_model->getAllRequestByTypeCode($params);
+        if ($result) {
+            $data['priority_list'] = $result->result();
+        }
+        my_json_output($data);
     }
 
     public function processRequestById($id) {
 
 
-        $moduleCodes = $this->session->userdata('serviceRequestModules');
-        $moduleCodes = explode("|", $moduleCodes);
-        $index = array_search(priority_sr, $moduleCodes);
-        if ($index > -1) {
+        // $moduleCodes = $this->session->userdata('serviceRequestModules');
+        // $moduleCodes = explode("|", $moduleCodes);
+        // $index = array_search(priority_sr, $moduleCodes);
+        // if ($index > -1) {
 
 
 
 
-            $request = $this->priority_request_process_model->getSingleRequestById($id);
+        $request = $this->priority_request_process_model->getSingleRequestById($id);
 
 
-            $mailData['to'] = "";
-            $mailData['body'] = "";
-            $mailData['subject'] = "";
+        $mailData['to'] = "";
+        $mailData['body'] = "";
+        $mailData['subject'] = "";
 
-            $strings['airPortPickDrop'] = "referenceNo,customerID,name,cardNo,requestDtTm,noOfPeople,altContact,remarks,jAirLineName,jFlightNo,jReportingDtTm,jPickUpAddress,jDropOffAddress,rAirLineName,rFlightNo,rReportingDtTm,rPickUpAddress,rDropOffAddress,prefferedVehicle";
-            $strings['aiPortMeetGreet'] = "referenceNo,customerID,name,cardNo,requestDtTm,noOfPeople,altContact,remarks,jAirLineName,jFlightNo,jReportingDtTm,rAirLineName,rFlightNo,rReportingDtTm";
-            $strings['skyLounge'] = "referenceNo,customerID,name,cardNo,requestDtTm,noOfPeople,altContact,remarks,jAirLineName,jFlightNo,jReportingDtTm";
-            $strings['rmCallback'] = "referenceNo,name,contactNo,email,myLocation,preferredCallDtTm,callBackFor";
+        $strings['airPortPickDrop'] = "referenceNo,customerID,name,cardNo,requestDtTm,noOfPeople,altContact,remarks,jAirLineName,jFlightNo,jReportingDtTm,jPickUpAddress,jDropOffAddress,rAirLineName,rFlightNo,rReportingDtTm,rPickUpAddress,rDropOffAddress,prefferedVehicle";
+        $strings['aiPortMeetGreet'] = "referenceNo,customerID,name,cardNo,requestDtTm,noOfPeople,altContact,remarks,jAirLineName,jFlightNo,jReportingDtTm,rAirLineName,rFlightNo,rReportingDtTm";
+        $strings['skyLounge'] = "referenceNo,customerID,name,cardNo,requestDtTm,noOfPeople,altContact,remarks,jAirLineName,jFlightNo,jReportingDtTm";
+        $strings['rmCallback'] = "referenceNo,name,contactNo,email,myLocation,preferredCallDtTm,callBackFor";
 
-            $replacearray = array('typeCode' => 'Type Code',
-                'referenceNo' => 'Reference No',
-                'customerID' => 'Customer ID',
-                'name' => 'Name',
-                'contactNo' => 'Contact No.',
-                'email' => 'Email',
-                'cardNo' => 'Card No',
-                'requestDtTm' => 'Request Date',
-                'noOfPeople' => 'No. of People',
-                'altContact' => 'Contact No.',
-                'remarks' => 'Remarks',
-                'jAirLineName' => 'Journey Air Line Name',
-                'jFlightNo' => 'Journey Flight Number',
-                'jReportingDtTm' => 'Journey Reporting Date',
-                'jPickUpAddress' => 'Journey Pickup Address',
-                'jDropOffAddress' => 'Journey Drop off Address',
-                'rAirLineName' => 'Return Air Line Name',
-                'rFlightNo' => 'Return Flight Number',
-                'rReportingDtTm' => 'Return Reporting Date',
-                'rPickUpAddress' => 'Return Pickup Address',
-                'rDropOffAddress' => 'Return Drop off Address',
-                'myLocation' => 'My Location',
-                'preferredCallDtTm' => 'Preferred Call Date',
-                'prefferedVehicle' => 'Preferred Vehicle Type',
-                'callBackFor' => 'Call Back For');
+        $replacearray = array('typeCode' => 'Type Code',
+            'referenceNo' => 'Reference No',
+            'customerID' => 'Customer ID',
+            'name' => 'Name',
+            'contactNo' => 'Contact No.',
+            'email' => 'Email',
+            'cardNo' => 'Card No',
+            'requestDtTm' => 'Request Date',
+            'noOfPeople' => 'No. of People',
+            'altContact' => 'Contact No.',
+            'remarks' => 'Remarks',
+            'jAirLineName' => 'Journey Air Line Name',
+            'jFlightNo' => 'Journey Flight Number',
+            'jReportingDtTm' => 'Journey Reporting Date',
+            'jPickUpAddress' => 'Journey Pickup Address',
+            'jDropOffAddress' => 'Journey Drop off Address',
+            'rAirLineName' => 'Return Air Line Name',
+            'rFlightNo' => 'Return Flight Number',
+            'rReportingDtTm' => 'Return Reporting Date',
+            'rPickUpAddress' => 'Return Pickup Address',
+            'rDropOffAddress' => 'Return Drop off Address',
+            'myLocation' => 'My Location',
+            'preferredCallDtTm' => 'Preferred Call Date',
+            'prefferedVehicle' => 'Preferred Vehicle Type',
+            'callBackFor' => 'Call Back For');
 
 
 
-            if ($request['typeCode'] == "01") {
-                $mailData['subject'] = "Airport Pick & Drop";
-                foreach ($request as $key => $value) {
-                    if (strpos($strings['airPortPickDrop'], $key) > - 1) {
-                        $mailData['body'] .= "<p>" . $replacearray[$key] . ':  ' . $value . "<p>";
-                    }
-                }
-            } else if ($request['typeCode'] == "02") {
-                $mailData['subject'] = "Airport Meet & Greet";
-                foreach ($request as $key => $value) {
-                    if (strpos($strings['aiPortMeetGreet'], $key) > - 1) {
-                        $mailData['body'] .= "<p>" . $replacearray[$key] . ':  ' . $value . "<p>";
-                    }
-                }
-            } else if ($request['typeCode'] == "03") {
-                $mailData['subject'] = "Sky Lounge";
-                foreach ($request as $key => $value) {
-                    if (strpos($strings['skyLounge'], $key) > - 1) {
-                        $mailData['body'] .= "<p>" . $replacearray[$key] . ':  ' . $value . "<p>";
-                    }
-                }
-            } else if ($request['typeCode'] == "04") {
-                $mailData['subject'] = "RM Call Back";
-                foreach ($request as $key => $value) {
-                    if (strpos($strings['rmCallback'], $key) > - 1) {
-                        $mailData['body'] .= "<p>" . $replacearray[$key] . ':  ' . $value . "<p>";
-                    }
+        if ($request['typeCode'] == "01") {
+            $mailData['subject'] = "Airport Pick & Drop";
+            foreach ($request as $key => $value) {
+                if (strpos($strings['airPortPickDrop'], $key) > - 1) {
+                    $mailData['body'] .= "<p>" . $replacearray[$key] . ':  ' . $value . "<p>";
                 }
             }
-            $mailData['serviceRequestID'] = $id;
-            $this->output->set_template('theme2');
-            $this->load->view('priority_request_process/mail_form', $mailData);
-        } else {
-            echo "not allowed";
-            die();
+        } else if ($request['typeCode'] == "02") {
+            $mailData['subject'] = "Airport Meet & Greet";
+            foreach ($request as $key => $value) {
+                if (strpos($strings['aiPortMeetGreet'], $key) > - 1) {
+                    $mailData['body'] .= "<p>" . $replacearray[$key] . ':  ' . $value . "<p>";
+                }
+            }
+        } else if ($request['typeCode'] == "03") {
+            $mailData['subject'] = "Sky Lounge";
+            foreach ($request as $key => $value) {
+                if (strpos($strings['skyLounge'], $key) > - 1) {
+                    $mailData['body'] .= "<p>" . $replacearray[$key] . ':  ' . $value . "<p>";
+                }
+            }
+        } else if ($request['typeCode'] == "04") {
+            $mailData['subject'] = "RM Call Back";
+            foreach ($request as $key => $value) {
+                if (strpos($strings['rmCallback'], $key) > - 1) {
+                    $mailData['body'] .= "<p>" . $replacearray[$key] . ':  ' . $value . "<p>";
+                }
+            }
         }
+        $mailData['serviceRequestID'] = $id;
+
+        $mailData["pageTitle"] = "Priority Request";
+        $mailData["body_template"] = "priority_request_process/mail_form.php";
+        $this->load->view('site_template.php', $mailData);
+
+        // } else {
+        //   echo "not allowed";
+        //   die();
+        //  }
     }
 
     public function sendMail() {

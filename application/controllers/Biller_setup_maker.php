@@ -10,7 +10,9 @@ class Biller_setup_maker extends CI_Controller {
     }
 
     public function index() {
-
+        
+        
+        
         $data["billerData"] = json_encode($this->biller_setup_model_maker->getAllBillers());
         $data["pageTitle"] = "Biller Setup";
         $data["body_template"] = "biller_setup_maker/overall_view.php";
@@ -71,7 +73,7 @@ class Biller_setup_maker extends CI_Controller {
         $billerNameCheck = $this->biller_setup_model_maker->getBillerByCode($data['billerCode']);
 
         if (!empty($billerNameCheck)) {
-            
+
             $data['message'] = 'The biller with code "' . $data['billerCode'] . '" already exists';
             $data['billTypes'] = $this->biller_setup_model_maker->getAllBillTypes();
             $data['selectedActionName'] = $data['makerAction'];
@@ -79,7 +81,6 @@ class Biller_setup_maker extends CI_Controller {
             $data["pageTitle"] = "Add Biller";
             $data["body_template"] = "biller_setup_maker/add_biller.php";
             $this->load->view('site_template.php', $data);
-            
         } else {
             $this->biller_setup_model_maker->insertBillerInfo($data);
             redirect('Biller_setup_maker');

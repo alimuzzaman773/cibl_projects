@@ -34,9 +34,12 @@ class Priority_request_process_model extends CI_Model {
         return $query->result();
     }
 
-    public function getAllRequestByTypeCode($typecode) {
-        $this->db->order_by("serviceRequestID", "desc");
-        $this->db->select('service_request.serviceRequestID,
+    public function getAllRequestByTypeCode($params = array()) {
+
+        if (isset($params['count']) && $params['count'] == true) {
+            $this->db->select("COUNT(serviceRequestID) as total");
+        } else {
+           $this->db->select('service_request.serviceRequestID,
                            service_request.typeCode,
                            service_request.referenceNo,
                            service_request.name,
@@ -45,14 +48,25 @@ class Priority_request_process_model extends CI_Model {
                            service_request.requestDtTm,
                            service_request.status,
                            service_type.serviceName,
-                           apps_users.eblSkyId'
-        );
+                           apps_users.eblSkyId',FALSE);
+        }
+        
         $this->db->from('service_request');
         $this->db->join('service_type', 'service_request.typeCode = service_type.serviceTypeCode');
         $this->db->join('apps_users', 'service_request.skyId = apps_users.skyId');
-        $this->db->where("typeCode = '$typecode'");
+
+        if (isset($params['type_code']) && trim($params['type_code']) != "") {
+            $this->db->where("typeCode", $params['type_code']);
+        }
+        $this->db->order_by("serviceRequestID", "desc");
+
+        if (isset($params['limit']) && (int) $params['limit'] > 0) {
+            $offset = (isset($params['offset'])) ? $params['offset'] : 0;
+            $this->db->limit($params['limit'], $offset);
+        }
+        
         $query = $this->db->get();
-        return $query->result();
+        return $query->num_rows() > 0 ? $query : false;
     }
 
     public function statusChange($id, $mailData, $bodyInstruction) {

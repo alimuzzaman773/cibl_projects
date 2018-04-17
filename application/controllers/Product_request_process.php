@@ -7,56 +7,31 @@ class Product_request_process extends CI_Controller {
 
     function __construct() {
         parent::__construct();
-        date_default_timezone_set('Asia/Dhaka');
-
-        $this->load->helper('url');
-        $this->load->model('product_request_process_model');
-        $this->load->model('common_model'); // for sending mail
-
-        $this->load->model('login_model');
-        $this->load->library('session');
-        if ($this->login_model->check_session()) {
-            redirect('/admin_login/index');
-        }
-    }
-
-    public function index() {
-        $moduleCodes = $this->session->userdata('serviceRequestModules');
-        $moduleCodes = explode("|", $moduleCodes);
-        $index = array_search(product_sr, $moduleCodes);
-        if ($index > -1) {
-
-            $this->output->set_template('theme2');
-            $data['fromDate'] = "";
-            $data['toDate'] = "";
-            $data['productRequest'] = "";
-            $this->load->view('product_request_process/show_product_request.php', $data);
-        } else {
-            echo "not allowed";
-            die();
-        }
+        $this->load->library("my_session");
+        $this->my_session->checkSession();
+        $this->load->model(array('product_request_process_model','common_model','login_model'));
     }
 
     public function getRequest() {
-        $moduleCodes = $this->session->userdata('serviceRequestModules');
-        $moduleCodes = explode("|", $moduleCodes);
-        $index = array_search(product_sr, $moduleCodes);
-        if ($index > -1) {
-
-            if (isset($_GET['fromDate']) && isset($_GET['toDate'])) {
-                $data['fromDate'] = $_GET['fromDate'];
-                $data['toDate'] = $_GET['toDate'];
-                $data['productRequest'] = json_encode($this->product_request_process_model->getProductRequestByDate($data));
-                $this->output->set_template('theme2');
-                $this->load->view('product_request_process/show_product_request.php', $data);
-            }
-        } else {
-            echo "not allowed";
-            die();
+        $data["pageTitle"] = "Product Request";
+        $data["body_template"] = "product_request_process/show_product_request.php";
+        $this->load->view('site_template.php', $data);
+    }
+/*
+    public function getRequest() {
+        $data["fromDate"] = $this->input->get("fromDate");
+        $data["toDate"] = $this->input->get("toDate");
+        if ($data["fromDate"] && $data["toDate"]) {
+            $data["pageTitle"] = "Product Request";
+            $data['productRequest'] = json_encode($this->product_request_process_model->getProductRequestByDate($data));
+            $data["body_template"] = "product_request_process/show_product_request.php";
+            $this->load->view('site_template.php', $data);
         }
     }
+    */
 
     public function processRequestById($id, $fromDate, $toDate) {
+        /*
         $moduleCodes = $this->session->userdata('serviceRequestModules');
         $moduleCodes = explode("|", $moduleCodes);
         $index = array_search(product_sr, $moduleCodes);
@@ -97,6 +72,8 @@ class Product_request_process extends CI_Controller {
             echo "not allowed";
             die();
         }
+        
+         */
     }
 
     public function sendMail() {

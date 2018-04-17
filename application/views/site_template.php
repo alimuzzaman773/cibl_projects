@@ -89,11 +89,9 @@
         <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/ko-dt-bootstrap/cog.js"></script>
         <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/ko-dt-bootstrap/cog.utils.js"></script>
         <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/ko-dt-bootstrap/knockout_datatable.js"></script>
+        <script src="<?php echo base_url(); ?>assets/data_table/data_table.min.js"></script>
+       
 
-
-            <script src="<?php echo base_url(); ?>assets/data_table/data_table.min.js"></script>
-
-        
     </head>
 
     <body>

@@ -4,25 +4,18 @@ class Banking_service_request extends CI_Controller {
 
     function __construct() {
         parent::__construct();
-        date_default_timezone_set('Asia/Dhaka');
-
-        $this->load->helper('url');
-        $this->load->model('banking_service_request_model');
+      $this->load->library("my_session");
+        $this->my_session->checkSession();
+        $this->load->model(array('banking_service_request_model','common_model','login_model'));
         $this->load->model('common_model'); // for sending mail
-
-        $this->load->model('login_model');
-        $this->load->library('session');
-        if ($this->login_model->check_session()) {
-            redirect('/admin_login/index');
-        }
     }
 
     public function getRequests() {
 
-        $moduleCodes = $this->session->userdata('serviceRequestModules');
-        $moduleCodes = explode("|", $moduleCodes);
-        $index = array_search(banking_sr, $moduleCodes);
-        if ($index > -1) {
+        //$moduleCodes = $this->session->userdata('serviceRequestModules');
+        //$moduleCodes = explode("|", $moduleCodes);
+        //$index = array_search(banking_sr, $moduleCodes);
+        //if ($index > -1) {
 
 
             $moduleName = "Banking";
@@ -45,20 +38,21 @@ class Banking_service_request extends CI_Controller {
                     $data['BankingRequestList'] = json_encode($this->banking_service_request_model->getAllBankingRequestByTypeCode($_POST['Crequest']));
                 }
             }
-
-            $this->output->set_template('theme2');
-            $this->load->view('banking_service_request/show_banking_request.php', $data);
-        } else {
-            echo "not allowed";
-            die();
-        }
+            
+            $data["pageTitle"]="Banking Service";
+            $data["body_template"]="banking_service_request/show_banking_request.php";
+            $this->load->view('site_template.php', $data);
+       // } else {
+           // echo "not allowed";
+          //  die();
+        //}
     }
 
     public function processRequestById($id) {
-        $moduleCodes = $this->session->userdata('serviceRequestModules');
-        $moduleCodes = explode("|", $moduleCodes);
-        $index = array_search(banking_sr, $moduleCodes);
-        if ($index > -1) {
+        //$moduleCodes = $this->session->userdata('serviceRequestModules');
+        //$moduleCodes = explode("|", $moduleCodes);
+        //$index = array_search(banking_sr, $moduleCodes);
+       // if ($index > -1) {
 
 
 
@@ -227,12 +221,15 @@ class Banking_service_request extends CI_Controller {
             }
 
             $mailData['serviceId'] = $id;
-            $this->output->set_template('theme2');
-            $this->load->view('banking_service_request/mail_form', $mailData);
-        } else {
-            echo "not allowed";
-            die();
-        }
+           
+            $mailData["pageTitle"]="Banking Service";
+            $mailData["body_template"]="banking_service_request/mail_form.php";
+            $this->load->view('site_template.php', $mailData);
+            
+        //} else {
+           // echo "not allowed";
+           // die();
+       // }
     }
 
     public function sendMail() {

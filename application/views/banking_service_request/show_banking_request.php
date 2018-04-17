@@ -1,5 +1,4 @@
-<title>Banking Request</title>
-<div class="breadcrum">Banking Requests</div>
+<h2 class="title-underlined">Banking Requests</h2>
 
 <div class="container" style="margin-top:50px">
     <form method="post" id="bankingRequestForm" name="bankingRequestForm" action="<?php echo base_url(); ?>banking_service_request/getRequests">
@@ -7,7 +6,7 @@
         <tr>
             <th align="left" scope="">Select Service Type</th>
             <td>
-                <select id="Prequest" name="Prequest"  onchange="generateDropDown();">
+                <select id="Prequest" name="Prequest"  onchange="generateDropDown();" class="form-control">
                     <option value="0">Select Service Type</option>
                     <?php foreach ($parentServiceList as $item) { ?>
                       <option value="<?= $item->serviceTypeCode ?>"><?= $item->serviceName ?></option>
@@ -15,10 +14,8 @@
                    
                 </select>
             </td>
-
-
             <td>
-                <select id="Crequest" name="Crequest"  onchange="generateList();">
+                <select id="Crequest" name="Crequest"  onchange="generateList();" class="form-control">
                     <option value="0">Select Service Type</option>
                     <?php foreach ($childServiceList as $item) { ?>
                       <option value="<?= $item->serviceTypeCode ?>"><?= $item->serviceName ?></option>
@@ -26,14 +23,9 @@
                    
                 </select>
             </td>
-
         </tr>   
     </table>
     </form>
-
-
-    <br/>
-    <br/>
 
     <table data-bind="dataTable: { dataSource : records, rowTemplate: 'rowTemplate',
            options: {
@@ -143,6 +135,5 @@
 
     }
     ko.applyBindings(new vm());
-
     
 </script>
