@@ -1,4 +1,4 @@
-<div class="container"
+<div class="container">
      <div class="row">
         <div class="col-sm-12">
             <h3 class="title-underlined ng-scope">

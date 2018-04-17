@@ -9,91 +9,69 @@ class Admin_users_maker extends CI_Controller {
         parent::__construct();
         $this->load->library("my_session");
         $this->my_session->checkSession();
-        $this->load->model(array('admin_users_model_maker', 'login_model'));
+
+        $this->load->model('admin_users_model_maker');
         $this->load->library('BOcrypter');
     }
 
-    public function index() {
-        $this->output->set_template('theme2');
-        $moduleCodes = $this->session->userdata('moduleCodes');
-        $actionCodes = $this->session->userdata('actionCodes');
-        $actionNames = $this->session->userdata('actionNames');
-        $moduleCodes = explode("|", $moduleCodes);
-        $actionCodes = explode("#", $actionCodes);
-        $actionNames = explode("#", $actionNames);
-        $index = array_search(admin_user_module, $moduleCodes);
-        if ($index > -1) {
-            $actionCodes = json_encode(explode(",", $actionCodes[$index]));
-            $actionNames = json_encode(explode(",", $actionNames[$index]));
-            $adminUserData = $this->admin_users_model_maker->getAllUsers();
+    function index() {
+        $adminUserData = $this->admin_users_model_maker->getAllUsers();
 
-            foreach ($adminUserData as $index => $value) {
-                $adminUserData[$index]->email = $this->bocrypter->Decrypt($adminUserData[$index]->email);
-            }
-
-            $data['adminUsers'] = json_encode($adminUserData);
-            $data['actionCodes'] = $actionCodes;
-            $data['actionNames'] = $actionNames;
-            //$data['adminUserId'] = $this->session->userdata('adminUserId');
-            $this->load->view('admin_users_maker/all_admin_users_view.php', $data);
-        } else {
-            echo "not allowed";
+        foreach ($adminUserData as $index => $value) {
+            $adminUserData[$index]->email = $this->bocrypter->Decrypt($adminUserData[$index]->email);
         }
+
+        $data['adminUsers'] = json_encode($adminUserData);
+        $data['pageTitle'] = 'Admin User';
+        $data["body_template"] = "admin_users_maker/all_admin_users_view.php";
+        $this->load->view('site_template.php', $data);
     }
 
-    public function addNewUser($selectedActionName = NULL) {
-        $this->output->set_template('theme2');
-        $moduleCodes = $this->session->userdata('moduleCodes');
-        $actionCodes = $this->session->userdata('actionCodes');
-        $moduleCodes = explode("|", $moduleCodes);
-        $actionCodes = explode("#", $actionCodes);
-        $index = array_search(admin_user_module, $moduleCodes);
-        if ($index > -1) {
-            $moduleWiseActionCodes = $actionCodes[$index];
-            if (strpos($moduleWiseActionCodes, "add") > -1) {
-                $data['userGroups'] = $this->admin_users_model_maker->getAllGroups();
-                $data['selectedActionName'] = $selectedActionName;
-                $data['message'] = "";
-                $this->load->view('admin_users_maker/add_new_admin_users.php', $data);
-            }
-        } else {
-            echo "not allowed";
-        }
+    function addNewUser($selectedActionName = NULL) {
+        $data['userGroups'] = $this->admin_users_model_maker->getAllGroups();
+        $data['selectedActionName'] = $selectedActionName;
+        $data['message'] = "";
+
+        $data["pageTitle"] = "Add Admin User";
+        $data["body_template"] = "admin_users_maker/add_new_admin_users.php";
+        $this->load->view('site_template.php', $data);
     }
 
     public function insertNewUser() {
-        $data['fullName'] = $_POST['fullName'];
-        $data['adminUserName'] = $_POST['userId'];
-        $data['adminUserGroup'] = $_POST['group'];
+        $password = $this->input->post('password1');
+        $data['fullName'] = $this->input->post('fullName');
+        $data['adminUserName'] = $this->input->post('userId');
+        $data['adminUserGroup'] = $this->input->post('group');
         $data['passwordSetDtTm'] = 0;
         $data['passwordSalt'] = 12;
-        $data['encryptedPassword'] = $this->bocrypter->Encrypt($_POST['password1']);
+        $data['encryptedPassword'] = $this->bocrypter->Encrypt($password);
         $data['passwordChangeTms'] = 0;
         $data['passwordChangeDtTm'] = 0;
         $data['isReset'] = 0;
         $data['passwordResetTms'] = 0;
-        $data['email'] = $this->bocrypter->Encrypt($_POST['email']);
-        $data['dob'] = $_POST['dob'];
+        $data['email'] = $this->bocrypter->Encrypt($this->input->post('email'));
+        $data['dob'] = $this->input->post('dob');
         $data['mcStatus'] = 0;
-        $data['makerAction'] = $_POST['selectedActionName'];
+        $data['makerAction'] = $this->input->post('selectedActionName');
         $data['makerActionCode'] = 'add';
         $data['makerActionDt'] = date("y-m-d");
         $data['makerActionTm'] = date("G:i:s");
-        $data['makerActionBy'] = $this->session->userdata('adminUserId');
+        $data['makerActionBy'] = $this->my_session->adminUserId;
         $data['isLocked'] = 0;
         $data['isPublished'] = 0;
         $data['isActive'] = 1;
-        $data['createdBy'] = $this->session->userdata('adminUserId');
+        $data['createdBy'] = $this->my_session->adminUserId;
         $data['createdDtTm'] = input_date();
 
         $userNameCheck = $this->admin_users_model_maker->getUserByName($data['adminUserName']); // To check if user exists
 
         if ($userNameCheck) {
-            $this->output->set_template('theme2');
             $data['message'] = 'The User "' . $data['adminUserName'] . '" already exists';
             $data['userGroups'] = $this->admin_users_model_maker->getAllGroups();
-            $data['selectedActionName'] = $data['makerAction'];
-            $this->load->view('admin_users_maker/add_new_admin_users.php', $data);
+
+            $data["pageTitle"] = "Add Admin User";
+            $data["body_template"] = "admin_users_maker/add_new_admin_users.php";
+            $this->load->view('site_template.php', $data);
         } else {
             $this->admin_users_model_maker->insertAdminUserInfo($data);
             redirect('admin_users_maker');
@@ -101,55 +79,43 @@ class Admin_users_maker extends CI_Controller {
     }
 
     public function editUser($data, $selectedActionName = NULL, $message = NULL) {
-        $this->output->set_template('theme2');
-        $moduleCodes = $this->session->userdata('moduleCodes');
-        $actionCodes = $this->session->userdata('actionCodes');
-        $moduleCodes = explode("|", $moduleCodes);
-        $actionCodes = explode("#", $actionCodes);
-        $index = array_search(admin_user_module, $moduleCodes);
-        if ($index > -1) {
-            $moduleWiseActionCodes = $actionCodes[$index];
-            if (strpos($moduleWiseActionCodes, "edit") > -1) {
+        $tableData = $this->admin_users_model_maker->getAdminUserById($data);
 
-                $tableData = $this->admin_users_model_maker->getAdminUserById($data);
-
-                $tableData['email'] = $this->bocrypter->Decrypt($tableData['email']);
+        $tableData['email'] = $this->bocrypter->Decrypt($tableData['email']);
 
 
-                $viewData['checkerActionComment'] = $tableData['checkerActionComment'];
+        $viewData['checkerActionComment'] = $tableData['checkerActionComment'];
 
-                if ($viewData['checkerActionComment'] != NULL) {
-                    $viewData['reasonModeOfDisplay'] = "display: block;";
-                } else {
-                    $viewData['reasonModeOfDisplay'] = "display: none;";
-                }
-
-                $viewData['adminUserData'] = $tableData;
-                $viewData['userGroups'] = $this->admin_users_model_maker->getAllGroups();
-                $viewData['selectedActionName'] = $selectedActionName;
-                $viewData['message'] = $message;
-
-
-                $this->load->view('admin_users_maker/edit_admin_users.php', $viewData);
-            }
+        if ($viewData['checkerActionComment'] != NULL) {
+            $viewData['reasonModeOfDisplay'] = "display: block;";
         } else {
-            echo "not allowed";
+            $viewData['reasonModeOfDisplay'] = "display: none;";
         }
+
+        $viewData['adminUserData'] = $tableData;
+        $viewData['userGroups'] = $this->admin_users_model_maker->getAllGroups();
+        $viewData['selectedActionName'] = $selectedActionName;
+        $viewData['message'] = $message;
+
+        $viewData["pageTitle"] = "Edit Admin User";
+        $viewData["body_template"] = "admin_users_maker/edit_admin_users.php";
+        $this->load->view('site_template.php', $viewData);
     }
 
     public function updateAdminUser() {
-        $adminUserId = $_POST['adminUserId'];
-        $data['adminUserName'] = $_POST['userId'];
-        $data['fullName'] = $_POST['fullName'];
-        $data['adminUserGroup'] = $_POST['group'];
-        $data['email'] = $this->bocrypter->Encrypt($_POST['email']);
-        $data['dob'] = $_POST['dob'];
+        $adminUserId = $this->input->post('adminUserId');
+        $email = $this->input->post('email');
+        $data['adminUserName'] = $this->input->post('userId');
+        $data['fullName'] = $this->input->post('fullName');
+        $data['adminUserGroup'] = $this->input->post('group');
+        $data['email'] = $this->bocrypter->Encrypt($email);
+        $data['dob'] = $this->input->post('dob');
         $data['mcStatus'] = 0;
-        $data['makerAction'] = $_POST['selectedActionName'];
+        $data['makerAction'] = $this->input->post('selectedActionName');
         $data['makerActionCode'] = 'edit';
         $data['makerActionDt'] = date("y-m-d");
         $data['makerActionTm'] = date("G:i:s");
-        $data['makerActionBy'] = $this->session->userdata('adminUserId');
+        $data['makerActionBy'] = $this->my_session->adminUserId;
 
 
 
@@ -165,21 +131,21 @@ class Admin_users_maker extends CI_Controller {
     }
 
     public function adminUserActive() {
-        $moduleCodes = $this->session->userdata('moduleCodes');
-        $actionCodes = $this->session->userdata('actionCodes');
-        $moduleCodes = explode("|", $moduleCodes);
-        $actionCodes = explode("#", $actionCodes);
-        $index = array_search(admin_user_module, $moduleCodes);
-        if ($index > -1) {
-            $moduleWiseActionCodes = $actionCodes[$index];
-            if (strpos($moduleWiseActionCodes, "active") > -1) {
+//        $moduleCodes = $this->session->userdata('moduleCodes');
+//        $actionCodes = $this->session->userdata('actionCodes');
+//        $moduleCodes = explode("|", $moduleCodes);
+//        $actionCodes = explode("#", $actionCodes);
+//        $index = array_search(admin_user_module, $moduleCodes);
+//        if ($index > -1) {
+//            $moduleWiseActionCodes = $actionCodes[$index];
+//            if (strpos($moduleWiseActionCodes, "active") > -1) {
 
-                $adminUserId = explode("|", $_POST['adminUserId']);
-                $adminUserIdString = $_POST['adminUserId'];
+                $adminUserId = explode("|", $this->input->post('adminUserId'));
+                $adminUserIdString = $this->input->post('adminUserId');
                 $checkData = $this->chkPermission($adminUserId);
 
                 if (strcmp($adminUserIdString, $checkData) == 0) {
-                    $selectedActionName = $_POST['selectedActionName'];
+                    $selectedActionName = $this->input->post('selectedActionName');
                     foreach ($adminUserId as $index => $value) {
                         $updateData = array("adminUserId" => $value,
                             "isActive" => 1,
@@ -188,7 +154,8 @@ class Admin_users_maker extends CI_Controller {
                             "makerActionCode" => 'active',
                             "makerActionDt" => date("y-m-d"),
                             "makerActionTm" => date("G:i:s"),
-                            "makerActionBy" => $this->session->userdata('adminUserId'));
+                            "makerActionBy" => $this->my_session->adminUserId
+                                );
                         $updateArray[] = $updateData;
                     }
                     $this->db->update_batch('admin_users_mc', $updateArray, 'adminUserId');
@@ -196,10 +163,10 @@ class Admin_users_maker extends CI_Controller {
                 } else {
                     echo 2;
                 }
-            }
-        } else {
-            echo "not allowed";
-        }
+//            }
+//        } else {
+//            echo "not allowed";
+//        }
     }
 
     public function adminUserInactive() {

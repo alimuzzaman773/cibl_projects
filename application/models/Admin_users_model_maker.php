@@ -4,14 +4,11 @@ class Admin_users_model_maker extends CI_Model {
 
     function __construct() {
         parent::__construct();
-        date_default_timezone_set('Asia/Dhaka');
-
-        $this->load->database();
     }
 
     public function getAllUsers() {
 
-        $id = $this->session->userdata('adminUserId');
+        $id = $this->my_session->adminUserId;
 
         $this->db->select('admin_users_mc.*, admin_users_group.userGroupName');
 
