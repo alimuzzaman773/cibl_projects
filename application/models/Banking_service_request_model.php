@@ -36,30 +36,66 @@ class Banking_service_request_model extends CI_Model {
         }
     }
 
-    public function getAllBankingRequest() {
-        $this->db->order_by("serviceId", "desc");
-        $this->db->select('service_request_bank.serviceId,
-                           service_request_bank.skyId,
-                           service_request_bank.typeCode,
-                           service_request_bank.referenceNo,
-                           service_request_bank.mobileNo,
-                           service_request_bank.reason,
-                           service_request_bank.requestDtTm,
-                           service_request_bank.status1,
-                           apps_users.userName,
-			   apps_users.eblSkyId,
-                           service_type.serviceName');
-
-        $this->db->from('service_request_bank');
-        $this->db->join('service_type', 'service_request_bank.typeCode = service_type.serviceTypeCode');
-        $this->db->join('apps_users', 'service_request_bank.skyId = apps_users.skyId');
-        $query = $this->db->get();
-        return $query->result();
+    function getChildService($serviceId) {
+        $query = $this->db->select("*")
+                ->from("service_type")
+                ->where("isActive", 1)
+                ->where("pServiceTypeCode", $serviceId)
+                ->get();
+        return $query->num_rows() > 0 ? $query : false;
     }
 
-    public function getAllBankingRequestByTypeCode($typeCode) {
-        $this->db->order_by("serviceId", "desc");
-        $this->db->select('service_request_bank.serviceId,
+    /*
+      public function getAllBankingRequest() {
+      $this->db->order_by("serviceId", "desc");
+      $this->db->select('service_request_bank.serviceId,
+      service_request_bank.skyId,
+      service_request_bank.typeCode,
+      service_request_bank.referenceNo,
+      service_request_bank.mobileNo,
+      service_request_bank.reason,
+      service_request_bank.requestDtTm,
+      service_request_bank.status1,
+      apps_users.userName,
+      apps_users.eblSkyId,
+      service_type.serviceName');
+
+      $this->db->from('service_request_bank');
+      $this->db->join('service_type', 'service_request_bank.typeCode = service_type.serviceTypeCode');
+      $this->db->join('apps_users', 'service_request_bank.skyId = apps_users.skyId');
+      $query = $this->db->get();
+      return $query->result();
+      }
+
+      public function getAllBankingRequestByTypeCode($typeCode) {
+      $this->db->order_by("serviceId", "desc");
+      $this->db->select('service_request_bank.serviceId,
+      service_request_bank.skyId,
+      service_request_bank.typeCode,
+      service_request_bank.referenceNo,
+      service_request_bank.mobileNo,
+      service_request_bank.reason,
+      service_request_bank.requestDtTm,
+      service_request_bank.status1,
+      apps_users.userName,
+      apps_users.eblSkyId,
+      service_type.serviceName');
+
+
+      $this->db->from('service_request_bank');
+      $this->db->join('service_type', 'service_request_bank.typeCode = service_type.serviceTypeCode');
+      $this->db->join('apps_users', 'service_request_bank.skyId = apps_users.skyId');
+      $this->db->where("typeCode = '$typeCode'");
+      $query = $this->db->get();
+      return $query->result();
+      }
+     * */
+
+    function getAllBankingRequest($params = array()) {
+        if (isset($params['count']) && $params['count'] == true) {
+            $this->db->select("COUNT(service_request_bank.serviceId) as total");
+        } else {
+            $this->db->select('service_request_bank.serviceId,
                            service_request_bank.skyId,
                            service_request_bank.typeCode,
                            service_request_bank.referenceNo,
@@ -69,15 +105,27 @@ class Banking_service_request_model extends CI_Model {
                            service_request_bank.status1,
                            apps_users.userName,
                            apps_users.eblSkyId,
-                           service_type.serviceName');
+                           service_type.serviceName', FALSE);
+        }
 
-
+        $this->db->from('product_apply_request');
         $this->db->from('service_request_bank');
         $this->db->join('service_type', 'service_request_bank.typeCode = service_type.serviceTypeCode');
         $this->db->join('apps_users', 'service_request_bank.skyId = apps_users.skyId');
-        $this->db->where("typeCode = '$typeCode'");
+
+        if (isset($params['type_code']) && trim($params['type_code']) != "") {
+            $this->db->where("service_request_bank.typeCode", $params['type_code']);
+        }
+
+        $this->db->order_by("service_request_bank.serviceId", "desc");
+
+        if (isset($params['limit']) && (int) $params['limit'] > 0) {
+            $offset = (isset($params['offset'])) ? $params['offset'] : 0;
+            $this->db->limit($params['limit'], $offset);
+        }
         $query = $this->db->get();
-        return $query->result();
+
+        return $query->num_rows() > 0 ? $query : false;
     }
 
     public function getSingleRequestById($id) {

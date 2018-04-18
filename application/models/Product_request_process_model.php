@@ -13,11 +13,29 @@ class Product_request_process_model extends CI_Model {
         return $this->db->insert('product_apply_request', $data);
     }
 
-    public function getProductRequestByDate($data) {
+    public function getProductRequestByDate($params = array()) {
+
+        if (isset($params['count']) && $params['count'] == true) {
+            $this->db->select("COUNT(applyId) as total");
+        } else {
+            $this->db->select('*', FALSE);
+        }
+
+        $this->db->from('product_apply_request');
+
+        if ((isset($params['from_date']) && trim($params['from_date']) != "") && (isset($params['to_date']) && trim($params['to_date']) != "")) {
+            $this->db->where('creationDtTm >=', $params["from_date"])
+                    ->where('creationDtTm <=', $params["to_date"]);
+        }
         $this->db->order_by("applyId", "desc");
-        $this->db->where('creationDtTm BETWEEN "' . date('Y-m-d', strtotime($data['fromDate'])) . '" and "' . date('Y-m-d', strtotime($data['toDate'])) . '"');
-        $query = $this->db->get('product_apply_request');
-        return $query->result_array();
+
+        if (isset($params['limit']) && (int) $params['limit'] > 0) {
+            $offset = (isset($params['offset'])) ? $params['offset'] : 0;
+            $this->db->limit($params['limit'], $offset);
+        }
+        $query = $this->db->get();
+
+        return $query->num_rows() > 0 ? $query : false;
     }
 
     public function statusChange($id, $mailData, $bodyInstruction) {

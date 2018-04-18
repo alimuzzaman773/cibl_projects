@@ -140,36 +140,26 @@ class Priority_request_process extends CI_Controller {
     public function sendMail() {
 
 
-        $moduleCodes = $this->session->userdata('serviceRequestModules');
-        $moduleCodes = explode("|", $moduleCodes);
-        $index = array_search(priority_sr, $moduleCodes);
-        if ($index > -1) {
-            $serviceRequestID = $_POST['serviceRequestID'];
-            $maildata['to'] = $_POST['to'];
-            //----new-----//
-            $ccAddress = "";
-            $ccAddress = $_POST['cc'];
-            $maildata['cc'] = $ccAddress;
-            $bccAddress = "";
-            $bccAddress = $_POST['bcc'];
-            $maildata['bcc'] = $bccAddress;
-            //--------------//
-            $maildata['subject'] = $_POST['subject'];
-            $bodyInstruction = "";
-            $bodyInstruction = $_POST['bodyInstruction'];
-            $maildata['body'] = $_POST['body'] . "<br></br>" . $bodyInstruction;
+      //  $moduleCodes = $this->session->userdata('serviceRequestModules');
+      //  $moduleCodes = explode("|", $moduleCodes);
+      //  $index = array_search(priority_sr, $moduleCodes);
+      //  if ($index > -1) {
+            $serviceRequestID = $this->input->post("serviceRequestID");
+            $maildata['to'] = $this->input->post("to");
+            $maildata['cc'] = $this->input->post("cc");
+            $maildata['bcc'] = $this->input->post("bcc");
+            $maildata['subject'] = $this->input->post("subject"); 
+            $bodyInstruction =$this->input->post("bodyInstruction"); 
+            $maildata['body'] =$this->input->post("body") . "<br></br>" . $bodyInstruction;
             $isSuccess = $this->common_model->send_service_mail($maildata);
-
             if ($isSuccess) {
-                //----new----//
                 $this->priority_request_process_model->statusChange($serviceRequestID, $maildata, $bodyInstruction);
-                //-----------//
                 redirect('priority_request_process/getRequests');
             }
-        } else {
-            echo "not allowed";
-            die();
-        }
+       // } else {
+         //   echo "not allowed";
+         //   die();
+       // }
     }
 
 }

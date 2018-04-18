@@ -1,6 +1,6 @@
 var PriorityModuleApp = angular.module("PriorityModuleApp", ["angularUtils.directives.dirPagination"]);
 
-PriorityModuleApp.controller("PaymentListController", ["$scope", "$http", function ($scope, $http) {
+PriorityModuleApp.controller("PriorityController", ["$scope", "$http", function ($scope, $http) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
 
         $scope.priority_list = [];
@@ -9,7 +9,8 @@ PriorityModuleApp.controller("PaymentListController", ["$scope", "$http", functi
         $scope.currentPageNumber = 1;
 
         $scope.searchParams = {
-            type_code: ""
+            from_date: "",
+            to_date: ""
         };
 
         $scope.pagination = {
@@ -22,7 +23,8 @@ PriorityModuleApp.controller("PaymentListController", ["$scope", "$http", functi
 
         $scope.resetSearch = function () {
             $scope.searchParams = {
-                type_code: ""
+                from_date: "",
+                to_date: ""
             };
 
             $scope.getResultsPage(1);
