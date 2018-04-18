@@ -138,7 +138,7 @@ class Admin_user_group_checker extends CI_Controller {
         $data["pageTitle"] = "Admin User Group";
         $data["body_template"] = "admin_user_group_checker/approve_form.php";
         $this->load->view('site_template.php', $data);
-        s// } else {
+        // } else {
         //     echo "Authorization Module Not Given";
         //}
     }

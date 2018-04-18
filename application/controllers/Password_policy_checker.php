@@ -7,31 +7,32 @@ class Password_policy_checker extends CI_Controller {
 
     function __construct() {
         parent::__construct();
-        date_default_timezone_set('Asia/Dhaka');
-        $this->load->helper('url');
-        $this->load->library('session');
-        $this->load->model('password_policy_checker_model');
-        $this->load->model('login_model');
-        if ($this->login_model->check_session()) {
-            redirect('/admin_login/index');
-        }
+        $this->load->library("my_session");
+        $this->my_session->checkSession();
+        $this->load->model(array('password_policy_checker_model', 'login_model'));
     }
 
     public function index() {
-        $this->output->set_template('theme2');
-        $authorizationModules = $this->session->userdata('authorizationModules');
-        if (strpos($authorizationModules, password_policy_authorization) > -1) {
-            $data['passwordPolicy'] = json_encode($this->password_policy_checker_model->getUnapprovedPolicy());
-            $this->load->view('password_policy_checker/unapproved_policy', $data);
-        } else {
-            echo "Authorization Module Not Given";
-        }
+        $data['passwordPolicy'] = json_encode($this->password_policy_checker_model->getUnapprovedPolicy());
+        $data["body_template"]="password_policy_checker/unapproved_policy.php";
+        $this->load->view('site_template.php', $data);
+
+        /*
+          $this->output->set_template('theme2');
+          $authorizationModules = $this->session->userdata('authorizationModules');
+          if (strpos($authorizationModules, password_policy_authorization) > -1) {
+          $data['passwordPolicy'] = json_encode($this->password_policy_checker_model->getUnapprovedPolicy());
+          $this->load->view('password_policy_checker/unapproved_policy', $data);
+          } else {
+          echo "Authorization Module Not Given";
+          }
+         */
     }
 
     public function getPasswordPolicyApproval($id) {
-        $this->output->set_template('theme2');
-        $authorizationModules = $this->session->userdata('authorizationModules');
-        if (strpos($authorizationModules, password_policy_authorization) > -1) {
+       // $this->output->set_template('theme2');
+       // $authorizationModules = $this->session->userdata('authorizationModules');
+       // if (strpos($authorizationModules, password_policy_authorization) > -1) {
 
             $dbData = $this->password_policy_checker_model->getPolicyById($id);
 
@@ -68,32 +69,33 @@ class Password_policy_checker extends CI_Controller {
             } else {
                 $data['publishDataModeOfDisplay_ck'] = "display: none;";
             }
-
             $data['policy'] = $dbData;
-            $this->load->view('password_policy_checker/approved_policy', $data);
-        } else {
-            echo "Authorization Module Not Given";
-        }
+            $data["pageTitle"]="Password Policy Checker";
+            $data["body_template"]="password_policy_checker/approved_policy.php";
+            $this->load->view('site_template.php', $data);
+      //  } else {
+        //    echo "Authorization Module Not Given";
+       // }
     }
 
     public function getReason() {
-        $authorizationModules = $this->session->userdata('authorizationModules');
-        if (strpos($authorizationModules, password_policy_authorization) > -1) {
-            $data['checkerAction'] = $_POST['checkerAction'];
-            $id = $_POST['policyId'];
-            $makerActionDtTm = $_POST['makerActionDtTm'];
-            $checkerActionDtTm = $_POST['checkerActionDtTm'];
+      //  $authorizationModules = $this->session->userdata('authorizationModules');
+      //  if (strpos($authorizationModules, password_policy_authorization) > -1) {
+            $data['checkerAction'] = $this->input->post("checkerAction");
+            $id = $this->input->post("policyId");
+            $makerActionDtTm = $this->input->post("makerActionDtTm");
+            $checkerActionDtTm =$this->input->post("checkerActionDtTm");
 
             $dbData = $this->password_policy_checker_model->getPolicyById($id);
 
-            if ($dbData['makerActionBy'] == $this->session->userdata('adminUserId')) {
+            if ($dbData['makerActionBy'] == $this->my_session->userId) {
                 echo "You can not authorize your own maker action";
             } else {
                 if ($data['checkerAction'] == "approve") {
                     $chkdata['checkerActionDt'] = date("Y-m-d");
                     $chkdata['checkerActionTm'] = date("G:i:s");
                     $chkdata['isPublished'] = 1;
-                    $chkdata['checkerActionBy'] = $this->session->userdata('adminUserId');
+                    $chkdata['checkerActionBy'] =$this->my_session->userId;
                     $chkdata['checkerAction'] = "Approved";
                     $chkdata['checkerActionComment'] = NULL;
                     $chkdata['mcStatus'] = 1;
@@ -117,9 +119,9 @@ class Password_policy_checker extends CI_Controller {
                 } else if ($data['checkerAction'] == 'reject') {
                     $data['checkerActionDt'] = date("Y-m-d");
                     $data['checkerActionTm'] = date("G:i:s");
-                    $data['checkerActionBy'] = $this->session->userdata('adminUserId');
+                    $data['checkerActionBy'] = $this->my_session->userId;
                     $data['checkerAction'] = "Rejected";
-                    $data['checkerActionComment'] = $_POST['newReason'];
+                    $data['checkerActionComment'] = $this->input->post("newReason");
                     $data['mcStatus'] = 2;
 
                     $res = $this->checkUserInteraction($id, $makerActionDtTm, $checkerActionDtTm);
@@ -134,9 +136,9 @@ class Password_policy_checker extends CI_Controller {
                     }
                 }
             }
-        } else {
-            echo "Authorization module not given";
-        }
+      //  } else {
+       //     echo "Authorization module not given";
+       // }
     }
 
     public function checkUserInteraction($id, $makerActionDtTmPost, $checkerActionDtTmPost) {

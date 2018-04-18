@@ -7,15 +7,14 @@ class Password_policy_checker_model extends CI_Model {
 
     public function __construct() {
         parent::__construct();
-        date_default_timezone_set('Asia/Dhaka');
-        $this->load->database();
+        $this->load->library("my_session");
     }
 
     public function getUnapprovedPolicy() {
         $query = $this->db->select("*")
                 ->from("validation_group_mc")
                 ->where('mcStatus =', 0)
-                ->where('makerActionBy !=', $this->session->userdata('adminUserId'))
+                ->where('makerActionBy !=', $this->my_session->userId)
                 ->order_by('validationGroupId', 'desc')
                 ->get();
         return ($query->num_rows() > 0) ? $query->result() : false;
@@ -61,8 +60,8 @@ class Password_policy_checker_model extends CI_Model {
 
         // prepare data for activity log //
         $activityLog = array('activityJson' => json_encode($result),
-            'adminUserId' => $this->session->userdata('adminUserId'),
-            'adminUserName' => $this->session->userdata('username'),
+            'adminUserId' => $this->my_session->userId,
+            'adminUserName' => $this->my_session->userId,
             'tableName' => 'validation_group',
             'moduleName' => 'password_policy_module',
             'moduleCode' => '10',
@@ -84,8 +83,8 @@ class Password_policy_checker_model extends CI_Model {
 
         // prepare data for activity log //
         $activityLog = array('activityJson' => json_encode($result),
-            'adminUserId' => $this->session->userdata('adminUserId'),
-            'adminUserName' => $this->session->userdata('username'),
+            'adminUserId' => $this->my_session->userId,
+            'adminUserName' => $this->my_session->userId,
             'tableName' => 'validation_group',
             'moduleName' => 'password_policy_module',
             'moduleCode' => '10',
