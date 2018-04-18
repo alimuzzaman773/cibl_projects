@@ -1,41 +1,44 @@
-<title>Admin User Group</title>
-<div class="breadcrum">Edit Action</div>
+<h2 class="title-underlined"><?= $pageTitle ?></h2>
 
 <div class="container" style="margin-top:50px">
 
     <form method="post" style="" id="actionEdit" name="actionEdit" action="<?php echo base_url(); ?>admin_user_group_maker/editAdminUserGroup">
 
-    <label>User Group Name </label>
-    <input class="textbox" type="text" name="groupName" id="groupName" value="<?= $groupName ?>" readonly>
-    <input hidden type="text" name="userGroupId" id="userGroupId" value="<?= $userGroupId ?>">
+        <label>User Group Name </label>
+        <input class="textbox" type="text" name="groupName" id="groupName" value="<?= $groupName ?>" readonly>
+        <input hidden type="text" name="userGroupId" id="userGroupId" value="<?= $userGroupId ?>">
 
-    <input hidden class="textbox" type="text" name="moduleCodes" id="moduleCodes" value="">
-    <input hidden class="textbox" type="text" name="actionCodes" id="actionCodes" value="">
-    <input hidden class="textbox" type="text" name="moduleActionId" id="moduleActionId" value="">
-    <input hidden class="textbox" type="text" name="authorizationModuleCodes" id="authorizationModuleCodes" value="<?= $authorizationModuleCodes ?>">
-    <input hidden class="textbox" type="text" name="contentSetupModuleCodes" id="contentSetupModuleCodes" value="<?= $contentSetupModuleCodes ?>">
-    <input hidden class="textbox" type="text" name="serviceRequestModuleCodes" id="serviceRequestModuleCodes" value="<?= $serviceRequestModuleCodes ?>">
-    <input hidden class="textbox" type="text" name="reportTypeModuleCodes" id="reportTypeModuleCodes" value="<?= $reportTypeModuleCodes ?>">
-    <input hidden class="textbox" type="text" name="selectedActionName" id="selectedActionName" value="<?= $selectedActionName ?>">
-    <br><br>
+        <input hidden class="textbox" type="text" name="moduleCodes" id="moduleCodes" value="">
+        <input hidden class="textbox" type="text" name="actionCodes" id="actionCodes" value="">
+        <input hidden class="textbox" type="text" name="moduleActionId" id="moduleActionId" value="">
+        <input hidden class="textbox" type="text" name="authorizationModuleCodes" id="authorizationModuleCodes" value="<?= $authorizationModuleCodes ?>">
+        <input hidden class="textbox" type="text" name="contentSetupModuleCodes" id="contentSetupModuleCodes" value="<?= $contentSetupModuleCodes ?>">
+        <input hidden class="textbox" type="text" name="serviceRequestModuleCodes" id="serviceRequestModuleCodes" value="<?= $serviceRequestModuleCodes ?>">
+        <input hidden class="textbox" type="text" name="reportTypeModuleCodes" id="reportTypeModuleCodes" value="<?= $reportTypeModuleCodes ?>">
+        <input hidden class="textbox" type="text" name="selectedActionName" id="selectedActionName" value="<?= $selectedActionName ?>">
+        <br><br>
 
 
-    <?php foreach ($moduleIds as $index => $value) { $var = 0; ?>
-        <div class="container" style="margin-top:50px" id="<?= $value. "dv" ?>">
-            <?php foreach ($modulesActions as $item) {
-                if($value == $item['moduleId']){ 
-                    if($var == 0){ ?>
-                        <div> <input class="textbox" type="text" name="moduleCode" id="<?= $value."mName" ?>" value="<?= $item['moduleName'] ?>" readonly> </div>
-                   <?php $var = 1; }?>
-                    <input hidden class="textbox" type="text" name="moduleId" id="<?= $item['moduleActionId'] . "maId" ?>" value="<?= $item['moduleId'] ?>">
-                    <input hidden class="textbox" type="text" name="moduleCode" id="<?= $item['moduleActionId'] . "mCode" ?>" value="<?= $item['moduleCode'] ?>">
-                    <input hidden class="textbox" type="text" name="actionCode" id="<?= $item['moduleActionId'] . "aCode" ?>" value="<?= $item['actionCode'] ?>">
-                    <input id="<?= $item['moduleActionId'] ?>" class="actionCheckbox" style="margin-right: 15px" type="checkbox" name="actionCode[]" value="<?= $item['moduleActionId'] ?>"><label> <?= $item['actionName'] ?> </label><br>
-             <?php } ?>      
-            <?php } ?>
-        </div>
+        <?php foreach ($moduleIds as $index => $value) {
+            $var = 0; ?>
+            <div class="container" style="margin-top:50px" id="<?= $value . "dv" ?>">
+                <?php
+                foreach ($modulesActions as $item) {
+                    if ($value == $item['moduleId']) {
+                        if ($var == 0) {
+                            ?>
+                            <div> <input class="textbox" type="text" name="moduleCode" id="<?= $value . "mName" ?>" value="<?= $item['moduleName'] ?>" readonly> </div>
+                <?php $var = 1;
+            } ?>
+                        <input hidden class="textbox" type="text" name="moduleId" id="<?= $item['moduleActionId'] . "maId" ?>" value="<?= $item['moduleId'] ?>">
+                        <input hidden class="textbox" type="text" name="moduleCode" id="<?= $item['moduleActionId'] . "mCode" ?>" value="<?= $item['moduleCode'] ?>">
+                        <input hidden class="textbox" type="text" name="actionCode" id="<?= $item['moduleActionId'] . "aCode" ?>" value="<?= $item['actionCode'] ?>">
+                        <input id="<?= $item['moduleActionId'] ?>" class="actionCheckbox" style="margin-right: 15px" type="checkbox" name="actionCode[]" value="<?= $item['moduleActionId'] ?>"><label> <?= $item['actionName'] ?> </label><br>
+        <?php } ?>      
     <?php } ?>
-    <br><br>    
+            </div>
+<?php } ?>
+        <br><br>    
     </form>
 
     <button class="btn btn-success" onclick="getModuleid();">Update</button>
@@ -44,69 +47,67 @@
 
 
 <style> 
-.textbox { 
-    border: 1px solid #848484; 
-    -webkit-border-radius: 30px; 
-    -moz-border-radius: 30px; 
-    border-radius: 30px; 
-    outline:0;
-    height:25px; 
-    width: 275px; 
-    padding-left:10px; 
-    padding-right:10px; 
-  } 
+    .textbox { 
+        border: 1px solid #848484; 
+        -webkit-border-radius: 30px; 
+        -moz-border-radius: 30px; 
+        border-radius: 30px; 
+        outline:0;
+        height:25px; 
+        width: 275px; 
+        padding-left:10px; 
+        padding-right:10px; 
+    } 
 </style>
 
 
 <style>
 
-label {
-    vertical-align:middle;
-}
+    label {
+        vertical-align:middle;
+    }
 
-input {
-    float:center;
-    border: 1px solid #848484; 
-    -webkit-border-radius: 30px; 
-    -moz-border-radius: 30px; 
-    border-radius: 30px; 
-    outline:0; 
-    height:25px; 
-    width: 100px; 
-    padding-left:10px; 
-    padding-right:10px; 
-}
+    input {
+        float:center;
+        border: 1px solid #848484; 
+        -webkit-border-radius: 30px; 
+        -moz-border-radius: 30px; 
+        border-radius: 30px; 
+        outline:0; 
+        height:25px; 
+        width: 100px; 
+        padding-left:10px; 
+        padding-right:10px; 
+    }
 </style>
 
 
 
 <script type="text/javascript">
 
-    
+
     var obj = <?php echo json_encode($moduleIds); ?>
 
     function getModuleid()
     {
         var moduleId = "";
         var selectMid = "";
-        var moduleCode ="";
+        var moduleCode = "";
         var actionCode = "";
         var moduleActionId = "";
 
-        $(".actionCheckbox:checked").each(function() {
+        $(".actionCheckbox:checked").each(function () {
 
             moduleActionId += "," + $(this).val();
             var id = $(this).val();
-            var m = $("#"+id+"maId").val();
-            if(selectMid != m){
-                moduleId += $("#"+id+"maId").val() + "|";
+            var m = $("#" + id + "maId").val();
+            if (selectMid != m) {
+                moduleId += $("#" + id + "maId").val() + "|";
                 selectMid = m;
-                moduleCode += $("#"+id+"mCode").val() + "|";
-                actionCode += "#" + $("#"+id+"aCode").val();
-            }
-
-            else{
-                actionCode += "," + $("#"+id+"aCode").val();
+                moduleCode += $("#" + id + "mCode").val() + "|";
+                actionCode += "#" + $("#" + id + "aCode").val();
+            } else {
+                actionCode += "," + $("#" + id + "aCode").val();
             }
         });
 
@@ -117,19 +118,18 @@ input {
         var sap = (actionCode.match(/#/g) || []).length;
         var moduleNumber = obj.length;
 
-        if(sap === moduleNumber - 1){
+        if (sap === moduleNumber - 1) {
 
             $("#moduleCodes").val(moduleCode);
             $("#actionCodes").val(actionCode);
             $("#moduleActionId").val(moduleActionId);
             $("#actionEdit").submit();
 
-        }
-
-        else{
+        } else {
             alert("One action must be selected from each module");
         }
-    };
+    }
+    ;
 
 
 </script>
@@ -137,12 +137,12 @@ input {
 
 
 <script type="text/javascript">
-   
+
     var maIds = jQuery.parseJSON('<?= $moduleActionIds ?>');
-    maIds.forEach(function(entry) {
-        if(document.getElementById(entry)){
+    maIds.forEach(function (entry) {
+        if (document.getElementById(entry)) {
             document.getElementById(entry).checked = true;
-        }  
+        }
     });
 
 </script>
