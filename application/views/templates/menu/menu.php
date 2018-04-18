@@ -107,7 +107,6 @@
                                         <li><p><b>Users/Pin</b></p></li>
                                         <li><a href="<?= base_url() . 'admin_users_maker' ?>">Admin Users</a></li>
                                         <li><a href="<?= base_url() . 'admin_user_group_maker' ?>">Admin User Group</a></li>
-                                        <li><a href="<?= base_url() . 'admin_users_maker' ?>">Admin Users</a></li>
                                         <li><a href="<?= base_url() . 'client_registration/index' ?>">Apps users</a></li>
                                         <li><a href="<?= base_url() . 'pin_generation/viewPinByAction' ?>">Pin</a></li>
                                     </ul>
@@ -168,7 +167,7 @@
                                         <li><a href="<?= base_url() . 'reports/fund_transfer' ?>">Fund Transfer</a></li>
                                         <li><a href="<?= base_url() . 'reports/other_fund_transfer' ?>">Other Fund Transfer</a></li>
                                     </ul>
-                                     <ul class="col-md-2 col-xs-12 list-unstyled">
+                                    <ul class="col-md-2 col-xs-12 list-unstyled">
                                         <li><p><b>Billing Report</b></p></li>
                                         <li><a href="<?= base_url() . 'reports/bill_pay' ?>">Billing Information</a></li>
                                     </ul>
