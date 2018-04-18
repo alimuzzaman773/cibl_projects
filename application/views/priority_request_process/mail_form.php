@@ -41,47 +41,55 @@
         document.getElementById('submitBtn').click();
     }
 </script>
-<h2 class="title-underlined">Send Mail</h2>
-<div class="container" style="margin-top:50px">
-    <form method="post" style="" id="mailForm" name="mailForm" action="<?php echo base_url(); ?>priority_request_process/sendMail">
-        <table  class="table table-condensed table-bordered table-striped">
-            <input hidden type="text" name="serviceRequestID" value="<?= $serviceRequestID ?>" style="width: 700px">
-            <tr>
-                <th align="left" scope="row">To</th>
-                <td><input type="text" class="form-control input-sm" id="toMail" name="to" value="<?= $to ?>" style="width: 700px"></td>
-            </tr>
-            <tr>
-                <th align="left" scope="row">Cc</th>
-                <td><input type="text" class="form-control input-sm" id="ccMail" name="cc" value="" style="width: 700px"></td>
-            </tr>
-            <tr>
-                <th align="left" scope="row">Bcc</th>
-                <td><input type="text" class="form-control input-sm" id="bccMail" name="bcc" value="" style="width: 700px"></td>
-            </tr>
-            <tr>
-                <th align="left" scope="row">Subject</th>
-                <td><input type="text" class="form-control input-sm" name="subject" value="<?= $subject ?>" style="width: 700px" readonly></td>
-            </tr>
-            <tr>
-                <th align="left" scope="row">Body</th>    
-                <td><div class="mail_body"><?= $body ?></div></td>
-            <input type="text" id="body" name="body" style="display:none" value="<?= $body ?>">
-            </tr>
-            <tr>
-                <th align="left" scope="row">Instruction<br>(Optional)</th>    
-                <td><textarea class="form-control input-sm" rows="8" id="bodyInstruction" name="bodyInstruction" style="width: 700px;"></textarea></td>
-            </tr>
-            <tr>
-                <th align="left" scope="row">&nbsp;</th>
-                <td>
-                    <input type="submit" id="submitBtn" class="btn btn-success" style="display:none">
-                </td>
-            </tr>
-        </table>
-    </form>
-    <button class="btn btn-success" onclick="checkValidation()">Send Mail</button>
-    <a href="<?php echo base_url(); ?>priority_request_process/getRequests" class="btn btn-success"><i class="icon-remove"></i><span> Back </span></a>
+
+<h3 class="title-underlined">Send Mail</h3>
+<div class="container">
+    <div class="row">
+        <form method="post" style="" id="mailForm" name="mailForm" action="<?php echo base_url(); ?>priority_request_process/sendMail">
+            <table  class="table table-condensed table-bordered table-striped">
+                <input hidden type="text" name="serviceRequestID" value="<?= $serviceRequestID ?>" style="width: 700px">
+                <tr>
+                    <th align="left" scope="row">To</th>
+                    <td><input type="text" class="form-control input-sm" id="toMail" name="to" value="<?= $to ?>" style="width: 700px"></td>
+                </tr>
+                <tr>
+                    <th align="left" scope="row">Cc</th>
+                    <td><input type="text" class="form-control input-sm" id="ccMail" name="cc" value="" style="width: 700px"></td>
+                </tr>
+                <tr>
+                    <th align="left" scope="row">Bcc</th>
+                    <td><input type="text" class="form-control input-sm" id="bccMail" name="bcc" value="" style="width: 700px"></td>
+                </tr>
+                <tr>
+                    <th align="left" scope="row">Subject</th>
+                    <td><input type="text" class="form-control input-sm" name="subject" value="<?= $subject ?>" style="width: 700px" readonly></td>
+                </tr>
+                <tr>
+                    <th align="left" scope="row">Body</th>    
+                    <td><div class="mail_body"><?= $body ?></div></td>
+                <input type="text" id="body" name="body" style="display:none" value="<?= $body ?>">
+                </tr>
+                <tr>
+                    <th align="left" scope="row">Instruction<br>(Optional)</th>    
+                    <td><textarea class="form-control input-sm" rows="8" id="bodyInstruction" name="bodyInstruction" style="width: 700px;"></textarea></td>
+                </tr>
+                <tr>
+                    <th align="left" scope="row">&nbsp;</th>
+                    <td>
+                        <input type="submit" id="submitBtn" class="btn btn-success" style="display:none">
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <div class="row">
+        <div class="btn-group">
+            <button class="btn btn-success" onclick="checkValidation()">Send Mail</button>
+            <a href="<?php echo base_url(); ?>priority_request_process/getRequests" class="btn btn-danger"><i class="icon-remove"></i><span> Back </span></a>
+        </div>
+    </div>
 </div>
+
 <style>
     @media(min-width:768px){
         #mailForm .form-control{

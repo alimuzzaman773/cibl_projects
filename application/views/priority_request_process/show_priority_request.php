@@ -1,6 +1,6 @@
 <h2 class="title-underlined">Priority Requests</h2>
 
-<div class="container" id="PriorityModuleApp" data-ng-controller="PaymentListController">    
+<div class="container" id="PriorityModuleApp" data-ng-controller="PriorityController">    
     <div style="margin-bottom: 15px">
         <div class="row">
             <div class="col-xs-3 col-sm-3">
@@ -42,7 +42,20 @@
                 <td>{{ item.contactNo}}</td>
                 <td>{{ item.email}}</td>
                 <td>{{ item.requestDtTm}}</td>
-                <td></td>
+                <td>
+                    <div class="dropdown pull-right">
+                        <button class="btn btn-primary btn-xs dropdown-toggle" type="button" data-toggle="dropdown">
+                            Action <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="<?= base_url() . "priority_request_process/processRequestById/" ?>{{item.serviceRequestID}}">
+                                    <i class="glyphicon glyphicon-envelope"></i> Email
+                                </a>
+                            </li>  
+                        </ul>
+                    </div>
+                </td>
             </tr>
             <tr data-ng-show="priority_list.length <= 0">
                 <td colspan="13">No data found</td>

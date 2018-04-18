@@ -12,10 +12,37 @@ class Product_request_process extends CI_Controller {
         $this->load->model(array('product_request_process_model','common_model','login_model'));
     }
 
-    public function getRequest() {
+    public function index() {
         $data["pageTitle"] = "Product Request";
         $data["body_template"] = "product_request_process/show_product_request.php";
         $this->load->view('site_template.php', $data);
+    }
+    
+    function get_requests_ajax(){
+        $params['limit'] = (int) $this->input->get("limit", true);
+        $params['offset'] = (int) $this->input->get("offset", true);
+        $params['get_count'] = (bool) $this->input->get("get_count", true);
+        $params['from_date'] = $this->input->get("from_date", true);
+        $params['to_date'] = $this->input->get("to_date", true);
+
+        $data['total'] = array();
+        $data['product_list'] = array();
+
+        if ((int) $params['get_count'] > 0) {
+            $countParams = $params;
+            unset($countParams['limit']);
+            unset($countParams['offset']);
+            $countParams['count'] = true;
+            $countRes = $this->product_request_process_model->getProductRequestByDate($countParams);
+            if ($countRes):
+                $data['total'] = $countRes->row()->total;
+            endif;
+        }
+        $result = $this->product_request_process_model->getProductRequestByDate($params);
+        if ($result) {
+            $data['product_list'] = $result->result();
+        }
+        my_json_output($data);
     }
 /*
     public function getRequest() {
@@ -30,12 +57,12 @@ class Product_request_process extends CI_Controller {
     }
     */
 
-    public function processRequestById($id, $fromDate, $toDate) {
-        /*
-        $moduleCodes = $this->session->userdata('serviceRequestModules');
-        $moduleCodes = explode("|", $moduleCodes);
-        $index = array_search(product_sr, $moduleCodes);
-        if ($index > -1) {
+    public function processRequestById($id) {
+  
+       // $moduleCodes = $this->session->userdata('serviceRequestModules');
+       // $moduleCodes = explode("|", $moduleCodes);
+       // $index = array_search(product_sr, $moduleCodes);
+       // if ($index > -1) {
 
             $productRequest = $this->product_request_process_model->getSingleRequestById($id);
 
@@ -55,8 +82,6 @@ class Product_request_process extends CI_Controller {
                 'preferredCallDtTm' => 'Preferred Call Date',
                 'creationDtTm' => 'Request Date');
 
-
-
             foreach ($productRequest as $key => $value) {
                 if (strpos($strings['productRequest'], $key) > - 1) {
                     $mailData['body'] .= "<p>" . $replaceArray[$key] . ':  ' . $value . "<p>";
@@ -64,47 +89,41 @@ class Product_request_process extends CI_Controller {
             }
 
             $mailData['applyId'] = $id;
-            $mailData['fromDate'] = $fromDate;
-            $mailData['toDate'] = $toDate;
-            $this->output->set_template('theme2');
-            $this->load->view('product_request_process/mail_form', $mailData);
-        } else {
-            echo "not allowed";
-            die();
-        }
+            
+         $mailData["pageTitle"] = "Product Request Mail";
+        $mailData["body_template"] = "product_request_process/mail_form.php";
+        $this->load->view('site_template.php', $mailData);
         
-         */
+         //   $this->output->set_template('theme2');
+          //  $this->load->view('product_request_process/mail_form', $mailData);
+       // } else {
+          //  echo "not allowed";
+         //   die();
+       // }
     }
 
     public function sendMail() {
-        $moduleCodes = $this->session->userdata('serviceRequestModules');
-        $moduleCodes = explode("|", $moduleCodes);
-        $index = array_search(product_sr, $moduleCodes);
-        if ($index > -1) {
-            $applyId = $_GET['applyId'];
-            $maildata['to'] = $_GET['to'];
-            //----new-----//
-            $ccAddress = "";
-            $ccAddress = $_GET['cc'];
-            $maildata['cc'] = $ccAddress;
-            $bccAddress = "";
-            $bccAddress = $_GET['bcc'];
-            $maildata['bcc'] = $bccAddress;
-            //-------------//
-            $maildata['subject'] = $_GET['subject'];
-            $bodyInstruction = "";
-            $bodyInstruction = $_GET['bodyInstruction'];
-            $maildata['body'] = $_GET['body'] . "<br></br>" . $bodyInstruction;
+      // $moduleCodes = $this->session->userdata('serviceRequestModules');
+      //  $moduleCodes = explode("|", $moduleCodes);
+      //  $index = array_search(product_sr, $moduleCodes);
+      //  if ($index > -1) {
+            $applyId = $this->input->post("applyId");
+            $maildata['to'] =$this->input->post("to");
+            $maildata['cc'] = $this->input->post("cc");
+            $maildata['bcc'] = $this->input->post("bcc");
+            $maildata['subject'] = $this->input->post("subject");
+            $bodyInstruction =$this->input->post("bodyInstruction");
+            $maildata['body'] =$this->input->post("body"). "<br></br>" . $bodyInstruction;
             $isSuccess = $this->common_model->send_service_mail($maildata);
-
+            
             if ($isSuccess) {
                 $this->product_request_process_model->statusChange($applyId, $maildata, $bodyInstruction);
                 redirect('product_request_process');
             }
-        } else {
-            echo "not allowed";
-            die();
-        }
+      //  } else {
+      //      echo "not allowed";
+      //      die();
+     //   }
     }
 
 }
