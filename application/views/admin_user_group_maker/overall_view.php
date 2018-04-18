@@ -29,6 +29,7 @@
                     </thead>
                     <tbody>
                         <tr data-ng-repeat="i in data track by $index">
+                            <td class="text-center hidden"><input type="checkbox" id="selectAll" data-ng-model="i.isLocked" data-ng-true-value="true" data-ng-false-value="false" /></td>
                             <td class="text-center hidden"><input type="checkbox" id="selectAll" data-ng-model="i.isChecked" data-ng-true-value="true" data-ng-false-value="false" /></td>
                             <td>{{($index + 1)}}</td>
                             <td>{{i.userGroupName}}</td>
@@ -60,6 +61,16 @@
                                         <li>
                                             <a data-ng-click="deactivate(i.userGroupId);" data-ng-if="i.isActive == 1">
                                                 <i class="glyphicon glyphicon-remove"></i> Inactive
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a data-ng-click="lock(i.userGroupId);" data-ng-if="i.isLocked == 0">
+                                                <i class="glyphicon glyphicon-ok"></i> Lock
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a data-ng-click="unlock(i.userGroupId);" data-ng-if="i.isLocked == 1">
+                                                <i class="glyphicon glyphicon-remove"></i> Unlock
                                             </a>
                                         </li>
                                     </ul>

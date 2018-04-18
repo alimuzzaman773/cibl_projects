@@ -364,67 +364,43 @@ class Admin_user_group_maker extends CI_Controller {
     }
 
     public function groupLock() {
-        $moduleCodes = $this->session->userdata('moduleCodes');
-        $actionCodes = $this->session->userdata('actionCodes');
-        $moduleCodes = explode("|", $moduleCodes);
-        $actionCodes = explode("#", $actionCodes);
-        $index = array_search(admin_user_group_module, $moduleCodes);
-        if ($index > -1) {
-            $moduleWiseActionCodes = $actionCodes[$index];
-            if (strpos($moduleWiseActionCodes, "lock") > -1) {
-                $userGroupId = explode("|", $_POST['userGroupId']);
-                $selectedActionName = $_POST['selectedActionName'];
-                foreach ($userGroupId as $index => $value) {
-                    $updateData = array("userGroupId" => $userGroupId[$index],
-                        "isLocked" => 1,
-                        "mcStatus" => 0,
-                        "makerAction" => $selectedActionName,
-                        "makerActionCode" => 'lock',
-                        "makerActionDt" => date("y-m-d"),
-                        "makerActionTm" => date("G:i:s"),
-                        "makerActionBy" => $this->session->userdata('adminUserId'),
-                        "updateDtTm" => date('Y-m-d G:i:s'),
-                        "updatedBy" => $this->session->userdata('adminUserId'));
-                    $updateArray[] = $updateData;
-                }
-                $this->db->update_batch('admin_users_group_mc', $updateArray, 'userGroupId');
-                echo 1;
-            }
-        } else {
-            echo "not allowed";
+        $userGroupId = explode("|", $this->input->post('userGroupId'));
+        $selectedActionName = $this->input->post('selectedActionName');
+        foreach ($userGroupId as $index => $value) {
+            $updateData = array("userGroupId" => $userGroupId[$index],
+                "isLocked" => 1,
+                "mcStatus" => 0,
+                "makerAction" => $selectedActionName,
+                "makerActionCode" => 'lock',
+                "makerActionDt" => date("y-m-d"),
+                "makerActionTm" => date("G:i:s"),
+                "makerActionBy" => $this->my_session->adminUserId,
+                "updateDtTm" => date('Y-m-d G:i:s'),
+                "updatedBy" => $this->my_session->adminUserId);
+            $updateArray[] = $updateData;
         }
+        $this->db->update_batch('admin_users_group_mc', $updateArray, 'userGroupId');
+        echo 1;
     }
 
     public function groupUnlock() {
-        $moduleCodes = $this->session->userdata('moduleCodes');
-        $actionCodes = $this->session->userdata('actionCodes');
-        $moduleCodes = explode("|", $moduleCodes);
-        $actionCodes = explode("#", $actionCodes);
-        $index = array_search(admin_user_group_module, $moduleCodes);
-        if ($index > -1) {
-            $moduleWiseActionCodes = $actionCodes[$index];
-            if (strpos($moduleWiseActionCodes, "unlock") > -1) {
-                $userGroupId = explode("|", $_POST['userGroupId']);
-                $selectedActionName = $_POST['selectedActionName'];
-                foreach ($userGroupId as $index => $value) {
-                    $updateData = array("userGroupId" => $userGroupId[$index],
-                        "isLocked" => 0,
-                        "mcStatus" => 0,
-                        "makerAction" => $selectedActionName,
-                        "makerActionCode" => 'unlock',
-                        "makerActionDt" => date("y-m-d"),
-                        "makerActionTm" => date("G:i:s"),
-                        "makerActionBy" => $this->session->userdata('adminUserId'),
-                        "updateDtTm" => date('Y-m-d G:i:s'),
-                        "updatedBy" => $this->session->userdata('adminUserId'));
-                    $updateArray[] = $updateData;
-                }
-                $this->db->update_batch('admin_users_group_mc', $updateArray, 'userGroupId');
-                echo 1;
-            }
-        } else {
-            echo "not allowed";
+        $userGroupId = explode("|", $this->input->post('userGroupId'));
+        $selectedActionName = $this->input->post('selectedActionName');
+        foreach ($userGroupId as $index => $value) {
+            $updateData = array("userGroupId" => $userGroupId[$index],
+                "isLocked" => 0,
+                "mcStatus" => 0,
+                "makerAction" => $selectedActionName,
+                "makerActionCode" => 'unlock',
+                "makerActionDt" => date("y-m-d"),
+                "makerActionTm" => date("G:i:s"),
+                "makerActionBy" => $this->my_session->adminUserId,
+                "updateDtTm" => date('Y-m-d G:i:s'),
+                "updatedBy" => $this->my_session->adminUserId);
+            $updateArray[] = $updateData;
         }
+        $this->db->update_batch('admin_users_group_mc', $updateArray, 'userGroupId');
+        echo 1;
     }
 
 }
