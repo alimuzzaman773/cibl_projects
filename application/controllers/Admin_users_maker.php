@@ -131,160 +131,109 @@ class Admin_users_maker extends CI_Controller {
     }
 
     public function adminUserActive() {
-//        $moduleCodes = $this->session->userdata('moduleCodes');
-//        $actionCodes = $this->session->userdata('actionCodes');
-//        $moduleCodes = explode("|", $moduleCodes);
-//        $actionCodes = explode("#", $actionCodes);
-//        $index = array_search(admin_user_module, $moduleCodes);
-//        if ($index > -1) {
-//            $moduleWiseActionCodes = $actionCodes[$index];
-//            if (strpos($moduleWiseActionCodes, "active") > -1) {
+        $adminUserId = explode("|", $this->input->post('adminUserId'));
+        $adminUserIdString = $this->input->post('adminUserId');
+        $checkData = $this->chkPermission($adminUserId);
 
-                $adminUserId = explode("|", $this->input->post('adminUserId'));
-                $adminUserIdString = $this->input->post('adminUserId');
-                $checkData = $this->chkPermission($adminUserId);
-
-                if (strcmp($adminUserIdString, $checkData) == 0) {
-                    $selectedActionName = $this->input->post('selectedActionName');
-                    foreach ($adminUserId as $index => $value) {
-                        $updateData = array("adminUserId" => $value,
-                            "isActive" => 1,
-                            "mcStatus" => 0,
-                            "makerAction" => $selectedActionName,
-                            "makerActionCode" => 'active',
-                            "makerActionDt" => date("y-m-d"),
-                            "makerActionTm" => date("G:i:s"),
-                            "makerActionBy" => $this->my_session->adminUserId
-                                );
-                        $updateArray[] = $updateData;
-                    }
-                    $this->db->update_batch('admin_users_mc', $updateArray, 'adminUserId');
-                    echo 1;
-                } else {
-                    echo 2;
-                }
-//            }
-//        } else {
-//            echo "not allowed";
-//        }
+        if (strcmp($adminUserIdString, $checkData) == 0) {
+            $selectedActionName = $this->input->post('selectedActionName');
+            foreach ($adminUserId as $index => $value) {
+                $updateData = array("adminUserId" => $value,
+                    "isActive" => 1,
+                    "mcStatus" => 0,
+                    "makerAction" => $selectedActionName,
+                    "makerActionCode" => 'active',
+                    "makerActionDt" => date("y-m-d"),
+                    "makerActionTm" => date("G:i:s"),
+                    "makerActionBy" => $this->my_session->adminUserId
+                );
+                $updateArray[] = $updateData;
+            }
+            $this->db->update_batch('admin_users_mc', $updateArray, 'adminUserId');
+            echo 1;
+        } else {
+            echo 2;
+        }
     }
 
     public function adminUserInactive() {
-        $moduleCodes = $this->session->userdata('moduleCodes');
-        $actionCodes = $this->session->userdata('actionCodes');
-        $moduleCodes = explode("|", $moduleCodes);
-        $actionCodes = explode("#", $actionCodes);
-        $index = array_search(admin_user_module, $moduleCodes);
-        if ($index > -1) {
-            $moduleWiseActionCodes = $actionCodes[$index];
-            if (strpos($moduleWiseActionCodes, "inactive") > -1) {
+        $adminUserId = explode("|", $this->input->post('adminUserId'));
+        $adminUserIdString = $this->input->post('adminUserId');
+        ;
+        $checkData = $this->chkPermission($adminUserId);
 
-                $adminUserId = explode("|", $_POST['adminUserId']);
-                $adminUserIdString = $_POST['adminUserId'];
-                $checkData = $this->chkPermission($adminUserId);
-
-                if (strcmp($adminUserIdString, $checkData) == 0) {
-                    $selectedActionName = $_POST['selectedActionName'];
-                    foreach ($adminUserId as $index => $value) {
-                        $updateData = array("adminUserId" => $value,
-                            "isActive" => 0,
-                            "mcStatus" => 0,
-                            "makerAction" => $selectedActionName,
-                            "makerActionCode" => 'inactive',
-                            "makerActionDt" => date("y-m-d"),
-                            "makerActionTm" => date("G:i:s"),
-                            "makerActionBy" => $this->session->userdata('adminUserId'));
-                        $updateArray[] = $updateData;
-                    }
-                    $this->db->update_batch('admin_users_mc', $updateArray, 'adminUserId');
-                    echo 1;
-                } else {
-                    echo 2;
-                }
+        if (strcmp($adminUserIdString, $checkData) == 0) {
+            $selectedActionName = $this->input->post('selectedActionName');
+            foreach ($adminUserId as $index => $value) {
+                $updateData = array("adminUserId" => $value,
+                    "isActive" => 0,
+                    "mcStatus" => 0,
+                    "makerAction" => $selectedActionName,
+                    "makerActionCode" => 'inactive',
+                    "makerActionDt" => date("y-m-d"),
+                    "makerActionTm" => date("G:i:s"),
+                    "makerActionBy" => $this->my_session->adminUserId);
+                $updateArray[] = $updateData;
             }
+            $this->db->update_batch('admin_users_mc', $updateArray, 'adminUserId');
+            echo 1;
         } else {
-            echo "not allowed";
+            echo 2;
         }
     }
 
     public function adminUserLock() {
-        $moduleCodes = $this->session->userdata('moduleCodes');
-        $actionCodes = $this->session->userdata('actionCodes');
-        $moduleCodes = explode("|", $moduleCodes);
-        $actionCodes = explode("#", $actionCodes);
-        $index = array_search(admin_user_module, $moduleCodes);
-        if ($index > -1) {
-            $moduleWiseActionCodes = $actionCodes[$index];
-            if (strpos($moduleWiseActionCodes, "lock") > -1) {
+        $adminUserId = explode("|", $this->input->post('adminUserId'));
+        $adminUserIdString = $this->input->post('adminUserId');
+        $checkData = $this->chkPermission($adminUserId);
 
-                $adminUserId = explode("|", $_POST['adminUserId']);
-                $adminUserIdString = $_POST['adminUserId'];
-                $checkData = $this->chkPermission($adminUserId);
-
-                if (strcmp($adminUserIdString, $checkData) == 0) {
-                    $selectedActionName = $_POST['selectedActionName'];
-                    foreach ($adminUserId as $index => $value) {
-                        $updateData = array("adminUserId" => $value,
-                            "isLocked" => 1,
-                            "mcStatus" => 0,
-                            "makerAction" => $selectedActionName,
-                            "makerActionCode" => 'lock',
-                            "makerActionDt" => date("y-m-d"),
-                            "makerActionTm" => date("G:i:s"),
-                            "makerActionBy" => $this->session->userdata('adminUserId'));
-                        $updateArray[] = $updateData;
-                    }
-                    $this->db->update_batch('admin_users_mc', $updateArray, 'adminUserId');
-                    echo 1;
-                } else {
-                    echo 2;
-                }
+        if (strcmp($adminUserIdString, $checkData) == 0) {
+            $selectedActionName = $this->input->post('selectedActionName');
+            foreach ($adminUserId as $index => $value) {
+                $updateData = array("adminUserId" => $value,
+                    "isLocked" => 1,
+                    "mcStatus" => 0,
+                    "makerAction" => $selectedActionName,
+                    "makerActionCode" => 'lock',
+                    "makerActionDt" => date("y-m-d"),
+                    "makerActionTm" => date("G:i:s"),
+                    "makerActionBy" => $this->my_session->adminUserId);
+                $updateArray[] = $updateData;
             }
+            $this->db->update_batch('admin_users_mc', $updateArray, 'adminUserId');
+            echo 1;
         } else {
-            echo "not allowed";
+            echo 2;
         }
     }
 
     public function adminUserUnlock() {
-        $moduleCodes = $this->session->userdata('moduleCodes');
-        $actionCodes = $this->session->userdata('actionCodes');
-        $moduleCodes = explode("|", $moduleCodes);
-        $actionCodes = explode("#", $actionCodes);
-        $index = array_search(admin_user_module, $moduleCodes);
-        if ($index > -1) {
-            $moduleWiseActionCodes = $actionCodes[$index];
-            if (strpos($moduleWiseActionCodes, "unlock") > -1) {
+        $adminUserId = explode("|", $this->input->post('adminUserId'));
+        $adminUserIdString = $this->input->post('adminUserId');
+        $checkData = $this->chkPermission($adminUserId);
 
-                $adminUserId = explode("|", $_POST['adminUserId']);
-                $adminUserIdString = $_POST['adminUserId'];
-                $checkData = $this->chkPermission($adminUserId);
-
-                if (strcmp($adminUserIdString, $checkData) == 0) {
-                    $selectedActionName = $_POST['selectedActionName'];
-                    foreach ($adminUserId as $index => $value) {
-                        $updateData = array("adminUserId" => $value,
-                            "isLocked" => 0,
-                            "mcStatus" => 0,
-                            "makerAction" => $selectedActionName,
-                            "makerActionCode" => 'unlock',
-                            "makerActionDt" => date("y-m-d"),
-                            "makerActionTm" => date("G:i:s"),
-                            "makerActionBy" => $this->session->userdata('adminUserId'));
-                        $updateArray[] = $updateData;
-                    }
-                    $this->db->update_batch('admin_users_mc', $updateArray, 'adminUserId');
-                    echo 1;
-                } else {
-                    echo 2;
-                }
+        if (strcmp($adminUserIdString, $checkData) == 0) {
+            $selectedActionName = $this->input->post('selectedActionName');
+            foreach ($adminUserId as $index => $value) {
+                $updateData = array("adminUserId" => $value,
+                    "isLocked" => 0,
+                    "mcStatus" => 0,
+                    "makerAction" => $selectedActionName,
+                    "makerActionCode" => 'unlock',
+                    "makerActionDt" => date("y-m-d"),
+                    "makerActionTm" => date("G:i:s"),
+                    "makerActionBy" => $this->my_session->adminUserId);
+                $updateArray[] = $updateData;
             }
+            $this->db->update_batch('admin_users_mc', $updateArray, 'adminUserId');
+            echo 1;
         } else {
-            echo "not allowed";
+            echo 2;
         }
     }
 
     public function chkPermission($data) { // function to check injection
-        $id = $this->session->userdata('adminUserId');
+        $id = $this->my_session->adminUserId;
 
         $this->db->select('admin_users_mc.adminUserId');
         $this->db->where_in('adminUserId', $data);

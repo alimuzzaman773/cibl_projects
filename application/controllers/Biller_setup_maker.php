@@ -9,10 +9,7 @@ class Biller_setup_maker extends CI_Controller {
         $this->load->model('biller_setup_model_maker');
     }
 
-    public function index() {
-        
-        
-        
+    public function index() {  
         $data["billerData"] = json_encode($this->biller_setup_model_maker->getAllBillers());
         $data["pageTitle"] = "Biller Setup";
         $data["body_template"] = "biller_setup_maker/overall_view.php";

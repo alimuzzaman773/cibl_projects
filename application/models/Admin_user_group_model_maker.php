@@ -4,14 +4,11 @@ class Admin_user_group_model_maker extends CI_Model {
 
     function __construct() {
         parent::__construct();
-        date_default_timezone_set('Asia/Dhaka');
-
-        $this->load->database();
     }
 
     public function getAllGroups() {
         $this->db->where('userGroupId !=', 1);
-        $this->db->where('makerActionBy =', $this->session->userdata('adminUserId'));
+        $this->db->where('makerActionBy =', $this->my_session->adminUserId);
         $this->db->or_where('mcStatus =', 1);
         $query = $this->db->get('admin_users_group_mc');
         return $query->result();
