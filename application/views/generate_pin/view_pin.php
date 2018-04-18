@@ -1,5 +1,15 @@
-<title>Generate Pin</title>
-<div class="breadcrum">Pin Numbers</div>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <h3 class="title-underlined ng-scope">
+                <?= $pageTitle ?>
+                <a href="<?php echo base_url(); ?>pin_generation" class="btn btn-primary btn-xs pull-right">
+                    <i class="fa fa-plus"></i> Create Pin
+                </a>
+            </h3>
+        </div>
+    </div>
+</div>
 
 <div class="container" style="margin-top:50px">
 
