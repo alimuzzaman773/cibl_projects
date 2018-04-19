@@ -39,7 +39,7 @@ class Client_registration_model extends CI_Model {
                 ->where("skyId", $skyId)
                 ->where("isVaryfied", 1)
                 ->get();
-        return $query->num_rows() > 0 ? true : false;
+        return $query->num_rows() > 0 ? $query : false;
     }
 
     /*
@@ -128,8 +128,8 @@ class Client_registration_model extends CI_Model {
 
     public function userDeleteChange($data, $skyId) {
         $this->db->where("skyId", $skyId)
-                ->update("apps_users_mc", $data);
-        return false;
+                 ->update("apps_users_mc", $data);
+        return true;
     }
 
 }
