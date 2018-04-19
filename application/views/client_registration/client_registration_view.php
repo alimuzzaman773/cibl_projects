@@ -1,130 +1,125 @@
-<title>Apps User</title>
-<div class="breadcrum">Apps Users</div>
+<h1 class="title-underlined">
+    Apps User
+    <a href="<?php echo base_url(). 'apps_users/addAppsUser/Add'; ?>" class="btn btn-primary pull-right">
+        <i class="glyphicon glyphicon-plus"></i> Add User
+    </a>
+</h1>
+<div class="table-responsive" id="AppUserModule" data-ng-controller="AppUsersController as AppUsersController">
 
-<div class="container" style="margin-top:40px">
-
-
-    <table width="300" border="0" cellpadding="5">
-        <tr>
-            <th align="left" scope=""><font color="green">Select Action</font></th>
-            <td>
-                <select id="actionSelect" name="actionSelect" data-bind="event: {change: $root.actionFunction}">
-                    <option value="all">Select Action</option>
-                </select>
-            </td>
-        </tr>
-    </table>
-
-    <br><br>
-
-    <button style="display: none;" id="addUser" data-bind="click :$root.addUser" class="btn btn-success">Add User</button>
-    <button style="display: none;" id="active" data-bind="click :$root.active" class="btn btn-success">Active</button>
-    <button style="display: none;" id="inactive" data-bind="click :$root.inactive" class="btn btn-success">Inactive
-    </button>
-    <button style="display: none;" id="lock" data-bind="click :$root.lock" class="btn btn-success">Lock</button>
-    <button style="display: none;" id="unlock" data-bind="click :$root.unlock" class="btn btn-success">Unlock</button>
-    <br/>
-    <br/>
-
-    <table data-bind="dataTable: { dataSource : records, rowTemplate: 'rowTemplate',
-           options: {
-           bAutoWidth : false,
-           aoColumnDefs: [
-           { bSortable: false, aTargets: [4] },
-           { bSearchable: false, aTargets: [4] }
-           ],
-           aaSorting: [],
-           aLengthMenu: [[50, 100, 150, -1], [50, 100, 150, 'All']],
-           iDisplayLength: 50,
-           aoColumns: [
-           {  mDataProp:'skyId' },
-           {  mDataProp:'eblSkyId' },
-           {  mDataProp:'cfId' },
-           {  mDataProp:'clientId' },
-           {  mDataProp:'isLocked' },
-           {  mDataProp:'isActive' },
-           {  mDataProp:'status' },
-           {  mDataProp:'userName' },
-           {  mDataProp:'userGroupName' },
-           {  mDataProp:'userEmail' },
-           {  mDataProp:'dob' },
-           {  mDataProp:'gender' }           
-           ]}}" class="table table-striped table-bordered" id="referenceTable">
-
+    <table class="table table-striped table-bordered" id="referenceTable">
         <thead>
-        <tr>
-
-            <th style="width:10%; text-align:center" colspan="4">Actions</th>
-            <th style="text-align:center">
-                <!--
-                <button style="text-align:center" id="selectAll" data-bind="click :$root.selectAll" class="btn btn-primary">Select All</button>
-                <button style="text-align:center" id="deselectAll" data-bind="click :$root.deselectAll, visible: false" class="btn btn-primary">Deselect All</button>
-                -->
-            </th>
-
-            <th hidden style="text-align:center">SKY ID</th>
-            <th style="text-align:center">ESB ID</th>
-            <th style="text-align:center">CFID</th>
-            <th style="text-align:center">Client ID</th>
-            <th style="text-align:center">Lock/Unlock</th>
-            <th style="text-align:center">Active/Inactive</th>
-            <th style="text-align:center">Status</th>
-            <!--<th style="text-align:center" colspan="3">Device Count</th>-->
-            <th style="text-align:center">User Name</th>
-            <th style="text-align:center">User Group</th>
-            <th style="text-align:center">Date of Birth</th>
-            <th style="text-align:center">Email</th>
-            <th style="text-align:center">Gender</th>
-
-        </tr>
+            <tr class="bg-primary">
+                <th>SKY ID</th>
+                <th>ESB ID</th>
+                <th>CFID</th>
+                <th>Client ID</th>
+                <th>Lock/Unlock</th>
+                <th>Active/Inactive</th>
+                <th>Status</th>
+                <th>User Name</th>
+                <th>User Group</th>
+                <th>Date of Birth</th>
+                <th>Email</th>
+                <th>Gender</th>
+                <td>Action</td>
+            </tr>
         </thead>
-
+        <tbody>
+            <tr dir-paginate="a in app_users | itemsPerPage: per_page track by $index"
+                total-items="totalCount" current-page="pagination.current">
+                <td>{{a.skyId}}</td>
+                <td>{{a.eblSkyId}}</td>
+                <td>{{a.cfId}}</td>
+                <td>{{a.clientId}}</td>
+                <td data-ng-class="{'test' : setStatus($index), 'bg-success' : a.isLocked == 1, 'bg-danger' : a.isLocked == 0}">{{a.isLocked == 1 ? 'Locked' : 'Unlocked'}}</td>
+                <td data-ng-class="{'bg-success' : a.isActive == 1, 'bg-danger' : a.isActive == 0}">{{a.isActive == 1 ? 'Active' : 'Inactive'}}</td>
+                <td class="{{a.statusColor}}">{{a.status}}</td>                
+                <td>{{a.userName}}</td>
+                <td>{{a.userGroupName}}</td>
+                <td>{{a.dob}}</td>
+                <td>{{a.userEmail}}</td>
+                <td>{{a.gender}}</td>
+                <td>
+                    <div class="dropdown pull-right">
+                        <button class="btn btn-primary btn-xs dropdown-toggle" type="button" data-toggle="dropdown">
+                            Action <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <?php //if(ci_check_permission("canEditSite")): ?>
+                            <li>
+                                <a href="<?=base_url()?>apps_users/editAppsUser?eblSkyId={{a.eblSkyId}}&cfId={{a.cfId}}&clientId={{a.clientId}}&skyId={{a.skyId}}&selectedActionName=Edit">
+                                    <i class="glyphicon glyphicon-edit"></i> Edit
+                                </a>
+                            </li>
+                            <?php //endif;?>
+                            <?php //if(ci_check_permission("canEditSite")): ?>
+                            <li>
+                                <a href="<?=base_url()?>client_registration/deviceInfo?skyId={{a.skyId}}&eblSkyId={{a.eblSkyId}}">
+                                    <i class="glyphicon glyphicon-dashboard"></i> View Devices
+                                </a>
+                            </li>
+                            <?php //endif;?>
+                            <?php //if(ci_check_permission("canEditSite")): ?>
+                            <li>
+                                <a href="<?=base_url()?>client_registration/viewUser?skyId={{a.skyId}}">
+                                    <i class="glyphicon glyphicon-list-alt"></i> Detail View
+                                </a>
+                            </li>
+                            <?php //endif;?>
+                            <?php //if(ci_check_permission("canViewElectricityReading")): ?>
+                            <li data-ng-if="a.isLocked == 0">
+                                <a data-ng-click="lock_unlock(a, 'Lock', 'userLock');">
+                                    <i class="glyphicon glyphicon-lock"></i> Lock
+                                </a>
+                            </li> 
+                            <?php //endif;?>
+                            <?php //if(ci_check_permission("canViewAdvancePaymentModule")): ?>
+                            <li data-ng-if="a.isLocked == 1">
+                                <a data-ng-click="lock_unlock(a, 'Unlock', 'userUnlock');">
+                                    <i class="glyphicon glyphicon-refresh"></i> Unlock
+                                </a>
+                            </li> 
+                            <?php //endif;?>
+                            <?php //if(ci_check_permission("canViewAdvancePaymentModule")): ?>
+                            <li data-ng-if="a.isActive == 0">
+                                <a data-ng-click="activate_deactivate(a, 'Active', 'userActive');">
+                                    <i class="glyphicon glyphicon-flash"></i> Active
+                                </a>
+                            </li> 
+                            <?php //endif;?>
+                            <?php //if(ci_check_permission("canViewAdvancePaymentModule")): ?>
+                            <li data-ng-if="a.isActive == 1">
+                                <a data-ng-click="activate_deactivate(a, 'Inactive', 'userInactive');">
+                                    <i class="glyphicon glyphicon-flash"></i> Inactive
+                                </a>
+                            </li> 
+                            <?php //endif;?>
+                            <?php //if(ci_check_permission("canViewTheftReport")): ?>
+                            <li>
+                                <a data-ng-click="deleteUser(a)">
+                                    <i class="glyphicon glyphicon-trash"></i> Delete
+                                </a>
+                            </li> 
+                            <?php //endif;?>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
     </table>
-
-    <script id="rowTemplate" type="text/html">
-
-        <td style="text-align:center">
-            <button data-bind="click: $root.viewUser, visible: detailView" class="btn btn-warning">Detail View</button>
-        </td>
-        <td style="text-align:center">
-            <button data-bind="click: $root.editUser, visible: edit" class="btn btn-warning">Edit</button>
-        </td>
-        <td style="text-align:center">
-            <button data-bind="click: $root.deletedUser, visible: deleted" class="btn btn-danger">Delete</button>
-        </td>
-        <td style="text-align:center">
-            <button data-bind="click: $root.addDevice, visible: device" class="btn btn-warning">Device</button>
-        </td>
-        <td style="text-align:center"><input type="checkbox" data-bind="checked: isProcessed, visible: check"></td>
-
-
-        <td hidden data-bind="text:skyId"></td>
-        <td data-bind="text:eblSkyId"></td>
-        <td data-bind="text:cfId"></td>
-        <td data-bind="text:clientId"></td>
-
-        <td style="text-align:center" data-bind="text:lock, style:{color: lockColor}"></td>
-        <td style="text-align:center" data-bind="text:active, style:{color: activeColor}"></td>
-        <td style="text-align:center" data-bind="text:status, style:{color: statusColor}"></td>
-	<!--
-        <td data-bind="text:totalDevice"></td>
-        <td data-bind="text:verifiedDevice"></td>
-        <td data-bind="text:nonVerifiedDevice"></td>
-	-->
-        <td style="text-align:center" data-bind="text:userName"></td>
-        <td style="text-align:center" data-bind="text:userGroupName"></td>
-        <td style="text-align:center" data-bind="text:dob"></td>
-        <td style="text-align:center" data-bind="text:userEmail"></td>
-        <td style="text-align:center" data-bind="text:gender"></td>
-
-
-    </script>
-
+    <div class="box-footer clearfix text-center">
+        <dir-pagination-controls on-page-change="pageChanged(newPageNumber)"
+                                 template-url="<?= base_url() ?>assets/angularjs/directives/dirPagination.tpl.html"></dir-pagination-controls>
+    </div>  
 </div>
 
+<?php
+ci_add_js(asset_url()."angularjs/directives/dirPagination.js");  
+ci_add_js(asset_url()."app/app_users.js")  
+?>    
 
 <script type="text/javascript" charset="utf-8">
-    var initialData = <?= $appsUsers ?>; //data for building initial table
+    var initialData = <?= '[]'?>; //data for building initial table
     
     var vm = function () {
         var self = this;
@@ -139,38 +134,6 @@
             record.detailView = ko.observable(false);
             record.deleted = ko.observable(false);
 	    
-            /*
-            record.verifiedDevice = "Verified Device: 0";
-            record.nonVerifiedDevice = "Nonverified Device: 0";
-            record.totalDevice = "Total Device: 0";
-            */
-
-            /*
-            for (var v = 0; v < verifiedDevice.length; v++) {
-
-                if (record.skyId === verifiedDevice[v].skyId) {
-
-                    record.verifiedDevice = "Verified Device: " + verifiedDevice[v].deviceCount;
-                }
-            }
-
-
-            for (var nv = 0; nv < nonVerifiedDevice.length; nv++) {
-
-                if (record.skyId === nonVerifiedDevice[nv].skyId) {
-
-                    record.nonVerifiedDevice = "Non Verified Device: " + nonVerifiedDevice[nv].deviceCount;
-                }
-            }
-
-            for (var t = 0; t < totalDevice.length; t++) {
-
-                if (record.skyId === totalDevice[t].skyId) {
-
-                    record.totalDevice = "Total Device: " + totalDevice[t].deviceCount;
-                }
-            }
-            */
 
             if (record.isActive == 1) {
                 record.active = "Active";
@@ -200,13 +163,7 @@
                 record.status = "Rejected";
                 record.statusColor = ko.observable("red");
             }
-            /*
-            if (record.verifiedDevice > 0) {
-                record.btnDeleteUser = ko.observable(false);
-            } else {
-                record.btnDeleteUser = ko.observable(true);
-            }
-            */
+            
 
         });
 
@@ -517,25 +474,11 @@
         };
 
     };
-    ko.applyBindings(new vm());
+    //ko.applyBindings(new vm());
 
 
 </script>
 
-
-<script type="text/javascript" charset="utf-8">
-
-    var actionCodes = <?php echo $actionCodes ?>;
-    var actionNames = <?php echo $actionNames ?>;
-
-    var sel = document.getElementById('actionSelect');
-    for (var i = 0; i < actionCodes.length; i++) {
-        var opt = document.createElement('option');
-        opt.innerHTML = actionNames[i];
-        opt.value = actionCodes[i];
-        sel.appendChild(opt);
-    }
-</script>
 
 
 

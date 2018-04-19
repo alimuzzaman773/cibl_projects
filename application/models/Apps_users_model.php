@@ -85,7 +85,7 @@ class Apps_users_model extends CI_Model {
         $clientId = $data['clientId'];
         $skyId = $data['skyId'];
 
-        $this->db->where("clientId = '$clientId' AND skyId != '$skyId'");
+        $this->db->where("clientId = {$this->db->escape($clientId)} AND skyId != {$this->db->escape($skyId)}");
         $query = $this->db->get('apps_users_mc');
         return $query->result_array();
     }

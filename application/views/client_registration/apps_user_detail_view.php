@@ -1,48 +1,16 @@
-
-<title>Apps User</title>
-<div class="breadcrum">Detail View</div>
-
-
-
-<style>
-
-label {
-    float:left;
-    width:180px;
-    clear:left;
-    text-align:right;
-    padding-right:10px;
-    color: #009933;
-}
-
-input {
-    float:center;
-    border: 1px solid #848484; 
-    -webkit-border-radius: 30px; 
-    -moz-border-radius: 30px; 
-    border-radius: 30px; 
-    outline:0; 
-    height:25px; 
-    width: 275px; 
-    padding-left:10px; 
-    padding-right:10px; 
-}
-</style>
-
-
-
-
+<h1 class="title-underlined">Apps User</h1>
 <input type="hidden" name="skyId" id="skyId" value="<?=$userInfo['skyId']?>" />
 
 
-<div class="container" style="margin-top:50px">
-
-
-<h3> General Information <h3>
-
-<table class="table table-striped table-bordered">    
+<div class="clearfix table-responsive">
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr class="bg-primary">
+            <td colspan="2">General Information</td>
+        </tr>
+    </thead>    
     <tr>
-        <th align="left" scope="row">ESB ID</th>
+        <th style="width:200px;">ESB ID</th>
         <td><?= $userInfo['eblSkyId'] ?></td>
     </tr>
     
@@ -147,20 +115,12 @@ input {
     </tr>
 </table>
 
-<br><br>
-
-
-
-
-
-
-
-<h3> Account Information <h3>
-<div id="showAccounts" data-bind="visible: accounts().length > 0">
+<h3>Account Information</h3>
+<div id="showAccounts" data-bind="visible: accounts().length > 0" class="table-responsive">
     <table class="table table-striped table-bordered">
         <thead>
             <tr>
-				<th style="text-align:center">Account Number</th>
+                <th style="text-align:center">Account Number</th>
                 <th style="text-align:center">Account Type</th>
                 <th style="text-align:center">Product Name</th>
                 <th style="text-align:center">Currency</th>
@@ -168,7 +128,7 @@ input {
         </thead>
         <tbody data-bind="foreach: accounts">
             <tr>
-				<td style="text-align:center" data-bind="text:accNo"></td>
+                <td style="text-align:center" data-bind="text:accNo"></td>
                 <td style="text-align:center" data-bind="text:accType"></td>
                 <td style="text-align:center" data-bind="text:accName"></td>
                 <td style="text-align:center" data-bind="text:accCurrency"></td>
@@ -183,9 +143,8 @@ input {
 </div>
 
 
-<div class="container" style="margin-top:50px">
-
-<h3> Device Information <h3>
+<div class="clearfix table-responsive">
+<h3>Device Information</h3>
 <div id="showAccounts" data-bind="visible: devices().length > 0">
     <table class="table table-striped table-bordered">
         <thead>
@@ -205,7 +164,6 @@ input {
             </tr>
         </tbody>
     </table>
-
 </div>
 
 <div class="well" data-bind="visible: devices().length == 0">
@@ -214,8 +172,6 @@ input {
 
 <br>
 <button style="display: block;" id="back" data-bind="click :$root.back" class="btn btn-success">Back</button>
-
-
 </div>
 
 
@@ -233,7 +189,7 @@ input {
 			account.accType = account.accType;
             account.accName = account.accName;
             account.accCurrency = account.accCurrency;
-        })
+        });
 
         $.each(self.devices(), function(i, device) { 
             device.eblSkyId = device.eblSkyId;
@@ -247,16 +203,11 @@ input {
                 device.verifyColor = ko.observable("red")
             }
             device.varyfiedDtTm = device.varyfiedDtTm;
-        })
-
-
+        });
         
         self.back = function(item){
             window.location = "<?php echo base_url(); ?>client_registration";
-        }
-
-
-
+        };
     }
     ko.applyBindings(new vm());
 </script>

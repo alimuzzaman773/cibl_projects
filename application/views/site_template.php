@@ -9,7 +9,7 @@
         <meta name="author" content="">
         <link rel="shortcut icon" href="<?= asset_url() ?>favicon.ico">
 
-        <title><?= $pageTitle ?> | SkyBank</title>
+        <title><?= isset($pageTitle) ? $pageTitle : 'NoTitle' ?> | SkyBank</title>
 
         <!-- Bootstrap core CSS -->
         <link href="<?= theme_path() ?>bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -194,6 +194,11 @@
                 }
             }
         </script>    
-
+        <footer>
+            <div class="container">
+                <hr />
+                <p class="text-center">&copy; EBL</p>
+            </div>
+        </footer>
     </body>
 </html>

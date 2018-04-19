@@ -9,16 +9,28 @@ class Client_registration_model extends CI_Model {
         $this->load->database();
     }
 
-    public function getAllAppsUsers() {
-        $this->db->order_by('skyId', 'desc');
-        $this->db->select('apps_users_mc.*, apps_users_group.userGroupName');
-        $this->db->where("apps_users_mc.salt2 IS Null");
-        $this->db->where('apps_users_mc.makerActionBy =', $this->session->userdata('adminUserId'));
-        $this->db->or_where('apps_users_mc.mcStatus =', 1);
+    public function getAllAppsUsers($p) 
+    {
+        if(isset($p['get_count']) && (int)$p['get_count'] > 0):
+            $this->db->select('count(*) as total',false);            
+        else:
+            $this->db->select('apps_users_mc.*, apps_users_group.userGroupName');
+        endif;
+            
         $this->db->from('apps_users_mc');
         $this->db->join('apps_users_group', 'apps_users_mc.appsGroupId = apps_users_group.appsGroupId');
+        $this->db->where("apps_users_mc.salt2 IS Null");
+        $this->db->where('apps_users_mc.makerActionBy', $this->my_session->userId);
+        $this->db->or_where('apps_users_mc.mcStatus =', 1);
+        $this->db->order_by('skyId', 'desc');
+        
+        if(isset($p['limit']) && (int)$p['limit'] > 0){
+            $offset = (isset($p['offset']) && $p['offset'] != null) ? (int)$p['offset'] : 0;
+            $this->db->limit($p['limit'], $offset);
+        }
+        
         $query = $this->db->get();
-        return $query->result();
+        return $query->num_rows() > 0 ? $query : false;
     }
 
     public function countVerifiedDevice($skyId) {
@@ -64,8 +76,8 @@ class Client_registration_model extends CI_Model {
         if ($data != NULL) {
             $this->db->select('apps_users_mc.eblSkyId, device_info_mc.*');
 
-            $this->db->where('(device_info_mc.makerActionBy = ' . $this->session->userdata('adminUserId') .
-                    ' OR device_info_mc.mcStatus = 1) AND device_info_mc.skyId = ' . $data);
+        $this->db->where("(device_info_mc.makerActionBy =  {$this->db->escape($this->my_session->adminUserId)}
+                     OR device_info_mc.mcStatus = 1) AND device_info_mc.skyId = " . $this->db->escape($data));
 
             $this->db->from('device_info_mc');
             $this->db->join('apps_users_mc', 'apps_users_mc.skyId = device_info_mc.skyId');
@@ -96,7 +108,7 @@ class Client_registration_model extends CI_Model {
     public function checkDuplicateImei($data) {
         $deviceId = $data['deviceId'];
         $imeiNo = $data['imeiNo'];
-        $this->db->where("imeiNo = '$imeiNo' AND deviceId != '$deviceId'");
+        $this->db->where("imeiNo = {$this->db->escape($imeiNo)} AND deviceId != {$this->db->escape($deviceId)}");
         $this->db->from('device_info_mc');
         $count = $this->db->count_all_results();
         return $count;
@@ -106,6 +118,7 @@ class Client_registration_model extends CI_Model {
         unset($data['eblSkyId']);
         unset($data['selectedActionName']);
         $this->db->insert('device_info_mc', $data);
+        return $this->db->insert_id();
     }
 
     public function updateImeiNo($data, $id) {

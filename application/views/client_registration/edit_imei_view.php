@@ -1,94 +1,112 @@
-<title>Apps User</title>
-<div class="breadcrum">Edit Apps User</div>
-<div class="container" style="margin-top:50px">
-
-    <div class="alert alert-success"><?php echo $message ?></div>
+<h1 class="title-underlined">Apps User</h1>
+<div class="clearfix table-responsive">
+    <div class="alert alert-info" id="message" style="display:none"><?php echo $message ?></div>
 
     <form method="post" style="" id="imeiEditForm" name="imeiEditForm" action="<?php echo base_url(); ?>client_registration/updateDevice">
-        <input hidden type="text" name="skyId" id="skyId" value="<?=$skyId ?>" size="20" />
-        <input hidden type="text" name="deviceId" id="deviceId" value="<?=$deviceId ?>" size="20" />
-        <input hidden type="text" name="selectedActionName" id="selectedActionName" value="<?=$selectedActionName ?>" size="20" />
-        <fieldset>
+        <input hidden type="text" name="skyId" id="skyId" value="<?= $skyId ?>" size="20" />
+        <input hidden type="text" name="deviceId" id="deviceId" value="<?= $deviceId ?>" size="20" />
+        <input hidden type="text" name="selectedActionName" id="selectedActionName" value="<?= $selectedActionName ?>" size="20" />
 
+        <div id="reasonDiv" style="<?= $reasonModeOfDisplay ?>">
+            <h3>Reject Reason</h3>
+            <?=$checkerActionComment?>        
+        </div>
 
-            <div id="reasonDiv" style="<?= $reasonModeOfDisplay ?>" >
-                <h3>Reject Reason<h3>
-                <textarea name="reason" id="reason" cols="40" rows="5" readonly></textarea>
-                <br><br>
-            </div>
+        <table class="table table-bordered table-bordered table-striped">
+            <tr>
+                <th style="width:200px;">ESB ID</th>
+                <td><input type="text" class="form-control" name="eblSkyId" id="eblSkyId" value="<?= $eblSkyId ?>" size="20" readonly /></td>                
+            </tr>
+            <tr>
+                <th>IMEI No.</th>
+                <td><input type="text" class="form-control" name="imeiNo" id="imeiNo" maxlength="15" value="<?= $imeiNo ?>"/></td>
+            </tr>
 
-            <table width="500" border="0" cellpadding="5">
-                <tr>
-                    <th width="213" align="left" scope="row">ESB ID</th>
-                    <td width="161"><input type="text" name="eblSkyId" id="eblSkyId" value="<?=$eblSkyId ?>" size="20" readonly /></td>
-                    <td width="161"><input hidden type="text" name="skyId" id="skyId" value="<?=$skyId ?>" size="20" readonly /></td>
-                </tr>
+            <tr>
+                <th>&nbsp;</th>
+                <td>
+                    <button class="btn btn-primary" type="button" onclick="return app.saveImei();">
+                        Update
+                    </button>
+                    <input type="button" value="Back" class="btn btn-success" id="backButton"/>
+                </td>
+            </tr>
 
-  
-                <tr>
-                    <th align="left" scope="row">IMEI No.</th>
-                    <td><input type="text" name="imeiNo" id="imeiNo" maxlength="15" value="<?=$imeiNo ?>"/></td>
-                </tr>
-                
-                <tr>
-                    <th align="left" scope="row">&nbsp;</th>
-                    <td></td>
-                </tr>
-
-            </table>
-
-        </fieldset>
-
-      <table width="50" border="0" cellpadding="2">
-          <tr>
-              <td width="100"><input type="button" value="Update" class="btn btn-success" id="updateButton"/></td>
-              <td width="100"><input type="button" value="Back" class="btn btn-success" id="backButton"/></td>
-          </tr>
-      </table>
-
-
+        </table>
     </form>
-
 </div>
 
 
 <script>
-
-
-document.getElementById("reason").value = "<?php echo $checkerActionComment ?>";
-
-  $(document).ready(function(){
-    $('#updateButton').click(function(){
-       var imeiNo = $('#imeiNo').val();
-       if(imeiNo.match(/\s|\./g)){
-        alert("IMEI field can't contain space");
-       }
-       else if(imeiNo === null || imeiNo === ""){
-        alert("IMEI field can't be empty");
-       }
-       /* 
-	else if(isNaN(imeiNo)){
-        alert("Only numbers are allowed for IMEI");
-       }
-	*/
-
-       else{
-        $('#imeiEditForm').submit()
-       }
-    });
-  });
-
+    var app = app || {};
+    
+    app.saveImei = function()
+    {
+        var result = app.checkImei();
+        if(!result.success){
+            $("#message").html(result.msg);
+            $("#message").fadeIn();
+            return false;
+        }
+        
+        $("#message").html("");
+        $("#message").hide();
+        app.showModal();
+        $.ajax({
+           url : app.baseUrl+'client_registration/updateDevice',
+           type: 'post',
+           data : $("#imeiEditForm").serialize(),
+           dataType : 'json',
+           success : function(data){
+               app.hideModal();
+               if(data.success == false){
+                   console.log(data);
+                   $("#message").html(data.msg);
+                   $("#message").fadeIn();
+                   return false;
+               }
+               
+               alert("IMEI NO saved successfully");
+               $("#reasonDiv").hide();
+           },
+           error : function(data){
+               app.hideModal();
+               alert("There was a problem, please try again later.");
+           }
+        });
+        return false;
+    };
+    
+    app.checkImei = function(){
+        var imeiNo = $('#imeiNo').val();
+        if(imeiNo.match(/\s|\./g)){
+            return {
+                success : false,
+                msg : "IMEI field cannot contain spaces"
+            }
+        }
+        else if(imeiNo === null || imeiNo === ""){
+            return {
+                success : false,
+                msg : 'IMEI field cannot be empty'
+            }
+        }
+        return {
+            success: true
+        }
+    };
+    
 </script>
 
 
 <script>
 
-  $(document).ready(function(){
-    $('#backButton').click(function(){
-       var skyId = $('#skyId').val();
-       var eblSkyId = $('#eblSkyId').val();
-       window.location = "<?php echo base_url(); ?>client_registration/deviceInfo?skyId=" + skyId + "&eblSkyId=" + eblSkyId;
+    $(document).ready(function () {
+        $('#backButton').click(function () {
+            var skyId = $('#skyId').val();
+            var eblSkyId = $('#eblSkyId').val();
+            window.location = "<?php echo base_url(); ?>client_registration/deviceInfo?skyId=" + skyId + "&eblSkyId=" + eblSkyId;
+        });
     });
-  });
 
 </script>
