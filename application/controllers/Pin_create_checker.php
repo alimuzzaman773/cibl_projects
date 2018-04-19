@@ -8,27 +8,16 @@ class Pin_create_checker extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
-        date_default_timezone_set('Asia/Dhaka');
-
-        $this->load->helper('url');
+        $this->load->library("my_session");
+        $this->my_session->checkSession();
         $this->load->model('generate_eblskyid_model_checker');
-        $this->load->library('session');
-
-        $this->load->model('login_model');
-        if ($this->login_model->check_session()) {
-            redirect('/admin_login/index');
-        }
     }
 
     public function index() {
-        $this->output->set_template('theme2');
-        $authorizationModules = $this->session->userdata('authorizationModules');
-        if (strpos($authorizationModules, pin_create_authorization) > -1) {
-            $data['unApprovedRequest'] = json_encode($this->generate_eblskyid_model_checker->getUnapprovedRequests());
-            $this->load->view('pin_create_checker/requests.php', $data);
-        } else {
-            echo "Authorization Module Not Given";
-        }
+        $data['unApprovedRequest'] = json_encode($this->generate_eblskyid_model_checker->getUnapprovedRequests());
+        $data["pageTitle"] = "PIN Create Checker";
+        $data["body_template"] = "pin_create_checker/requests.php";
+        $this->load->view('site_template.php', $data);
     }
 
     public function pinCreateApprove() {
@@ -50,13 +39,10 @@ class Pin_create_checker extends CI_Controller {
                 $data['checkerActionComment'] = NULL;
                 $data['checkerActionDt'] = date("Y-m-d");
                 $data['checkerActionTm'] = date('G:i:s');
-                $data['checkerActionBy'] = $this->session->userdata('adminUserId');
+                $data['checkerActionBy'] = $this->my_session->userId;
 
                 $this->db->where('requestId', $id);
                 $this->db->update('pin_generation_request', $data);
-
-
-
                 $selectedActionName = "Create";
 
                 $this->db->select_max('generateId');
@@ -68,7 +54,7 @@ class Pin_create_checker extends CI_Controller {
 
                     $insertData = array('eblSkyId' => 'ESB' . (1000 + $maxId + $i),
                         'pin' => $this->common_model->generateRandomString(),
-                        'createdBy' => $this->session->userdata('adminUserId'),
+                        'createdBy' => $this->my_session->userId,
                         'creationDtTm' => date("Y-m-d G:i:s"),
                         'isActive' => 1,
                         'mcStatus' => 1,
@@ -93,7 +79,7 @@ class Pin_create_checker extends CI_Controller {
 
                 // prepare data for activity log //
                 $activityLog = array('activityJson' => json_encode($pinCreateActivity),
-                    'adminUserId' => $this->session->userdata('adminUserId'),
+                    'adminUserId' => $this->my_session->userId,
                     'adminUserName' => $this->session->userdata('username'),
                     'tableName' => 'generate_eblskyid',
                     'moduleName' => 'pin_module',

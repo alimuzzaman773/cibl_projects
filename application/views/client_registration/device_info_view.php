@@ -1,155 +1,108 @@
-<title>Device</title>
-<div class="breadcrum">Device</div>
+<h1 class="title-underlined">
+    Device
+    
+    <a href="<?=base_url()."client_registration/addDeviceInfo?eblSkyId={$eblSkyId}&skyId={$skyId}"?>" class="btn btn-primary pull-right">
+        <i class="glyphicon glyphicon-plus"></i> Add Device
+    </a>
+</h1>
 
-<div class="container" style="margin-top:50px">
-
+<div class="clearfix table-responsive form-inline" id="AppUserModule" data-ng-controller="AppUsersDeviceCOntroller">
     <input hidden type="text" name="skyId" id="skyId" value="<?= $skyId ?>" size="20"/>
     <input hidden type="text" name="eblSkyId" id="eblSkyId" value="<?= $eblSkyId ?>" size="20"/>
-
-    <table width="300" border="0" cellpadding="5">
-        <tr>
-            <th align="left" scope="">Select Action</th>
-            <td>
-                <select id="actionSelect" name="actionSelect" data-bind="event: {change: $root.actionFunction}">
-                    <option value="all">Select Action</option>
-
-                </select>
-            </td>
-        </tr>
-    </table>
-    <br/>
-     <table width="50" border="0" cellpadding="2">
-        <tr>
-            <td width="100">
-                <button style="display: block;" id="back" data-bind="click :$root.back" class="btn btn-success">Back
-                </button>
-            </td>
-            <td width="100">
-                <button style="display: none;" id="addDevice" data-bind="click :$root.addDevice"
-                        class="btn btn-success">Add Device
-                </button>
-            </td>
-            <td width="100">
-                <button style="display: none;" id="lock" data-bind="click :$root.lock" class="btn btn-success">Lock
-                </button>
-            </td>
-            <td width="100">
-                <button style="display: none;" id="unlock" data-bind="click :$root.unlock" class="btn btn-success">
-                    Unlock
-                </button>
-            </td>
-            <td width="100">
-                <button style="display: none;" id="active" data-bind="click :$root.active" class="btn btn-success">
-                    Active
-                </button>
-            </td>
-            <td width="100">
-                <button style="display: none;" id="inactive" data-bind="click :$root.inactive" class="btn btn-success">
-                    Inactive
-                </button>
-            </td>
-        </tr>
-    </table>
-    <br/>
-
-
-    <table data-bind="dataTable: { dataSource : records, rowTemplate: 'rowTemplate',
-           options: {
-           bAutoWidth : false,
-           aoColumnDefs: [
-           { bSortable: false, aTargets: [0,1] },
-           { bSearchable: false, aTargets: [0,1] }
-           ],
-           aaSorting: [],
-           aLengthMenu: [[50, 100, 150, -1], [50, 100, 150, 'All']],
-           iDisplayLength: 50,
-           aoColumns: [
-           {  mDataProp:'deviceId' },
-           {  mDataProp:'skyId' },
-           {  mDataProp:'eblSkyId' },
-           {  mDataProp:'imeiNo' },
-           {  mDataProp:'verify' },
-           {  mDataProp:'varyfiedDtTm' },
-           {  mDataProp:'active' },
-           {  mDataProp:'lock' },
-           {  mDataProp:'status' }
-           ]}}" class="table table-striped table-bordered" id="referenceTable">
-
+    
+    <table class="table table-striped table-bordered" id="referenceTable">
         <thead>
-        <tr>
-
-            <th style="width:5%; text-align: center">Actions</th>
-            <th style="text-align:center; width:10%">
-<!--
-                <button style="text-align:center" id="selectAll" data-bind="click :$root.selectAll"
-                        class="btn btn-primary">Select All
-                </button>
-                <button style="text-align:center" id="deselectAll" data-bind="click :$root.deselectAll, visible: false"
-                        class="btn btn-primary">Deselect All
-                </button>
--->
-            </th>
-
-
-            <th hidden style="text-align:center">Device ID</th>
-            <th hidden style="text-align:center">SKY ID</th>
-            <th style="text-align:center">ESB ID</th>
-            <th style="text-align:center">IMEI No.</th>
-            <th style="text-align:center">Is Verified</th>
-            <th style="text-align:center">Verify Date</th>
-            <th style="text-align:center">Active/Inactive</th>
-            <th style="text-align:center">Lock/Unlock</th>
-            <th style="text-align:center">Status</th>
-
-        </tr>
+            <tr class="bg-primary">
+                <th>#SL</th>
+                <th>Device ID</th>
+                <th>SKY ID</th>
+                <th>ESB ID</th>
+                <th>IMEI No.</th>
+                <th>Is Verified</th>
+                <th>Verify Date</th>
+                <th>Active/Inactive</th>
+                <th>Lock/Unlock</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
         </thead>
 
         <tbody>
+            <tr data-ng-repeat="d in devices track by $index">
+                <td>{{$index + 1}}</td>
+                <td data-ng-bind="d.deviceId"></td>
+                <td data-ng-bind="d.skyId"></td>
+                <td data-ng-bind="d.eblSkyId"></td>
+                <td data-ng-bind="d.imeiNo"></td>
+                <td data-ng-bind="d.isVaryfied"></td>
+                <td data-ng-bind="d.varyfiedDtTm"></td>
+                <td data-ng-bind="d.isActive"></td>
+                <td data-ng-bind="d.isLocked"></td>
+                <td data-ng-class="{'sds' : setStatus($index)}" data-ng-bind="d.status"></td>                
+                <td>
+                    <div class="dropdown pull-right">
+                        <button class="btn btn-primary btn-xs dropdown-toggle" type="button" data-toggle="dropdown">
+                            Action <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <?php //if(ci_check_permission("canEditSite")): ?>
+                            <li>
+                                <a href="<?=base_url()?>client_registration/editDevice?eblSkyId={{d.eblSkyId}}&skyId={{d.skyId}}&imeiNo={{d.imeiNo}}&deviceId={{d.deviceId}}">
+                                    <i class="glyphicon glyphicon-edit"></i> Edit
+                                </a>
+                            </li>
+                            <?php //endif;?>
+                            <?php //if(ci_check_permission("canViewElectricityReading")): ?>
+                            <li data-ng-if="d.isLocked == 0">
+                                <a data-ng-click="lock_unlock(d, 'Lock', 'deviceLock');">
+                                    <i class="glyphicon glyphicon-lock"></i> Lock
+                                </a>
+                            </li> 
+                            <?php //endif;?>
+                            <?php //if(ci_check_permission("canViewAdvancePaymentModule")): ?>
+                            <li data-ng-if="d.isLocked == 1">
+                                <a data-ng-click="lock_unlock(d, 'Unlock', 'deviceUnlock');">
+                                    <i class="glyphicon glyphicon-refresh"></i> Unlock
+                                </a>
+                            </li> 
+                            <?php //endif;?>
+                            <?php //if(ci_check_permission("canViewAdvancePaymentModule")): ?>
+                            <li data-ng-if="d.isActive == 0">
+                                <a data-ng-click="activate(d);">
+                                    <i class="glyphicon glyphicon-flash"></i> Activate
+                                </a>
+                            </li> 
+                            <?php //endif;?>
+                            <?php //if(ci_check_permission("canViewAdvancePaymentModule")): ?>
+                            <li data-ng-if="d.isActive == 1">
+                                <a data-ng-click="deactivate(d);">
+                                    <i class="glyphicon glyphicon-flash"></i> Deactivate
+                                </a>
+                            </li> 
+                            <?php //endif;?>                            
+                        </ul>
+                    </div>
+                </td>                
+            </tr>
         </tbody>
 
     </table>
-
-    <script id="rowTemplate" type="text/html">
-        <td style="text-align:center">
-            <button data-bind="click: $root.editDevice, visible: edit" class="btn btn-warning">Edit</button>
-        </td>
-        <td style="text-align:center"><input type="checkbox" data-bind="checked: isProcessed, visible: check"></td>
-        <td hidden style="text-align:center" data-bind="text:deviceId"></td>
-        <td hidden style="text-align:center" data-bind="text:skyId"></td>
-        <td style="text-align:center" data-bind="text:eblSkyId"></td>
-        <td style="text-align:center" data-bind="text:imeiNo"></td>
-        <td style="text-align:center" data-bind="text:verify, style:{color: verifyColor}"></td>
-        <td style="text-align:center" data-bind="text:varyfiedDtTm"></td>
-        <td style="text-align:center" data-bind="text:active, style:{color: activeColor}"></td>
-        <td style="text-align:center" data-bind="text:lock, style:{color: lockColor}"></td>
-        <td style="text-align:center" data-bind="text:status, style:{color: statusColor}"></td>
-    </script>
-
-
-  
-
-
 </div>
 
 
-<style>
-    input {
-        float: center;
-        border: 1px solid #848484;
-        -webkit-border-radius: 30px;
-        -moz-border-radius: 30px;
-        border-radius: 30px;
-        outline: 0;
-        height: 25px;
-        width: 100px;
-        padding-left: 10px;
-        padding-right: 10px;
-    }
-</style>
+<?php
+ci_add_js(asset_url()."angularjs/directives/dirPagination.js");  
+ci_add_js(asset_url()."app/app_users.js")  
+?> 
 
+<script>
+var app = app || {};
+app.skyId = '<?=$skyId?>';
+app.eblSkyId = '<?=$eblSkyId?>';
+</script>
 
 <script type="text/javascript" charset="utf-8">
-    var initialData = jQuery.parseJSON('<?= $deviceInfo ?>'); //data for building initial table
+    var initialData = app.devices = jQuery.parseJSON('<?= $deviceInfo ?>'); //data for building initial table
     var vm = function () {
         var self = this;
         self.records = ko.observableArray(initialData);
@@ -477,24 +430,5 @@
 
     };
 
-    ko.applyBindings(new vm());
+    //ko.applyBindings(new vm());
 </script>
-
-
-<script type="text/javascript" charset="utf-8">
-
-    var actionCodes = <?php echo $actionCodes ?>;
-    var actionNames = <?php echo $actionNames ?>;
-
-    var sel = document.getElementById('actionSelect');
-    for (var i = 0; i < actionCodes.length; i++) {
-        var opt = document.createElement('option');
-        opt.innerHTML = actionNames[i];
-        opt.value = actionCodes[i];
-        sel.appendChild(opt);
-    }
-
-
-</script>
-
-

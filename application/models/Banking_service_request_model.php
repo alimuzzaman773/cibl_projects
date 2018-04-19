@@ -4,8 +4,6 @@ class Banking_service_request_model extends CI_Model {
 
     function __construct() {
         parent::__construct();
-        date_default_timezone_set('Asia/Dhaka');
-        $this->load->database();
     }
 
     public function insert_banking_request($data) {

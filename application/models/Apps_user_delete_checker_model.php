@@ -7,8 +7,7 @@ class Apps_user_delete_checker_model extends CI_Model {
 
     public function __construct() {
         parent::__construct();
-        date_default_timezone_set('Asia/Dhaka');
-        $this->load->database();
+      $this->load->library("my_session");
     }
 
     public function getUnapprovedDeleteUser() {
@@ -16,7 +15,7 @@ class Apps_user_delete_checker_model extends CI_Model {
                 ->order_by("skyId", "desc")
                 ->where('apps_users_mc.salt2', 'delete')
                 ->where('apps_users_mc.mcStatus =', 0)
-                ->where('apps_users_mc.makerActionBy !=', $this->session->userdata('adminUserId'))
+                ->where('apps_users_mc.makerActionBy !=', $this->my_session->userId)
                 ->select('apps_users_mc.*, apps_users_group.userGroupName')
                 ->from('apps_users_mc')
                 ->join('apps_users_group', 'apps_users_mc.appsGroupId = apps_users_group.appsGroupId')

@@ -1,232 +1,189 @@
-<title>Apps User</title>
-<div class="breadcrum">Edit Apps User</div>
+<h1 class="title-underlined">Apps User</h1>
 
 <input hidden class="textbox" type="text" name="selectedActionName" id="selectedActionName"
-       value="<?= $selectedActionName ?>">
-<input hidden type="text" name="skyId" id="skyId" value="<?= $skyId ?>">
+       value="<?= $selectedActionName ?>" />
+<input hidden type="text" name="skyId" id="skyId" value="<?= $skyId ?>" />
 
-<div class="container" style="margin-top:50px">
+<div class="clearfix">
     <div id="reasonDiv" style="<?= $reasonModeOfDisplay ?>">
-        <h3 style="color:red">Reject Reason<h3>
-                <textarea name="reason" id="reason" cols="40" rows="5" readonly></textarea>
-                <br><br>
+        <h3 style="color:red">Reject Reason</h3>
+        <?php echo $checkerActionComment; ?>        
     </div>
 
     <div class="card_container">
-        <h3 style="color: green" class="container_title">Account Related Information
-            <h3>
+        <h3 style="color: green" class="container_title">
+            Account Related Information
+        </h3>
 
-                <div id="showUsers">
-                    <table class="table table-striped table-bordered">
+        <div id="showUsers" class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th colspan="2" style="text-align: center; color: green">General Information</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th align="left" scope="row">ESB ID</th>
+                        <td id="esbId"><?= $esbId ?></td>
+                    </tr>
+                    <tr>
+                        <th align="left" scope="row">CFID</th>
+                        <td id="cfId"><?= $cfId ?></td>
+                    </tr>
+                    <tr>
+                        <th align="left" scope="row">Date of Birth</th>
+                        <td id="dob"><?= $dob ?></td>
+                    </tr>
+                    <tr>
+                        <th align="left" scope="row">Gender</th>
+                        <td id="sex"><?= $sex ?></td>
+                    </tr>
+                    <tr>
+                        <th align="left" scope="row">Father's Name</th>
+                        <td id="fatherName"><?= $fatherName ?></td>
+                    </tr>
+                    <tr>
+                        <th align="left" scope="row">Mother's Name</th>
+                        <td id="motherName"><?= $motherName ?></td>
+                    </tr>
+                    <tr>
+                        <th align="left" scope="row">Contact Number</th>
+                        <td id="userMobNo1"><?= $userMobNo1 ?></td>
+                    </tr>
+                    <tr>
+                        <th align="left" scope="row">Alternate Contact Number</th>
+                        <td id="userMobNo2"><?= $userMobNo2 ?></td>
+                    </tr>
+                    <tr>
+                        <th align="left" scope="row">User Name</th>
+                        <td id="userName"><?= $userName ?></td>
+                    </tr>
+                    <tr>
+                        <th align="left" scope="row">Email</th>
+                        <td id="userEmail"><?= $userEmail ?></td>
+                    </tr>
+                    <tr>
+                        <th align="left" scope="row">Current Address</th>
+                        <td id="currAddress"><?= $currAddress ?></td>
+                    </tr>
+                    <tr>
+                        <th align="left" scope="row">Parmanent Address</th>
+                        <td id="parmAddress"><?= $parmAddress ?></td>
+                    </tr>
+                    <tr>
+                        <th align="left" scope="row">Mailing Address</th>
+                        <td id="billingAddress"><?= $billingAddress ?></td>
+                    </tr>
+                    <tr>
+                        <th align="left" scope="row">Home Branch Code</th>
+                        <td id="homeBranchCode"><?= $homeBranchCode ?></td>
+                    </tr>
+                    <tr>
+                        <th align="left" scope="row">Home Branch Name</th>
+                        <td id="homeBranchName"><?= $homeBranchName ?></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
-                        <thead>
-                        <tr>
-                            <th colspan="2" style="text-align: center; color: green">General Information</th>
-                        </tr>
-                        </thead>
-
-
-                        <tbody>
-                        <tr>
-                            <th align="left" scope="row">ESB ID</th>
-                            <td id="esbId"><?= $esbId ?></td>
-                        </tr>
-
-                        <tr>
-                            <th align="left" scope="row">CFID</th>
-                            <td id="cfId"><?= $cfId ?></td>
-                        </tr>
-
-                        <tr>
-                            <th align="left" scope="row">Date of Birth</th>
-                            <td id="dob"><?= $dob ?></td>
-                        </tr>
-
-
-                        <tr>
-                            <th align="left" scope="row">Gender</th>
-                            <td id="sex"><?= $sex ?></td>
-                        </tr>
-
-
-                        <tr>
-                            <th align="left" scope="row">Father's Name</th>
-                            <td id="fatherName"><?= $fatherName ?></td>
-                        </tr>
-
-                        <tr>
-                            <th align="left" scope="row">Mother's Name</th>
-                            <td id="motherName"><?= $motherName ?></td>
-                        </tr>
-
-
-                        <tr>
-                            <th align="left" scope="row">Contact Number</th>
-                            <td id="userMobNo1"><?= $userMobNo1 ?></td>
-                        </tr>
-
-
-                        <tr>
-                            <th align="left" scope="row">Alternate Contact Number</th>
-                            <td id="userMobNo2"><?= $userMobNo2 ?></td>
-                        </tr>
-
-                        <tr>
-                            <th align="left" scope="row">User Name</th>
-                            <td id="userName"><?= $userName ?></td>
-                        </tr>
-
-
-                        <tr>
-                            <th align="left" scope="row">Email</th>
-                            <td id="userEmail"><?= $userEmail ?></td>
-                        </tr>
-
-
-                        <tr>
-                            <th align="left" scope="row">Current Address</th>
-                            <td id="currAddress"><?= $currAddress ?></td>
-                        </tr>
-
-
-                        <tr>
-                            <th align="left" scope="row">Parmanent Address</th>
-                            <td id="parmAddress"><?= $parmAddress ?></td>
-                        </tr>
-
-                        <tr>
-                            <th align="left" scope="row">Mailing Address</th>
-                            <td id="billingAddress"><?= $billingAddress ?></td>
-                        </tr>
-
-                        <tr>
-                            <th align="left" scope="row">Home Branch Code</th>
-                            <td id="homeBranchCode"><?= $homeBranchCode ?></td>
-                        </tr>
-
-                        <tr>
-                            <th align="left" scope="row">Home Branch Name</th>
-                            <td id="homeBranchName"><?= $homeBranchName ?></td>
-                        </tr>
-
-                        </tbody>
-                    </table>
-                </div>
-
-
-                <div class="" style="margin-top:30px">
-
-                    <div id="showAccounts" data-bind="visible: records().length > 0">
-                        <table class="table table-striped table-bordered">
-                            <thead>
-                            <tr>
-                                <th colspan="5" style="text-align: center; color: green">Accounts Information</th>
-                            </tr>
-                            <tr>
-                                <th style="text-align:center">Account Number</th>
-                                <th style="text-align:center">Account Type</th>
-                                <th style="text-align:center">Product Name</th>
-                                <th style="text-align:center">Currency</th>
-                                <th style="text-align:center">
-                                    <button data-bind="click :$root.processAll" class="btn btn-primary">Select
-                                        All
-                                    </button>
-                                </th>
-                            </tr>
-                            </thead>
-                            <tbody data-bind="foreach: records">
-                            <tr>
-                                <td style="text-align:center" data-bind="text:accNo"></td>
-                                <td style="text-align:center" data-bind="text:accType"></td>
-                                <td style="text-align:center" data-bind="text:accName"></td>
-                                <td style="text-align:center" data-bind="text:accCurrency"></td>
-                                <td style="text-align:center"><input type="checkbox" data-bind="checked: isProcessed"></td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+        <div class="clearfix">
+            <div id="showAccounts" data-bind="visible: records().length > 0">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                    <tr>
+                        <th colspan="5" style="text-align: center; color: green">Accounts Information</th>
+                    </tr>
+                    <tr>
+                        <th style="text-align:center">Account Number</th>
+                        <th style="text-align:center">Account Type</th>
+                        <th style="text-align:center">Product Name</th>
+                        <th style="text-align:center">Currency</th>
+                        <th style="text-align:center">
+                            <button data-bind="click :$root.processAll" class="btn btn-primary">Select
+                                All
+                            </button>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody data-bind="foreach: records">
+                    <tr>
+                        <td style="text-align:center" data-bind="text:accNo"></td>
+                        <td style="text-align:center" data-bind="text:accType"></td>
+                        <td style="text-align:center" data-bind="text:accName"></td>
+                        <td style="text-align:center" data-bind="text:accCurrency"></td>
+                        <td style="text-align:center"><input type="checkbox" data-bind="checked: isProcessed"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
     <div class="card_container" style="<?= $cardsModeOfDisplay;?>">
-        <h3 style="color: green" class="container_title">Card Related Information
-            <h3>
-
-
-                <div id="showUsers">
-                    <table class="table table-striped table-bordered">
-
-                        <thead>
-                        <tr>
-                            <th colspan="2" style="text-align: center; color: green">General Information</th>
-                        </tr>
-                        </thead>
-
-
-                        <tbody>
-                        <tr>
-                            <th align="left" scope="row">Clinet ID</th>
-                            <td id="clientId"><?= $clientId ?></td>
-                        </tr>
-
-
-                        <tr>
-                            <th align="left" scope="row">Card User Name</th>
-                            <td><?= $userNameCard ?></td>
-                        </tr>
-
-
-                        <tr>
-                            <th align="left" scope="row">Mother's Name</th>
-                            <td><?= $mothersNameCard ?></td>
-                        </tr>
-
-
-                        <tr>
-                            <th align="left" scope="row">Date of birth</th>
-                            <td><?= $dobCard ?></td>
-                        </tr>
-
-                        <tr>
-                            <th align="left" scope="row">Billing Address</th>
-                            <td><?= $clientBillingAddress ?></td>
-                        </tr>
-
-                        </tbody>
-                    </table>
-                </div>
-
-
-                <div class="" style="margin-top:50px">
-
-                    <div id="showAccounts">
-                        <table class="table table-striped table-bordered">
-                            <thead>
-                            <tr>
-                                <th colspan="5" style="text-align: center; color: green">Card Information</th>
-                            </tr>
-                            <tr>
-                                <th style="text-align:center">Card Number</th>
-                                <th style="text-align:center">Card Type</th>
-                                <th style="text-align:center">Currency</th>
-                                <th style="text-align:center">Card Status</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <?php foreach($multiCard as $multiCard){?>
-                            <tr>
-                                <td style="text-align:center"><?php echo $multiCard['cardNumber'];?></td>
-                                <td style="text-align:center"><?php echo $multiCard['cardType'];?></td>
-                                <td style="text-align:center"><?php echo $multiCard['cardCurrency'];?></td>
-                                <td style="text-align:center"><?php echo $multiCard['cardStatus'];?></td>
-                                </td>
-                            </tr>
-                            <?php } ?>
-                            </tbody>
-                        </table>
-
-                    </div>
-                </div>
+        <h3 style="color: green" class="container_title">
+            Card Related Information
+        </h3>
+        <div id="showUsers" class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th colspan="2" style="text-align: center; color: green">General Information</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th align="left" scope="row">Clinet ID</th>
+                    <td id="clientId"><?= $clientId ?></td>
+                </tr>
+                <tr>
+                    <th align="left" scope="row">Card User Name</th>
+                    <td><?= $userNameCard ?></td>
+                </tr>
+                <tr>
+                    <th align="left" scope="row">Mother's Name</th>
+                    <td><?= $mothersNameCard ?></td>
+                </tr>
+                <tr>
+                    <th align="left" scope="row">Date of birth</th>
+                    <td><?= $dobCard ?></td>
+                </tr>
+                <tr>
+                    <th align="left" scope="row">Billing Address</th>
+                    <td><?= $clientBillingAddress ?></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="clearfix" style="margin-top:50px">
+            <div id="showAccounts" class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                    <tr>
+                        <th colspan="5" style="text-align: center; color: green">Card Information</th>
+                    </tr>
+                    <tr>
+                        <th style="text-align:center">Card Number</th>
+                        <th style="text-align:center">Card Type</th>
+                        <th style="text-align:center">Currency</th>
+                        <th style="text-align:center">Card Status</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php foreach($multiCard as $multiCard){?>
+                    <tr>
+                        <td style="text-align:center"><?php echo $multiCard['cardNumber'];?></td>
+                        <td style="text-align:center"><?php echo $multiCard['cardType'];?></td>
+                        <td style="text-align:center"><?php echo $multiCard['cardCurrency'];?></td>
+                        <td style="text-align:center"><?php echo $multiCard['cardStatus'];?></td>
+                        </td>
+                    </tr>
+                    <?php } ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
 
@@ -235,13 +192,10 @@
         <a href="<?php echo base_url(); ?>apps_users/editAppsUser?eblSkyId=<?= $esbId ?>&cfId=<?= $cfId ?>&clientId=<?= $clientId ?>&skyId=<?= $skyId ?>&selectedActionName=<?= $selectedActionName ?>"
            class="btn btn-success"><i class="icon-plus icon-white"></i><span>Back</span></a>
     </div>
-
+</div>
 
     <script type="text/javascript" charset="utf-8">
-
-        document.getElementById("reason").value = "<?php echo $checkerActionComment ?>";
-
-        var initialData = jQuery.parseJSON('<?= $accountInfo ?>');//data for building initial table
+        var initialData = <?= $accountInfo?>;//data for building initial table
         var vm = function() {
             var self = this;
             self.records = ko.observableArray(initialData);
@@ -340,12 +294,15 @@
                     "accCurrency" : account_currency};
 
                 console.log(dataToSave);
+                app.showModal();
                 $.ajax({
                     type: "POST",
                     data: dataToSave,
                     url: "<?= base_url() ?>apps_users/updateAppsUser",
                     success: function(data) {
+                        app.hideModal();
                         if (data > 0) {
+                            app.showModal();
                             window.location = "<?= base_url() ?>apps_users/userGroupSelection?skyId=" + data + "&action=edit";
                         }
 
@@ -355,7 +312,8 @@
                         }
                     },
                     error: function(error) {
-                        // alert(error.status + "<--and--> " + error.statusText);
+                        app.hideModal();
+                        alert(error.status + "<--and--> " + error.statusText);
                     }
                 });
             }

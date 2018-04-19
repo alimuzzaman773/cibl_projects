@@ -42,8 +42,9 @@
         document.getElementById('submitBtn').click();
     }
 </script>
-<h2 class="title-underlined">Send Mail</h2>
-<div class="container" style="margin-top:50px">
+<h3 class="title-underlined">Send Mail</h3>
+<div class="container">
+
     <form method="post" style="" id="mailForm" name="mailForm" action="<?php echo base_url(); ?>banking_service_request/sendMail">
         <table class="table table-condensed table-bordered table-striped">
             <input hidden type="text" name="serviceId" value="<?= $serviceId ?>">
@@ -80,12 +81,14 @@
             </tr>
         </table>
     </form>
-    <button class="btn btn-success" onclick="checkValidation()">Send Mail</button>
-    <a href="<?php echo base_url(); ?>banking_service_request/getRequests" class="btn btn-success"><i class="icon-remove"></i><span> Cancel</span></a>
+    <div class="btn-group">
+        <button class="btn btn-success" onclick="checkValidation()">Send Mail</button>
+        <a href="<?php echo base_url(); ?>banking_service_request/getRequests" class="btn btn-warning"><i class="icon-remove"></i><span> Cancel</span></a>
+    </div>
 </div>
 
 <style>
-     @media(min-width:768px){
+    @media(min-width:768px){
         #mailForm .form-control{
             max-width: 500px;
         }
@@ -100,9 +103,9 @@
 </style>
 <script>
     /*
-    tinymce.init({
-        selector: 'textarea',
-        readonly: 0
-    });
-*/
+     tinymce.init({
+     selector: 'textarea',
+     readonly: 0
+     });
+     */
 </script>

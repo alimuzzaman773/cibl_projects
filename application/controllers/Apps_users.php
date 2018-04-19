@@ -14,177 +14,154 @@ class Apps_users extends CI_Controller {
         $this->load->model('apps_users_model');
         $this->load->model('login_model');
         $this->load->model('common_model');
-        $this->load->library('session');
-        if ($this->login_model->check_session()) {
-            redirect('/admin_login/index');
-        }
+        
+        $this->load->library('my_session');
+        $this->my_session->checkSession();
     }
 
-    public function addAppsUser($selectedActionName = NULL) {
-        $this->output->set_template('theme2');
-        $moduleCodes = $this->session->userdata('moduleCodes');
-        $actionCodes = $this->session->userdata('actionCodes');
-        $moduleCodes = explode("|", $moduleCodes);
-        $actionCodes = explode("#", $actionCodes);
-        $index = array_search(apps_user_module, $moduleCodes);
-        if ($index > -1) {
-            $moduleWiseActionCodes = $actionCodes[$index];
-            if (strpos($moduleWiseActionCodes, "add") > -1) {
-                $data['message'] = "";
-                $data['selectedActionName'] = $selectedActionName;
-                $this->load->view('apps_users/add_new_user.php', $data);
-            }
-        } else {
-            echo "not allowed";
-        }
+    function addAppsUser($selectedActionName = NULL) 
+    {        
+        $data['message'] = "";
+        $data['selectedActionName'] = $selectedActionName;
+        $data['body_template'] = 'apps_users/add_new_user.php';
+        $this->load->view('site_template.php', $data);
+            
     }
 
-    public function pullFromCbs() {
-        $this->output->set_template('theme2');
-        $moduleCodes = $this->session->userdata('moduleCodes');
-        $actionCodes = $this->session->userdata('actionCodes');
-        $moduleCodes = explode("|", $moduleCodes);
-        $actionCodes = explode("#", $actionCodes);
-        $index = array_search(apps_user_module, $moduleCodes);
+    function pullFromCbs()
+    {
+        $data['esbId'] = strtoupper($_POST['esbId']);
+        $data['cfId'] = $_POST['cfId'];
+        $data['clientId'] = $_POST['clientId'];
+        $data['selectedActionName'] = $_POST['selectedActionName'];
+        $esbcheck = $this->checkESBID($data);
 
-        if ($index > -1) {
-            $moduleWiseActionCodes = $actionCodes[$index];
-            if (strpos($moduleWiseActionCodes, "add") > -1) {
-                $data['esbId'] = strtoupper($_POST['esbId']);
-                $data['cfId'] = $_POST['cfId'];
-                $data['clientId'] = $_POST['clientId'];
-                $data['selectedActionName'] = $_POST['selectedActionName'];
-                $esbcheck = $this->checkESBID($data);
+        if ($esbcheck == 1) {
+            $cfIdCheck = $this->apps_users_model->cfIdCheck($data['cfId']);
 
-                if ($esbcheck == 1) {
-                    $cfIdCheck = $this->apps_users_model->cfIdCheck($data['cfId']);
+            if (empty($cfIdCheck)) {
+                $reqTypeCode = "02";
+                $data['accountNumber'] = "";
+                $data['customerId'] = $data['cfId'];
+                $result = $this->push_to_cbs_service_library->pushToCbsService($reqTypeCode, $data);
+                $result = str_replace(array("\n", "\r", "\t"), '', $result);
+                $xml = simplexml_load_string($result);
 
-                    if (empty($cfIdCheck)) {
-                        $reqTypeCode = "02";
-                        $data['accountNumber'] = "";
-                        $data['customerId'] = $data['cfId'];
-                        $result = $this->push_to_cbs_service_library->pushToCbsService($reqTypeCode, $data);
-                        $result = str_replace(array("\n", "\r", "\t"), '', $result);
-                        $xml = simplexml_load_string($result);
+                if ($xml->ISSUCCESS == "Y") {
+                    $userInfo['dob'] = (string) $xml->CUSTPERSONAL->DOB;
+                    $userInfo['sex'] = (string) $xml->CUSTPERSONAL->SEX;
+                    $userInfo['fatherName'] = (string) $xml->CUSTPERSONAL->FATHER_NAME;
+                    $userInfo['motherName'] = (string) $xml->CUSTPERSONAL->MOTHER_NAME;
+                    $userInfo['userMobNo1'] = (string) $xml->CUSTPERSONAL->MOB1;
+                    $userInfo['userMobNo2'] = (string) $xml->CUSTPERSONAL->MOB2;
+                    $userInfo['userName'] = (string) $xml->CUSTACCTSUMMARY->CUSTSUMMARY->ACCTDESC;
+                    $userInfo['userEmail'] = (string) $xml->CUSTPERSONAL->EMAIL;
+                    $userInfo['currAddress'] = (string) $xml->CUSTPERSONAL->CURRADDR;
+                    $userInfo['parmAddress'] = (string) $xml->CUSTPERSONAL->PERMADDR;
+                    $userInfo['billingAddress'] = (string) $xml->CUSTPERSONAL->MAILADDR;
 
-                        if ($xml->ISSUCCESS == "Y") {
-                            $userInfo['dob'] = (string) $xml->CUSTPERSONAL->DOB;
-                            $userInfo['sex'] = (string) $xml->CUSTPERSONAL->SEX;
-                            $userInfo['fatherName'] = (string) $xml->CUSTPERSONAL->FATHER_NAME;
-                            $userInfo['motherName'] = (string) $xml->CUSTPERSONAL->MOTHER_NAME;
-                            $userInfo['userMobNo1'] = (string) $xml->CUSTPERSONAL->MOB1;
-                            $userInfo['userMobNo2'] = (string) $xml->CUSTPERSONAL->MOB2;
-                            $userInfo['userName'] = (string) $xml->CUSTACCTSUMMARY->CUSTSUMMARY->ACCTDESC;
-                            $userInfo['userEmail'] = (string) $xml->CUSTPERSONAL->EMAIL;
-                            $userInfo['currAddress'] = (string) $xml->CUSTPERSONAL->CURRADDR;
-                            $userInfo['parmAddress'] = (string) $xml->CUSTPERSONAL->PERMADDR;
-                            $userInfo['billingAddress'] = (string) $xml->CUSTPERSONAL->MAILADDR;
-
-                            $userInfo['homeBranchCode'] = (string) $xml->CUSTPERSONAL->HOMEBRANCHCODE;
-                            $userInfo['homeBranchName'] = getBranchName($userInfo['homeBranchCode']);
+                    $userInfo['homeBranchCode'] = (string) $xml->CUSTPERSONAL->HOMEBRANCHCODE;
+                    $userInfo['homeBranchName'] = getBranchName($userInfo['homeBranchCode']);
 
 
-                            foreach ($xml->CUSTACCTSUMMARY->CUSTSUMMARY as $item) {
-                                $xmlToArray[] = array('accountNo' => (string) $item->IDACCOUNT,
-                                    'accountType' => (string) $item->ACCTTYPE,
-                                    'productName' => (string) $item->PRDNAME,
-                                    'accountCurrency' => (string) $item->CODACCTCURR);
-                            }
+                    foreach ($xml->CUSTACCTSUMMARY->CUSTSUMMARY as $item) {
+                        $xmlToArray[] = array('accountNo' => (string) $item->IDACCOUNT,
+                            'accountType' => (string) $item->ACCTTYPE,
+                            'productName' => (string) $item->PRDNAME,
+                            'accountCurrency' => (string) $item->CODACCTCURR);
+                    }
 
-                            $userInfo['accountInfo'] = json_encode($xmlToArray);
+                    $userInfo['accountInfo'] = json_encode($xmlToArray);
 
-                            $userInfo['esbId'] = $data['esbId'];
-                            $userInfo['cfId'] = $data['cfId'];
-                            $userInfo['clientId'] = $data['clientId'];
-                            $userInfo['selectedActionName'] = $data['selectedActionName'];
+                    $userInfo['esbId'] = $data['esbId'];
+                    $userInfo['cfId'] = $data['cfId'];
+                    $userInfo['clientId'] = $data['clientId'];
+                    $userInfo['selectedActionName'] = $data['selectedActionName'];
 
-                            if (!empty($data['clientId'])) {
-                                $clientIdCheck = $this->apps_users_model->clientIdCheck($data['clientId']);
+                    if (!empty($data['clientId'])) {
+                        $clientIdCheck = $this->apps_users_model->clientIdCheck($data['clientId']);
 
-                                if (empty($clientIdCheck)) {
-                                    $reqTypeCode = "10";
-                                    $cardsData['methodName'] = "CARD_ACCOUNT_DETAILS";
-                                    $cardsData['clientId'] = $data['clientId'];
-                                    $cardsData['cardNumber'] = "NULL";
-                                    $cardsData['cardCurrency'] = "NULL";
-                                    $accDetail = $this->push_to_cbs_service_library->pushToCbsService($reqTypeCode, $cardsData);
-                                    $accDetail = str_replace(array("\n", "\r", "\t"), '', $accDetail);
-                                    $accDetail = simplexml_load_string($accDetail);
+                        if (empty($clientIdCheck)) {
+                            $reqTypeCode = "10";
+                            $cardsData['methodName'] = "CARD_ACCOUNT_DETAILS";
+                            $cardsData['clientId'] = $data['clientId'];
+                            $cardsData['cardNumber'] = "NULL";
+                            $cardsData['cardCurrency'] = "NULL";
+                            $accDetail = $this->push_to_cbs_service_library->pushToCbsService($reqTypeCode, $cardsData);
+                            $accDetail = str_replace(array("\n", "\r", "\t"), '', $accDetail);
+                            $accDetail = simplexml_load_string($accDetail);
 
-                                    if (((string) $accDetail->ISSUCCESS == "Y") && (!empty($accDetail->EBLCRD_OUTPUT))) {
-                                        $reqTypeCode = "10";
-                                        $cardsData['methodName'] = "CARD_INFORMATION_DETAILS";
-                                        $cardsData['clientId'] = $data['clientId'];
-                                        $cardsData['cardNumber'] = (string) $accDetail->EBLCRD_OUTPUT->ITEM[0]->CARDNUMBER;
-                                        $cardsData['cardCurrency'] = "NULL";
-                                        $cardInfoDetail = $this->push_to_cbs_service_library->pushToCbsService($reqTypeCode, $cardsData);
-                                        $cardInfoDetail = str_replace(array("\n", "\r", "\t"), '', $cardInfoDetail);
-                                        $cardInfoDetail = simplexml_load_string($cardInfoDetail);
+                            if (((string) $accDetail->ISSUCCESS == "Y") && (!empty($accDetail->EBLCRD_OUTPUT))) {
+                                $reqTypeCode = "10";
+                                $cardsData['methodName'] = "CARD_INFORMATION_DETAILS";
+                                $cardsData['clientId'] = $data['clientId'];
+                                $cardsData['cardNumber'] = (string) $accDetail->EBLCRD_OUTPUT->ITEM[0]->CARDNUMBER;
+                                $cardsData['cardCurrency'] = "NULL";
+                                $cardInfoDetail = $this->push_to_cbs_service_library->pushToCbsService($reqTypeCode, $cardsData);
+                                $cardInfoDetail = str_replace(array("\n", "\r", "\t"), '', $cardInfoDetail);
+                                $cardInfoDetail = simplexml_load_string($cardInfoDetail);
 
 
-                                        if ((string) $cardInfoDetail->ISSUCCESS == "Y") {
-                                            $userInfo['clientNumber'] = (string) $cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->CLIENTNUMBER;
-                                            //$userInfo['cardNumber'] = $this->common_model->numberMasking(MASK, (string)$accDetail->EBLCRD_OUTPUT->ITEM[0]->CARDNUMBER);
-                                            //$userInfo['cardType'] = (string)$cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->DEBITORCREDITCARD;
-                                            //$userInfo['cardProductType'] = (string)$cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->CARDTYPE;
-                                            //$userInfo['cardStatus'] = (string)$cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->CARDSTATUS;
-                                            $userInfo['issupplementary'] = (string) $cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->ISSUPPLEMENTARY;
-                                            $userInfo['primaryCardNumber'] = (string) $cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->PRIMARYCARDNUMBER;
-                                            $userInfo['userNameCard'] = (string) $cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->EMBOSSEDNAME;
-                                            $userInfo['expiryDate'] = (string) $cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->EXPIRYDATE;
-                                            $userInfo['clientBillingAddress'] = (string) $cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->CLIENTBILLINGADDRESS;
-                                            $userInfo['dobCard'] = (string) $cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->DOB;
-                                            $userInfo['mothersNameCard'] = (string) $cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->MOTHERSNAME;
+                                if ((string) $cardInfoDetail->ISSUCCESS == "Y") {
+                                    $userInfo['clientNumber'] = (string) $cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->CLIENTNUMBER;
+                                    //$userInfo['cardNumber'] = $this->common_model->numberMasking(MASK, (string)$accDetail->EBLCRD_OUTPUT->ITEM[0]->CARDNUMBER);
+                                    //$userInfo['cardType'] = (string)$cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->DEBITORCREDITCARD;
+                                    //$userInfo['cardProductType'] = (string)$cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->CARDTYPE;
+                                    //$userInfo['cardStatus'] = (string)$cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->CARDSTATUS;
+                                    $userInfo['issupplementary'] = (string) $cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->ISSUPPLEMENTARY;
+                                    $userInfo['primaryCardNumber'] = (string) $cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->PRIMARYCARDNUMBER;
+                                    $userInfo['userNameCard'] = (string) $cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->EMBOSSEDNAME;
+                                    $userInfo['expiryDate'] = (string) $cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->EXPIRYDATE;
+                                    $userInfo['clientBillingAddress'] = (string) $cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->CLIENTBILLINGADDRESS;
+                                    $userInfo['dobCard'] = (string) $cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->DOB;
+                                    $userInfo['mothersNameCard'] = (string) $cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->MOTHERSNAME;
 
-                                            /* new add for multi card */
-                                            $itemCount = count($accDetail->EBLCRD_OUTPUT->ITEM);
-                                            for ($w = 0; $w < $itemCount; $w++) {
-                                                $cardNo = (string) $accDetail->EBLCRD_OUTPUT->ITEM[$w]->CARDNUMBER;
-                                                $cardItem['cardNumber'] = $this->common_model->numberMasking(MASK, $cardNo);
-                                                $cardItem['cardType'] = checkCardTypes($cardNo);
-                                                $cardItem['cardStatus'] = (string) $accDetail->EBLCRD_OUTPUT->ITEM[$w]->CARDSTATUS;
-                                                $cardItem['cardCurrency'] = (string) $accDetail->EBLCRD_OUTPUT->ITEM[$w]->CURRENCYCODE;
-                                                $multiCardItem[] = $cardItem;
-                                            }
-                                            $userInfo['multiCard'] = $multiCardItem;
-                                            /* new add for multi card */
-
-                                            $userInfo['cardsModeOfDisplay'] = "display: block;";
-                                            $this->load->view('apps_users/import_account_view.php', $userInfo);
-                                        } else {
-                                            $data['message'] = (string) $cardInfoDetail->WARNING;
-                                            $this->load->view('apps_users/add_new_user.php', $data);
-                                        }
-                                    } else if ((string) $accDetail->ISSUCCESS == "N") {
-                                        $data['message'] = (string) $accDetail->WARNING;
-                                        $this->load->view('apps_users/add_new_user.php', $data);
-                                    } else {
-                                        $data['message'] = "No result found against this client ID";
-                                        $this->load->view('apps_users/add_new_user.php', $data);
+                                    /* new add for multi card */
+                                    $itemCount = count($accDetail->EBLCRD_OUTPUT->ITEM);
+                                    for ($w = 0; $w < $itemCount; $w++) {
+                                        $cardNo = (string) $accDetail->EBLCRD_OUTPUT->ITEM[$w]->CARDNUMBER;
+                                        $cardItem['cardNumber'] = $this->common_model->numberMasking(MASK, $cardNo);
+                                        $cardItem['cardType'] = checkCardTypes($cardNo);
+                                        $cardItem['cardStatus'] = (string) $accDetail->EBLCRD_OUTPUT->ITEM[$w]->CARDSTATUS;
+                                        $cardItem['cardCurrency'] = (string) $accDetail->EBLCRD_OUTPUT->ITEM[$w]->CURRENCYCODE;
+                                        $multiCardItem[] = $cardItem;
                                     }
+                                    $userInfo['multiCard'] = $multiCardItem;
+                                    /* new add for multi card */
+
+                                    $userInfo['cardsModeOfDisplay'] = "display: block;";
+                                    $this->load->view('apps_users/import_account_view.php', $userInfo);
                                 } else {
-                                    $data['message'] = 'The client ID "' . $data['clientId'] . '" is already registered
-                                                        <br> with ESB ID "' . $clientIdCheck['eblSkyId'] . '" ';
+                                    $data['message'] = (string) $cardInfoDetail->WARNING;
                                     $this->load->view('apps_users/add_new_user.php', $data);
                                 }
+                            } else if ((string) $accDetail->ISSUCCESS == "N") {
+                                $data['message'] = (string) $accDetail->WARNING;
+                                $this->load->view('apps_users/add_new_user.php', $data);
                             } else {
-                                $userInfo['cardsModeOfDisplay'] = "display: none;";
-                                $this->load->view('apps_users/import_account_view.php', $userInfo);
+                                $data['message'] = "No result found against this client ID";
+                                $this->load->view('apps_users/add_new_user.php', $data);
                             }
                         } else {
-                            $data['message'] = (string) $xml->WARNING;
+                            $data['message'] = 'The client ID "' . $data['clientId'] . '" is already registered
+                                                <br> with ESB ID "' . $clientIdCheck['eblSkyId'] . '" ';
                             $this->load->view('apps_users/add_new_user.php', $data);
                         }
                     } else {
-                        $data['message'] = 'The CFID "' . $data['cfId'] . '" is already registered
-                                            <br> with ESB ID "' . $cfIdCheck['eblSkyId'] . '" ';
-                        $this->load->view('apps_users/add_new_user.php', $data);
+                        $userInfo['cardsModeOfDisplay'] = "display: none;";
+                        $this->load->view('apps_users/import_account_view.php', $userInfo);
                     }
+                } else {
+                    $data['message'] = (string) $xml->WARNING;
+                    $this->load->view('apps_users/add_new_user.php', $data);
                 }
+            } else {
+                $data['message'] = 'The CFID "' . $data['cfId'] . '" is already registered
+                                    <br> with ESB ID "' . $cfIdCheck['eblSkyId'] . '" ';
+                $this->load->view('apps_users/add_new_user.php', $data);
             }
-        } else {
-            echo "not allowed";
         }
+            
     }
 
     public function insertUserInfo() {
@@ -271,10 +248,11 @@ class Apps_users extends CI_Controller {
     }
 
     // user group selection
-    public function userGroupSelection() {
+    public function userGroupSelection()
+    {
         $data = $_GET['skyId'];
         $action = $_GET['action'];
-        $this->output->set_template('theme2');
+        //$this->output->set_template('theme2');
 
 
         if ($action == "edit") {
@@ -312,7 +290,9 @@ class Apps_users extends CI_Controller {
         $viewData['userGroup'] = $this->apps_users_model->getAllGroups();
         $viewData['packages'] = json_encode($array);
         $viewData['group'] = json_encode($groupData);
-        $this->load->view('apps_users/user_group.php', $viewData);
+        
+        $viewData['body_template'] = 'apps_users/user_group.php';
+        $this->load->view('site_template.php', $viewData);
     }
 
     // user group assign
@@ -360,186 +340,190 @@ class Apps_users extends CI_Controller {
         }
     }
 
-    public function editAppsUser() {
-        $this->output->set_template('theme2');
-        $moduleCodes = $this->session->userdata('moduleCodes');
-        $actionCodes = $this->session->userdata('actionCodes');
-        $moduleCodes = explode("|", $moduleCodes);
-        $actionCodes = explode("#", $actionCodes);
-        $index = array_search(apps_user_module, $moduleCodes);
-        if ($index > -1) {
-            $moduleWiseActionCodes = $actionCodes[$index];
-
-            if (strpos($moduleWiseActionCodes, "edit") > -1) {
-                $data['eblSkyId'] = $_GET['eblSkyId'];
-                $data['cfId'] = $_GET['cfId'];
-                $data['clientId'] = $_GET['clientId'];
-                $data['skyId'] = $_GET['skyId'];
-                $data['selectedActionName'] = $_GET['selectedActionName'];
-                $data['message'] = "";
-                $this->load->view('apps_users/edit_user.php', $data);
-            }
-        }
+    public function editAppsUser() 
+    {
+        $data['eblSkyId'] = $_GET['eblSkyId'];
+        $data['cfId'] = $_GET['cfId'];
+        $data['clientId'] = $_GET['clientId'];
+        $data['skyId'] = $_GET['skyId'];
+        $data['selectedActionName'] = $_GET['selectedActionName'];
+        $data['message'] = "";
+        
+        $data['pageTitle'] = "Edit Apps User";
+        
+        $data['body_template'] = 'apps_users/edit_user.php';
+        $this->load->view('site_template.php', $data);
     }
-
+    
     // User edit start
-    public function pullFromCbsEdit() {
-        $this->output->set_template('theme2');
-        $moduleCodes = $this->session->userdata('moduleCodes');
-        $actionCodes = $this->session->userdata('actionCodes');
-        $moduleCodes = explode("|", $moduleCodes);
-        $actionCodes = explode("#", $actionCodes);
-        $index = array_search(apps_user_module, $moduleCodes);
+    public function pullFromCbsEdit() 
+    {        
+        
+        $data['eblSkyId'] = $this->input->post('eblSkyId');
+        $data['cfId'] = $this->input->post('cfId');
+        $data['clientId'] = $this->input->post('clientId');
+        $data['skyId'] = $this->input->post('skyId');
+        $data['selectedActionName'] = $this->input->post('selectedActionName');
 
-        if ($index > -1) {
-            $moduleWiseActionCodes = $actionCodes[$index];
+        
+        //d($_POST);
 
-            if (strpos($moduleWiseActionCodes, "edit") > -1) {
-                $data['eblSkyId'] = $_POST['eblSkyId'];
-                $data['cfId'] = $_POST['cfId'];
-                $data['clientId'] = $_POST['clientId'];
-                $data['skyId'] = $_POST['skyId'];
-                $data['selectedActionName'] = $_POST['selectedActionName'];
+        $reqTypeCode = "02";
+        $data['accountNumber'] = "";
+        $data['customerId'] = $data['cfId'];
+        $result = $this->push_to_cbs_service_library->pushToCbsService($reqTypeCode, $data);
+        $result = str_replace(array("\n", "\r", "\t"), '', $result);
+        $xml = simplexml_load_string($result);
 
-
-                $reqTypeCode = "02";
-                $data['accountNumber'] = "";
-                $data['customerId'] = $data['cfId'];
-                $result = $this->push_to_cbs_service_library->pushToCbsService($reqTypeCode, $data);
-                $result = str_replace(array("\n", "\r", "\t"), '', $result);
-                $xml = simplexml_load_string($result);
-
-                if ($xml->ISSUCCESS == "Y") {
-                    $userInfo['dob'] = (string) $xml->CUSTPERSONAL->DOB;
-                    $userInfo['sex'] = (string) $xml->CUSTPERSONAL->SEX;
-                    $userInfo['fatherName'] = (string) $xml->CUSTPERSONAL->FATHER_NAME;
-                    $userInfo['motherName'] = (string) $xml->CUSTPERSONAL->MOTHER_NAME;
-                    $userInfo['userMobNo1'] = (string) $xml->CUSTPERSONAL->MOB1;
-                    $userInfo['userMobNo2'] = (string) $xml->CUSTPERSONAL->MOB2;
-                    $userInfo['userName'] = (string) $xml->CUSTACCTSUMMARY->CUSTSUMMARY->ACCTDESC;
-                    $userInfo['userEmail'] = (string) $xml->CUSTPERSONAL->EMAIL;
-                    $userInfo['currAddress'] = (string) $xml->CUSTPERSONAL->CURRADDR;
-                    $userInfo['parmAddress'] = (string) $xml->CUSTPERSONAL->PERMADDR;
-                    $userInfo['billingAddress'] = (string) $xml->CUSTPERSONAL->MAILADDR;
-
-                    $userInfo['homeBranchCode'] = (string) $xml->CUSTPERSONAL->HOMEBRANCHCODE;
-                    $userInfo['homeBranchName'] = getBranchName($userInfo['homeBranchCode']);
-
-                    $id['eblSkyId'] = $data['eblSkyId'];
-                    $existingAccounts = $this->apps_users_model->getAppsUser($id);
-
-                    $userInfo['checkerActionComment'] = $existingAccounts['checkerActionComment'];
-
-                    if (!empty($userInfo['checkerActionComment'])) {
-                        $userInfo['reasonModeOfDisplay'] = "display: block;";
-                    } else {
-                        $userInfo['reasonModeOfDisplay'] = "display: none;";
-                    }
-
-                    foreach ($xml->CUSTACCTSUMMARY->CUSTSUMMARY as $item) {
-                        if (strpos($existingAccounts['accountNo'], (string) $item->IDACCOUNT) > -1) {
-                            $cbsAccounts[] = array('accNo' => (string) $item->IDACCOUNT,
-                                'accType' => (string) $item->ACCTTYPE,
-                                'accName' => (string) $item->PRDNAME,
-                                'accCurrency' => (string) $item->CODACCTCURR,
-                                'isExist' => 1);
-                        } else {
-                            $cbsAccounts[] = array('accNo' => (string) $item->IDACCOUNT,
-                                'accType' => (string) $item->ACCTTYPE,
-                                'accName' => (string) $item->PRDNAME,
-                                'accCurrency' => (string) $item->CODACCTCURR,
-                                'isExist' => 0);
-                        }
-                    }
-                    $userInfo['accountInfo'] = json_encode($cbsAccounts);
-                    $userInfo['esbId'] = $data['eblSkyId'];
-                    $userInfo['cfId'] = $data['cfId'];
-                    $userInfo['clientId'] = $data['clientId'];
-                    $userInfo['skyId'] = $data['skyId'];
-                    $userInfo['selectedActionName'] = $data['selectedActionName'];
-
-                    if (!empty($data['clientId'])) {
-
-                        $clientIdCheckEdit = $this->apps_users_model->clientIdCheckEdit($data);
-
-                        if (empty($clientIdCheckEdit)) {
-                            // pull card information //
-                            $reqTypeCode = "10";
-                            $cardsData['methodName'] = "CARD_ACCOUNT_DETAILS";
-                            $cardsData['clientId'] = $data['clientId'];
-                            $cardsData['cardNumber'] = "NULL";
-                            $cardsData['cardCurrency'] = "NULL";
-                            $accDetail = $this->push_to_cbs_service_library->pushToCbsService($reqTypeCode, $cardsData);
-                            $accDetail = str_replace(array("\n", "\r", "\t"), '', $accDetail);
-                            $accDetail = simplexml_load_string($accDetail);
-
-                            if (((string) $accDetail->ISSUCCESS == "Y") && (!empty($accDetail->EBLCRD_OUTPUT))) {
-                                $reqTypeCode = "10";
-                                $cardsData['methodName'] = "CARD_INFORMATION_DETAILS";
-                                $cardsData['clientId'] = $data['clientId'];
-                                $cardsData['cardNumber'] = (string) $accDetail->EBLCRD_OUTPUT->ITEM[0]->CARDNUMBER;
-                                $cardsData['cardCurrency'] = "NULL";
-                                $cardInfoDetail = $this->push_to_cbs_service_library->pushToCbsService($reqTypeCode, $cardsData);
-                                $cardInfoDetail = str_replace(array("\n", "\r", "\t"), '', $cardInfoDetail);
-                                $cardInfoDetail = simplexml_load_string($cardInfoDetail);
-
-
-                                if ((string) $cardInfoDetail->ISSUCCESS == "Y") {
-                                    // cards data //
-                                    $userInfo['clientNumber'] = (string) $cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->CLIENTNUMBER;
-                                    //$userInfo['cardNumber'] = $this->common_model->numberMasking(MASK, (string)$accDetail->EBLCRD_OUTPUT->ITEM[0]->CARDNUMBER);
-                                    //$userInfo['cardType'] = (string)$cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->DEBITORCREDITCARD;
-                                    //$userInfo['cardProductType'] = (string)$cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->CARDTYPE;
-                                    //$userInfo['cardStatus'] = (string)$cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->CARDSTATUS;
-                                    $userInfo['issupplementary'] = (string) $cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->ISSUPPLEMENTARY;
-                                    $userInfo['primaryCardNumber'] = (string) $cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->PRIMARYCARDNUMBER;
-                                    $userInfo['userNameCard'] = (string) $cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->EMBOSSEDNAME;
-                                    $userInfo['expiryDate'] = (string) $cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->EXPIRYDATE;
-                                    $userInfo['clientBillingAddress'] = (string) $cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->CLIENTBILLINGADDRESS;
-                                    $userInfo['dobCard'] = (string) $cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->DOB;
-                                    $userInfo['mothersNameCard'] = (string) $cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->MOTHERSNAME;
-
-
-                                    $itemCount = count($accDetail->EBLCRD_OUTPUT->ITEM);
-                                    for ($w = 0; $w < $itemCount; $w++) {
-                                        $cardNo = (string) $accDetail->EBLCRD_OUTPUT->ITEM[$w]->CARDNUMBER;
-                                        $cardItem['cardNumber'] = $this->common_model->numberMasking(MASK, $cardNo);
-                                        $cardItem['cardType'] = checkCardTypes($cardNo);
-                                        $cardItem['cardStatus'] = (string) $accDetail->EBLCRD_OUTPUT->ITEM[$w]->CARDSTATUS;
-                                        $cardItem['cardCurrency'] = (string) $accDetail->EBLCRD_OUTPUT->ITEM[$w]->CURRENCYCODE;
-                                        $multiCardItem[] = $cardItem;
-                                    }
-                                    $userInfo['multiCard'] = $multiCardItem;
-                                    $userInfo['cardsModeOfDisplay'] = "display: block;";
-                                    $this->load->view('apps_users/edit_account_view.php', $userInfo);
-                                } else {
-                                    $data['message'] = (string) $cardInfoDetail->WARNING;
-                                    $this->load->view('apps_users/edit_user.php', $data);
-                                }
-                            } else if ((string) $accDetail->ISSUCCESS == "N") {
-                                $data['message'] = (string) $accDetail->WARNING;
-                                $this->load->view('apps_users/edit_user.php', $data);
-                            } else {
-                                $data['message'] = "No result found against this client ID";
-                                $this->load->view('apps_users/edit_user.php', $data);
-                            }
-                        } else {
-                            $data['message'] = 'The client ID "' . $data['clientId'] . '" is already registered
-                                                    <br> with ESB ID "' . $clientIdCheckEdit[0]['eblSkyId'] . '" ';
-                            $this->load->view('apps_users/edit_user.php', $data);
-                        }
-                    } else {
-                        $userInfo['cardsModeOfDisplay'] = "display: none;";
-                        $this->load->view('apps_users/edit_account_view.php', $userInfo);
-                    }
-                } else {
-                    $data['message'] = (string) $xml->WARNING;
-                    $this->load->view('apps_users/edit_user.php', $data);
-                }
-            }
-        } else {
-            echo "not allowed";
+        if($xml->ISSUCCESS != "Y"){
+            $data['message'] = (string) $xml->WARNING;
+            $this->load->view('apps_users/edit_user.php', $data);
+            die();
         }
+                
+        $userInfo['dob'] = (string) $xml->CUSTPERSONAL->DOB;
+        $userInfo['sex'] = (string) $xml->CUSTPERSONAL->SEX;
+        $userInfo['fatherName'] = (string) $xml->CUSTPERSONAL->FATHER_NAME;
+        $userInfo['motherName'] = (string) $xml->CUSTPERSONAL->MOTHER_NAME;
+        $userInfo['userMobNo1'] = (string) $xml->CUSTPERSONAL->MOB1;
+        $userInfo['userMobNo2'] = (string) $xml->CUSTPERSONAL->MOB2;
+        $userInfo['userName'] = (string) $xml->CUSTACCTSUMMARY->CUSTSUMMARY->ACCTDESC;
+        $userInfo['userEmail'] = (string) $xml->CUSTPERSONAL->EMAIL;
+        $userInfo['currAddress'] = (string) $xml->CUSTPERSONAL->CURRADDR;
+        $userInfo['parmAddress'] = (string) $xml->CUSTPERSONAL->PERMADDR;
+        $userInfo['billingAddress'] = (string) $xml->CUSTPERSONAL->MAILADDR;
+
+        $userInfo['homeBranchCode'] = (string) $xml->CUSTPERSONAL->HOMEBRANCHCODE;
+        $userInfo['homeBranchName'] = getBranchName($userInfo['homeBranchCode']);
+
+        $id['eblSkyId'] = $data['eblSkyId'];
+        $existingAccounts = $this->apps_users_model->getAppsUser($id);
+
+        $userInfo['checkerActionComment'] = $existingAccounts['checkerActionComment'];
+
+        if (!empty($userInfo['checkerActionComment'])) {
+            $userInfo['reasonModeOfDisplay'] = "display: block;";
+        } else {
+            $userInfo['reasonModeOfDisplay'] = "display: none;";
+        }
+
+        $cbsAccounts = array();
+        foreach ($xml->CUSTACCTSUMMARY->CUSTSUMMARY as $item) {
+            $cbsAccountsItem = array(
+                    'accNo' => (string) $item->IDACCOUNT,
+                    'accType' => (string) $item->ACCTTYPE,
+                    'accName' => (string) $item->PRDNAME,
+                    'accCurrency' => (string) $item->CODACCTCURR
+            );
+            
+            if (strpos($existingAccounts['accountNo'], (string) $item->IDACCOUNT) > -1) {
+                $cbsAccountsItem['isExist'] = 1;
+            } else {
+                $cbsAccountsItem['isExist'] = 0;
+            }
+            
+            $cbsAccounts[] = $cbsAccountsItem;
+        }
+        
+        $userInfo['accountInfo'] = json_encode($cbsAccounts);
+        $userInfo['esbId'] = $data['eblSkyId'];
+        $userInfo['cfId'] = $data['cfId'];
+        $userInfo['clientId'] = $data['clientId'];
+        $userInfo['skyId'] = $data['skyId'];
+        $userInfo['selectedActionName'] = $data['selectedActionName'];
+
+        $userInfo['cardsModeOfDisplay'] = "display: block;";
+        if(trim($data['clientId']) == ""){
+            $userInfo['cardsModeOfDisplay'] = "display: none;";
+            $userInfo['body_template'] = 'apps_users/edit_account_view.php';
+            $this->load->view('site_template.php', $userInfo);
+            die();
+        }
+                
+        $clientIdCheckEdit = $this->apps_users_model->clientIdCheckEdit($data);
+        if(!empty($clientIdCheckEdit)):
+            $data['message'] = 'The client ID "' . $data['clientId'] . '" is already registered
+                                    <br> with ESB ID "' . $clientIdCheckEdit[0]['eblSkyId'] . '" ';
+            $data['body_template'] = 'apps_users/edit_user.php';
+            $this->load->view('site_template.php', $data);
+        endif;
+        
+        // pull card information //
+        $reqTypeCode = "10";
+        $cardsData['methodName'] = "CARD_ACCOUNT_DETAILS";
+        $cardsData['clientId'] = $data['clientId'];
+        $cardsData['cardNumber'] = "NULL";
+        $cardsData['cardCurrency'] = "NULL";
+        $accDetail = $this->push_to_cbs_service_library->pushToCbsService($reqTypeCode, $cardsData);
+        $accDetail = str_replace(array("\n", "\r", "\t"), '', $accDetail);
+        $accDetail = simplexml_load_string($accDetail);
+
+        if ((string) $accDetail->ISSUCCESS == "N") 
+        {
+            $data['message'] = (string) $accDetail->WARNING;
+            
+            $data['body_template'] = 'apps_users/edit_user.php';
+            $this->load->view('site_template.php', $data);
+            die();
+        }
+        else if((string) $accDetail->ISSUCCESS != "Y" || empty($accDetail->EBLCRD_OUTPUT)) {
+            $data['message'] = "No result found against this client ID";
+            $data['body_template'] = 'apps_users/edit_user.php';
+            $this->load->view('site_template.php', $data);
+            die();
+        }
+        
+        //if (((string) $accDetail->ISSUCCESS == "Y") && (!empty($accDetail->EBLCRD_OUTPUT)))
+        
+        $reqTypeCode = "10";
+        $cardsData['methodName'] = "CARD_INFORMATION_DETAILS";
+        $cardsData['clientId'] = $data['clientId'];
+        $cardsData['cardNumber'] = (string) $accDetail->EBLCRD_OUTPUT->ITEM[0]->CARDNUMBER;
+        $cardsData['cardCurrency'] = "NULL";
+        $cardInfoDetail = $this->push_to_cbs_service_library->pushToCbsService($reqTypeCode, $cardsData);
+        $cardInfoDetail = str_replace(array("\n", "\r", "\t"), '', $cardInfoDetail);
+        $cardInfoDetail = simplexml_load_string($cardInfoDetail);
+
+
+        if ((string) $cardInfoDetail->ISSUCCESS != "Y") 
+        {
+            $data['message'] = (string) $cardInfoDetail->WARNING;
+            $data['body_template'] = 'apps_users/edit_user.php';
+            $this->load->view('site_template.php', $data);
+            die();
+        }  
+        
+        
+        // cards data //
+        $userInfo['clientNumber'] = (string) $cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->CLIENTNUMBER;
+        //$userInfo['cardNumber'] = $this->common_model->numberMasking(MASK, (string)$accDetail->EBLCRD_OUTPUT->ITEM[0]->CARDNUMBER);
+        //$userInfo['cardType'] = (string)$cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->DEBITORCREDITCARD;
+        //$userInfo['cardProductType'] = (string)$cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->CARDTYPE;
+        //$userInfo['cardStatus'] = (string)$cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->CARDSTATUS;
+        $userInfo['issupplementary'] = (string) $cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->ISSUPPLEMENTARY;
+        $userInfo['primaryCardNumber'] = (string) $cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->PRIMARYCARDNUMBER;
+        $userInfo['userNameCard'] = (string) $cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->EMBOSSEDNAME;
+        $userInfo['expiryDate'] = (string) $cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->EXPIRYDATE;
+        $userInfo['clientBillingAddress'] = (string) $cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->CLIENTBILLINGADDRESS;
+        $userInfo['dobCard'] = (string) $cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->DOB;
+        $userInfo['mothersNameCard'] = (string) $cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->MOTHERSNAME;
+
+
+        $itemCount = count($accDetail->EBLCRD_OUTPUT->ITEM);
+        for ($w = 0; $w < $itemCount; $w++) {
+            $cardNo = (string) $accDetail->EBLCRD_OUTPUT->ITEM[$w]->CARDNUMBER;
+            $cardItem['cardNumber'] = $this->common_model->numberMasking(MASK, $cardNo);
+            $cardItem['cardType'] = checkCardTypes($cardNo);
+            $cardItem['cardStatus'] = (string) $accDetail->EBLCRD_OUTPUT->ITEM[$w]->CARDSTATUS;
+            $cardItem['cardCurrency'] = (string) $accDetail->EBLCRD_OUTPUT->ITEM[$w]->CURRENCYCODE;
+            $multiCardItem[] = $cardItem;
+        }
+        $userInfo['multiCard'] = $multiCardItem;
+        $userInfo['cardsModeOfDisplay'] = "display: block;";
+        $userInfo['body_template'] = 'apps_users/edit_account_view.php';
+        $this->load->view('site_template.php', $userInfo);
+        
+                           
     }
 
     // apps user update
@@ -592,7 +576,7 @@ class Apps_users extends CI_Controller {
         $userInfo['makerActionCode'] = 'edit';
         $userInfo['makerActionDt'] = date("y-m-d");
         $userInfo['makerActionTm'] = date("G:i:s");
-        $userInfo['makerActionBy'] = $this->session->userdata('adminUserId');
+        $userInfo['makerActionBy'] = $this->my_session->userId; //$this->session->userdata('adminUserId');
 
         $this->apps_users_model->updateUserInfo($userInfo); // user info + account info
         echo $userInfo['skyId'];

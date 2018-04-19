@@ -167,6 +167,7 @@
                                                                                                                             <input id="<?= "RTM" . $index . "_c" ?>" style="margin-right: 15px" type="checkbox" name="reportTypeModuleCodes_c[]" value="<?= $index ?>" onclick="return false"><label> <?= $value ?> </label><br>
                                                                                                                         <?php } ?>
                                                                                                                         <br><br>
+                                                                                                                        
                                                                                                                         <table class="table table-striped table-bordered">    
                                                                                                                             <tr>
                                                                                                                                 <th align="left" scope="row">Maker Action</th>
@@ -178,18 +179,7 @@
                                                                                                                                 <td><?= $makerActionDtTm_c ?></td>
                                                                                                                             </tr>
                                                                                                                         </table>
-                                                                                                                        <div id="reasonDiv_c" style="<?= $reasonModeOfDisplay_c ?>" >
-                                                                                                                            <h3>Reason<h3>
-                                                                                                                                    <textarea name="reason_c" id="reason_c" cols="40" rows="5" readonly></textarea>
-                                                                                                                                    <br><br>
-                                                                                                                                    </div>
-                                                                                                                                    <table width="100" border="0" cellpadding="2">
-                                                                                                                                        <tr>
-                                                                                                                                            <td width="100"></td>
-                                                                                                                                            <td width="100"></td>
-                                                                                                                                            <td></td>
-                                                                                                                                        </tr>
-                                                                                                                                    </table>
+                                                                                                                        
                                                                                                                                     </td>
                                                                                                                                     </tr>
                                                                                                                                     </tbody>
