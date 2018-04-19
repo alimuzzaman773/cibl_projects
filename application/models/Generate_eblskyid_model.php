@@ -8,7 +8,53 @@ class Generate_eblskyid_model extends CI_Model {
     function __construct() {
         parent::__construct();
     }
-    
+
+    function getAllPinRequests($params = array()) {
+        if (isset($params['count']) && $params['count'] == true) {
+            $this->db->select("COUNT(requestId) as total");
+        } else {
+            $this->db->select('pin_generation_request.*, admin_users.fullName, admin_users.adminUserName', FALSE);
+        }
+
+        $this->db->from('pin_generation_request');
+        $this->db->join('admin_users', 'pin_generation_request.makerActionBy = admin_users.adminUserId');
+        $this->db->where('pin_generation_request.makerActionBy =', $this->my_session->adminUserId);
+
+        if (isset($params['limit']) && (int) $params['limit'] > 0) {
+            $offset = (isset($params['offset'])) ? $params['offset'] : 0;
+            $this->db->limit($params['limit'], $offset);
+        }
+
+        $result = $this->db->order_by("requestId", "DESC")->get();
+
+        if ($result->num_rows() > 0) {
+            return $result;
+        }
+        return false;
+    }
+
+    function getPinList($params = array()) {
+        if (isset($params['count']) && $params['count'] == true) {
+            $this->db->select("COUNT(generateId) as total");
+        } else {
+            $this->db->select('generate_eblskyid.*', FALSE);
+        }
+
+        $this->db->from('generate_eblskyid');
+
+        if (isset($params['limit']) && (int) $params['limit'] > 0) {
+            $offset = (isset($params['offset'])) ? $params['offset'] : 0;
+            $this->db->limit($params['limit'], $offset);
+        }
+
+        $result = $this->db->order_by("generateId", "DESC")->get();
+
+        if ($result->num_rows() > 0) {
+            return $result;
+        }
+        return false;
+    }
+
     public function getAllPin() {
         $query = $this->db->get('generate_eblskyid');
         return $query->result();
@@ -38,17 +84,6 @@ class Generate_eblskyid_model extends CI_Model {
         $query = $this->db->get('generate_eblskyid');
 
         return $query->result();
-    }
-
-    public function getAllPinRequests() {
-        $this->db->select('pin_generation_request.*,
-                           admin_users.fullName,
-                           admin_users.adminUserName');
-        $this->db->where('pin_generation_request.makerActionBy =', $this->my_session->adminUserId);
-        $this->db->from('pin_generation_request');
-        $this->db->join('admin_users', 'pin_generation_request.makerActionBy = admin_users.adminUserId');
-        $query = $this->db->get();
-        return $query->result_array();
     }
 
     public function getPinRequestById($id) {
