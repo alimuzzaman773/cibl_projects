@@ -7,38 +7,22 @@ class Apps_user_delete_checker extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
-        date_default_timezone_set('Asia/Dhaka');
-        $this->load->database();
-        $this->load->helper('url');
-        $this->load->model('apps_user_delete_checker_model');
-        $this->load->model('client_registration_model_checker');
-        $this->load->library('push_to_cbs_service_library');
-        $this->load->model('common_model');
-        $this->load->library('session');
-        $this->load->library('BOcrypter');
-        $this->load->model('login_model');
-        if ($this->login_model->check_session()) {
-            redirect('/admin_login/index');
-        }
+        $this->load->library("my_session");
+        $this->my_session->checkSession();
+        $this->load->model(array('apps_user_delete_checker_model', 'client_registration_model_checker', 'common_model', 'login_model'));
+        $this->load->library(array('push_to_cbs_service_library', 'BOcrypter'));
     }
 
     public function index() {
-        $this->output->set_template('theme2');
-        $authorizationModules = $this->session->userdata('authorizationModules');
-        if (strpos($authorizationModules, apps_user_delete_authorization) > -1) {
-            $data['deleteUser'] = json_encode($this->apps_user_delete_checker_model->getUnapprovedDeleteUser());
-            $this->load->view('apps_user_delete_checker/unapproved_delete_user', $data);
-        } else {
-            echo "Authorization Module Not Given";
-        }
+        $data['deleteUser'] = json_encode($this->apps_user_delete_checker_model->getUnapprovedDeleteUser());
+        $data["pageTitle"] = "Apps User Delete Checker";
+        $data["body_template"] = "apps_user_delete_checker/unapproved_delete_user.php";
+        $this->load->view('site_template.php', $data);
     }
 
     public function getAppsUserForApproval($id) {
         $data['multiCard'] = array();
         $data['multiCard_c'] = array();
-
-
-        $this->output->set_template('theme2');
 
         $data['clientNumber_c'] = "";
         $data['cardNumber_c'] = "";
@@ -68,8 +52,8 @@ class Apps_user_delete_checker extends CI_Controller {
         $data['mothersNameCard'] = "";
 
 
-        $authorizationModules = $this->session->userdata('authorizationModules');
-        if (strpos($authorizationModules, apps_users_authorization) > -1) {
+       // $authorizationModules = $this->session->userdata('authorizationModules');
+      //  if (strpos($authorizationModules, apps_users_authorization) > -1) {
 
             $dbData = $this->client_registration_model_checker->getAppsUserById($id);
 
@@ -392,22 +376,24 @@ class Apps_user_delete_checker extends CI_Controller {
                 $data['message_c'] = "Client ID is empty";
             }
 
-            $this->load->view('apps_user_delete_checker/apps_user_delete_approve_form', $data);
-        } else {
-            echo "Authorization Module Not Given";
-        }
+            $data["pageTitle"]="Apps Delete Checker";
+            $data["body_template"]="apps_user_delete_checker/apps_user_delete_approve_form.php";
+            $this->load->view('site_template.php', $data);
+      //  } else {
+        //    echo "Authorization Module Not Given";
+       // }
     }
 
     public function getReason() {
-        $authorizationModules = $this->session->userdata('authorizationModules');
-        if (strpos($authorizationModules, apps_users_authorization) > -1) {
-            $data['checkerAction'] = $_POST['checkerAction'];
+       // $authorizationModules = $this->session->userdata('authorizationModules');
+       // if (strpos($authorizationModules, apps_users_authorization) > -1) {
+            $data['checkerAction'] = $this->input->post("checkerAction");
             $id = $_POST['skyId'];
-            $makerActionDtTm = $_POST['makerActionDtTm'];
-            $checkerActionDtTm = $_POST['checkerActionDtTm'];
+            $makerActionDtTm =$this->input->post("makerActionDtTm");
+            $checkerActionDtTm =$this->input->post("checkerActionDtTm");
             $dbData = $this->client_registration_model_checker->getAppsUserById($id);
 
-            if ($dbData['makerActionBy'] == $this->session->userdata('adminUserId')) {
+            if ($dbData['makerActionBy'] == $this->my_session->userId) {
                 echo "You can not authorize your own maker action";
             } else {
                 if ($data['checkerAction'] == "approve") {
@@ -416,7 +402,7 @@ class Apps_user_delete_checker extends CI_Controller {
                     $chkdata['checkerActionDt'] = date("Y-m-d");
                     $chkdata['checkerActionTm'] = date("G:i:s");
                     $chkdata['isPublished'] = 1;
-                    $chkdata['checkerActionBy'] = $this->session->userdata('adminUserId');
+                    $chkdata['checkerActionBy'] = $this->my_session->userId;
                     $chkdata['checkerAction'] = "Approved";
                     $chkdata['checkerActionComment'] = NULL;
                     $chkdata['mcStatus'] = 1;
@@ -434,7 +420,7 @@ class Apps_user_delete_checker extends CI_Controller {
                     $data['salt2'] = Null;
                     $data['checkerActionDt'] = date("Y-m-d");
                     $data['checkerActionTm'] = date("G:i:s");
-                    $data['checkerActionBy'] = $this->session->userdata('adminUserId');
+                    $data['checkerActionBy'] = $this->my_session->userId;
                     $data['checkerAction'] = "Rejected";
                     $data['checkerActionComment'] = $_POST['newReason'];
                     $data['mcStatus'] = 2;
@@ -451,9 +437,9 @@ class Apps_user_delete_checker extends CI_Controller {
                     }
                 }
             }
-        } else {
-            echo "Authorization module not given";
-        }
+      //  } else {
+        //    echo "Authorization module not given";
+      //  }
     }
 
     public function checkUserInteraction($id, $makerActionDtTmPost, $checkerActionDtTmPost) {

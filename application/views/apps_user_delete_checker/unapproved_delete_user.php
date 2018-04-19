@@ -1,3 +1,89 @@
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <h3 class="title-underlined ng-scope">
+                Apps User Delete Checker
+            </h3>
+        </div>
+    </div>
+</div>
+
+<div class="container" id="UserDeleteCheckerModule" data-ng-controller="UserDeleteCheckerController">
+    <div class="row">
+        <div class="col-md-12 col-xs-12">
+            <div class="table-responsive">        
+                <table class="table table-bordered table-condensed table-striped table-hover" >          
+                    <thead>
+                        <tr class="bg-primary">
+                            <th>SL#</th>
+                            <th>ESB ID</th>
+                            <th>User Group</th>
+                            <th>Maker Action</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr data-ng-repeat="i in user_delete_data track by $index">
+                            <td class="text-center hidden"><input type="checkbox" id="selectAll" data-ng-model="i.isChecked" data-ng-true-value="true" data-ng-false-value="false" /></td>
+                            <td>{{($index + 1)}}</td>
+                            <td>{{i.eblSkyId}}</td>
+                            <td>{{i.userGroupName}}</td>
+                            <td>{{i.makerAction}}</td>
+                            <td>                                
+                                <span data-ng-class="{'text-success': i.mcStatus == '1', 'text-warning': i.isActive == '0'}">{{i.isActive=='1' ? 'Active' : 'Inactive'}}</span>
+                            </td>
+                            <td>
+                                <div class="dropdown pull-right">
+                                    <button class="btn btn-primary btn-xs dropdown-toggle" type="button" data-toggle="dropdown">
+                                        Action <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <a href="<?= base_url() ?>apps_user_delete_checker/getAppsUserForApproval/{{i.skyId}}">
+                                                <i class="glyphicon glyphicon-pencil"></i> Approve
+                                            </a>
+                                        </li> 
+
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr data-ng-show="user_delete_data.length <= 0">
+                            <td colspan="10">No data found</td>
+                        </tr>
+                    </tbody>
+                </table>               
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<?php
+ci_add_js(asset_url() . 'app/checker/user_delete_module.js');
+?>
+
+<script type="text/javascript" charset="utf-8">
+    var app = app || {};
+    app.user_delete_data = <?= $deleteUser ?>;
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--
 <title>Apps User Delete</title>
 <div class="breadcrum">Apps Users Delete Approve/Reject</div>
 
@@ -72,3 +158,4 @@
     ko.applyBindings(new vm());
 
 </script>
+-->

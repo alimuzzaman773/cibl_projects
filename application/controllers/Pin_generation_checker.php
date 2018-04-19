@@ -8,20 +8,10 @@ class Pin_generation_checker extends CI_Controller {
     public function __construct() {
 
         parent::__construct();
-        date_default_timezone_set('Asia/Dhaka');
-
-        $this->load->database();
-        $this->load->helper('url');
-
-        $this->load->model('login_model');
-        $this->load->library('session');
+        $this->load->library("my_session");
+        $this->my_session->checkSession();
         $this->load->library('sms_service');
-        if ($this->login_model->check_session()) {
-            redirect('/admin_login/index');
-        }
-
-        $this->load->model('generate_eblskyid_model_checker');
-        $this->load->model('common_model');
+        $this->load->model(array('generate_eblskyid_model_checker', 'common_model'));
     }
 
     public function index() {

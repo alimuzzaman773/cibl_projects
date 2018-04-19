@@ -9,30 +9,17 @@ class Password_policy_checker extends CI_Controller {
         parent::__construct();
         $this->load->library("my_session");
         $this->my_session->checkSession();
-        $this->load->model(array('password_policy_checker_model', 'login_model'));
+        $this->load->model(array('password_policy_checker_model'));
     }
 
     public function index() {
         $data['passwordPolicy'] = json_encode($this->password_policy_checker_model->getUnapprovedPolicy());
+        $data["pageTitle"]="Password Policy Checker";
         $data["body_template"]="password_policy_checker/unapproved_policy.php";
         $this->load->view('site_template.php', $data);
-
-        /*
-          $this->output->set_template('theme2');
-          $authorizationModules = $this->session->userdata('authorizationModules');
-          if (strpos($authorizationModules, password_policy_authorization) > -1) {
-          $data['passwordPolicy'] = json_encode($this->password_policy_checker_model->getUnapprovedPolicy());
-          $this->load->view('password_policy_checker/unapproved_policy', $data);
-          } else {
-          echo "Authorization Module Not Given";
-          }
-         */
     }
 
     public function getPasswordPolicyApproval($id) {
-       // $this->output->set_template('theme2');
-       // $authorizationModules = $this->session->userdata('authorizationModules');
-       // if (strpos($authorizationModules, password_policy_authorization) > -1) {
 
             $dbData = $this->password_policy_checker_model->getPolicyById($id);
 
@@ -73,14 +60,9 @@ class Password_policy_checker extends CI_Controller {
             $data["pageTitle"]="Password Policy Checker";
             $data["body_template"]="password_policy_checker/approved_policy.php";
             $this->load->view('site_template.php', $data);
-      //  } else {
-        //    echo "Authorization Module Not Given";
-       // }
     }
 
     public function getReason() {
-      //  $authorizationModules = $this->session->userdata('authorizationModules');
-      //  if (strpos($authorizationModules, password_policy_authorization) > -1) {
             $data['checkerAction'] = $this->input->post("checkerAction");
             $id = $this->input->post("policyId");
             $makerActionDtTm = $this->input->post("makerActionDtTm");
@@ -136,9 +118,6 @@ class Password_policy_checker extends CI_Controller {
                     }
                 }
             }
-      //  } else {
-       //     echo "Authorization module not given";
-       // }
     }
 
     public function checkUserInteraction($id, $makerActionDtTmPost, $checkerActionDtTmPost) {

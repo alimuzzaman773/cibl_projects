@@ -7,7 +7,7 @@ class Password_policy_checker_model extends CI_Model {
 
     public function __construct() {
         parent::__construct();
-        $this->load->library("my_session");
+         $this->load->library("my_session");
     }
 
     public function getUnapprovedPolicy() {
@@ -60,8 +60,8 @@ class Password_policy_checker_model extends CI_Model {
 
         // prepare data for activity log //
         $activityLog = array('activityJson' => json_encode($result),
-            'adminUserId' => $this->my_session->userId,
-            'adminUserName' => $this->my_session->userId,
+            'adminUserId' => $this->session->userdata('adminUserId'),
+            'adminUserName' => $this->session->userdata('username'),
             'tableName' => 'validation_group',
             'moduleName' => 'password_policy_module',
             'moduleCode' => '10',
