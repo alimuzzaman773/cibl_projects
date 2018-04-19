@@ -56,7 +56,7 @@
                                             <a href="<?= base_url() ?>admin_users_maker/editUser/{{i.adminUserId}}/edit">
                                                 <i class="glyphicon glyphicon-pencil"></i> Edit
                                             </a>
-                                        </li> 
+                                        </li>
                                         <li>
                                             <a data-ng-click="activate(i.adminUserId);" data-ng-if="i.isActive == 0">
                                                 <i class="glyphicon glyphicon-ok"></i> Active

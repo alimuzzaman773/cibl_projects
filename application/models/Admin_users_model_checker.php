@@ -4,15 +4,13 @@ class Admin_users_model_checker extends CI_Model {
 
     function __construct() {
         parent::__construct();
-        date_default_timezone_set('Asia/Dhaka');
-        $this->load->database();
     }
 
     public function getUnapprovedUsers() {
         $this->db->order_by("adminUserId", "desc");
         $this->db->where('admin_users_mc.mcStatus =', 0);
         $this->db->where('adminUserId !=', 1);
-        $this->db->where('admin_users_mc.makerActionBy !=', $this->session->userdata('adminUserId'));
+        $this->db->where('admin_users_mc.makerActionBy !=', $this->my_session->adminUserId);
         $this->db->select('admin_users_mc.*, admin_users_group.userGroupName');
         $this->db->from('admin_users_mc');
         $this->db->join('admin_users_group', 'admin_users_mc.adminUserGroup = admin_users_group.userGroupId');
@@ -64,8 +62,8 @@ class Admin_users_model_checker extends CI_Model {
 
         // prepare data for activity log //
         $activityLog = array('activityJson' => json_encode($result),
-            'adminUserId' => $this->session->userdata('adminUserId'),
-            'adminUserName' => $this->session->userdata('username'),
+            'adminUserId' => $this->my_session->adminUserId,
+            'adminUserName' => $this->my_session->userName,
             'tableName' => 'admin_users',
             'moduleName' => 'admin_user_module',
             'moduleCode' => '04',
@@ -88,8 +86,8 @@ class Admin_users_model_checker extends CI_Model {
 
         // prepare data for activity log //
         $activityLog = array('activityJson' => json_encode($result),
-            'adminUserId' => $this->session->userdata('adminUserId'),
-            'adminUserName' => $this->session->userdata('username'),
+            'adminUserId' => $this->my_session->adminUserId,
+            'adminUserName' => $this->my_session->userName,
             'tableName' => 'admin_users',
             'moduleName' => 'admin_user_module',
             'moduleCode' => '04',
