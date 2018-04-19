@@ -94,6 +94,98 @@ var AdminUserModule = angular.module('AdminUserModule',[])
                 }
             });
         };
+        
+        $scope.lock = function($id){
+            if(!confirm("Are you sure?")){
+                return false;
+            }
+            
+            var $postId = [];
+            if($id == undefined){
+                angular.forEach($scope.data,function(v,i){
+                    if(v.isChecked == true){
+                        $postId.push(v.adminUserId);
+                    }
+                });
+            }
+            else if(app.parseInt($id) > 0) {
+                $postId.push($id);
+            }
+            
+            if($postId.length <= 0){
+                alert('Please select a item for lock');
+                return false;
+            }
+            app.showModal();
+            var dataToSave = {"adminUserId" : $postId.join("|"), "selectedActionName" : 'Lock'};
+            $.ajax({
+                type: "POST",
+                data: dataToSave,
+                url: app.baseUrl + "admin_users_maker/adminUserLock",
+                success: function(data) {
+                    app.hideModal();
+                    if (data == 1) {
+                        alert("Selected item is lock");
+                        window.location = app.baseUrl+ "admin_user_group_maker";
+                    }
+                    else if(data == 2){
+                        alert("Don't try like this");
+                        window.location = app.baseUrl+"admin_user_group_maker";
+                    }
+                },
+                error: function(error) {
+                    app.hideModal();
+                    alert(error.status + "<--and--> " + error.statusText);
+                }
+            });
+        };
+        
+        $scope.unlock = function($id){
+            if(!confirm("Are you sure?")){
+                return false;
+            }
+            
+            var $postId = [];
+            if($id == undefined){
+                angular.forEach($scope.data,function(v,i){
+                    if(v.isChecked == true){
+                        $postId.push(v.adminUserId);
+                    }
+                });
+            }
+            else if(app.parseInt($id) > 0) {
+                $postId.push($id);
+            }
+            
+            if($postId.length <= 0){
+                alert('Please select a item id for unlock');
+                return false;
+            }
+            
+            app.showModal();
+            
+            var dataToSave = {"adminUserId" : $postId.join("|"), "selectedActionName" : 'Unlock'};
+            $.ajax({
+                type: "POST",
+                data: dataToSave,
+                url: app.baseUrl + "admin_users_maker/adminUserUnlock",
+                success: function(data) {
+                    app.hideModal();
+                    if (data == 1) {
+                        alert("Selected item is unlock");
+                        window.location = app.baseUrl+ "admin_user_group_maker";
+                    }
+                    else if(data == 2){
+                        alert("Don't try like this");
+                        window.location = app.baseUrl+"admin_user_group_maker";
+                    }
+                },
+                error: function(error) {
+                    app.hideModal();
+                    alert(error.status + "<--and--> " + error.statusText);
+                }
+            });
+        };
 
         $scope.init = function(){
             $scope.data = app.adminUsers;

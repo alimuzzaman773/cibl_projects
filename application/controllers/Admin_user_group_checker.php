@@ -7,143 +7,140 @@ class Admin_user_group_checker extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
-        date_default_timezone_set('Asia/Dhaka');
-
-        $this->load->database();
-        $this->load->helper('url');
-        $this->load->model('admin_user_group_model_checker');
-
-        $this->load->model('login_model');
-        $this->load->library('session');
-        if ($this->login_model->check_session()) {
-            redirect('/admin_login/index');
-        }
+        $this->load->library("my_session");
+        $this->my_session->checkSession();
+        $this->load->model(array('admin_user_group_model_checker', 'login_model'));
     }
 
     public function index() {
-        $this->output->set_template('theme2');
-        $authorizationModules = $this->session->userdata('authorizationModules');
-        if (strpos($authorizationModules, admin_user_group_authorization) > -1) {
-            $data['groups'] = json_encode($this->admin_user_group_model_checker->getUnapprovedGroups());
-            $this->load->view('admin_user_group_checker/overall_view.php', $data);
-        } else {
-            echo "Authorization Module Not Given";
-        }
+        $data['groups'] = json_encode($this->admin_user_group_model_checker->getUnapprovedGroups());
+        $data["pageTitle"] = "Priority Request";
+        $data["body_template"] = "admin_user_group_checker/overall_view.php";
+        $this->load->view('site_template.php', $data);
+        /*
+          $this->output->set_template('theme2');
+          $authorizationModules = $this->session->userdata('authorizationModules');
+          if (strpos($authorizationModules, admin_user_group_authorization) > -1) {
+          $data['groups'] = json_encode($this->admin_user_group_model_checker->getUnapprovedGroups());
+          $this->load->view('admin_user_group_checker/overall_view.php', $data);
+          } else {
+          echo "Authorization Module Not Given";
+          }
+         */
     }
 
     public function getGroupForApproval($id) {
-        $this->output->set_template('theme2');
-        $authorizationModules = $this->session->userdata('authorizationModules');
-        if (strpos($authorizationModules, admin_user_group_authorization) > -1) {
+        //  $this->output->set_template('theme2');
+        // $authorizationModules = $this->session->userdata('authorizationModules');
+        //  if (strpos($authorizationModules, admin_user_group_authorization) > -1) {
 
-            $dbData = $this->admin_user_group_model_checker->getGroupById($id);
-            if (empty($dbData)) {
-                redirect('admin_user_group_checker');
-            }
-
-//            header('content-Type: application/json');
-//            print_r($dbData); die();
-
-            $data['modulesActions'] = $this->admin_user_group_model_checker->getModuleActions();
-            $data['moduleIds'] = $this->admin_user_group_model_checker->getAllModules();
-            $data['userGroup'] = $dbData;
-
-
-            $data['authorizationModules'] = array('01' => 'Apps Users Authorization',
-                '02' => 'Device Authorization',
-                '03' => 'Pin Reset Authorization',
-                '04' => 'Admin User Authorization',
-                '05' => 'Admin User Group Authorization',
-                '06' => 'Limit Package Authorization',
-                '07' => 'Biller Setup Authorization',
-                '08' => 'Pin Create Authorization',
-                '09' => 'Password Policy Authorization',
-                '10' => 'Apps User Delete Authorization');
-
-
-            $data['contentSetupModules'] = array('01' => 'Product Setup',
-                '02' => 'Location Setup',
-                '03' => 'Zip Partners',
-                '04' => 'Priority Setup',
-                '05' => 'Benifit Setup',
-                '06' => 'News And Events',
-                '07' => 'Notification',
-                '08' => 'Advertisement',
-                '09' => 'Help Setup');
-
-            $data['serviceRequestModules'] = array('01' => 'Priority',
-                '02' => 'Product',
-                '03' => 'Banking');
-
-
-            $data['reportTypeModules'] = array('01' => 'Apps Users' . "'" . ' Status',
-                '02' => 'Customer Information',
-                '03' => 'User Login Information',
-                '04' => 'Fund Transfer',
-                '05' => 'Other Fund Transfer',
-                '06' => 'User ID Modification',
-                '07' => 'Billing Information',
-                '08' => 'Priority Request',
-                '09' => 'Product Request',
-                '10' => 'Banking Request');
-
-
-            $data['authorizationModuleCodes'] = json_encode(explode("|", $dbData['authorizationModules']));
-            $data['authorizationModuleCodes_c'] = json_encode(explode("|", $dbData['authorizationModules_c']));
-
-            $data['contentSetupModuleCodes'] = json_encode(explode("|", $dbData['contentSetupModules']));
-            $data['contentSetupModuleCodes_c'] = json_encode(explode("|", $dbData['contentSetupModules_c']));
-
-            $data['serviceRequestModuleCodes'] = json_encode(explode("|", $dbData['serviceRequestModules']));
-            $data['serviceRequestModuleCodes_c'] = json_encode(explode("|", $dbData['serviceRequestModules_c']));
-
-
-            $data['reportTypeModuleCodes'] = json_encode(explode("|", $dbData['reportTypeModules']));
-            $data['reportTypeModuleCodes_c'] = json_encode(explode("|", $dbData['reportTypeModules_c']));
-
-
-            $data['makerActionDtTm'] = $dbData['makerActionDt'] . " " . $dbData['makerActionTm'];
-            $data['checkerActionDtTm'] = $dbData['checkerActionDt'] . " " . $dbData['checkerActionTm'];
-
-            if ($data['checkerActionDtTm'] == " ") {
-                $data['checkerActionDtTm'] = "";
-            }
-
-            $data['makerActionDtTm_c'] = $dbData['makerActionDt_c'] . " " . $dbData['makerActionTm_c'];
-            $data['checkerActionDtTm_c'] = $dbData['checkerActionDt_c'] . " " . $dbData['checkerActionTm_c'];
-
-            if ($data['checkerActionDtTm_c'] == " ") {
-                $data['checkerActionDtTm_c'] = "";
-            }
-
-
-            $data['checkerActionComment'] = $dbData['checkerActionComment'];
-            $data['checkerActionComment_c'] = $dbData['checkerActionComment_c'];
-
-            if ($data['checkerActionComment'] != NULL) {
-                $data['reasonModeOfDisplay'] = "display: block;";
-            } else {
-                $data['reasonModeOfDisplay'] = "display: none;";
-            }
-
-            if ($data['checkerActionComment_c'] != NULL) {
-                $data['reasonModeOfDisplay_c'] = "display: block;";
-            } else {
-                $data['reasonModeOfDisplay_c'] = "display: none;";
-            }
-
-            if ($dbData['userGroupId_c'] != NULL) {
-                $data['publishDataOfDisplay_c'] = "display: block;";
-            } else {
-                $data['publishDataOfDisplay_c'] = "display: none;";
-            }
-
-            $data['moduleActionIds'] = json_encode(explode(",", $data['userGroup']['moduleActionId']));
-            $data['moduleActionIds_c'] = json_encode(explode(",", $data['userGroup']['moduleActionId_c']));
-            $this->load->view('admin_user_group_checker/approve_form', $data);
-        } else {
-            echo "Authorization Module Not Given";
+        $dbData = $this->admin_user_group_model_checker->getGroupById($id);
+        if (empty($dbData)) {
+            redirect('admin_user_group_checker');
         }
+
+        $data['modulesActions'] = $this->admin_user_group_model_checker->getModuleActions();
+        $data['moduleIds'] = $this->admin_user_group_model_checker->getAllModules();
+        $data['userGroup'] = $dbData;
+
+
+        $data['authorizationModules'] = array('01' => 'Apps Users Authorization',
+            '02' => 'Device Authorization',
+            '03' => 'Pin Reset Authorization',
+            '04' => 'Admin User Authorization',
+            '05' => 'Admin User Group Authorization',
+            '06' => 'Limit Package Authorization',
+            '07' => 'Biller Setup Authorization',
+            '08' => 'Pin Create Authorization',
+            '09' => 'Password Policy Authorization',
+            '10' => 'Apps User Delete Authorization');
+
+
+        $data['contentSetupModules'] = array('01' => 'Product Setup',
+            '02' => 'Location Setup',
+            '03' => 'Zip Partners',
+            '04' => 'Priority Setup',
+            '05' => 'Benifit Setup',
+            '06' => 'News And Events',
+            '07' => 'Notification',
+            '08' => 'Advertisement',
+            '09' => 'Help Setup');
+
+        $data['serviceRequestModules'] = array('01' => 'Priority',
+            '02' => 'Product',
+            '03' => 'Banking');
+
+
+        $data['reportTypeModules'] = array('01' => 'Apps Users' . "'" . ' Status',
+            '02' => 'Customer Information',
+            '03' => 'User Login Information',
+            '04' => 'Fund Transfer',
+            '05' => 'Other Fund Transfer',
+            '06' => 'User ID Modification',
+            '07' => 'Billing Information',
+            '08' => 'Priority Request',
+            '09' => 'Product Request',
+            '10' => 'Banking Request');
+
+
+        $data['authorizationModuleCodes'] = json_encode(explode("|", $dbData['authorizationModules']));
+        $data['authorizationModuleCodes_c'] = json_encode(explode("|", $dbData['authorizationModules_c']));
+
+        $data['contentSetupModuleCodes'] = json_encode(explode("|", $dbData['contentSetupModules']));
+        $data['contentSetupModuleCodes_c'] = json_encode(explode("|", $dbData['contentSetupModules_c']));
+
+        $data['serviceRequestModuleCodes'] = json_encode(explode("|", $dbData['serviceRequestModules']));
+        $data['serviceRequestModuleCodes_c'] = json_encode(explode("|", $dbData['serviceRequestModules_c']));
+
+
+        $data['reportTypeModuleCodes'] = json_encode(explode("|", $dbData['reportTypeModules']));
+        $data['reportTypeModuleCodes_c'] = json_encode(explode("|", $dbData['reportTypeModules_c']));
+
+
+        $data['makerActionDtTm'] = $dbData['makerActionDt'] . " " . $dbData['makerActionTm'];
+        $data['checkerActionDtTm'] = $dbData['checkerActionDt'] . " " . $dbData['checkerActionTm'];
+
+        if ($data['checkerActionDtTm'] == " ") {
+            $data['checkerActionDtTm'] = "";
+        }
+
+        $data['makerActionDtTm_c'] = $dbData['makerActionDt_c'] . " " . $dbData['makerActionTm_c'];
+        $data['checkerActionDtTm_c'] = $dbData['checkerActionDt_c'] . " " . $dbData['checkerActionTm_c'];
+
+        if ($data['checkerActionDtTm_c'] == " ") {
+            $data['checkerActionDtTm_c'] = "";
+        }
+
+        $data['checkerActionComment'] = $dbData['checkerActionComment'];
+        $data['checkerActionComment_c'] = $dbData['checkerActionComment_c'];
+
+        if ($data['checkerActionComment'] != NULL) {
+            $data['reasonModeOfDisplay'] = "display: block;";
+        } else {
+            $data['reasonModeOfDisplay'] = "display: none;";
+        }
+
+        if ($data['checkerActionComment_c'] != NULL) {
+            $data['reasonModeOfDisplay_c'] = "display: block;";
+        } else {
+            $data['reasonModeOfDisplay_c'] = "display: none;";
+        }
+
+        if ($dbData['userGroupId_c'] != NULL) {
+            $data['publishDataOfDisplay_c'] = "display: block;";
+        } else {
+            $data['publishDataOfDisplay_c'] = "display: none;";
+        }
+
+        $data['moduleActionIds'] = json_encode(explode(",", $data['userGroup']['moduleActionId']));
+        $data['moduleActionIds_c'] = json_encode(explode(",", $data['userGroup']['moduleActionId_c']));
+
+        $data["pageTitle"] = "Admin User Group";
+        $data["body_template"] = "admin_user_group_checker/approve_form.php";
+        $this->load->view('site_template.php', $data);
+        // } else {
+        //     echo "Authorization Module Not Given";
+        //}
     }
 
     public function getReason() {
