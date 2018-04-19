@@ -115,8 +115,8 @@ class Client_registration_model_checker extends CI_Model {
 
         // prepare data for activity log //
         $activityLog = array('activityJson' => json_encode($tableData),
-            'adminUserId' => $this->session->userdata('adminUserId'),
-            'adminUserName' => $this->session->userdata('username'),
+            'adminUserId' => $this->my_session->userId,
+            'adminUserName' => $this->my_session->userName,
             'tableName' => 'apps_users',
             'moduleName' => 'apps_user_module',
             'moduleCode' => '01',
