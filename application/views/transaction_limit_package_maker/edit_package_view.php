@@ -1,10 +1,10 @@
-<title>Limit Package</title>
-<div class="breadcrum">Edit Package</div>
+<h1 class="title-underlined">Limit Package >> Edit</h1>
+<div class="clearfix table-responsive">
 
-<div class="container" style="margin-top:50px">
-
+    <?php if($message != ""): ?>
     <div class="alert alert-success"><?php echo $message ?></div>
-
+    <?php endif; ?>
+    
     <form method="post" style="" id="packageSelection" name="packageSelection" action="<?php echo base_url(); ?>transaction_limit_setup_maker/editGroup">
     <div class="container" style="margin-top:50px">
 

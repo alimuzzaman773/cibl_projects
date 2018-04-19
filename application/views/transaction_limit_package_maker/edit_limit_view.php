@@ -1,9 +1,10 @@
-<title>Limit Package</title>
-<div class="breadcrum">Edit Limit</div>
+<h1 class="title-underlined">Limit Package >> Edit Limit</h1>
 
-<div class="container" style="margin-top:50px">
-    <label>Group Name</label>
-    <input class="textbox" type="text" name="groupName" id="groupName" value="<?= $userGroupName ?>" readonly><br><br>
+<div class="clearfix">
+    <div class="form-group">
+        <label>Group Name</label>
+        <input class="textbox" class="form-control" type="text" name="groupName" id="groupName" value="<?= $userGroupName ?>" readonly />       
+    </div>
 </div>
 
 
@@ -11,11 +12,10 @@
 <input hidden class="textbox" type="text" name="selectedActionName" id="selectedActionName" value="<?= $selectedActionName ?>">
 
 
-<div class="container" id="assignPackage">
-
-    <table class="table table-striped table-bordered">
+<div class="clearfix table-responsive" id="assignPackage">
+    <table class="table table-bordered table-condensed">
         <thead>
-            <tr>
+            <tr class="bg-primary">
             <th hidden >ID</th>
             <th>Package Name</th>
             <th style="text-align: center" valign="middle">Minimum Transaction Limit</th>
@@ -27,7 +27,7 @@
       <tbody data-bind="foreach: records">
           <tr>
             <td hidden data-bind="text:packageId" > </td>
-            <td data-bind="text:packageName" > </td>                
+            <td data-bind="text:packageName"> </td>                
             <td data-bind="text:min" contenteditable > </td>
             <td data-bind="text:max" contenteditable > </td>
             <td data-bind="text:dayLimit" contenteditable > </td>

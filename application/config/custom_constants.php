@@ -23,7 +23,7 @@ define("DB_PREFIX", "");
 
 define("TBL_ADMIN_USERS", DB_PREFIX . "admin_users");
 define("TBL_ADMIN_USERS_GROUP", DB_PREFIX . "admin_users_group");
-define("TBL_PERMISSION", DB_PREFIX . "permission");
+define("TBL_PERMISSIONS", DB_PREFIX . "permissions");
 define("TBL_ACTION", DB_PREFIX . "action");
 define("TBL_PRODUCT_SETUP", DB_PREFIX . "product_setup");
 define("TBL_PRODUCT_TYPE_SETUP", DB_PREFIX . "product_type_setup");
