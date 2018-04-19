@@ -1,143 +1,85 @@
-<title>Pin Request</title>
-<div class="breadcrum">Pin Request</div>
-
-<div class="container" style="margin-top:50px">
-
-
-<br><br>
-
-    <table data-bind="dataTable: { dataSource : records, rowTemplate: 'rowTemplate',
-           options: {
-           bAutoWidth : false,
-           aoColumnDefs: [
-           { bSortable: false, aTargets: [] },
-           { bSearchable: false, aTargets: [] }
-           ],
-           aaSorting: [],
-           aLengthMenu: [[50, 100, 150, -1], [50, 100, 150, 'All']],
-           iDisplayLength: 50,
-           aoColumns: [
-           {  mDataProp:'requestId' },
-           {  mDataProp:'totalPin' },
-           {  mDataProp:'makerAction' },
-           {  mDataProp:'makerActionComment' },
-           {  mDataProp:'fullName' },
-           {  mDataProp:'makerActionDt' },
-           {  mDataProp:'checkerActionDt' },
-           {  mDataProp:'status' }
-           ]}}" class="table table-striped table-bordered" id="referenceTable">
-
-        <thead>
-            <tr>
-                <th hidden style="text-align: center" >Request ID</th>
-                <th style="text-align: center" >Action</th>
-                <th style="text-align: center" >Total Pin</th>
-                <th style="text-align: center" >Maker Action</th>
-                <th style="text-align: center" >Maker Remark</th>
-                <th style="text-align: center" >Requested By</th>
-                <th style="text-align: center" >Request Date</th>
-                <th style="text-align: center" >Approve Date</th>
-                <th style="text-align: center" >Status</th>
-            </tr>
-        </thead>
-
-    </table>
-
-    <script id="rowTemplate" type="text/html">
-        <td hidden style="text-align:center" data-bind="text:requestId"></td>
-        <td style="text-align:center"><button data-bind="click: $root.editRequest, visible: edit" class="btn btn-warning">Edit</button></td>
-        <td style="text-align:center" data-bind="text:totalPin"></td>
-        <td style="text-align:center" data-bind="text:makerAction"></td>
-        <td style="text-align:center" data-bind="text:makerActionComment"></td>
-        <td style="text-align:center" data-bind="text:fullName"></td>
-        <td style="text-align:center" data-bind="text:makerActionDt"></td>
-        <td style="text-align:center" data-bind="text:checkerActionDt"></td>
-        <td style="text-align:center" data-bind="text:status, style:{color: statusColor}"></td>
-    </script>
-
-  
-
-
-    <table width="100" border="0" cellpadding="2">
-        <tr>
-            <td width="100"><button style="display: block;" id="newRequest" data-bind="click :$root.newRequest" class="btn btn-success">New Request</button></td>
-            <td><a href="<?php echo base_url(); ?>pin_generation/viewPinByAction" class="btn btn-success"><i class="icon-plus icon-white"></i><span>Back</span></a> </td>
-        </tr>
-    </table>
-
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <h3 class="title-underlined ng-scope">
+                <?= $pageTitle ?>
+                <a href="<?php echo base_url(); ?>pin_generation/viewPinByAction" class="btn btn-primary btn-xs pull-right">
+                    <span class="glyphicon glyphicon-plus"></span> Pin List
+                </a>
+            </h3>
+        </div>
+    </div>
 </div>
+<div class="container" id="PinRequestModule" data-ng-controller="PinRequestController">
+    <div class="col-md-12 col-sm-12 text-right" data-ng-show="totalCount > 0">        
+        <span class="label label-primary"> Displaying: {{ ((per_page * currentPageNumber) - (per_page - 1))}} to {{ upper_range()}} of {{ totalCount}}</span>            
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-sm-12">
+            <div class="table-responsive">        
+                <table class="table table-bordered table-condensed table-striped table-hover" >          
+                    <thead>
+                        <tr class="bg-primary">
+                            <th>SI#</th>
+                            <th>Total Pin</th>
+                            <th>Maker Action</th>
+                            <th>Maker Remark</th>
+                            <th>Requested Byt</th>
+                            <th>Request Date</th>
+                            <th>Approve Date</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr dir-paginate="i in data_list | itemsPerPage: per_page track by $index" total-items="totalCount" current-page="pagination.current">
+                            <td>{{(per_page * (currentPageNumber - 1)) + ($index + 1)}}</td>
+                            <td>{{i.totalPin}}</td>
+                            <td>{{i.makerAction}}</td>
+                            <td>{{i.makerActionComment}}</td>
+                            <td>{{i.fullName}}</td>
+                            <td>{{i.makerActionDt}}</td>
+                            <td>{{i.checkerActionDt}}</td>
+                            <td>
+                                <span data-ng-class="{'text-success': i.mcStatus == '1', 'text-danger': i.mcStatus == '0'}">{{i.mcStatus=='1' ? 'Approved' : 'Wait for approve'}}</span>
+                            </td>
+                            <td>
+                                <div class="dropdown pull-right">
+                                    <button class="btn btn-primary btn-xs dropdown-toggle" type="button" data-toggle="dropdown">
+                                        Action <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <a href="<?= base_url() . "pin_generation/newRequest/Create" ?>{{i.generateId}}">
+                                                <i class="glyphicon glyphicon-collapse-up"></i> New Request
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr data-ng-show="data_list.length <= 0">
+                            <td colspan="8">No data found</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="text-center">
+                    <dir-pagination-controls on-page-change="pageChanged(newPageNumber)" template-url="<?= base_url() ?>assets/angularjs/directives/dirPagination.tpl.html"></dir-pagination-controls>
+                </div>                
+                <div>
+                </div>
+            </div>
+        </div>
+    </div>    
+</div>    
 
-
-
-<style>
-input {
-    float:center;
-    border: 1px solid #848484; 
-    -webkit-border-radius: 30px; 
-    -moz-border-radius: 30px; 
-    border-radius: 30px; 
-    outline:0; 
-    height:25px; 
-    width: 100px; 
-    padding-left:10px; 
-    padding-right:10px; 
-}
-</style>
-
-
+<?php
+ci_add_js(base_url() . ASSETS_FOLDER . "angularjs/directives/dirPagination.js");
+ci_add_js(asset_url() . 'app/pin/pin_request.js');
+?>
 
 <script type="text/javascript" charset="utf-8">
-    var initialData = <?= $pinRequest ?>;
-
-    var vm = function() {
-        var self = this;
-        self.records = ko.observableArray(initialData);
-
-        $.each(self.records(), function(i, record) {  //build the checkboxes checked/unchecked
-            
-
-            if(record.mcStatus === "1"){
-                record.edit = ko.observable(false);
-                record.status = "Approved";
-                record.statusColor = ko.observable("green");
-            }else if(record.mcStatus === "0"){
-                document.getElementById("newRequest").style.display = "none";
-                record.edit = ko.observable(true);
-                record.status = "Wait for approve";
-                record.statusColor = ko.observable("red");
-            }else if(record.mcStatus === "2"){
-                document.getElementById("newRequest").style.display = "none";
-                record.edit = ko.observable(true);
-                record.status = "Rejected";
-                record.statusColor = ko.observable("red");
-            }
-        })
-
-
-
-
-
-
-
-
-
-        self.newRequest = function(item){
-            window.location = "<?php echo base_url(); ?>pin_generation/newRequest/Create";
-            //alert($("#selectedActionName").val());
-        }
-
-        self.editRequest = function(item){
-            window.location = "<?php echo base_url(); ?>pin_generation/editRequest/" + item.requestId  + "/Create";
-            //alert("edit request");
-        }
-
-
-
-
-
-    }
-    ko.applyBindings(new vm());
-    
+    var app = app || {};
 </script>
 
 
