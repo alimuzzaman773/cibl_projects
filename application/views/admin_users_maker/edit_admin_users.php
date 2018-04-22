@@ -7,7 +7,7 @@
     <input hidden type="text" name="adminUserId" id="adminUserId" value="<?= $adminUserData['adminUserId'] ?>" size="20" />
     <input hidden class="textbox" type="text" name="selectedActionName" id="selectedActionName" value="<?= $selectedActionName ?>">
     <fieldset>
-        <table  class="table table-condensed table-bordered table-striped">
+        <table class="table table-condensed table-bordered table-striped">
             <tr>
                 <th width="213" align="left" scope="row">Full Name</th>
                 <td><input class="form-control input-sm" type="text" name="fullName" id="fullName" value="<?= $adminUserData['fullName'] ?>" size="20" /></td>

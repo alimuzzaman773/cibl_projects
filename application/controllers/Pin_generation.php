@@ -7,61 +7,81 @@ class Pin_generation extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
-        date_default_timezone_set('Asia/Dhaka');
+        $this->load->library("my_session");
+        $this->my_session->checkSession();
 
-        $this->load->database();
-        $this->load->helper('url');
-
-        $this->load->model('login_model');
-        $this->load->library('session');
         $this->load->library('BOcrypter');
-        if ($this->login_model->check_session()) {
-            redirect('/admin_login/index');
-        }
-
         $this->load->model('generate_eblskyid_model');
-        $this->load->model('common_model');
     }
 
     public function index() {
-        $this->output->set_template('theme2');
-        $moduleCodes = $this->session->userdata('moduleCodes');
-        $actionCodes = $this->session->userdata('actionCodes');
-        $actionNames = $this->session->userdata('actionNames');
-        $moduleCodes = explode("|", $moduleCodes);
-        $actionCodes = explode("#", $actionCodes);
-        $actionNames = explode("#", $actionNames);
-        $index = array_search(pin_module, $moduleCodes);
-        if ($index > -1) {
-            $actionCodes = json_encode(explode(",", $actionCodes[$index]));
-            $actionNames = json_encode(explode(",", $actionNames[$index]));
-            $pinRequestData = $this->generate_eblskyid_model->getAllPinRequests();
-            $data['pinRequest'] = json_encode($pinRequestData);
-            $data['actionCodes'] = $actionCodes;
-            $data['actionNames'] = $actionNames;
-            $this->load->view('generate_pin/generate_pin.php', $data);
-        } else {
-            echo "not allowed";
+        $data['pageTitle'] = 'Pin Request';
+        $data["body_template"] = "generate_pin/generate_pin.php";
+        $this->load->view('site_template.php', $data);
+    }
+
+    function get_pin_request_list() {
+        $params['limit'] = (int) $this->input->get("limit", true);
+        $params['offset'] = (int) $this->input->get("offset", true);
+        $params['get_count'] = (bool) $this->input->get("get_count", true);
+
+        $data['total'] = array();
+        $data['data_list'] = array();
+
+        if ((int) $params['get_count'] > 0) {
+            $countParams = $params;
+            unset($countParams['limit']);
+            unset($countParams['offset']);
+            $countParams['count'] = true;
+            $countRes = $this->generate_eblskyid_model->getAllPinRequests($countParams);
+            if ($countRes):
+                $data['total'] = $countRes->row()->total;
+            endif;
         }
+
+        $result = $this->generate_eblskyid_model->getAllPinRequests($params);
+        if ($result) {
+            $data['data_list'] = $result->result();
+            $data['q'] = $this->db->last_query();
+        }
+
+        my_json_output($data);
+    }
+
+    function get_pin_list() {
+        $params['limit'] = (int) $this->input->get("limit", true);
+        $params['offset'] = (int) $this->input->get("offset", true);
+        $params['get_count'] = (bool) $this->input->get("get_count", true);
+
+        $data['total'] = array();
+        $data['data_list'] = array();
+
+        if ((int) $params['get_count'] > 0) {
+            $countParams = $params;
+            unset($countParams['limit']);
+            unset($countParams['offset']);
+            $countParams['count'] = true;
+            $countRes = $this->generate_eblskyid_model->getPinList($countParams);
+            if ($countRes):
+                $data['total'] = $countRes->row()->total;
+            endif;
+        }
+
+        $result = $this->generate_eblskyid_model->getPinList($params);
+        if ($result) {
+            $data['data_list'] = $result->result();
+            $data['q'] = $this->db->last_query();
+        }
+
+        my_json_output($data);
     }
 
     public function newRequest($selectedActionName) {
-        $this->output->set_template('theme2');
-        $moduleCodes = $this->session->userdata('moduleCodes');
-        $actionCodes = $this->session->userdata('actionCodes');
-        $moduleCodes = explode("|", $moduleCodes);
-        $actionCodes = explode("#", $actionCodes);
-        $index = array_search(pin_module, $moduleCodes);
-        if ($index > -1) {
-            $moduleWiseActionCodes = $actionCodes[$index];
-            if (strpos($moduleWiseActionCodes, "create") > -1) {
-                $data['selectedActionName'] = $selectedActionName;
-                $data['message'] = "";
-                $this->load->view('generate_pin/new_request.php', $data);
-            }
-        } else {
-            echo "not allowed";
-        }
+        $data['selectedActionName'] = $selectedActionName;
+        $data['message'] = "";
+        $data['pageTitle'] = 'New Request';
+        $data["body_template"] = "generate_pin/new_request.php";
+        $this->load->view('site_template.php', $data);
     }
 
     public function insertNewRequest() {
@@ -71,7 +91,7 @@ class Pin_generation extends CI_Controller {
         $data['makerActionComment'] = $this->input->post('makerActionComment');
         $data['makerActionDt'] = date("Y-m-d");
         $data['makerActionTm'] = date("G:i:s");
-        $data['makerActionBy'] = $this->session->userdata('adminUserId');
+        $data['makerActionBy'] = $this->my_session->adminUserId;
 
         $this->db->insert('pin_generation_request', $data);
         redirect('pin_generation');
@@ -158,40 +178,9 @@ class Pin_generation extends CI_Controller {
     }
 
     public function viewPinByAction() {
-        $this->output->set_template('theme2');
-        $moduleCodes = $this->session->userdata('moduleCodes');
-        $actionCodes = $this->session->userdata('actionCodes');
-        $actionNames = $this->session->userdata('actionNames');
-        $moduleCodes = explode("|", $moduleCodes);
-        $actionCodes = explode("#", $actionCodes);
-        $actionNames = explode("#", $actionNames);
-        $index = array_search(pin_module, $moduleCodes);
-        if ($index > -1) {
-            $actionCodes = json_encode(explode(",", $actionCodes[$index]));
-            $actionNames = json_encode(explode(",", $actionNames[$index]));
-            $this->output->set_template('theme2');
-            $data = isset($_POST['action']) ? $_POST['action'] : "all";
-
-            if ($data == "all" || $data == "create") {
-                $viewData['pinNumbers'] = json_encode($this->generate_eblskyid_model->getAllPin());
-            }
-            if ($data == "destroy") {
-                $viewData['pinNumbers'] = json_encode($this->generate_eblskyid_model->getPinToDestroy());
-            }
-            if ($data == "print") {
-                $viewData['pinNumbers'] = json_encode($this->generate_eblskyid_model->getPinToPrint());
-            }
-            if ($data == "reset") {
-                $viewData['pinNumbers'] = json_encode($this->generate_eblskyid_model->getPinToReset());
-            }
-
-            $viewData['selectedValue'] = $data;
-            $viewData['actionCodes'] = $actionCodes;
-            $viewData['actionNames'] = $actionNames;
-            $this->load->view('generate_pin/view_pin.php', $viewData);
-        } else {
-            echo "not allowed";
-        }
+        $viewData['pageTitle'] = 'Pin Numbers';
+        $viewData["body_template"] = "generate_pin/view_pin.php";
+        $this->load->view('site_template.php', $viewData);
     }
 
     public function pinDestroy() {

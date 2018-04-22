@@ -115,30 +115,37 @@ AppUserModule.controller("AppUsersController", ["$scope", "$http", function ($sc
         return false;
     };
     
-    $scope.deletedUser = function (item) {	
+    $scope.deleteUser = function (item) {	
        var r = confirm("Are you sure to delete this user?");
-        if (r == true) {
-            $.ajax({
-                type: "POST",
-                data: {"skyId": item.skyId},
-                url: app.baseUrl + "client_registration/userDelete",
-                success: function (res) {
-
-                    if (res == 1) {
-                        alert("User can't delete because of user device already verified.");
-
-
-                    } else {
-                        window.location = "<?= base_url() ?>client_registration";
-                    }
-                },
-                error: function (error) {
-                    alert(error.status + "<--and--> " + error.statusText);
-                }
-            });
-        } else {
+        if (!r) {
             return false;
-        }
+        }    
+        
+        app.showModal();
+        $.ajax({
+            type: "POST",
+            data: {"skyId": item.skyId},
+            dataType : 'json',
+            url: app.baseUrl + "client_registration/userDelete",
+            success: function (res) {
+                app.hideModal();
+                if (res.success == false) 
+                {
+                    alert(res.msg);
+                    return false;
+                } 
+                
+                app.showModal();
+                alert("User deleted successfully");
+                window.location = app.baseUrl + "client_registration";
+            },
+            error: function (error) {
+                app.hideModal();
+                alert(error.status + "<--and--> " + error.statusText);
+            }
+        });
+        
+        return false;
     };
     
 

@@ -9,9 +9,10 @@ class Transaction_limit_setup_model_maker extends CI_Model {
         $this->load->database();
     }
 
-    public function getAllPackages() {
-        $this->db->where('makerActionBy =', $this->session->userdata('adminUserId'));
-        $this->db->or_where('mcStatus =', 1);
+    function getAllPackages() 
+    {
+        $this->db->where('makerActionBy', $this->my_session->userId);
+        $this->db->or_where('mcStatus', 1);
         $this->db->order_by("userGroupName", "ASC");
         $query = $this->db->get('apps_users_group_mc');
         return $query->result();

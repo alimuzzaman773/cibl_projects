@@ -540,22 +540,39 @@ class Client_registration extends CI_Controller {
     function userDelete() 
     {   
         $skyId = (int) $this->input->post("skyId");
-        if ($skyId > 0) {
-            $res = $this->client_registration_model->countVerifiedDevice($skyId);
-            if ($res == true) {
-                echo 1;
-            } else {
-                $data["mcStatus"] = 0;
-                $data["makerAction"] = "Delete";
-                $data["salt2"] = "delete";
-                $data["makerActionCode"] = 'delete';
-                $data["makerActionDt"] = date("Y-m-d");
-                $data["makerActionTm"] = date("G:i:s");
-                $data["makerActionBy"] = $this->session->userdata('adminUserId');
-                $this->client_registration_model->userDeleteChange($data, $skyId);
-                echo 0;
-            }
-        }
+        if ((int)$skyId <= 0) {
+            $json = array(
+                "msg" => "no sky id provided",
+                "success" => false
+            );
+            my_json_output($json);
+        }    
+        
+        $res = $this->client_registration_model->countVerifiedDevice($skyId);
+        if ($res)
+        {
+            $json = array(
+                "msg" => "User cannot be deleted because user already has {$res->num_rows()} verified device/s",
+                "devices" => $res->result(),
+                "success" => false
+            );
+            my_json_output($json);
+        } 
+        
+        $data["mcStatus"] = 0;
+        $data["makerAction"] = "Delete";
+        $data["salt2"] = "delete";
+        $data["makerActionCode"] = 'delete';
+        $data["makerActionDt"] = date("Y-m-d");
+        $data["makerActionTm"] = date("G:i:s");
+        $data["makerActionBy"] = $this->my_session->userId;
+        $this->client_registration_model->userDeleteChange($data, $skyId);
+        
+        $json = array(
+            "success" => true
+        );
+        my_json_output($json);  
+        
            
     }
 
