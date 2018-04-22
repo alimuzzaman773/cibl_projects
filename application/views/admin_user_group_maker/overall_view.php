@@ -3,9 +3,11 @@
         <div class="col-sm-12">
             <h3 class="title-underlined ng-scope">
                 <?= $pageTitle ?>
-                <a href="<?php echo base_url(); ?>admin_user_group_maker/selectModule/Add" class="btn btn-primary btn-xs pull-right">
-                    <i class="fa fa-plus"></i> Add Admin User Group
-                </a>
+                <?php if (ci_check_permission("canAddAdminUserGroup")): ?>
+                    <a href="<?php echo base_url(); ?>admin_user_group_maker/selectModule/Add" class="btn btn-primary btn-xs pull-right">
+                        <i class="fa fa-plus"></i> Add Admin User Group
+                    </a>
+                <?php endif; ?>
             </h3>
         </div>
     </div>
@@ -48,41 +50,55 @@
                                         Action <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li>
-                                            <a href="<?= base_url() ?>admin_user_group_maker/editModule/{{i.userGroupId}}/edit">
-                                                <i class="glyphicon glyphicon-pencil"></i> Edit
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="<?= base_url() ?>permission">
-                                                <i class="glyphicon glyphicon-eye-open"></i> Permission
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="<?= base_url() ?>admin_user_group_maker/set_permission/{{i.userGroupId}}">
-                                                <i class="glyphicon glyphicon-cog"></i> Set Permission
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a data-ng-click="activate(i.userGroupId);" data-ng-if="i.isActive == 0">
-                                                <i class="glyphicon glyphicon-ok"></i> Active
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a data-ng-click="deactivate(i.userGroupId);" data-ng-if="i.isActive == 1">
-                                                <i class="glyphicon glyphicon-remove"></i> Inactive
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a data-ng-click="lock(i.userGroupId);" data-ng-if="i.isLocked == 0">
-                                                <i class="glyphicon glyphicon-ok"></i> Lock
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a data-ng-click="unlock(i.userGroupId);" data-ng-if="i.isLocked == 1">
-                                                <i class="glyphicon glyphicon-remove"></i> Unlock
-                                            </a>
-                                        </li>
+                                        <?php if (ci_check_permission("canEditAdminUserGroup")): ?>
+                                            <li>
+                                                <a href="<?= base_url() ?>admin_user_group_maker/editModule/{{i.userGroupId}}/edit">
+                                                    <i class="glyphicon glyphicon-pencil"></i> Edit
+                                                </a>
+                                            </li>
+                                        <?php endif; ?>
+                                        <?php if (ci_check_permission("canPermissionAdminUserGroup")): ?>
+                                            <li>
+                                                <a href="<?= base_url() ?>permission">
+                                                    <i class="glyphicon glyphicon-eye-open"></i> Permission
+                                                </a>
+                                            </li>
+                                        <?php endif; ?>
+                                        <?php if (ci_check_permission("canSetpermissionAdminUserGroup")): ?>
+                                            <li>
+                                                <a href="<?= base_url() ?>admin_user_group_maker/set_permission/{{i.userGroupId}}">
+                                                    <i class="glyphicon glyphicon-cog"></i> Set Permission
+                                                </a>
+                                            </li>
+                                        <?php endif; ?>
+                                        <?php if (ci_check_permission("canActiveAdminUserGroup")): ?>
+                                            <li>
+                                                <a data-ng-click="activate(i.userGroupId);" data-ng-if="i.isActive == 0">
+                                                    <i class="glyphicon glyphicon-ok"></i> Active
+                                                </a>
+                                            </li>
+                                        <?php endif; ?>
+                                        <?php if (ci_check_permission("canInactiveAdminUserGroup")): ?>
+                                            <li>
+                                                <a data-ng-click="deactivate(i.userGroupId);" data-ng-if="i.isActive == 1">
+                                                    <i class="glyphicon glyphicon-remove"></i> Inactive
+                                                </a>
+                                            </li>
+                                        <?php endif; ?>
+                                        <?php if (ci_check_permission("canLockAdminUserGroup")): ?>
+                                            <li>
+                                                <a data-ng-click="lock(i.userGroupId);" data-ng-if="i.isLocked == 0">
+                                                    <i class="glyphicon glyphicon-ok"></i> Lock
+                                                </a>
+                                            </li>
+                                        <?php endif; ?>
+                                        <?php if (ci_check_permission("canUnlockAdminUserGroup")): ?>
+                                            <li>
+                                                <a data-ng-click="unlock(i.userGroupId);" data-ng-if="i.isLocked == 1">
+                                                    <i class="glyphicon glyphicon-remove"></i> Unlock
+                                                </a>
+                                            </li>
+                                        <?php endif; ?>
                                     </ul>
                                 </div>
                             </td>
