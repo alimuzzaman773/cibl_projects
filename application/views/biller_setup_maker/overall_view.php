@@ -1,11 +1,13 @@
 <div class="container">
-     <div class="row">
+    <div class="row">
         <div class="col-sm-12">
             <h3 class="title-underlined ng-scope">
                 Biller Setup
+                <?php if (ci_check_permission("canAddBillerSetup")): ?>
                 <a href="<?php echo base_url(); ?>biller_setup_maker/addNewBiller/Add" class="btn btn-primary btn-xs pull-right">
                     <i class="fa fa-plus"></i> Add Biller
                 </a>
+                <?php endif; ?>
             </h3>
         </div>
     </div>
@@ -41,7 +43,7 @@
                             <td>{{i.billTypeName}}</td>
                             <td>{{i.checkerAction}}</td>
                             <td>                                
-                                <span data-ng-class="{'text-success': i.isActive=='1', 'text-warning': i.isActive=='0'}">{{i.isActive=='1' ? 'Active' : 'Inactive'}}</span>
+                                <span data-ng-class="{'text-success': i.isActive == '1', 'text-warning': i.isActive == '0'}">{{i.isActive=='1' ? 'Active' : 'Inactive'}}</span>
                             </td>
                             <td>
                                 <div class="dropdown pull-right">
@@ -49,21 +51,27 @@
                                         Action <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li>
-                                            <a href="<?= base_url() ?>biller_setup_maker/editBiller/{{i.billerId}}/edit">
-                                                <i class="glyphicon glyphicon-pencil"></i> Edit
-                                            </a>
-                                        </li> 
-                                        <li>
-                                            <a data-ng-click="activate(i.billerId);" data-ng-if="i.isActive == 0">
-                                                <i class="glyphicon glyphicon-ok"></i> Active
-                                            </a>
-                                        </li>
-                                         <li>
-                                            <a data-ng-click="deactivate(i.billerId);" data-ng-if="i.isActive == 1">
-                                                <i class="glyphicon glyphicon-remove"></i> Inactive
-                                            </a>
-                                        </li>
+                                        <?php if (ci_check_permission("canActiveBillerSetup")): ?>
+                                            <li>
+                                                <a href="<?= base_url() ?>biller_setup_maker/editBiller/{{i.billerId}}/edit">
+                                                    <i class="glyphicon glyphicon-pencil"></i> Edit
+                                                </a>
+                                            </li> 
+                                        <?php endif; ?>
+                                        <?php if (ci_check_permission("canActiveBillerSetup")): ?>
+                                            <li>
+                                                <a data-ng-click="activate(i.billerId);" data-ng-if="i.isActive == 0">
+                                                    <i class="glyphicon glyphicon-ok"></i> Active
+                                                </a>
+                                            </li>
+                                        <?php endif; ?>
+                                        <?php if (ci_check_permission("canInactiveBillerSetup")): ?>
+                                            <li>
+                                                <a data-ng-click="deactivate(i.billerId);" data-ng-if="i.isActive == 1">
+                                                    <i class="glyphicon glyphicon-remove"></i> Inactive
+                                                </a>
+                                            </li>
+                                        <?php endif; ?>
                                     </ul>
                                 </div>
                             </td>

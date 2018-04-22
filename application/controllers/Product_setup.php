@@ -13,20 +13,20 @@ class Product_setup extends CI_Controller {
 
         $this->load->library('grocery_CRUD');
     }
-    
+
     function index() {
         try {
             $crud = new grocery_CRUD();
             $crud->set_theme(TABLE_THEME);
             $crud->set_subject('Product');
             $crud->set_table(TBL_PRODUCT_SETUP);
-            
+
             $crud->required_fields('parentName', 'childName', 'productName');
 
             $crud->unique_fields('productName');
-            
+
             $crud->columns('parentName', 'childName', 'productName', 'productDetails', 'isActive', 'productOrder');
-            
+
             $time = date("Y-m-d H:i:s");
             $creatorId = $this->my_session->userId;
 
@@ -51,6 +51,22 @@ class Product_setup extends CI_Controller {
 
             $crud->unset_delete();
 
+            if (!ci_check_permission("canAddProduct")):
+                $crud->unset_add();
+            endif;
+            if (!ci_check_permission("canEditProduct")):
+                $crud->unset_edit();
+            endif;
+            if (!ci_check_permission("canDetailsProduct")):
+                $crud->unset_read();
+            endif;
+            if (!ci_check_permission("canExportProduct")):
+                $crud->unset_export();
+            endif;
+            if (!ci_check_permission("canPrintProduct")):
+                $crud->unset_print();
+            endif;
+
             $output = $crud->render();
             $output->css = "";
             $output->js = "";
@@ -63,4 +79,5 @@ class Product_setup extends CI_Controller {
             show_error($e->getMessage() . ' --- ' . $e->getTraceAsString());
         }
     }
+
 }

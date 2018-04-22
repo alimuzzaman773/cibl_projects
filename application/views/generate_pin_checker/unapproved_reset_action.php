@@ -35,11 +35,13 @@
                                         Action <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu">
+                                        <?php if (ci_check_permission("canResetPin")): ?>
                                         <li>
                                             <a href="<?= base_url() ?>pin_generation_checker/getResetActionForApproval/{{i.eblSkyId}}">
                                                 <i class="glyphicon glyphicon-pencil"></i> Approve
                                             </a>
                                         </li> 
+                                        <?php endif; ?>
                                     </ul>
                                 </div>
                             </td>

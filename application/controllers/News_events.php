@@ -44,6 +44,22 @@ class News_events extends CI_Controller {
 
             $crud->unset_delete();
 
+            if (!ci_check_permission("canAddNewsEvenet")):
+                $crud->unset_add();
+            endif;
+            if (!ci_check_permission("canEditNewsEvenet")):
+                $crud->unset_edit();
+            endif;
+            if (!ci_check_permission("canDetailsNewsEvenet")):
+                $crud->unset_read();
+            endif;
+            if (!ci_check_permission("canExportNewsEvenet")):
+                $crud->unset_export();
+            endif;
+            if (!ci_check_permission("canPrintNewsEvenet")):
+                $crud->unset_print();
+            endif;
+            
             $output = $crud->render();
             $output->css = "";
             $output->js = "";

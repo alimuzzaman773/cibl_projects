@@ -48,11 +48,13 @@
                             Action <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu">
+                            <?php if (ci_check_permission("canEmailPriorityRequest")): ?>
                             <li>
                                 <a href="<?= base_url() . "priority_request_process/processRequestById/" ?>{{item.serviceRequestID}}">
                                     <i class="glyphicon glyphicon-envelope"></i> Email
                                 </a>
                             </li>  
+                            <?php endif;?>
                         </ul>
                     </div>
                 </td>

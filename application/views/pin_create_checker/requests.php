@@ -45,17 +45,18 @@
                                         Action <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li>
-                                            <a href="#" onclick="approve(pin_checker_data)">
-                                                <i class="glyphicon glyphicon-pencil"></i> Approve
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="<?= base_url() ?>pin_create_checker/getRejectReason?requestId={{i.requestId}}&makerActionDtTm={{i.makerActionDt}} {{i.makerActionTm}}&checkerActionDtTm={{i.checkerActionDt}} {{i.checkerActionTm}}">
-                                                <i class="glyphicon glyphicon-pencil"></i> Reject
-                                            </a>
-                                        </li> 
-
+                                        <?php if (ci_check_permission("canApprovePinRequest")): ?>
+                                            <li>
+                                                <a href="#" onclick="approve(pin_checker_data)">
+                                                    <i class="glyphicon glyphicon-pencil"></i> Approve
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="<?= base_url() ?>pin_create_checker/getRejectReason?requestId={{i.requestId}}&makerActionDtTm={{i.makerActionDt}} {{i.makerActionTm}}&checkerActionDtTm={{i.checkerActionDt}} {{i.checkerActionTm}}">
+                                                    <i class="glyphicon glyphicon-pencil"></i> Reject
+                                                </a>
+                                            </li> 
+                                        <?php endif; ?>
                                     </ul>
                                 </div>
                             </td>
@@ -80,24 +81,24 @@ ci_add_js(asset_url() . 'app/checker/pin_create_checker_module.js');
     app.pin_checker_data = <?= $unApprovedRequest ?>;
 
     function approve(item) {
-        
+
         console.log(item);
         /*
-        var dataToSave = {"requestId": item.requestId,
-            "totalPin": item.totalPin,
-            "makerActionDtTm": item.makerActionDtTm,
-            "checkerActionDtTm": item.checkerActionDtTm};
-        $.ajax({
-            type: "POST",
-            data: dataToSave,
-            url: app.baseUrl + "pin_create_checker/pinCreateApprove",
-            success: function (data) {
-                window.location = app.baseUrl+"pin_create_checker";
-            },
-            error: function (error) {
-                alert(error.status + "<--and--> " + error.statusText);
-            }
-        });
-        */
+         var dataToSave = {"requestId": item.requestId,
+         "totalPin": item.totalPin,
+         "makerActionDtTm": item.makerActionDtTm,
+         "checkerActionDtTm": item.checkerActionDtTm};
+         $.ajax({
+         type: "POST",
+         data: dataToSave,
+         url: app.baseUrl + "pin_create_checker/pinCreateApprove",
+         success: function (data) {
+         window.location = app.baseUrl+"pin_create_checker";
+         },
+         error: function (error) {
+         alert(error.status + "<--and--> " + error.statusText);
+         }
+         });
+         */
     }
 </script>

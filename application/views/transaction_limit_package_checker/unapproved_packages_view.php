@@ -35,11 +35,13 @@
                                         Action <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu">
+                                        <?php if (ci_check_permission("canApproveLimitPackage")): ?>
                                         <li>
                                             <a href="<?= base_url() ?>transaction_limit_setup_checker/getPackageForApproval/{{i.appsGroupId}}">
                                                 <i class="glyphicon glyphicon-pencil"></i> Approve
                                             </a>
                                         </li> 
+                                        <?php endif;?>
                                     </ul>
                                 </div>
                             </td>

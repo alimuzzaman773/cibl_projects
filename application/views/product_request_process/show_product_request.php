@@ -59,11 +59,13 @@
                             Action <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu">
+                            <?php if (ci_check_permission("canEmailProductRequest")): ?>
                             <li>
                                 <a href="<?= base_url() . "product_request_process/processRequestById/" ?>{{item.applyId}}">
                                     <i class="glyphicon glyphicon-envelope"></i> Email
                                 </a>
                             </li>  
+                            <?php endif;?>
                         </ul>
                     </div>
                 </td>

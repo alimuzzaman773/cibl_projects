@@ -39,12 +39,13 @@
                                         Action <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li>
-                                            <a href="<?= base_url() ?>apps_user_delete_checker/getAppsUserForApproval/{{i.skyId}}">
-                                                <i class="glyphicon glyphicon-pencil"></i> Approve
-                                            </a>
-                                        </li> 
-
+                                        <?php if (ci_check_permission("canDeleteAppsUser")): ?>
+                                            <li>
+                                                <a href="<?= base_url() ?>apps_user_delete_checker/getAppsUserForApproval/{{i.skyId}}">
+                                                    <i class="glyphicon glyphicon-pencil"></i> Approve
+                                                </a>
+                                            </li> 
+                                        <?php endif; ?>
                                     </ul>
                                 </div>
                             </td>

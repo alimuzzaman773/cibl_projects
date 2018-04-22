@@ -38,7 +38,6 @@
                 <th>Reason</th>
                 <th>Request Date</th>
                 <th>Action</th>
-
             </tr>
         </thead>
         <tbody>
@@ -58,11 +57,13 @@
                             Action <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu">
+                            <?php if (ci_check_permission("canEmailBankingRequest")): ?>
                             <li>
                                 <a href="<?= base_url() . "banking_service_request/processRequestById/" ?>{{item.serviceId}}">
                                     <i class="glyphicon glyphicon-envelope"></i> Email
                                 </a>
                             </li>  
+                            <?php endif;?>
                         </ul>
                     </div>
                 </td>

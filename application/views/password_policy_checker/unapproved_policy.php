@@ -1,5 +1,5 @@
 <div class="container">
-     <div class="row">
+    <div class="row">
         <div class="col-sm-12">
             <h3 class="title-underlined ng-scope">
                 Password Policy
@@ -36,7 +36,7 @@
                             <td>{{i.wrongAttempts}}</td>
                             <td>{{i.passExpiryPeriod}}</td>
                             <td>                                
-                                <span data-ng-class="{'text-success': i.isActive=='1', 'text-warning': i.isActive=='0'}">{{i.isActive=='1' ? 'Active' : 'Inactive'}}</span>
+                                <span data-ng-class="{'text-success': i.isActive == '1', 'text-warning': i.isActive == '0'}">{{i.isActive=='1' ? 'Active' : 'Inactive'}}</span>
                             </td>
                             <td>
                                 <div class="dropdown pull-right">
@@ -44,12 +44,13 @@
                                         Action <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li>
-                                            <a href="<?= base_url() ?>password_policy_checker/getPasswordPolicyApproval/{{i.validationGroupId}}">
-                                                <i class="glyphicon glyphicon-pencil"></i> Approve
-                                            </a>
-                                        </li> 
-         
+                                        <?php if (ci_check_permission("canApprovePasswordPolicy")): ?>
+                                            <li>
+                                                <a href="<?= base_url() ?>password_policy_checker/getPasswordPolicyApproval/{{i.validationGroupId}}">
+                                                    <i class="glyphicon glyphicon-pencil"></i> Approve
+                                                </a>
+                                            </li> 
+                                        <?php endif; ?>
                                     </ul>
                                 </div>
                             </td>

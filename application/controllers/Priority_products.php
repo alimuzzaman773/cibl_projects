@@ -46,6 +46,22 @@ class Priority_products extends CI_Controller {
 
             $crud->unset_delete();
 
+            if (!ci_check_permission("canAddPriorityProduct")):
+                $crud->unset_add();
+            endif;
+            if (!ci_check_permission("canEditPriorityProduct")):
+                $crud->unset_edit();
+            endif;
+            if (!ci_check_permission("canDetailsPriorityProduct")):
+                $crud->unset_read();
+            endif;
+            if (!ci_check_permission("canExportPriorityProduct")):
+                $crud->unset_export();
+            endif;
+            if (!ci_check_permission("canPrintPriorityProduct")):
+                $crud->unset_print();
+            endif;
+
             $output = $crud->render();
             $output->css = "";
             $output->js = "";
@@ -58,4 +74,5 @@ class Priority_products extends CI_Controller {
             show_error($e->getMessage() . ' --- ' . $e->getTraceAsString());
         }
     }
+
 }

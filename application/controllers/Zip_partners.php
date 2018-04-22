@@ -63,6 +63,22 @@ class Zip_partners extends CI_Controller {
 
             $crud->unset_delete();
 
+            if (!ci_check_permission("canAddZipPartner")):
+                $crud->unset_add();
+            endif;
+            if (!ci_check_permission("canEditZipPartner")):
+                $crud->unset_edit();
+            endif;
+            if (!ci_check_permission("canDetailsZipPartner")):
+                $crud->unset_read();
+            endif;
+            if (!ci_check_permission("canExportZipPartner")):
+                $crud->unset_export();
+            endif;
+            if (!ci_check_permission("canPrintZipPartner")):
+                $crud->unset_print();
+            endif;
+
             $output = $crud->render();
             $output->css = "";
             $output->js = "";
@@ -106,6 +122,7 @@ class Zip_partners extends CI_Controller {
             return true;
         }
     }
+
 //
 //    function add_data($post_array) {
 //        $post_array['createdBy'] = $this->session->userdata('adminUserId');
@@ -123,5 +140,4 @@ class Zip_partners extends CI_Controller {
 //        $post_array['updateDtTm'] = input_date();
 //        return $post_array;
 //    }
-
 }
