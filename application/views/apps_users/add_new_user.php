@@ -13,11 +13,11 @@
 			<input hidden class="textbox" type="text" name="selectedActionName" id="selectedActionName" value="<?= $selectedActionName ?>">
 
 
-			<h4>ESB ID</h4>
+			<h4>Apps ID</h4>
 			<input type="text" name="esbId" style="text-transform:uppercase" required>
 			<br><br>
 
-			<h4>CFID</h4>
+			<h4>CIF ID</h4>
 			<input type="number" name="cfId" required>
 			<br><br>
 

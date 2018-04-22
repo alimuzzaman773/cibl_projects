@@ -4,16 +4,13 @@ class Client_registration_model_checker extends CI_Model {
 
     function __construct() {
         parent::__construct();
-        date_default_timezone_set('Asia/Dhaka');
-
-        $this->load->database();
     }
 
     public function getUnapprovedAppsUsers() {
         $this->db->order_by("skyId", "desc");
         $this->db->where('apps_users_mc.mcStatus =', 0);
         $this->db->where("apps_users_mc.salt2 IS Null");
-        $this->db->where('apps_users_mc.makerActionBy !=', $this->session->userdata('adminUserId'));
+        $this->db->where('apps_users_mc.makerActionBy !=', $this->my_session->userId);
         $this->db->select('apps_users_mc.*, apps_users_group.userGroupName');
         $this->db->from('apps_users_mc');
         $this->db->join('apps_users_group', 'apps_users_mc.appsGroupId = apps_users_group.appsGroupId');
@@ -179,8 +176,8 @@ class Client_registration_model_checker extends CI_Model {
 
         // prepare data for activity log //
         $activityLog = array('activityJson' => json_encode($jsonData),
-            'adminUserId' => $this->session->userdata('adminUserId'),
-            'adminUserName' => $this->session->userdata('username'),
+            'adminUserId' => $this->my_session->userId,
+            'adminUserName' => $this->my_session->userName,
             'tableName' => 'apps_users',
             'moduleName' => 'apps_user_module',
             'moduleCode' => '01',

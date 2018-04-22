@@ -1,104 +1,70 @@
-<title>Biller Setup</title>
-<div class="breadcrum">Biller Setup Approve/Reject</div>
-
-<div class="container" style="margin-top:50px">
-
-
-    <table data-bind="dataTable: { dataSource : records, rowTemplate: 'rowTemplate',
-           options: {
-           bAutoWidth : false,
-           aoColumnDefs: [
-           { bSortable: false, aTargets: [] },
-           { bSearchable: false, aTargets: [] }
-           ],
-           aaSorting: [],
-           aLengthMenu: [[50, 100, 150, -1], [50, 100, 150, 'All']],
-           iDisplayLength: 50,
-           aoColumns: [
-           {  mDataProp:'billerId' },
-           {  mDataProp:'billerName' },
-           {  mDataProp:'cfId' },
-           {  mDataProp:'billerCode' },
-           {  mDataProp:'billTypeName' },
-           {  mDataProp:'makerAction' },
-           {  mDataProp:'status' }
-           ]}}" class="table table-striped table-bordered" id="referenceTable">
-
-        <thead>
-            <tr>
-                <th hidden style="text-align: center" >ID</th>
-                <th style="text-align: center" >Biller Name</th>
-                <th style="text-align: center" >CFID</th>
-                <th style="text-align: center" >Biller Code</th>
-                <th style="text-align: center" >Bill Type</th>
-                <th style="text-align: center" >Maker Action</th>
-                <th style="text-align: center" >Status</th>
-                <th style="text-align: center" >Action</th>
-            </tr>
-        </thead>
-
-    </table>
-
-    <script id="rowTemplate" type="text/html">
-        <td hidden style="text-align:center" data-bind="text:billerId"></td>
-        <td style="text-align:center" data-bind="text:billerName"></td>
-        <td style="text-align:center" data-bind="text:cfId"></td>
-        <td style="text-align:center" data-bind="text:billerCode"></td>
-        <td style="text-align:center" data-bind="text:billTypeName"></td>
-        <td style="text-align:center" data-bind="text:makerAction"></td>
-        <td style="text-align:center" data-bind="text:status, style:{color: statusColor}"></td>
-        <td style="text-align:center"><button data-bind="click: $root.approveOrReject" class="btn btn-warning">Approve/Reject</button></td>
-    </script>
-
-
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <h3 class="title-underlined ng-scope">
+                Biller Setup Checker
+            </h3>
+        </div>
+    </div>
 </div>
 
+<div class="container" id="BillerSetupCheckerModule" data-ng-controller="BillerSetupCheckerController">
+    <div class="row">
+        <div class="col-md-12 col-xs-12">
+            <div class="table-responsive">        
+                <table class="table table-bordered table-condensed table-striped table-hover" >          
+                    <thead>
+                        <tr class="bg-primary">
+                            <th>SL#</th>
+                            <th>Biller Name</th>
+                            <th>CIF ID</th>
+                            <th>Biller Code</th>
+                            <th>Bill Type</th>
+                            <th>Maker Action</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr data-ng-repeat="i in biller_setup_data track by $index">
+                            <td class="text-center hidden"><input type="checkbox" id="selectAll" data-ng-model="i.isChecked" data-ng-true-value="true" data-ng-false-value="false" /></td>
+                            <td>{{($index + 1)}}</td>
+                            <td>{{i.billerName}}</td>
+                            <td>{{i.cfId}}</td>
+                            <td>{{i.billerCode}}</td>
+                            <td>{{i.billTypeName}}</td>
+                            <td>{{i.makerAction}}</td>
+                            <td>{{i.mcStatuss}}</td>
+                            <td>
+                                <div class="dropdown pull-right">
+                                    <button class="btn btn-primary btn-xs dropdown-toggle" type="button" data-toggle="dropdown">
+                                        Action <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <a href="<?= base_url() ?>pin_generation_checker/getResetActionForApproval/{{i.billerId}}">
+                                                <i class="glyphicon glyphicon-pencil"></i> Approve
+                                            </a>
+                                        </li> 
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr data-ng-show="biller_setup_data.length <= 0">
+                            <td colspan="10">No data found</td>
+                        </tr>
+                    </tbody>
+                </table>               
+            </div>
+        </div>
+    </div>
+</div>
 
-
-<style>
-input {
-    float:center;
-    border: 1px solid #848484; 
-    -webkit-border-radius: 30px; 
-    -moz-border-radius: 30px; 
-    border-radius: 30px; 
-    outline:0; 
-    height:25px; 
-    width: 100px; 
-    padding-left:10px; 
-    padding-right:10px; 
-}
-</style>
-
-
+<?php
+ci_add_js(asset_url() . 'app/checker/biller_setup_module.js');
+?>
 
 <script type="text/javascript" charset="utf-8">
-
-  var initialData = <?= $unapprovedBillers ?>;
-  var vm = function() {
-    
-    var self = this;
-    self.records = ko.observableArray(initialData);
-
-    $.each(self.records(), function(i, record) {  //build the checkboxes checked/unchecked
-
-      if(record.mcStatus === "1"){
-          record.status = "Approved";
-          record.statusColor = ko.observable("green");
-      }else if(record.mcStatus === "0"){
-          record.status = "Wait for approve";
-          record.statusColor = ko.observable("red");
-      }else if(record.mcStatus === "2"){
-          record.status = "Rejected";
-          record.statusColor = ko.observable("red");
-      }
-    })
-
-    self.approveOrReject = function(item){
-        window.location = "<?php echo base_url(); ?>biller_setup_checker/getBillerFroApproval/" + item.billerId;
-    }
-  }
-  ko.applyBindings(new vm());
-    
+    var app = app || {};
+    app.biller_setup_data = <?= $unapprovedBillers ?>;
 </script>
-

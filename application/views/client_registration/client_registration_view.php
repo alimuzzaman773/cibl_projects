@@ -10,8 +10,8 @@
         <thead>
             <tr class="bg-primary">
                 <th>SKY ID</th>
-                <th>ESB ID</th>
-                <th>CFID</th>
+                <th>Apps ID</th>
+                <th>CIF ID</th>
                 <th>Client ID</th>
                 <th>Lock/Unlock</th>
                 <th>Active/Inactive</th>

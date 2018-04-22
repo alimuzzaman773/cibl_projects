@@ -7,27 +7,16 @@ class Biller_setup_checker extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
-        date_default_timezone_set('Asia/Dhaka');
-
-        $this->load->helper('url');
+        $this->load->library("my_session");
+        $this->my_session->checkSession();
         $this->load->model('biller_setup_model_checker');
-        $this->load->library('session');
-
-        $this->load->model('login_model');
-        if ($this->login_model->check_session()) {
-            redirect('/admin_login/index');
-        }
     }
 
     public function index() {
-        $this->output->set_template('theme2');
-        $authorizationModules = $this->session->userdata('authorizationModules');
-        if (strpos($authorizationModules, biller_setup_authorization) > -1) {
-            $data['unapprovedBillers'] = json_encode($this->biller_setup_model_checker->getUnapprovedBillers());
-            $this->load->view('biller_setup_checker/unapproved_billers.php', $data);
-        } else {
-            echo "Authorization Module Not Given";
-        }
+        $data['unapprovedBillers'] = json_encode($this->biller_setup_model_checker->getUnapprovedBillers());
+        $data["pageTitle"] = "Biller Setup Checker";
+        $data["body_template"] = "biller_setup_checker/unapproved_billers.php";
+        $this->load->view('site_template', $data);
     }
 
     public function getBillerFroApproval($id) {

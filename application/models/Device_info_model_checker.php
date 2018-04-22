@@ -4,15 +4,13 @@ class Device_info_model_checker extends CI_Model {
 
     function __construct() {
         parent::__construct();
-        date_default_timezone_set('Asia/Dhaka');
-
-        $this->load->database();
+        $this->load->library("my_session");
     }
 
     public function getUnapprovedDevice() {
         $this->db->order_by("deviceId", "desc");
         $this->db->where('device_info_mc.mcStatus =', 0);
-        $this->db->where('device_info_mc.makerActionBy !=', $this->session->userdata('adminUserId'));
+        $this->db->where('device_info_mc.makerActionBy !=', $this->my_session->userId);
         $this->db->select('device_info_mc.*, apps_users_mc.eblSkyId');
         $this->db->from('device_info_mc');
         $this->db->join('apps_users_mc', 'apps_users_mc.skyId = device_info_mc.skyId');

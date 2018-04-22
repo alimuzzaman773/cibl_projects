@@ -16,12 +16,12 @@
 
 
 
-<br>
- <br>
+    <br>
+    <br>
     <button style="display: none;" id="active" data-bind="click :$root.active" class="btn btn-success">Active</button>
     <button style="display: none;" id="inactive" data-bind="click :$root.inactive" class="btn btn-success">Inactive</button>
     <button style="display: none;" id="addPackage" data-bind="click :$root.addPackage" class="btn btn-success">Add Package</button>
-<br>
+    <br>
 
     <div id="showGroups" data-bind="visible: records().length > 0">
         <table class="table table-striped table-bordered">
@@ -30,11 +30,11 @@
                     <th hidden style="text-align: center" >ID</th>
                     <th style="text-align: center" >Action</th>
                     <th style="text-align:left">
-<!--                        
-<button style="text-align:left" id="selectAll" data-bind="click :$root.selectAll" class="btn btn-primary">Select All</button>
-<button style="text-align:left" id="deselectAll" data-bind="click :$root.deselectAll, visible: false" class="btn btn-primary">Deselect All</button>
--->
-       
+                        <!--                        
+                        <button style="text-align:left" id="selectAll" data-bind="click :$root.selectAll" class="btn btn-primary">Select All</button>
+                        <button style="text-align:left" id="deselectAll" data-bind="click :$root.deselectAll, visible: false" class="btn btn-primary">Deselect All</button>
+                        -->
+
                     </th>
                     <th style="text-align: center" >Group Name</th>
                     <th style="text-align: center" >Own Account Transfer</th>
@@ -57,7 +57,7 @@
                     <td style="text-align:center"><input type="checkbox" onclick="return false" data-bind="checked: billsPayChecked"></td>
                     <td style="text-align:center" data-bind="text:active, style:{color: activeColor}"></td>
                     <td style="text-align:center" data-bind="text:status, style:{color: statusColor}"></td>
-          
+
                 </tr>
             </tbody>
         </table>    
@@ -73,106 +73,106 @@
 
 <style>
 
-input {
-    float:center;
-    border: 1px solid #848484; 
-    -webkit-border-radius: 30px; 
-    -moz-border-radius: 30px; 
-    border-radius: 30px; 
-    outline:0; 
-    height:25px; 
-    width: 100px; 
-    padding-left:10px; 
-    padding-right:10px; 
-}
+    input {
+        float:center;
+        border: 1px solid #848484; 
+        -webkit-border-radius: 30px; 
+        -moz-border-radius: 30px; 
+        border-radius: 30px; 
+        outline:0; 
+        height:25px; 
+        width: 100px; 
+        padding-left:10px; 
+        padding-right:10px; 
+    }
 </style>
 
 
 
 <script type="text/javascript" charset="utf-8">
     var initialData = <?= $packages ?>; //data for building initial table
-    var vm = function() {
+    var vm = function () {
         var self = this;
         self.records = ko.observableArray(initialData);
 
-        $.each(self.records(), function(i, record) {  //build the checkboxes checked/unchecked
+        $.each(self.records(), function (i, record) {  //build the checkboxes checked/unchecked
             record.isProcessed = ko.observable(false);
             record.edit = ko.observable(false);
             record.check = ko.observable(false);
 
             record.appGroupId = record.appsGroupId;
             record.userGroupName = record.userGroupName;
-            
 
-            if(record.isActive === "1"){
+
+            if (record.isActive === "1") {
                 record.active = "Active";
                 record.activeColor = ko.observable("green");
-            }else if(record.isActive === "0"){
+            } else if (record.isActive === "0") {
                 record.active = "Inactive";
                 record.activeColor = ko.observable("red");
             }
 
-            if(record.oatMinTxnLim > 0){
+            if (record.oatMinTxnLim > 0) {
                 record.ownChecked = ko.observable(true);
-            }else if(record.oatMinTxnLim == 0){
+            } else if (record.oatMinTxnLim == 0) {
                 record.ownChecked = ko.observable(false);
             }
 
 
-            if(record.eatMinTxnLim > 0){
+            if (record.eatMinTxnLim > 0) {
                 record.eblChecked = ko.observable(true);
-            }else if(record.eatMinTxnLim == 0){
+            } else if (record.eatMinTxnLim == 0) {
                 record.eblChecked = ko.observable(false);
             }
 
 
-            if(record.obtMinTxnLim > 0){
+            if (record.obtMinTxnLim > 0) {
                 record.otherChecked = ko.observable(true);
-            }else if(record.obtMinTxnLim == 0){
+            } else if (record.obtMinTxnLim == 0) {
                 record.otherChecked = ko.observable(false);
             }
 
 
-            if(record.pbMinTxnLim > 0){
+            if (record.pbMinTxnLim > 0) {
                 record.billsPayChecked = ko.observable(true);
-            }else if(record.pbMinTxnLim == 0){
+            } else if (record.pbMinTxnLim == 0) {
                 record.billsPayChecked = ko.observable(false);
             }
 
 
-            if(record.mcStatus === "1"){
+            if (record.mcStatus === "1") {
                 record.status = "Approved";
                 record.statusColor = ko.observable("green");
-            }else if(record.mcStatus === "0"){
+            } else if (record.mcStatus === "0") {
                 record.status = "Wait for approve";
                 record.statusColor = ko.observable("red");
-            }else if(record.mcStatus === "2"){
+            } else if (record.mcStatus === "2") {
                 record.status = "Rejected";
                 record.statusColor = ko.observable("red");
             }
-            
+
         })
 
 
-        self.selectAll = function(){
+        self.selectAll = function () {
             document.getElementById("selectAll").style.display = "none";
             document.getElementById("deselectAll").style.display = "block";
-            $.each(self.records(), function(i, record){
+            $.each(self.records(), function (i, record) {
                 record.isProcessed(true);
             })
         }
 
-        self.deselectAll = function(){
+        self.deselectAll = function () {
             document.getElementById("selectAll").style.display = "block";
             document.getElementById("deselectAll").style.display = "none";
-            $.each(self.records(), function(i, record){
+            $.each(self.records(), function (i, record) {
                 record.isProcessed(false);
             })
         }
 
 
 
-        self.actionFunction = function(){
+        self.actionFunction = function (){
 
             var action = document.getElementById("actionSelect").value;
             if(action === "add"){

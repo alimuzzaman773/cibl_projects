@@ -7,39 +7,23 @@ class Client_registration_checker extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
-        date_default_timezone_set('Asia/Dhaka');
-
-        $this->load->database();
-        $this->load->helper('url');
-        $this->load->library('session');
-        $this->load->model('client_registration_model_checker');
+        $this->load->library("my_session");
+        $this->my_session->checkSession();
+        $this->load->model(array('client_registration_model_checker', 'common_model','login_model'));
         $this->load->library('push_to_cbs_service_library');
-        $this->load->model('common_model');
-        $this->load->model('login_model'); // for formating user information with library function 
-
-        if ($this->login_model->check_session()) {
-            redirect('/admin_login/index');
-        }
     }
 
     public function index() {
-        $this->output->set_template('theme2');
-        $authorizationModules = $this->session->userdata('authorizationModules');
-        if (strpos($authorizationModules, apps_users_authorization) > -1) {
-            $data['appsUsers'] = json_encode($this->client_registration_model_checker->getUnapprovedAppsUsers());
-            $this->load->view('client_registration_checker/unapproved_apps_users_view.php', $data);
-        } else {
-            echo "Authorization Module Not Given";
-        }
+        $data['appsUsers'] = json_encode($this->client_registration_model_checker->getUnapprovedAppsUsers());
+        $data["pageTitle"] = "Device Iinformation Checker";
+        $data["body_template"] = "client_registration_checker/unapproved_apps_users_view.php";
+        $this->load->view('site_template.php', $data);
     }
 
     public function getAppsUserForApproval($id) {
         $data['multiCard'] = array();
         $data['multiCard_c'] = array();
-
-
-        $this->output->set_template('theme2');
-
+       
         $data['clientNumber_c'] = "";
         $data['cardNumber_c'] = "";
         $data['cardType_c'] = "";
@@ -53,7 +37,6 @@ class Client_registration_checker extends CI_Controller {
         $data['dobCard_c'] = "";
         $data['mothersNameCard_c'] = "";
 
-
         $data['clientNumber'] = "";
         $data['cardNumber'] = "";
         $data['cardType'] = "";
@@ -66,11 +49,6 @@ class Client_registration_checker extends CI_Controller {
         $data['clientBillingAddress'] = "";
         $data['dobCard'] = "";
         $data['mothersNameCard'] = "";
-
-
-
-        $authorizationModules = $this->session->userdata('authorizationModules');
-        if (strpos($authorizationModules, apps_users_authorization) > -1) {
 
             $dbData = $this->client_registration_model_checker->getAppsUserById($id);
 
@@ -102,13 +80,11 @@ class Client_registration_checker extends CI_Controller {
                 $data['reasonModeOfDisplay_c'] = "display: none;";
             }
 
-
             if ($dbData['skyId_c'] != NULL) {
                 $data['publishDataModeOfDisplay_c'] = "display: block;";
             } else {
                 $data['publishDataModeOfDisplay_c'] = "display: none;";
             }
-
 
             $data['homeBranchName'] = getBranchName($dbData['homeBranchCode']);
             $data['homeBranchName_c'] = getBranchName($dbData['homeBranchCode_c']);
@@ -118,8 +94,6 @@ class Client_registration_checker extends CI_Controller {
 
             $data['isLocked'] = "";
             $data['isLocked_c'] = "";
-
-
 
             // active & inactive
             if ($dbData['isActive'] == "1") {
@@ -136,8 +110,6 @@ class Client_registration_checker extends CI_Controller {
                 $data['isActive_c'] = "";
             }
 
-
-
             // lock & unlock
             if ($dbData['isLocked'] == "1") {
                 $data['isLocked'] = "Locked";
@@ -153,7 +125,6 @@ class Client_registration_checker extends CI_Controller {
                 $data['isLocked_c'] = "";
             }
 
-
             $data['appsUser'] = $dbData;
             $data['accountInfo'] = json_encode($this->login_model->checkAccount($dbData));
 
@@ -163,8 +134,6 @@ class Client_registration_checker extends CI_Controller {
             } else {
                 $data['accountInfo_c'] = json_encode((object) null);
             }
-
-
 
             $reqTypeCode = "10";
 
@@ -379,7 +348,6 @@ class Client_registration_checker extends CI_Controller {
                         $data['multiCard_c'] = $multiCardItem_c;
                         /* new add for multi card */
 
-
                         $data['cardsModeOfDisplay'] = "display: block;";
                         $data['cardsModeOfDisplay_c'] = "display: block;";
                         $data['message_c'] = "";
@@ -395,7 +363,6 @@ class Client_registration_checker extends CI_Controller {
                 }
             }
 
-
             if (empty($dbData['clientId']) && empty($dbData['clientId_c'])) {
                 $data['cardsModeOfDisplay'] = "display: none;";
                 $data['message'] = "Client ID is empty";
@@ -403,29 +370,28 @@ class Client_registration_checker extends CI_Controller {
                 $data['message_c'] = "Client ID is empty";
             }
 
-            $this->load->view('client_registration_checker/apps_user_approve_form.php', $data);
-        } else {
-            echo "Authorization Module Not Given";
-        }
+            $data["pageTitle"]="Apps User Checker";
+            $data["body_template"]="client_registration_checker/apps_user_approve_form.php";
+            $this->load->view('site_template.php', $data);
     }
 
     public function getReason() {
-        $authorizationModules = $this->session->userdata('authorizationModules');
-        if (strpos($authorizationModules, apps_users_authorization) > -1) {
-            $data['checkerAction'] = $_POST['checkerAction'];
-            $id = $_POST['skyId'];
-            $makerActionDtTm = $_POST['makerActionDtTm'];
-            $checkerActionDtTm = $_POST['checkerActionDtTm'];
+      //  $authorizationModules = $this->session->userdata('authorizationModules');
+       // if (strpos($authorizationModules, apps_users_authorization) > -1) {
+            $data['checkerAction'] = $this->input->post("checkerAction");
+            $id =  $this->input->post("skyId");
+            $makerActionDtTm =  $this->input->post("makerActionDtTm");
+            $checkerActionDtTm =  $this->input->post("checkerActionDtTm");
             $dbData = $this->client_registration_model_checker->getAppsUserById($id);
 
-            if ($dbData['makerActionBy'] == $this->session->userdata('adminUserId')) {
+            if ($dbData['makerActionBy'] == $this->my_session->userId) {
                 echo "You can not authorize your own maker action";
             } else {
                 if ($data['checkerAction'] == "approve") {
                     $chkdata['checkerActionDt'] = date("Y-m-d");
                     $chkdata['checkerActionTm'] = date("G:i:s");
                     $chkdata['isPublished'] = 1;
-                    $chkdata['checkerActionBy'] = $this->session->userdata('adminUserId');
+                    $chkdata['checkerActionBy'] = $this->my_session->userId;
                     $chkdata['checkerAction'] = "Approved";
                     $chkdata['checkerActionComment'] = NULL;
                     $chkdata['mcStatus'] = 1;
@@ -446,11 +412,7 @@ class Client_registration_checker extends CI_Controller {
                                 $this->client_registration_model_checker->UpdateUpdateCheckerApprove($id, $chkdata, $descision);
                             }
                         }
-
-
-
                         // activity log goes here
-
                         redirect('client_registration_checker');
                     } else {
                         // redirect
@@ -459,26 +421,23 @@ class Client_registration_checker extends CI_Controller {
                 } else if ($data['checkerAction'] == 'reject') {
                     $data['checkerActionDt'] = date("Y-m-d");
                     $data['checkerActionTm'] = date("G:i:s");
-                    $data['checkerActionBy'] = $this->session->userdata('adminUserId');
+                    $data['checkerActionBy'] = $this->my_session->userId;
                     $data['checkerAction'] = "Rejected";
-                    $data['checkerActionComment'] = $_POST['newReason'];
+                    $data['checkerActionComment'] =$this->input->post("newReason");
                     $data['mcStatus'] = 2;
 
                     $res = $this->checkUserInteraction($id, $makerActionDtTm, $checkerActionDtTm);
-
                     if ($res == 0) {
-                        // update
                         $this->client_registration_model_checker->checkerReject($id, $data);
                         redirect('client_registration_checker');
                     } else {
-                        // redirect
                         echo "interaction";
                     }
                 }
             }
-        } else {
-            echo "Authorization module not given";
-        }
+       // } else {
+          //  echo "Authorization module not given";
+      //  }
     }
 
     public function checkUserInteraction($id, $makerActionDtTmPost, $checkerActionDtTmPost) {

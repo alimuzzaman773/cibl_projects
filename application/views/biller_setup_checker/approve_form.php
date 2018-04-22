@@ -101,14 +101,14 @@
 
 
                             <div id="newReasonDiv" style="display: none" >
-                                <h3 style="color:red" >New Reject Reason<h3>
+                                <h3 style="color:red" >New Reject Reason</h3>
                                 <textarea name="newReason" id="newReason" cols="40" rows="5"></textarea>
                                 <br><br>
                             </div>
 
 
                             <div id="reasonDiv" style="<?= $reasonModeOfDisplay ?>" >
-                                <h3 style="color:red" >Previous Reject Reason<h3>
+                                <h3 style="color:red" >Previous Reject Reason</h3>
                                 <textarea name="reason" id="reason" cols="40" rows="5" readonly></textarea>
                                 <br><br>
                             </div>
@@ -197,7 +197,7 @@
                             </table>
 
                         <div id="reasonDiv_c" style="<?= $reasonModeOfDisplay_c ?>" >
-                            <h3 style="color:red" >Reject Reason<h3>
+                            <h3 style="color:red" >Reject Reason</h3>
                             <textarea name="reason_c" id="reason_c" cols="40" rows="5" readonly></textarea>
                             <br><br>
                         </div>

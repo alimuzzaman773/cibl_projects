@@ -8,37 +8,24 @@ class Device_info_checker extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
-        date_default_timezone_set('Asia/Dhaka');
-
-        $this->load->database();
-        $this->load->helper('url');
-        $this->load->model('device_info_model_checker');
-        $this->load->model('common_model');
-        $this->load->library('session');
+        $this->load->library("my_session");
+        $this->my_session->checkSession();
+        $this->load->model(array('device_info_model_checker', 'common_model'));
         $this->load->library('sms_service');
-
-        $this->load->model('login_model');
-        if ($this->login_model->check_session()) {
-            redirect('/admin_login/index');
-        }
     }
 
     public function index() {
-        $this->output->set_template('theme2');
-        $authorizationModules = $this->session->userdata('authorizationModules');
-        if (strpos($authorizationModules, device_authorization) > -1) {
-            $data['deviceInfo'] = json_encode($this->device_info_model_checker->getUnapprovedDevice());
-            $this->load->view('device_info_checker/unapproved_device.php', $data);
-        } else {
-            echo "Authorization Module Not Given";
-        }
+        $data['deviceInfo'] = json_encode($this->device_info_model_checker->getUnapprovedDevice());
+        $data["pageTitle"] = "Device Iinformation Checker";
+        $data["body_template"] = "device_info_checker/unapproved_device.php";
+        $this->load->view('site_template.php', $data);
     }
 
     public function getDeviceForApproval($id) {
 
-        $this->output->set_template('theme2');
-        $authorizationModules = $this->session->userdata('authorizationModules');
-        if (strpos($authorizationModules, device_authorization) > -1) {
+        //$this->output->set_template('theme2');
+        //$authorizationModules = $this->session->userdata('authorizationModules');
+       // if (strpos($authorizationModules, device_authorization) > -1) {
 
             $dbData = $this->device_info_model_checker->getDeviceById($id);
 
@@ -91,13 +78,14 @@ class Device_info_checker extends CI_Controller {
             } else {
                 $data['isActive_c'] = "";
             }
-
-
             $data['deviceInfo'] = $dbData;
-            $this->load->view('device_info_checker/device_approve_form.php', $data);
-        } else {
-            echo "Authorization Module Not Given";
-        }
+           
+            $data["pageTitle"]="Device Information Checker";
+            $data["body_template"]="device_info_checker/device_approve_form.php";
+            $this->load->view('site_template.php', $data);
+       // } else {
+          //  echo "Authorization Module Not Given";
+       // }
     }
 
     public function approveOrRejectDevice() {
