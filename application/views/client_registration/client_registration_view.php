@@ -45,62 +45,62 @@
                             Action <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu">
-                            <?php //if(ci_check_permission("canEditSite")): ?>
+                            <?php if(ci_check_permission("can edit app user")): ?>
                             <li>
                                 <a href="<?=base_url()?>apps_users/editAppsUser?eblSkyId={{a.eblSkyId}}&cfId={{a.cfId}}&clientId={{a.clientId}}&skyId={{a.skyId}}&selectedActionName=Edit">
                                     <i class="glyphicon glyphicon-edit"></i> Edit
                                 </a>
                             </li>
-                            <?php //endif;?>
-                            <?php //if(ci_check_permission("canEditSite")): ?>
+                            <?php endif;?>
+                            <?php if(ci_check_permission("can view app user device")): ?>
                             <li>
                                 <a href="<?=base_url()?>client_registration/deviceInfo?skyId={{a.skyId}}&eblSkyId={{a.eblSkyId}}">
                                     <i class="glyphicon glyphicon-dashboard"></i> View Devices
                                 </a>
                             </li>
-                            <?php //endif;?>
-                            <?php //if(ci_check_permission("canEditSite")): ?>
+                            <?php endif;?>
+                            <?php if(ci_check_permission("can view app user")): ?>
                             <li>
                                 <a href="<?=base_url()?>client_registration/viewUser?skyId={{a.skyId}}">
                                     <i class="glyphicon glyphicon-list-alt"></i> Detail View
                                 </a>
                             </li>
-                            <?php //endif;?>
-                            <?php //if(ci_check_permission("canViewElectricityReading")): ?>
+                            <?php endif;?>
+                            <?php if(ci_check_permission("can lock app user")): ?>
                             <li data-ng-if="a.isLocked == 0">
                                 <a data-ng-click="lock_unlock(a, 'Lock', 'userLock');">
                                     <i class="glyphicon glyphicon-lock"></i> Lock
                                 </a>
                             </li> 
-                            <?php //endif;?>
-                            <?php //if(ci_check_permission("canViewAdvancePaymentModule")): ?>
+                            <?php endif;?>
+                            <?php if(ci_check_permission("can unlock app user")): ?>
                             <li data-ng-if="a.isLocked == 1">
                                 <a data-ng-click="lock_unlock(a, 'Unlock', 'userUnlock');">
                                     <i class="glyphicon glyphicon-refresh"></i> Unlock
                                 </a>
                             </li> 
-                            <?php //endif;?>
-                            <?php //if(ci_check_permission("canViewAdvancePaymentModule")): ?>
+                            <?php endif;?>
+                            <?php if(ci_check_permission("can active app user")): ?>
                             <li data-ng-if="a.isActive == 0">
                                 <a data-ng-click="activate_deactivate(a, 'Active', 'userActive');">
                                     <i class="glyphicon glyphicon-flash"></i> Active
                                 </a>
                             </li> 
-                            <?php //endif;?>
-                            <?php //if(ci_check_permission("canViewAdvancePaymentModule")): ?>
+                            <?php endif;?>
+                            <?php if(ci_check_permission("can inactive app user")): ?>
                             <li data-ng-if="a.isActive == 1">
                                 <a data-ng-click="activate_deactivate(a, 'Inactive', 'userInactive');">
                                     <i class="glyphicon glyphicon-flash"></i> Inactive
                                 </a>
                             </li> 
-                            <?php //endif;?>
-                            <?php //if(ci_check_permission("canViewTheftReport")): ?>
+                            <?php endif;?>
+                            <?php if(ci_check_permission("can delete app user")): ?>
                             <li>
                                 <a data-ng-click="deleteUser(a)">
                                     <i class="glyphicon glyphicon-trash"></i> Delete
                                 </a>
                             </li> 
-                            <?php //endif;?>
+                            <?php endif;?>
                         </ul>
                     </div>
                 </td>
