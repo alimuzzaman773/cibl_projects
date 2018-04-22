@@ -7,10 +7,8 @@ class Discount_partners extends CI_Controller {
 
     function __construct() {
         parent::__construct();
-
         $this->load->library("my_session");
         $this->my_session->checkSession();
-
         $this->load->library('grocery_CRUD');
     }
 

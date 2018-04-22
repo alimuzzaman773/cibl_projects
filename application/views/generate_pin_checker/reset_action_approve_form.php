@@ -1,7 +1,4 @@
-<title>Approve/Reject</title>
-<div class="breadcrum">Approve/Reject Admin Users</div>
-
-
+<h3 class="title-underlined">PIN Reset Checker</h3>
 <div class="container" style="margin-top:50px">
     <div id="showUsers">
         <table class="table table-striped table-bordered">

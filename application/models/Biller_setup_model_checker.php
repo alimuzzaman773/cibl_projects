@@ -4,14 +4,13 @@ class Biller_setup_model_checker extends CI_Model {
 
     function __construct() {
         parent::__construct();
-        date_default_timezone_set('Asia/Dhaka');
-        $this->load->database();
+      $this->load->library("my_session");
     }
 
     public function getUnapprovedBillers() {
         $this->db->order_by("billerId", "desc");
         $this->db->where('biller_setup_mc.mcStatus =', 0);
-        $this->db->where('biller_setup_mc.makerActionBy !=', $this->session->userdata('adminUserId'));
+        $this->db->where('biller_setup_mc.makerActionBy !=', $this->my_session->userId);
         $this->db->select('biller_setup_mc.*, bill_type.billTypeName');
         $this->db->from('biller_setup_mc');
         $this->db->join('bill_type', 'biller_setup_mc.billTypeCode = bill_type.billTypeCode');

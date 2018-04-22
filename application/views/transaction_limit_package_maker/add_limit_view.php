@@ -8,7 +8,6 @@
 
 <input hidden class="textbox" type="text" name="selectedActionName" id="selectedActionName" value="<?= $selectedActionName ?>">
 
-
 <div class="container" id="assignPackage">
     <table class="table table-striped table-bordered">
         <thead>
@@ -57,10 +56,7 @@
     padding-left:10px; 
     padding-right:10px; 
   }
-
-
 </style> 
-
 
 
 <script type="text/javascript" charset="utf-8">

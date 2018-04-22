@@ -7,11 +7,8 @@ class Generate_eblskyid_model_checker extends CI_Model {
 
     function __construct() {
         parent::__construct();
-        date_default_timezone_set('Asia/Dhaka');
-
-        $this->load->database();
-        $this->load->model('common_model');
-        $this->load->model('login_model');
+        $this->load->library("my_session");
+        $this->load->model(array('common_model', 'login_model'));
     }
 
     //added 27 sep 2017
@@ -29,7 +26,7 @@ class Generate_eblskyid_model_checker extends CI_Model {
         $this->db->order_by("generateId", "desc");
         $this->db->where('generate_eblskyid.mcStatus =', 0);
         $this->db->where('generate_eblskyid.isReset =', 1);
-        $this->db->where('generate_eblskyid.makerActionBy !=', $this->session->userdata('adminUserId'));
+        $this->db->where('generate_eblskyid.makerActionBy !=', $this->my_session->userId);
         $this->db->from('generate_eblskyid');
         $query = $this->db->get();
         return $query->result();

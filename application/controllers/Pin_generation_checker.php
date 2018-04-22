@@ -15,21 +15,17 @@ class Pin_generation_checker extends CI_Controller {
     }
 
     public function index() {
-        $this->output->set_template('theme2');
-        $authorizationModules = $this->session->userdata('authorizationModules');
-        if (strpos($authorizationModules, pin_reset_authorization) > -1) {
-            $data['resetAction'] = json_encode($this->generate_eblskyid_model_checker->getUnapprovedResetAction());
-            $this->load->view('generate_pin_checker/unapproved_reset_action.php', $data);
-        } else {
-            echo "Authorization Module Not Given";
-        }
+        $data["pageTitle"] = "Pin Reset Checker";
+        $data['resetAction'] = json_encode($this->generate_eblskyid_model_checker->getUnapprovedResetAction());
+        $data["body_template"] = "generate_pin_checker/unapproved_reset_action.php";
+        $this->load->view('site_template.php', $data);
     }
 
     public function getResetActionForApproval($id) {
 
-        $this->output->set_template('theme2');
-        $authorizationModules = $this->session->userdata('authorizationModules');
-        if (strpos($authorizationModules, pin_reset_authorization) > -1) {
+       // $this->output->set_template('theme2');
+      //  $authorizationModules = $this->session->userdata('authorizationModules');
+      //  if (strpos($authorizationModules, pin_reset_authorization) > -1) {
 
             $dbData = $this->generate_eblskyid_model_checker->getUnapprovedResetActionById($id);
 
@@ -73,10 +69,13 @@ class Pin_generation_checker extends CI_Controller {
 
 
             $data['resetPin'] = $dbData;
-            $this->load->view('generate_pin_checker/reset_action_approve_form.php', $data);
-        } else {
-            echo "Authorization Module Not Given";
-        }
+            
+            $data["pageTitle"]="PIN Reset Checker";
+            $data["body_template"]="generate_pin_checker/reset_action_approve_form.php";
+            $this->load->view('site_template.php', $data);
+       // } else {
+      //      echo "Authorization Module Not Given";
+      //  }
     }
 
     public function approveOrReject() { // for reset action approval //

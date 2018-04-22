@@ -4,15 +4,12 @@ class Transaction_limit_setup_model_checker extends CI_Model {
 
     function __construct() {
         parent::__construct();
-        date_default_timezone_set('Asia/Dhaka');
-
-        $this->load->database();
     }
 
     public function getUnapprovedPackages() {
         $this->db->order_by("appsGroupId", "desc");
         $this->db->where('apps_users_group_mc.mcStatus =', 0);
-        $this->db->where('apps_users_group_mc.makerActionBy !=', $this->session->userdata('adminUserId'));
+        $this->db->where('apps_users_group_mc.makerActionBy !=', $this->my_session->userId);
         $this->db->from('apps_users_group_mc');
         $query = $this->db->get();
         return $query->result();
@@ -78,8 +75,8 @@ class Transaction_limit_setup_model_checker extends CI_Model {
 
         // prepare data for activity log //
         $activityLog = array('activityJson' => json_encode($result),
-            'adminUserId' => $this->session->userdata('adminUserId'),
-            'adminUserName' => $this->session->userdata('username'),
+            'adminUserId' => $this->my_session->userId,
+            'adminUserName' => $this->my_session->userName,
             'tableName' => 'apps_users_group',
             'moduleName' => 'limit_package_module',
             'moduleCode' => '06',
@@ -101,8 +98,8 @@ class Transaction_limit_setup_model_checker extends CI_Model {
 
         // prepare data for activity log //
         $activityLog = array('activityJson' => json_encode($result),
-            'adminUserId' => $this->session->userdata('adminUserId'),
-            'adminUserName' => $this->session->userdata('username'),
+            'adminUserId' => $this->my_session->userId,
+            'adminUserName' =>  $this->my_session->userName,
             'tableName' => 'apps_users_group',
             'moduleName' => 'limit_package_module',
             'moduleCode' => '06',
@@ -116,5 +113,4 @@ class Transaction_limit_setup_model_checker extends CI_Model {
         $this->db->where('appsGroupId', $id);
         $this->db->update('apps_users_group_mc', $data);
     }
-
 }

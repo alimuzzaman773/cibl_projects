@@ -6,21 +6,20 @@
 <!-- Account statement container -->
 <div class="container" style="margin-top:50px">
 
-<div class="card_container">
-    <h3 style="color: green" class="container_title">Account Related Information
-        <h3>
+    <div class="card_container">
+        <h3 style="color: green" class="container_title">Account Related Information </h3>
 
-            <div id="showUsers">
-                <table class="table table-striped table-bordered">
+        <div id="showUsers">
+            <table class="table table-striped table-bordered">
 
-                    <thead>
+                <thead>
                     <tr>
                         <th style="text-align: center; color: green" colspan="2">Accounts Related Information</th>
                     </tr>
-                    </thead>
+                </thead>
 
 
-                    <tbody >
+                <tbody >
                     <tr>
                         <th align="left" scope="row">ESB ID</th>
                         <td id = "esbId"><?= $esbId ?></td>
@@ -102,32 +101,32 @@
                         <th align="left" scope="row">Home Branch Name</th>
                         <td id = "homeBranchName"><?= $homeBranchName ?></td>
                     </tr>
-                    </tbody>
-                </table>
-            </div>
+                </tbody>
+            </table>
+        </div>
 
 
-            <div class="" style="margin-top:30px">
+        <div class="" style="margin-top:30px">
 
-                <div id="userAccounts" data-bind="visible: records().length > 0">
-                    <table class="table table-striped table-bordered">
-                        <thead>
+            <div id="userAccounts" data-bind="visible: records().length > 0">
+                <table class="table table-striped table-bordered">
+                    <thead>
                         <tr>
                             <th style="text-align:center">Account Number</th>
                             <th style="text-align:center">Account Type</th>
                             <th style="text-align:center">Product Name</th>
                             <th style="text-align:center">Currency</th>
                             <th style="text-align:left">
-<!--                                
-<button style="text-align:left" id="selectAll" data-bind="click :$root.selectAll" class="btn btn-primary">Select All</button>
-<button style="text-align:left" id="deselectAll" data-bind="click :$root.deselectAll, visible: false" class="btn btn-primary">Deselect All</button>
--->
+                                <!--                                
+                                <button style="text-align:left" id="selectAll" data-bind="click :$root.selectAll" class="btn btn-primary">Select All</button>
+                                <button style="text-align:left" id="deselectAll" data-bind="click :$root.deselectAll, visible: false" class="btn btn-primary">Deselect All</button>
+                                -->
 
                             </th>
 
                         </tr>
-                        </thead>
-                        <tbody data-bind="foreach: records">
+                    </thead>
+                    <tbody data-bind="foreach: records">
                         <tr>
                             <td style="text-align:center" data-bind="text:accountNo"></td>
                             <td style="text-align:center" data-bind="text:accountType"></td>
@@ -135,35 +134,34 @@
                             <td style="text-align:center" data-bind="text:accountCurrency"></td>
                             <td style="text-align:left"><input type="checkbox" data-bind="checked: isProcessed"></td>
                         </tr>
-                        </tbody>
-                    </table>
-                    <br/>
+                    </tbody>
+                </table>
+                <br/>
 
-                </div>
             </div>
-</div>
+        </div>
+    </div>
 
 
 
 
 
-<!-- Card statement container -->
-<div class="card_container" style="<?= $cardsModeOfDisplay;?>">
-    <h3 style="color: green" class="container_title">Card Related Information
-        <h3>
+    <!-- Card statement container -->
+    <div class="card_container" style="<?= $cardsModeOfDisplay; ?>">
+        <h3 style="color: green" class="container_title">Card Related Information </h3>
 
 
-            <div id="showUsers">
-                <table class="table table-striped table-bordered">
+        <div id="showUsers">
+            <table class="table table-striped table-bordered">
 
-                    <thead>
+                <thead>
                     <tr>
                         <th colspan="2" style="text-align: center; color: green">General Information</th>
                     </tr>
-                    </thead>
+                </thead>
 
 
-                    <tbody>
+                <tbody>
 
                     <tr>
                         <th align="left" scope="row">Clinet ID</th>
@@ -192,16 +190,16 @@
                         <td><?= $clientBillingAddress ?></td>
                     </tr>
 
-                    </tbody>
-                </table>
-            </div>
+                </tbody>
+            </table>
+        </div>
 
 
-            <div class="" style="margin-top:50px">
+        <div class="" style="margin-top:50px">
 
-                <div id="showAccounts">
-                    <table class="table table-striped table-bordered">
-                        <thead>
+            <div id="showAccounts">
+                <table class="table table-striped table-bordered">
+                    <thead>
                         <tr>
                             <th colspan="5" style="text-align: center; color: green">Card Information</th>
                         </tr>
@@ -211,23 +209,23 @@
                             <th style="text-align:center">Currency</th>
                             <th style="text-align:center">Card Status</th>
                         </tr>
-                        </thead>
-                        <tbody>
-                        <?php foreach($multiCard as $multiCard){?>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($multiCard as $multiCard) { ?>
                             <tr>
-                                <td style="text-align:center"><?php echo $multiCard['cardNumber'];?></td>
-                                <td style="text-align:center"><?php echo $multiCard['cardType'];?></td>
-                                <td style="text-align:center"><?php echo $multiCard['cardCurrency'];?></td>
-                                <td style="text-align:center"><?php echo $multiCard['cardStatus'];?></td>
+                                <td style="text-align:center"><?php echo $multiCard['cardNumber']; ?></td>
+                                <td style="text-align:center"><?php echo $multiCard['cardType']; ?></td>
+                                <td style="text-align:center"><?php echo $multiCard['cardCurrency']; ?></td>
+                                <td style="text-align:center"><?php echo $multiCard['cardStatus']; ?></td>
                                 </td>
                             </tr>
                         <?php } ?>
-                        </tbody>
-                    </table>
+                    </tbody>
+                </table>
 
-                </div>
             </div>
-</div>
+        </div>
+    </div>
 </div>
 
 
@@ -268,11 +266,11 @@
 
 <script type="text/javascript" charset="utf-8">
     var initialData = jQuery.parseJSON('<?= $accountInfo ?>');//data for building initial table
-    var vm = function() {
+    var vm = function () {
         var self = this;
         self.records = ko.observableArray(initialData);
 
-        $.each(self.records(), function(i, record) {   //build the checkboxes as observable
+        $.each(self.records(), function (i, record) {   //build the checkboxes as observable
             record.isProcessed = ko.observable(false);
             record.accountNo = record.accountNo;
             record.accountType = record.accountType;
@@ -281,26 +279,26 @@
         });
 
 
-        self.selectAll = function(){
+        self.selectAll = function () {
             document.getElementById("selectAll").style.display = "none";
             document.getElementById("deselectAll").style.display = "block";
-            $.each(self.records(), function(i, record){
+            $.each(self.records(), function (i, record) {
                 record.isProcessed(true);
             })
         };
 
 
-        self.deselectAll = function(){
+        self.deselectAll = function () {
             document.getElementById("selectAll").style.display = "block";
             document.getElementById("deselectAll").style.display = "none";
-            $.each(self.records(), function(i, record){
+            $.each(self.records(), function (i, record) {
                 record.isProcessed(false);
             })
         };
 
 
 
-        self.save = function()
+        self.save = function ()
         {
             var acc_no = "";
             var acc_type = "";
@@ -308,7 +306,7 @@
             var account_currency = "";
 
             $.each(self.records(), function (i, record) {
-                if(record.isProcessed()==true){
+                if (record.isProcessed() == true) {
 
                     selected_action_name = selectedActionName.value;
                     esb_id = $("#esbId").text();
@@ -330,10 +328,10 @@
                     home_branch_name = $("#homeBranchName").text();
 
 
-                    acc_no = acc_no+"|"+record.accountNo;
-                    acc_type = acc_type+"|"+record.accountType;
-                    product_name = product_name+"|"+record.productName;
-                    account_currency = account_currency+"|"+record.accountCurrency;
+                    acc_no = acc_no + "|" + record.accountNo;
+                    acc_type = acc_type + "|" + record.accountType;
+                    product_name = product_name + "|" + record.productName;
+                    account_currency = account_currency + "|" + record.accountCurrency;
 
                     // acc_no = acc_no.substring(1); acc_type = acc_type.substring(1);
                     // product_name = product_name.substring(1); account_currency = account_currency.substring(1);
@@ -342,52 +340,50 @@
                 }
             });
 
-            if(acc_no==""){
+            if (acc_no == "") {
                 alert("Error: No Account is Selected");
                 return false;
             }
 
-            var dataToSave = {"selectedActionName" : selected_action_name,
-                "esbid" : esb_id,
-                "cfid" : cf_id,
-                "clientId" : client_id,
-                "dob" : birth_date,
-                "sex" : gender,
-                "fatherName" : father_name,
-                "motherName" : mother_name,
-                "mob1" : mob1,
-                "mob2" : mob2,
-                "username" : user_name,
-                "email" : user_email,
-                "currAddress" : curr_address,
-                "parmAddress" : parm_address,
-                "billingAddress" : billing_address,
+            var dataToSave = {"selectedActionName": selected_action_name,
+                "esbid": esb_id,
+                "cfid": cf_id,
+                "clientId": client_id,
+                "dob": birth_date,
+                "sex": gender,
+                "fatherName": father_name,
+                "motherName": mother_name,
+                "mob1": mob1,
+                "mob2": mob2,
+                "username": user_name,
+                "email": user_email,
+                "currAddress": curr_address,
+                "parmAddress": parm_address,
+                "billingAddress": billing_address,
 
-                "homeBranchCode" : home_branch_code,
-                "homeBranchName" : home_branch_name,
+                "homeBranchCode": home_branch_code,
+                "homeBranchName": home_branch_name,
 
-                "accNo" : acc_no,
-                "accType" : acc_type,
-                "productName" : product_name,
-                "accCurrency" : account_currency};
+                "accNo": acc_no,
+                "accType": acc_type,
+                "productName": product_name,
+                "accCurrency": account_currency};
 
             console.log(dataToSave);
             $.ajax({
                 type: "POST",
                 data: dataToSave,
                 url: "<?= base_url() ?>apps_users/insertUserInfo",
-                success: function(data) {
+                success: function (data) {
                     if (data > 0) {
                         alert("User created successfully");
                         window.location = "<?= base_url() ?>apps_users/userGroupSelection?skyId=" + data + "&action=add";
-                    }
-
-                    else{
+                    } else {
                         alert("This ESB ID is Used");
                         window.location = "<?= base_url() ?>apps_users/addAppsUser";
                     }
                 },
-                error: function(error) {
+                error: function (error) {
                     // alert(error.status + "<--and--> " + error.statusText);
                 }
             });
