@@ -40,14 +40,19 @@
                             <td>{{i.checkerActionDt}} {{i.checkerActionTm}}</td>
                             <td>{{i.checkerActionComment}}</td>
                             <td>
-                                <div class="dropdown pull-right">
+                                <div  data-ng-hide="i.mcStatus == 1" class="dropdown pull-right">
                                     <button class="btn btn-primary btn-xs dropdown-toggle" type="button" data-toggle="dropdown">
                                         Action <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu">
                                         <li>
-                                            <a href="<?= base_url() ?>password_policy_checker/getPasswordPolicyApproval/{{i.validationGroupId}}">
+                                            <a href="#" onclick="approve(pin_checker_data)">
                                                 <i class="glyphicon glyphicon-pencil"></i> Approve
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="<?= base_url() ?>pin_create_checker/getRejectReason?requestId={{i.requestId}}&makerActionDtTm={{i.makerActionDt}} {{i.makerActionTm}}&checkerActionDtTm={{i.checkerActionDt}} {{i.checkerActionTm}}">
+                                                <i class="glyphicon glyphicon-pencil"></i> Reject
                                             </a>
                                         </li> 
 
@@ -73,4 +78,26 @@ ci_add_js(asset_url() . 'app/checker/pin_create_checker_module.js');
 <script type="text/javascript" charset="utf-8">
     var app = app || {};
     app.pin_checker_data = <?= $unApprovedRequest ?>;
+
+    function approve(item) {
+        
+        console.log(item);
+        /*
+        var dataToSave = {"requestId": item.requestId,
+            "totalPin": item.totalPin,
+            "makerActionDtTm": item.makerActionDtTm,
+            "checkerActionDtTm": item.checkerActionDtTm};
+        $.ajax({
+            type: "POST",
+            data: dataToSave,
+            url: app.baseUrl + "pin_create_checker/pinCreateApprove",
+            success: function (data) {
+                window.location = app.baseUrl+"pin_create_checker";
+            },
+            error: function (error) {
+                alert(error.status + "<--and--> " + error.statusText);
+            }
+        });
+        */
+    }
 </script>

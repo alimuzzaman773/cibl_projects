@@ -42,7 +42,7 @@
                                     </button>
                                     <ul class="dropdown-menu">
                                         <li>
-                                            <a href="<?= base_url() ?>pin_generation_checker/getResetActionForApproval/{{i.billerId}}">
+                                            <a href="<?= base_url() ?>biller_setup_checker/getBillerFroApproval/{{i.billerId}}">
                                                 <i class="glyphicon glyphicon-pencil"></i> Approve
                                             </a>
                                         </li> 
