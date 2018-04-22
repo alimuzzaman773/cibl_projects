@@ -52,7 +52,17 @@
                                             <a href="<?= base_url() ?>admin_user_group_maker/editModule/{{i.userGroupId}}/edit">
                                                 <i class="glyphicon glyphicon-pencil"></i> Edit
                                             </a>
-                                        </li> 
+                                        </li>
+                                        <li>
+                                            <a href="<?= base_url() ?>permission">
+                                                <i class="glyphicon glyphicon-eye-open"></i> Permission
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="<?= base_url() ?>admin_user_group_maker/set_permission/{{i.userGroupId}}">
+                                                <i class="glyphicon glyphicon-cog"></i> Set Permission
+                                            </a>
+                                        </li>
                                         <li>
                                             <a data-ng-click="activate(i.userGroupId);" data-ng-if="i.isActive == 0">
                                                 <i class="glyphicon glyphicon-ok"></i> Active

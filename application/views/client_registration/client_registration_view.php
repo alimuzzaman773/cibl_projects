@@ -45,14 +45,14 @@
                             Action <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu">
-                            <?php if(ci_check_permission("can edit app user")): ?>
+                            <?php if(ci_check_permission("canEditAppUser")): ?>
                             <li>
                                 <a href="<?=base_url()?>apps_users/editAppsUser?eblSkyId={{a.eblSkyId}}&cfId={{a.cfId}}&clientId={{a.clientId}}&skyId={{a.skyId}}&selectedActionName=Edit">
                                     <i class="glyphicon glyphicon-edit"></i> Edit
                                 </a>
                             </li>
                             <?php endif;?>
-                            <?php if(ci_check_permission("can view app user device")): ?>
+                            <?php if(ci_check_permission("canViewAppUser")): ?>
                             <li>
                                 <a href="<?=base_url()?>client_registration/deviceInfo?skyId={{a.skyId}}&eblSkyId={{a.eblSkyId}}">
                                     <i class="glyphicon glyphicon-dashboard"></i> View Devices
