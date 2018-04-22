@@ -52,28 +52,28 @@
                                 Action <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu">
-                                <?php //if(ci_check_permission("canEditSite")): ?>
+                                <?php if(ci_check_permission("canEditAppsUser")): ?>
                                 <li>
                                     <a href="<?=base_url()?>transaction_limit_setup_maker/editTransactionLimitPackage/{{text.appsGroupId}}/Edit">
                                         <i class="glyphicon glyphicon-edit"></i> Edit
                                     </a>
                                 </li>
-                                <?php //endif;?>
+                                <?php endif;?>
                                 
-                                <?php //if(ci_check_permission("canViewAdvancePaymentModule")): ?>
+                                <?php if(ci_check_permission("canActiveAppsUser")): ?>
                                 <li data-ng-if="text.isActive == 0">
                                     <a data-ng-click="activate_deactivate(text, 'Active', 'packageActive');">
                                         <i class="glyphicon glyphicon-flash"></i> Active
                                     </a>
                                 </li> 
-                                <?php //endif;?>
-                                <?php //if(ci_check_permission("canViewAdvancePaymentModule")): ?>
+                                <?php endif;?>
+                                <?php if(ci_check_permission("canInactiveAppsUser")): ?>
                                 <li data-ng-if="text.isActive == 1">
                                     <a data-ng-click="activate_deactivate(text, 'Inactive', 'packageInactive');">
                                         <i class="glyphicon glyphicon-flash"></i> Inactive
                                     </a>
                                 </li> 
-                                <?php //endif;?>                                
+                                <?php endif;?>                                
                             </ul>
                         </div>
                     </td>
