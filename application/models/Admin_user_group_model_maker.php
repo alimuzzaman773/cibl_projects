@@ -86,12 +86,8 @@ class Admin_user_group_model_maker extends CI_Model {
         $data['permissions'] = $permission;
         $this->db->where("userGroupId", $ugid)
                 ->update('admin_users_group', $data);
-
-        if ($this->db->affected_rows()):
-            return $ugid;
-        else:
-            return false;
-        endif;
+        
+        return true;
     }
 
 }

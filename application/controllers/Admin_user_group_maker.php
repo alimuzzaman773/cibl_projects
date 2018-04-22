@@ -196,7 +196,7 @@ class Admin_user_group_maker extends CI_Controller {
             $permission_string = $this->convert_permission_to_string($permission);
             
             $result = $this->admin_user_group_model_maker->updatePermission($ugid,$permission_string);
-            
+                       
             if(!$result):
                 return FALSE;
             endif;
