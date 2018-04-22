@@ -21,9 +21,9 @@
         </tbody>
     </table>
 
-
-    <button id="writeMessage" data-ng-click="" class="btn btn-success">Write Message</button>
-  
+    <?php if (ci_check_permission("canSendNotification")): ?>
+        <button id="writeMessage" data-ng-click="" class="btn btn-success">Write Message</button>
+    <?php endif; ?>
 </section>
 
 <?php

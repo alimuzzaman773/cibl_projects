@@ -13,18 +13,18 @@ class Help_setup extends CI_Controller {
 
         $this->load->library('grocery_CRUD');
     }
-    
+
     function index() {
         try {
             $crud = new grocery_CRUD();
             $crud->set_theme(TABLE_THEME);
             $crud->set_subject('Help');
             $crud->set_table('help_center');
-            
+
             $crud->columns('helpText');
 
             $crud->display_as('helpText', 'Help');
-            
+
             $time = date("Y-m-d H:i:s");
             $creatorId = $this->my_session->userId;
 
@@ -50,18 +50,18 @@ class Help_setup extends CI_Controller {
             show_error($e->getMessage() . ' --- ' . $e->getTraceAsString());
         }
     }
-    
+
     function complaintInfo($params = null) {
         try {
             $crud = new grocery_CRUD();
             $crud->set_theme(TABLE_THEME);
             $crud->set_subject('Complaint Info');
             $crud->set_table('complaint_info');
-            
+
             $crud->required_fields('parentName', 'childName', 'productName');
 
             $crud->columns('empName', 'designation', 'contactNo', 'contactDetails', 'isActive');
-            
+
             $time = date("Y-m-d H:i:s");
             $creatorId = $this->my_session->userId;
 
@@ -79,7 +79,23 @@ class Help_setup extends CI_Controller {
                     ->display_as('isActive', 'Is Active')
                     ->display_as('contactDetails', 'Contact Details');
 
-            //$crud->unset_delete();
+            $crud->unset_delete();
+
+            if (!ci_check_permission("canAddHelpSetup")):
+                $crud->unset_add();
+            endif;
+            if (!ci_check_permission("canEditHelpSetup")):
+                $crud->unset_edit();
+            endif;
+            if (!ci_check_permission("canDetailsHelpSetup")):
+                $crud->unset_read();
+            endif;
+            if (!ci_check_permission("canExportHelpSetup")):
+                $crud->unset_export();
+            endif;
+            if (!ci_check_permission("canPrintHelpSetup")):
+                $crud->unset_print();
+            endif;
 
             $output = $crud->render();
             $output->css = "";
@@ -93,4 +109,5 @@ class Help_setup extends CI_Controller {
             show_error($e->getMessage() . ' --- ' . $e->getTraceAsString());
         }
     }
+
 }

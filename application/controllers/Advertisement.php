@@ -50,6 +50,22 @@ class Advertisement extends CI_Controller {
 
             $crud->unset_delete();
 
+            if (!ci_check_permission("canAddAdvertisement")):
+                $crud->unset_add();
+            endif;
+            if (!ci_check_permission("canEditAdvertisement")):
+                $crud->unset_edit();
+            endif;
+            if (!ci_check_permission("canDetailsAdvertisement")):
+                $crud->unset_read();
+            endif;
+            if (!ci_check_permission("canExportAdvertisement")):
+                $crud->unset_export();
+            endif;
+            if (!ci_check_permission("canPrintAdvertisement")):
+                $crud->unset_print();
+            endif;
+
             $output = $crud->render();
             $output->css = "";
             $output->js = "";
@@ -62,7 +78,7 @@ class Advertisement extends CI_Controller {
             show_error($e->getMessage() . ' --- ' . $e->getTraceAsString());
         }
     }
-    
+
     function addvertisementImage_callback_after_upload($uploader_response, $field_info, $files_to_upload) {
         $this->load->library('image_moo');
 

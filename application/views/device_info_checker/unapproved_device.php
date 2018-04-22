@@ -37,12 +37,13 @@
                                         Action <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li>
-                                            <a href="<?= base_url() ?>device_info_checker/getDeviceForApproval/{{i.deviceId}}">
-                                                <i class="glyphicon glyphicon-pencil"></i> Approve
-                                            </a>
-                                        </li> 
-
+                                        <?php if (ci_check_permission("canApproveDevice")): ?>
+                                            <li>
+                                                <a href="<?= base_url() ?>device_info_checker/getDeviceForApproval/{{i.deviceId}}">
+                                                    <i class="glyphicon glyphicon-pencil"></i> Approve
+                                                </a>
+                                            </li> 
+                                        <?php endif; ?>
                                     </ul>
                                 </div>
                             </td>

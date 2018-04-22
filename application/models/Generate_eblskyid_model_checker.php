@@ -47,15 +47,14 @@ class Generate_eblskyid_model_checker extends CI_Model {
         $this->db->set('resetTms', 'resetTms + 1', FALSE);
         $this->db->update('generate_eblskyid');
 
-
         $result = $this->db->get_where('generate_eblskyid', array('eblSkyId' => $id));
         $jsonData = $result->row_array();
         unset($jsonData['pin'], $jsonData['salt']);
 
         // prepare data for activity log //
         $activityLog = array('activityJson' => json_encode($jsonData),
-            'adminUserId' => $this->session->userdata('adminUserId'),
-            'adminUserName' => $this->session->userdata('username'),
+            'adminUserId' => $this->my_session->userId,
+            'adminUserName' => $this->my_session->userName,
             'tableName' => 'generate_eblskyid',
             'moduleName' => 'pin_module',
             'moduleCode' => '03',
@@ -96,15 +95,14 @@ class Generate_eblskyid_model_checker extends CI_Model {
         $this->db->set('resetTms', 'resetTms + 1', FALSE);
         $this->db->update('generate_eblskyid');
 
-
         $result = $this->db->get_where('generate_eblskyid', array('eblSkyId' => $id));
         $jsonData = $result->row_array();
         unset($jsonData['pin'], $jsonData['salt']);
 
         // prepare data for activity log //
         $activityLog = array('activityJson' => json_encode($jsonData),
-            'adminUserId' => $this->session->userdata('adminUserId'),
-            'adminUserName' => $this->session->userdata('username'),
+            'adminUserId' => $this->my_session->userId,
+            'adminUserName' => $this->my_session->userName,
             'tableName' => 'generate_eblskyid',
             'moduleName' => 'pin_module',
             'moduleCode' => '03',
@@ -123,7 +121,6 @@ class Generate_eblskyid_model_checker extends CI_Model {
         $this->db->select('pin_generation_request.*,
                            admin_users.fullName,
                            admin_users.adminUserName');
-        // $this->db->where('pin_generation_request.mcStatus', 0);
         $this->db->from('pin_generation_request');
         $this->db->join('admin_users', 'pin_generation_request.makerActionBy = admin_users.adminUserId');
         $query = $this->db->get();
@@ -135,5 +132,4 @@ class Generate_eblskyid_model_checker extends CI_Model {
         $query = $this->db->get('pin_generation_request');
         return $query->row_array();
     }
-
 }

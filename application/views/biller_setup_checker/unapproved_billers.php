@@ -41,11 +41,13 @@
                                         Action <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu">
+                                        <?php if (ci_check_permission("canApproveBillerSetup")): ?>
                                         <li>
-                                            <a href="<?= base_url() ?>pin_generation_checker/getResetActionForApproval/{{i.billerId}}">
+                                            <a href="<?= base_url() ?>biller_setup_checker/getBillerFroApproval/{{i.billerId}}">
                                                 <i class="glyphicon glyphicon-pencil"></i> Approve
                                             </a>
                                         </li> 
+                                        <?php endif; ?>
                                     </ul>
                                 </div>
                             </td>

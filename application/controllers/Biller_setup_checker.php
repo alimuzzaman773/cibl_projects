@@ -20,15 +20,8 @@ class Biller_setup_checker extends CI_Controller {
     }
 
     public function getBillerFroApproval($id) {
-        $this->output->set_template('theme2');
-        $authorizationModules = $this->session->userdata('authorizationModules');
-        if (strpos($authorizationModules, biller_setup_authorization) > -1) {
 
             $dbData = $this->biller_setup_model_checker->getBillerById($id);
-
-            // echo "<pre>";
-            // print_r($dbData); die();
-
             $data['makerActionDtTm'] = $dbData['makerActionDt'] . " " . $dbData['makerActionTm'];
             $data['checkerActionDtTm'] = $dbData['checkerActionDt'] . " " . $dbData['checkerActionTm'];
             if ($data['checkerActionDtTm'] == " ") {
@@ -79,32 +72,27 @@ class Biller_setup_checker extends CI_Controller {
                 $data['isActive_c'] = "";
             }
 
-
-
             $data['biller'] = $dbData;
-            $this->load->view('biller_setup_checker/approve_form.php', $data);
-        } else {
-            echo "Authorization Module Not Given";
-        }
+            $data["pageTitle"]="Biller Setup Checker";
+            $data["body_template"]="biller_setup_checker/approve_form.php";
+            $this->load->view('site_template.php', $data);
     }
 
     public function getReason() {
-        $authorizationModules = $this->session->userdata('authorizationModules');
-        if (strpos($authorizationModules, biller_setup_authorization) > -1) {
-            $data['checkerAction'] = $_POST['checkerAction'];
-            $id = $_POST['billerId'];
-            $makerActionDtTm = $_POST['makerActionDtTm'];
-            $checkerActionDtTm = $_POST['checkerActionDtTm'];
+            $data['checkerAction'] = $this->input->post("checkerAction");
+            $id = $this->input->post("billerId");
+            $makerActionDtTm =  $this->input->post("makerActionDtTm");
+            $checkerActionDtTm =$this->input->post("checkerActionDtTm");
             $dbData = $this->biller_setup_model_checker->getBillerById($id);
 
-            if ($dbData['makerActionBy'] == $this->session->userdata('adminUserId')) {
+            if ($dbData['makerActionBy'] == $this->my_session->userId) {
                 echo "You can not authorize your own maker action";
             } else {
                 if ($data['checkerAction'] == "approve") {
                     $chkdata['checkerActionDt'] = date("Y-m-d");
                     $chkdata['checkerActionTm'] = date("G:i:s");
                     $chkdata['isPublished'] = 1;
-                    $chkdata['checkerActionBy'] = $this->session->userdata('adminUserId');
+                    $chkdata['checkerActionBy'] =  $this->my_session->userId;
                     $chkdata['checkerAction'] = "Approved";
                     $chkdata['checkerActionComment'] = NULL;
                     $chkdata['mcStatus'] = 1;
@@ -129,9 +117,9 @@ class Biller_setup_checker extends CI_Controller {
                 } else if ($data['checkerAction'] == 'reject') {
                     $data['checkerActionDt'] = date("Y-m-d");
                     $data['checkerActionTm'] = date("G:i:s");
-                    $data['checkerActionBy'] = $this->session->userdata('adminUserId');
+                    $data['checkerActionBy'] =  $this->my_session->userId;
                     $data['checkerAction'] = "Rejected";
-                    $data['checkerActionComment'] = $_POST['newReason'];
+                    $data['checkerActionComment'] =$this->input->post("newReason"); 
                     $data['mcStatus'] = 2;
 
                     $res = $this->checkUserInteraction($id, $makerActionDtTm, $checkerActionDtTm);
@@ -146,9 +134,6 @@ class Biller_setup_checker extends CI_Controller {
                     }
                 }
             }
-        } else {
-            echo "Authorization module not given";
-        }
     }
 
     public function checkUserInteraction($id, $makerActionDtTmPost, $checkerActionDtTmPost) {

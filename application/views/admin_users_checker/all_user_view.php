@@ -36,11 +36,13 @@
                                         Action <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu">
+                                        <?php if (ci_check_permission("canApproveAdminUser")): ?>
                                         <li>
                                             <a href="<?= base_url() ?>admin_users_checker/getUserForApproval/{{i.adminUserId}}">
                                                 <i class="glyphicon glyphicon-pencil"></i> Approval
                                             </a>
                                         </li>
+                                        <?php endif;?>
                                     </ul>
                                 </div>
                             </td>

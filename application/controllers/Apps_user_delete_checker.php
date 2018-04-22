@@ -385,8 +385,7 @@ class Apps_user_delete_checker extends CI_Controller {
     }
 
     public function getReason() {
-       // $authorizationModules = $this->session->userdata('authorizationModules');
-       // if (strpos($authorizationModules, apps_users_authorization) > -1) {
+        
             $data['checkerAction'] = $this->input->post("checkerAction");
             $id = $_POST['skyId'];
             $makerActionDtTm =$this->input->post("makerActionDtTm");
@@ -422,7 +421,7 @@ class Apps_user_delete_checker extends CI_Controller {
                     $data['checkerActionTm'] = date("G:i:s");
                     $data['checkerActionBy'] = $this->my_session->userId;
                     $data['checkerAction'] = "Rejected";
-                    $data['checkerActionComment'] = $_POST['newReason'];
+                    $data['checkerActionComment'] =$this->input->post("newReason");
                     $data['mcStatus'] = 2;
 
                     $res = $this->checkUserInteraction($id, $makerActionDtTm, $checkerActionDtTm);
@@ -437,9 +436,6 @@ class Apps_user_delete_checker extends CI_Controller {
                     }
                 }
             }
-      //  } else {
-        //    echo "Authorization module not given";
-      //  }
     }
 
     public function checkUserInteraction($id, $makerActionDtTmPost, $checkerActionDtTmPost) {

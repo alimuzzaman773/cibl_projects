@@ -61,8 +61,8 @@ class Apps_user_delete_checker_model extends CI_Model {
         $jsonData["device_info"] = $deviceChecker;
 
         $activityLog = array('activityJson' => json_encode($jsonData),
-            'adminUserId' => $this->session->userdata('adminUserId'),
-            'adminUserName' => $this->session->userdata('username'),
+            'adminUserId' => $this->my_session->userId,
+            'adminUserName' => $this->my_session->userName,
             'tableName' => 'apps_users_mc',
             'moduleName' => 'apps_user_module',
             'moduleCode' => '01',
@@ -75,7 +75,7 @@ class Apps_user_delete_checker_model extends CI_Model {
         $publishedData["makerActionDt"] = date("Y-m-d");
         $publishedData["makerActionTm"] = date("G:i:s");
 
-        $deleteLog["createdBy"] = $this->session->userdata('adminUserId');
+        $deleteLog["createdBy"] = $this->my_session->userId;
         $deleteLog["createdDtTm"] = date("Y-m-d G:i:s");
         $deleteLog["actionCode"] = "delete";
         $deleteLog["moduleCode"] = "01";
