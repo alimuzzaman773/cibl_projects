@@ -72,4 +72,22 @@ class Admin_user_group_model_maker extends CI_Model {
         return $query->row_array();
     }
 
+    function getUGinfo($gpid) {
+        $this->db->where("userGroupId", $gpid);
+        $result = $this->db->get('admin_users_group');
+
+        if ($result->num_rows() > 0) {
+            return $result;
+        }
+        return false;
+    }
+
+    function updatePermission($ugid, $permission) {
+        $data['permissions'] = $permission;
+        $this->db->where("userGroupId", $ugid)
+                ->update('admin_users_group', $data);
+        
+        return true;
+    }
+
 }

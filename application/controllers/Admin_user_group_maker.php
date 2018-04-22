@@ -154,6 +154,79 @@ class Admin_user_group_maker extends CI_Controller {
             redirect('admin_user_group_maker');
         }
     }
+    
+    function set_permission($id = null)
+    {
+             
+        $result = $this->admin_user_group_model_maker->getUGinfo($id);
+        
+        if(!$result):
+            return FALSE;
+        endif;
+        
+        $data['uginfo'] = $result->row();
+        
+        $data['existingPermission'] = $this->convert_permission_to_array($data['uginfo']->permissions);
+        
+        $pres = $this->db->get(TBL_PERMISSIONS)->result();
+        
+        $data['permissions'] = array();
+        
+        foreach($pres as $p):
+            if(!isset($data['permissions']['category'][$p->category])){
+                $data['permissions']['category'][$p->category] = array();
+            }
+            $data['permissions']['category'][$p->category][] = $p;
+            
+        endforeach;
+        //d($data);
+        $data['pageTitle'] = "User Group Permissions";
+        $data['base_url'] = base_url();
+        $data['body_template'] = "admin_user_group_maker/ug_permission_view.php";
+        $this->load->view("site_template.php",$data);
+    }
+    
+    function update_permission()
+    {
+        $action = $this->input->post("action", true);
+        if($action == "edit_permissions"):
+            $ugid = $this->input->post("userGroupId", true);
+            $permission = $this->input->post("permissions", true);
+            
+            $permission_string = $this->convert_permission_to_string($permission);
+            
+            $result = $this->admin_user_group_model_maker->updatePermission($ugid,$permission_string);
+                       
+            if(!$result):
+                return FALSE;
+            endif;
+            
+            redirect(base_url()."admin_user_group_maker");           
+        endif;
+        
+    }
+    
+    function convert_permission_to_array($permissionString) {
+        $pstring = explode(";", $permissionString);
+
+        $parray = array();
+        foreach ($pstring as $key => $val) {
+            $parray[$val] = $val;
+        }
+        array_pop($parray);
+        return $parray;
+    }
+    
+    function convert_permission_to_string($permission) {
+        $pstring = "";
+        if (is_array($permission)):
+            foreach ($permission as $key => $val) {
+                $pstring .= $val . ";";
+            }
+        endif;
+
+        return $pstring;
+    }
 
     public function editModule($id, $selectedActionName = NULL, $message = NULL) {
         $tableData = $this->admin_user_group_model_maker->getUserGroupById($id);
@@ -402,5 +475,5 @@ class Admin_user_group_maker extends CI_Controller {
         $this->db->update_batch('admin_users_group_mc', $updateArray, 'userGroupId');
         echo 1;
     }
-
-}
+    
+    }
