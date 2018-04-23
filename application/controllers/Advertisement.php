@@ -43,7 +43,7 @@ class Advertisement extends CI_Controller {
                     ->display_as('addvertisementImage', 'Advertisement Image(720 X 90)');
 
             $crud->callback_after_upload(array($this, 'addvertisementImage_callback_after_upload'));
-            $crud->set_field_upload('addvertisementImage', 'assets/uploads/advertisement');
+            $crud->set_field_upload('addvertisementImage', 'assets/uploads/files');
 
             $crud->callback_after_insert(array($this, 'imageTransfer'));
             $crud->callback_after_update(array($this, 'imageTransfer'));
@@ -55,15 +55,6 @@ class Advertisement extends CI_Controller {
             endif;
             if (!ci_check_permission("canEditAdvertisement")):
                 $crud->unset_edit();
-            endif;
-            if (!ci_check_permission("canDetailsAdvertisement")):
-                $crud->unset_read();
-            endif;
-            if (!ci_check_permission("canExportAdvertisement")):
-                $crud->unset_export();
-            endif;
-            if (!ci_check_permission("canPrintAdvertisement")):
-                $crud->unset_print();
             endif;
 
             $output = $crud->render();

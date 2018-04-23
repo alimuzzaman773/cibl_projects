@@ -1,2 +1,2 @@
-<h2 class="title-underlined">Products</h2>
+<h2 class="title-underlined">Benefits Setup</h2>
 <?= $output ?>

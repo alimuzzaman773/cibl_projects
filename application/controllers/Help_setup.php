@@ -37,6 +37,13 @@ class Help_setup extends CI_Controller {
             $crud->change_field_type('updatedBy', 'hidden', $creatorId);
 
             $crud->unset_delete();
+            
+            if (!ci_check_permission("canAddHelpSetup")):
+                $crud->unset_add();
+            endif;
+            if (!ci_check_permission("canEditHelpSetup")):
+                $crud->unset_edit();
+            endif;
 
             $output = $crud->render();
             $output->css = "";

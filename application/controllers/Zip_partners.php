@@ -53,7 +53,7 @@ class Zip_partners extends CI_Controller {
                     ->display_as('merchant_web_site', 'Merchant Web Site')
                     ->display_as('uploadImage', 'Upload Image');
 
-            $crud->set_field_upload('uploadImage', 'assets/uploads/zip');
+            $crud->set_field_upload('uploadImage', 'assets/uploads/files');
             $crud->callback_after_upload(array($this, 'zip_callback_after_upload'));
 
             $crud->set_relation('category', 'partner_type_setup', 'zipPartners');
@@ -68,15 +68,6 @@ class Zip_partners extends CI_Controller {
             endif;
             if (!ci_check_permission("canEditZipPartner")):
                 $crud->unset_edit();
-            endif;
-            if (!ci_check_permission("canDetailsZipPartner")):
-                $crud->unset_read();
-            endif;
-            if (!ci_check_permission("canExportZipPartner")):
-                $crud->unset_export();
-            endif;
-            if (!ci_check_permission("canPrintZipPartner")):
-                $crud->unset_print();
             endif;
 
             $output = $crud->render();
