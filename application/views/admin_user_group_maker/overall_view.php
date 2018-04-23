@@ -57,20 +57,20 @@
                                                 </a>
                                             </li>
                                         <?php endif; ?>
-                                        <?php if (ci_check_permission("canPermissionAdminUserGroup")): ?>
+                                        <?php //if (ci_check_permission("canPermissionAdminUserGroup")): ?>
                                             <li>
                                                 <a href="<?= base_url() ?>permission">
                                                     <i class="glyphicon glyphicon-eye-open"></i> Permission
                                                 </a>
                                             </li>
-                                        <?php endif; ?>
-                                        <?php if (ci_check_permission("canSetpermissionAdminUserGroup")): ?>
+                                        <?php //endif; ?>
+                                        <?php //if (ci_check_permission("canSetpermissionAdminUserGroup")): ?>
                                             <li>
                                                 <a href="<?= base_url() ?>admin_user_group_maker/set_permission/{{i.userGroupId}}">
                                                     <i class="glyphicon glyphicon-cog"></i> Set Permission
                                                 </a>
                                             </li>
-                                        <?php endif; ?>
+                                        <?php //endif; ?>
                                         <?php if (ci_check_permission("canActiveAdminUserGroup")): ?>
                                             <li>
                                                 <a data-ng-click="activate(i.userGroupId);" data-ng-if="i.isActive == 0">
