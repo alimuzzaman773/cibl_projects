@@ -1,8 +1,10 @@
 <h1 class="title-underlined">
     Transaction Limit Package
+    <?php if (ci_check_permission("canAddLimitPackage")): ?>
     <a href="<?=base_url()."transaction_limit_setup_maker/createGroup/Add"?>" class="btn btn-primary pull-right">
         Add Package
     </a>
+    <?php endif; ?>
 </h1>
 <div class="clearfix table-responsive form-inline" id="TLPModule" data-ng-controller="TLPController">
     
@@ -52,7 +54,7 @@
                                 Action <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu">
-                                <?php if(ci_check_permission("canEditAppsUser")): ?>
+                                <?php if(ci_check_permission("canEditLimitPackgae")): ?>
                                 <li>
                                     <a href="<?=base_url()?>transaction_limit_setup_maker/editTransactionLimitPackage/{{text.appsGroupId}}/Edit">
                                         <i class="glyphicon glyphicon-edit"></i> Edit
@@ -60,14 +62,14 @@
                                 </li>
                                 <?php endif;?>
                                 
-                                <?php if(ci_check_permission("canActiveAppsUser")): ?>
+                                <?php if(ci_check_permission("canActiveLimitPackgae")): ?>
                                 <li data-ng-if="text.isActive == 0">
                                     <a data-ng-click="activate_deactivate(text, 'Active', 'packageActive');">
                                         <i class="glyphicon glyphicon-flash"></i> Active
                                     </a>
                                 </li> 
                                 <?php endif;?>
-                                <?php if(ci_check_permission("canInactiveAppsUser")): ?>
+                                <?php if(ci_check_permission("canInactiveLimitPackgae")): ?>
                                 <li data-ng-if="text.isActive == 1">
                                     <a data-ng-click="activate_deactivate(text, 'Inactive', 'packageInactive');">
                                         <i class="glyphicon glyphicon-flash"></i> Inactive
@@ -130,7 +132,6 @@ ci_add_js(asset_url()."app/transaction_limit_package.js");
             }else if(record.obtMinTxnLim == 0){
                 record.otherChecked = ko.observable(false);
             }
-
 
             if(record.pbMinTxnLim > 0){
                 record.billsPayChecked = ko.observable(true);

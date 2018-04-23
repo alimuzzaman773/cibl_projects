@@ -1,9 +1,10 @@
-<title>Limit Package</title>
-<div class="breadcrum">Add Package</div>
+<h3 class="title-underlined">Limit Package</h3>
 
-<div class="container" style="margin-top:50px">
+<div class="container">
 
-    <div class="alert alert-success"><?php echo $message ?></div>   
+    <?php if($message !=""){?>
+    <div class="alert alert-success"><?php echo $message ?></div>  
+    <?php } ?>
 
     <form method="post" style="" id="packageSelection" name="packageSelection" action="<?php echo base_url(); ?>transaction_limit_setup_maker/assignGroup">
         <div class="container" style="margin-top:50px">
