@@ -52,31 +52,41 @@
                                         Action <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li>
-                                            <a href="<?= base_url() ?>admin_users_maker/editUser/{{i.adminUserId}}/edit">
-                                                <i class="glyphicon glyphicon-pencil"></i> Edit
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a data-ng-click="activate(i.adminUserId);" data-ng-if="i.isActive == 0">
-                                                <i class="glyphicon glyphicon-ok"></i> Active
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a data-ng-click="deactivate(i.adminUserId);" data-ng-if="i.isActive == 1">
-                                                <i class="glyphicon glyphicon-remove"></i> Inactive
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a data-ng-click="lock(i.adminUserId);" data-ng-if="i.isLocked == 0">
-                                                <i class="glyphicon glyphicon-ok"></i> Lock
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a data-ng-click="unlock(i.adminUserId);" data-ng-if="i.isLocked == 1">
-                                                <i class="glyphicon glyphicon-remove"></i> Unlock
-                                            </a>
-                                        </li>
+                                        <?php if (ci_check_permission("canEditAdminUsersMaker")): ?>
+                                            <li>
+                                                <a href="<?= base_url() ?>admin_users_maker/editUser/{{i.adminUserId}}/edit">
+                                                    <i class="glyphicon glyphicon-pencil"></i> Edit
+                                                </a>
+                                            </li>
+                                        <?php endif; ?>
+                                        <?php if (ci_check_permission("canActiveAdminUsersMaker")): ?>
+                                            <li>
+                                                <a data-ng-click="activate(i.adminUserId);" data-ng-if="i.isActive == 0">
+                                                    <i class="glyphicon glyphicon-ok"></i> Active
+                                                </a>
+                                            </li>
+                                        <?php endif; ?>
+                                        <?php if (ci_check_permission("canInactiveAdminUsersMaker")): ?>
+                                            <li>
+                                                <a data-ng-click="deactivate(i.adminUserId);" data-ng-if="i.isActive == 1">
+                                                    <i class="glyphicon glyphicon-remove"></i> Inactive
+                                                </a>
+                                            </li>
+                                        <?php endif; ?>
+                                        <?php if (ci_check_permission("canLockAdminUsersMaker")): ?>
+                                            <li>
+                                                <a data-ng-click="lock(i.adminUserId);" data-ng-if="i.isLocked == 0">
+                                                    <i class="glyphicon glyphicon-ok"></i> Lock
+                                                </a>
+                                            </li>
+                                        <?php endif; ?>
+                                        <?php if (ci_check_permission("canUnlockAdminUsersMaker")): ?>
+                                            <li>
+                                                <a data-ng-click="unlock(i.adminUserId);" data-ng-if="i.isLocked == 1">
+                                                    <i class="glyphicon glyphicon-remove"></i> Unlock
+                                                </a>
+                                            </li>
+                                        <?php endif; ?>  
                                     </ul>
                                 </div>
                             </td>
