@@ -3,9 +3,11 @@
         <div class="col-sm-12">
             <h3 class="title-underlined ng-scope">
                 <?= $pageTitle ?>
+                <?php if (ci_check_permission("canCreatePin")): ?>
                 <a href="<?php echo base_url(); ?>pin_generation" class="btn btn-primary btn-xs pull-right">
                     <span class="glyphicon glyphicon-plus"></span> Create Pin
                 </a>
+                <?php endif; ?>
             </h3>
         </div>
     </div>
@@ -55,11 +57,13 @@
                                         Action <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu">
+                                        <?php if (ci_check_permission("canCreatePin")): ?>
                                         <li>
                                             <a href="<?= base_url() . "pin_generation" ?>">
                                                 <i class="glyphicon glyphicon-edit"></i> Create Pin
                                             </a>
                                         </li>
+                                        <?php endif; ?>
                                     </ul>
                                 </div>
                             </td>

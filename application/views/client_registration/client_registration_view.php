@@ -1,8 +1,10 @@
 <h1 class="title-underlined">
     Apps User
+    <?php if(ci_check_permission("canAddAppUser")): ?>
     <a href="<?php echo base_url(). 'apps_users/addAppsUser/Add'; ?>" class="btn btn-primary pull-right">
         <i class="glyphicon glyphicon-plus"></i> Add User
     </a>
+    <?php endif;?>
 </h1>
 <div class="table-responsive" id="AppUserModule" data-ng-controller="AppUsersController as AppUsersController">
 
@@ -52,49 +54,49 @@
                                 </a>
                             </li>
                             <?php endif;?>
-                            <?php if(ci_check_permission("canViewAppUser")): ?>
+                            <?php if(ci_check_permission("canViewAppUserDevice")): ?>
                             <li>
                                 <a href="<?=base_url()?>client_registration/deviceInfo?skyId={{a.skyId}}&eblSkyId={{a.eblSkyId}}">
                                     <i class="glyphicon glyphicon-dashboard"></i> View Devices
                                 </a>
                             </li>
                             <?php endif;?>
-                            <?php if(ci_check_permission("can view app user")): ?>
+                            <?php if(ci_check_permission("canViewAppUser")): ?>
                             <li>
                                 <a href="<?=base_url()?>client_registration/viewUser?skyId={{a.skyId}}">
                                     <i class="glyphicon glyphicon-list-alt"></i> Detail View
                                 </a>
                             </li>
                             <?php endif;?>
-                            <?php if(ci_check_permission("can lock app user")): ?>
+                            <?php if(ci_check_permission("canLockAppUser")): ?>
                             <li data-ng-if="a.isLocked == 0">
                                 <a data-ng-click="lock_unlock(a, 'Lock', 'userLock');">
                                     <i class="glyphicon glyphicon-lock"></i> Lock
                                 </a>
                             </li> 
                             <?php endif;?>
-                            <?php if(ci_check_permission("can unlock app user")): ?>
+                            <?php if(ci_check_permission("canUnlockAppUser")): ?>
                             <li data-ng-if="a.isLocked == 1">
                                 <a data-ng-click="lock_unlock(a, 'Unlock', 'userUnlock');">
                                     <i class="glyphicon glyphicon-refresh"></i> Unlock
                                 </a>
                             </li> 
                             <?php endif;?>
-                            <?php if(ci_check_permission("can active app user")): ?>
+                            <?php if(ci_check_permission("canActiveAppUser")): ?>
                             <li data-ng-if="a.isActive == 0">
                                 <a data-ng-click="activate_deactivate(a, 'Active', 'userActive');">
                                     <i class="glyphicon glyphicon-flash"></i> Active
                                 </a>
                             </li> 
                             <?php endif;?>
-                            <?php if(ci_check_permission("can inactive app user")): ?>
+                            <?php if(ci_check_permission("canInactiveAppUser")): ?>
                             <li data-ng-if="a.isActive == 1">
                                 <a data-ng-click="activate_deactivate(a, 'Inactive', 'userInactive');">
                                     <i class="glyphicon glyphicon-flash"></i> Inactive
                                 </a>
                             </li> 
                             <?php endif;?>
-                            <?php if(ci_check_permission("can delete app user")): ?>
+                            <?php if(ci_check_permission("canDeleteAppUser")): ?>
                             <li>
                                 <a data-ng-click="deleteUser(a)">
                                     <i class="glyphicon glyphicon-trash"></i> Delete

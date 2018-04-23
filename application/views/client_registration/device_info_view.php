@@ -1,9 +1,10 @@
 <h1 class="title-underlined">
     Device
-    
+    <?php if(ci_check_permission("canAddAppUserDevice")): ?>
     <a href="<?=base_url()."client_registration/addDeviceInfo?eblSkyId={$eblSkyId}&skyId={$skyId}"?>" class="btn btn-primary pull-right">
         <i class="glyphicon glyphicon-plus"></i> Add Device
     </a>
+    <?php endif;?>
 </h1>
 
 <div class="clearfix table-responsive form-inline" id="AppUserModule" data-ng-controller="AppUsersDeviceCOntroller">
@@ -45,41 +46,41 @@
                             Action <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu">
-                            <?php //if(ci_check_permission("canEditSite")): ?>
+                            <?php if(ci_check_permission("canEditAppUserDevice")): ?>
                             <li>
                                 <a href="<?=base_url()?>client_registration/editDevice?eblSkyId={{d.eblSkyId}}&skyId={{d.skyId}}&imeiNo={{d.imeiNo}}&deviceId={{d.deviceId}}">
                                     <i class="glyphicon glyphicon-edit"></i> Edit
                                 </a>
                             </li>
-                            <?php //endif;?>
-                            <?php //if(ci_check_permission("canViewElectricityReading")): ?>
+                            <?php endif;?>
+                            <?php if(ci_check_permission("canLockAppUserDevice")): ?>
                             <li data-ng-if="d.isLocked == 0">
                                 <a data-ng-click="lock_unlock(d, 'Lock', 'deviceLock');">
                                     <i class="glyphicon glyphicon-lock"></i> Lock
                                 </a>
                             </li> 
-                            <?php //endif;?>
-                            <?php //if(ci_check_permission("canViewAdvancePaymentModule")): ?>
+                            <?php endif;?>
+                            <?php if(ci_check_permission("canUnlockAppUserDevice")): ?>
                             <li data-ng-if="d.isLocked == 1">
                                 <a data-ng-click="lock_unlock(d, 'Unlock', 'deviceUnlock');">
                                     <i class="glyphicon glyphicon-refresh"></i> Unlock
                                 </a>
                             </li> 
-                            <?php //endif;?>
-                            <?php //if(ci_check_permission("canViewAdvancePaymentModule")): ?>
+                            <?php endif;?>
+                            <?php if(ci_check_permission("canActiveAppUserDevice")): ?>
                             <li data-ng-if="d.isActive == 0">
                                 <a data-ng-click="activate(d);">
                                     <i class="glyphicon glyphicon-flash"></i> Activate
                                 </a>
                             </li> 
-                            <?php //endif;?>
-                            <?php //if(ci_check_permission("canViewAdvancePaymentModule")): ?>
+                            <?php endif;?>
+                            <?php if(ci_check_permission("canInactiveAppUserDevice")): ?>
                             <li data-ng-if="d.isActive == 1">
                                 <a data-ng-click="deactivate(d);">
                                     <i class="glyphicon glyphicon-flash"></i> Deactivate
                                 </a>
                             </li> 
-                            <?php //endif;?>                            
+                            <?php endif;?>                            
                         </ul>
                     </div>
                 </td>                
