@@ -10,7 +10,6 @@ class Product_setup extends CI_Controller {
 
         $this->load->library("my_session");
         $this->my_session->checkSession();
-
         $this->load->library('grocery_CRUD');
     }
 
@@ -57,7 +56,7 @@ class Product_setup extends CI_Controller {
             if (!ci_check_permission("canEditProduct")):
                 $crud->unset_edit();
             endif;
-            if (!ci_check_permission("canDetailsProduct")):
+            if (!ci_check_permission("canReadProduct")):
                 $crud->unset_read();
             endif;
             if (!ci_check_permission("canExportProduct")):

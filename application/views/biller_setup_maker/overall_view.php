@@ -4,9 +4,9 @@
             <h3 class="title-underlined ng-scope">
                 Biller Setup
                 <?php if (ci_check_permission("canAddBillerSetup")): ?>
-                <a href="<?php echo base_url(); ?>biller_setup_maker/addNewBiller/Add" class="btn btn-primary btn-xs pull-right">
-                    <i class="fa fa-plus"></i> Add Biller
-                </a>
+                    <a href="<?php echo base_url(); ?>biller_setup_maker/addNewBiller/Add" class="btn btn-primary btn-xs pull-right">
+                        <i class="fa fa-plus"></i> Add Biller
+                    </a>
                 <?php endif; ?>
             </h3>
         </div>
@@ -51,7 +51,7 @@
                                         Action <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <?php if (ci_check_permission("canActiveBillerSetup")): ?>
+                                        <?php if (ci_check_permission("canEditBillerSetup")): ?>
                                             <li>
                                                 <a href="<?= base_url() ?>biller_setup_maker/editBiller/{{i.billerId}}/edit">
                                                     <i class="glyphicon glyphicon-pencil"></i> Edit

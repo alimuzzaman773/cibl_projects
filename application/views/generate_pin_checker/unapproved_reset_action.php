@@ -35,7 +35,7 @@
                                         Action <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <?php if (ci_check_permission("canResetPin")): ?>
+                                        <?php if (ci_check_permission("canApprovePinReset")): ?>
                                         <li>
                                             <a href="<?= base_url() ?>pin_generation_checker/getResetActionForApproval/{{i.eblSkyId}}">
                                                 <i class="glyphicon glyphicon-pencil"></i> Approve

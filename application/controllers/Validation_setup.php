@@ -7,10 +7,8 @@ class Validation_setup extends CI_Controller {
 
     function __construct() {
         parent::__construct();
-
         $this->load->library("my_session");
         $this->my_session->checkSession();
-
         $this->load->library('grocery_CRUD');
     }
 
@@ -66,7 +64,19 @@ class Validation_setup extends CI_Controller {
 
             $crud->unset_add();
             $crud->unset_delete();
-            //$crud->unset_edit();
+
+            if (!ci_check_permission("canEditPasswordPolicy")):
+                $crud->unset_edit();
+            endif;
+            if (!ci_check_permission("canReadPasswordPolicy")):
+                $crud->unset_read();
+            endif;
+            if (!ci_check_permission("canExportPasswordPolicy")):
+                $crud->unset_export();
+            endif;
+            if (!ci_check_permission("canPrintPasswordPolicy")):
+                $crud->unset_print();
+            endif;
 
             $output = $crud->render();
             $output->css = "";
