@@ -30,11 +30,13 @@
                                     Action <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu">
+                                    <?php if (ci_check_permission("canApproveAdminUserGroup")): ?>
                                     <li>
                                         <a href="<?= base_url() ?>admin_user_group_checker/getGroupForApproval/{{i.userGroupId}}">
                                             <i class="glyphicon glyphicon-pencil"></i> Approve
                                         </a>
                                     </li> 
+                                    <?php endif;?>
                                 </ul>
                             </div>
                         </td>
