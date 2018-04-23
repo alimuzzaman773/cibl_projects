@@ -3,9 +3,11 @@
         <div class="col-sm-12">
             <h3 class="title-underlined ng-scope">
                 <?= $pageTitle ?>
+                <?php if (ci_check_permission("canCreatePin")): ?>
                 <a href="<?php echo base_url(); ?>pin_generation/viewPinByAction" class="btn btn-primary btn-xs pull-right">
                     <span class="glyphicon glyphicon-plus"></span> Pin List
                 </a>
+                <?php endif; ?>
             </h3>
         </div>
     </div>
@@ -49,11 +51,13 @@
                                         Action <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu">
+                                        <?php if (ci_check_permission("canCreateNewRquestPin")): ?>
                                         <li>
                                             <a href="<?= base_url() . "pin_generation/newRequest/Create" ?>{{i.generateId}}">
                                                 <i class="glyphicon glyphicon-collapse-up"></i> New Request
                                             </a>
                                         </li>
+                                        <?php endif; ?>
                                     </ul>
                                 </div>
                             </td>
