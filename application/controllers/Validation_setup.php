@@ -13,6 +13,7 @@ class Validation_setup extends CI_Controller {
     }
 
     function index($params = null) {
+        $this->my_session->authorize("canReadPasswordPolicy");
         try {
             $crud = new grocery_CRUD();
             $crud->set_theme(TABLE_THEME);

@@ -9,7 +9,8 @@ class Biller_setup_maker extends CI_Controller {
         $this->load->model('biller_setup_model_maker');
     }
 
-    public function index() {  
+    public function index() {
+        $this->my_session->authorize("canViewBillerSetup");
         $data["billerData"] = json_encode($this->biller_setup_model_maker->getAllBillers());
         $data["pageTitle"] = "Biller Setup";
         $data["body_template"] = "biller_setup_maker/overall_view.php";
@@ -17,21 +18,21 @@ class Biller_setup_maker extends CI_Controller {
     }
 
     public function addNewBiller($selectedActionName = NULL) {
+        $this->my_session->authorize("canAddBillerSetup");
         $data['billTypes'] = $this->biller_setup_model_maker->getAllBillTypes();
         $data['selectedActionName'] = $selectedActionName;
         $data['message'] = "";
-
         $data["pageTitle"] = "Add Biller";
         $data["body_template"] = "biller_setup_maker/add_biller.php";
         $this->load->view('site_template.php', $data);
     }
 
     public function insertNewBiller() {
+        $this->my_session->authorize("canAddBillerSetup");
         $data['billerName'] = $this->input->post('billerName');
         $data['cfId'] = $this->input->post('cfId');
         $data['billerCode'] = $this->input->post('billerCode');
         $data['billerOrder'] = $this->input->post('billerOrder');
-
         $data['suggestion'] = $this->input->post('suggestion');
         $data['referenceRegex'] = $this->input->post('referenceRegex');
         $data['referenceMatch'] = $this->input->post('referenceMatch');
@@ -72,21 +73,8 @@ class Biller_setup_maker extends CI_Controller {
     }
 
     public function editBiller($data, $selectedActionName = NULL, $message = NULL) {
-        //$this->output->set_template('theme2');
-        //$moduleCodes = $this->session->userdata('moduleCodes');
-        //$actionCodes = $this->session->userdata('actionCodes');
-        //$moduleCodes = explode("|", $moduleCodes);
-        //$actionCodes = explode("#", $actionCodes);
-        //$index = array_search(biller_setup_module, $moduleCodes);
-        //if ($index > -1) {
-        // $moduleWiseActionCodes = $actionCodes[$index];
-        // if (strpos($moduleWiseActionCodes, "edit") > -1) {
-
+        $this->my_session->authorize("canEditBillerSetup");
         $tableData = $this->biller_setup_model_maker->getBillerById($data);
-
-        // echo "<pre>";
-        // print_r($tableData); die();
-
         $viewData['checkerActionComment'] = $tableData['checkerActionComment'];
         if ($viewData['checkerActionComment'] != NULL) {
             $viewData['reasonModeOfDisplay'] = "display: block; color: red";
@@ -100,20 +88,15 @@ class Biller_setup_maker extends CI_Controller {
 
         $viewData['body_template'] = 'biller_setup_maker/edit_biller.php';
         $this->load->view('site_template.php', $viewData);
-        //    }
-        //} else {
-        //    echo "not allowed";
-        //}
     }
 
     public function updateBiller() {
+        $this->my_session->authorize("canEditBillerSetup");
         $billerId = $this->input->post('billerId');
         $data['billerName'] = $this->input->post('billerName');
         $data['cfId'] = $this->input->post('cfId');
         $data['billerCode'] = $this->input->post('billerCode');
         $data['billerOrder'] = $this->input->post('billerOrder');
-
-
         $data['suggestion'] = $this->input->post('suggestion');
         $data['referenceRegex'] = $this->input->post('referenceRegex');
         $data['referenceMatch'] = $this->input->post('referenceMatch');
@@ -122,7 +105,6 @@ class Biller_setup_maker extends CI_Controller {
         $data['amountMatch'] = $this->input->post('amountMatch');
         $data['referenceMessage'] = $this->input->post('suggestion');
 
-
         $data['billTypeCode'] = $this->input->post('billTypeCode');
         $data['mcStatus'] = 0;
         $data['makerAction'] = $this->input->post('selectedActionName');
@@ -130,16 +112,7 @@ class Biller_setup_maker extends CI_Controller {
         $data['makerActionDt'] = date("y-m-d");
         $data['makerActionTm'] = date("G:i:s");
         $data['makerActionBy'] = $this->my_session->userId;
-
-
-        // echo "<pre>";
-        // print_r($data); die();
-
-
-
         $billerNameCheck = $this->biller_setup_model_maker->checkBiller($billerId, $data);
-
-
 
         if ($billerNameCheck > 0) {
             $message = 'The biller with code "' . $data['billerCode'] . '" already exists';
@@ -151,16 +124,7 @@ class Biller_setup_maker extends CI_Controller {
     }
 
     public function billerActive() {
-//        $moduleCodes = $this->session->userdata('moduleCodes');
-//        $actionCodes = $this->session->userdata('actionCodes');
-//        $moduleCodes = explode("|", $moduleCodes);
-//        $actionCodes = explode("#", $actionCodes);
-//        $index = array_search(biller_setup_module, $moduleCodes);
-//        if ($index > -1) {
-//            $moduleWiseActionCodes = $actionCodes[$index];
-//            if (strpos($moduleWiseActionCodes, "active") > -1) {
-
-
+        $this->my_session->authorize("canActiveBillerSetup");
         $billerId = explode("|", $this->input->post('billerId', true));
         $billerIdString = $this->input->post('billerId', true);
         $checkData = $this->chkPermission($billerId);
@@ -184,22 +148,10 @@ class Biller_setup_maker extends CI_Controller {
         } else {
             echo 2;
         }
-//            }
-//        } else {
-//            echo "not allowed";
-//        }
     }
 
     public function billerInactive() {
-//        $moduleCodes = $this->session->userdata('moduleCodes');
-//        $actionCodes = $this->session->userdata('actionCodes');
-//        $moduleCodes = explode("|", $moduleCodes);
-//        $actionCodes = explode("#", $actionCodes);
-//        $index = array_search(biller_setup_module, $moduleCodes);
-//        if ($index > -1) {
-//            $moduleWiseActionCodes = $actionCodes[$index];
-//            if (strpos($moduleWiseActionCodes, "inactive") > -1) {
-
+        $this->my_session->authorize("canInactiveBillerSetup");
         $billerId = explode("|", $this->input->post('billerId', true));
         $billerIdString = $this->input->post('billerId', true);
         $checkData = $this->chkPermission($billerId);
@@ -223,10 +175,6 @@ class Biller_setup_maker extends CI_Controller {
         } else {
             echo 2;
         }
-//            }
-//        } else {
-//            echo "not allowed";
-//        }
     }
 
     public function chkPermission($data) { // function to check injection

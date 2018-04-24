@@ -4,15 +4,13 @@ class Priority_request_process extends CI_Controller {
 
     function __construct() {
         parent::__construct();
-
         $this->load->library("my_session");
         $this->my_session->checkSession();
-
         $this->load->model(array('priority_request_process_model', 'common_model', 'login_model'));
     }
 
     public function getRequests() {
-
+        $this->my_session->authorize("canViewPriorityRequest");
         $data['service_list'] = $this->priority_request_process_model->getAllServiceTypeByModule("Priority");
         $data["pageTitle"] = "Priority Request";
         $data["body_template"] = "priority_request_process/show_priority_request.php";
@@ -20,6 +18,7 @@ class Priority_request_process extends CI_Controller {
     }
 
     function get_requests_ajax() {
+        $this->my_session->authorize("canViewPriorityRequest");
         $params['limit'] = (int) $this->input->get("limit", true);
         $params['offset'] = (int) $this->input->get("offset", true);
         $params['get_count'] = (bool) $this->input->get("get_count", true);
@@ -46,19 +45,8 @@ class Priority_request_process extends CI_Controller {
     }
 
     public function processRequestById($id) {
-
-
-        // $moduleCodes = $this->session->userdata('serviceRequestModules');
-        // $moduleCodes = explode("|", $moduleCodes);
-        // $index = array_search(priority_sr, $moduleCodes);
-        // if ($index > -1) {
-
-
-
-
+        $this->my_session->authorize("canEmailPriorityRequest");
         $request = $this->priority_request_process_model->getSingleRequestById($id);
-
-
         $mailData['to'] = "";
         $mailData['body'] = "";
         $mailData['subject'] = "";
@@ -94,8 +82,6 @@ class Priority_request_process extends CI_Controller {
             'prefferedVehicle' => 'Preferred Vehicle Type',
             'callBackFor' => 'Call Back For');
 
-
-
         if ($request['typeCode'] == "01") {
             $mailData['subject'] = "Airport Pick & Drop";
             foreach ($request as $key => $value) {
@@ -126,40 +112,25 @@ class Priority_request_process extends CI_Controller {
             }
         }
         $mailData['serviceRequestID'] = $id;
-
         $mailData["pageTitle"] = "Priority Request";
         $mailData["body_template"] = "priority_request_process/mail_form.php";
         $this->load->view('site_template.php', $mailData);
-
-        // } else {
-        //   echo "not allowed";
-        //   die();
-        //  }
     }
 
     public function sendMail() {
-
-
-      //  $moduleCodes = $this->session->userdata('serviceRequestModules');
-      //  $moduleCodes = explode("|", $moduleCodes);
-      //  $index = array_search(priority_sr, $moduleCodes);
-      //  if ($index > -1) {
-            $serviceRequestID = $this->input->post("serviceRequestID");
-            $maildata['to'] = $this->input->post("to");
-            $maildata['cc'] = $this->input->post("cc");
-            $maildata['bcc'] = $this->input->post("bcc");
-            $maildata['subject'] = $this->input->post("subject"); 
-            $bodyInstruction =$this->input->post("bodyInstruction"); 
-            $maildata['body'] =$this->input->post("body") . "<br></br>" . $bodyInstruction;
-            $isSuccess = $this->common_model->send_service_mail($maildata);
-            if ($isSuccess) {
-                $this->priority_request_process_model->statusChange($serviceRequestID, $maildata, $bodyInstruction);
-                redirect('priority_request_process/getRequests');
-            }
-       // } else {
-         //   echo "not allowed";
-         //   die();
-       // }
+        $this->my_session->authorize("canEmailPriorityRequest");
+        $serviceRequestID = $this->input->post("serviceRequestID");
+        $maildata['to'] = $this->input->post("to");
+        $maildata['cc'] = $this->input->post("cc");
+        $maildata['bcc'] = $this->input->post("bcc");
+        $maildata['subject'] = $this->input->post("subject");
+        $bodyInstruction = $this->input->post("bodyInstruction");
+        $maildata['body'] = $this->input->post("body") . "<br></br>" . $bodyInstruction;
+        $isSuccess = $this->common_model->send_service_mail($maildata);
+        if ($isSuccess) {
+            $this->priority_request_process_model->statusChange($serviceRequestID, $maildata, $bodyInstruction);
+            redirect('priority_request_process/getRequests');
+        }
     }
 
 }

@@ -15,6 +15,7 @@ class Bill_type_setup extends CI_Controller {
     }
 
     public function index($params = null) {
+        $this->my_session->authorize("canReadBillType");
         try {
             $crud = new grocery_CRUD();
             $crud->set_theme(TABLE_THEME);
