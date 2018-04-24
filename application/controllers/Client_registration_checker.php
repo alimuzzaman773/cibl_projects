@@ -14,6 +14,7 @@ class Client_registration_checker extends CI_Controller {
     }
 
     public function index() {
+        $this->my_session->authorize("canViewAppsUserAuthorization");
         $data['appsUsers'] = json_encode($this->client_registration_model_checker->getUnapprovedAppsUsers());
         $data["pageTitle"] = "Device Iinformation Checker";
         $data["body_template"] = "client_registration_checker/unapproved_apps_users_view.php";
@@ -21,6 +22,7 @@ class Client_registration_checker extends CI_Controller {
     }
 
     public function getAppsUserForApproval($id) {
+        $this->my_session->authorize("canApproveAppsUser");
         $data['multiCard'] = array();
         $data['multiCard_c'] = array();
        
@@ -441,6 +443,7 @@ class Client_registration_checker extends CI_Controller {
     }
 
     public function checkUserInteraction($id, $makerActionDtTmPost, $checkerActionDtTmPost) {
+        $this->my_session->authorize("canApproveAppsUser");
         $checkUserInteraction = 1;
         $actualdata = $this->client_registration_model_checker->getAppsUserById($id);
         $makerActionDtTm = $actualdata['makerActionDt'] . " " . $actualdata['makerActionTm'];

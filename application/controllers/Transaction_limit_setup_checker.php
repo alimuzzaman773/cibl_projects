@@ -13,6 +13,7 @@ class Transaction_limit_setup_checker extends CI_Controller {
     }
 
     public function index() {
+        $this->my_session->authorize("canViewLimitSetupAuthorization");
         $data["pageTitle"] = "Limit Packgae Setup Checker";
         $data['packages'] = json_encode($this->transaction_limit_setup_model_checker->getUnapprovedPackages());
         $data["body_template"] = "transaction_limit_package_checker/unapproved_packages_view.php";
@@ -20,7 +21,8 @@ class Transaction_limit_setup_checker extends CI_Controller {
     }
 
     public function getPackageForApproval($id) {
-
+        $this->my_session->authorize("canApproveLimitPackage");
+        
         $dbData = $this->transaction_limit_setup_model_checker->getUnapprovedPackageById($id);
         $data['appsGroupId'] = $dbData['appsGroupId'];
         $data['userGroupName'] = $dbData['userGroupName'];
@@ -120,6 +122,7 @@ class Transaction_limit_setup_checker extends CI_Controller {
     }
 
     public function approveOrReject() {
+        $this->my_session->authorize("canApproveLimitPackage");
 
         $data['checkerAction'] = $this->input->post("checkerAction");
         $id = $this->input->post("appsGroupId");
@@ -173,6 +176,7 @@ class Transaction_limit_setup_checker extends CI_Controller {
     }
 
     public function checkUserInteraction($id, $makerActionDtTmPost, $checkerActionDtTmPost) {
+        $this->my_session->authorize("canApproveLimitPackage");
         $checkUserInteraction = 1;
         $actualdata = $this->transaction_limit_setup_model_checker->getUnapprovedPackageById($id);
         $makerActionDtTm = $actualdata['makerActionDt'] . " " . $actualdata['makerActionTm'];

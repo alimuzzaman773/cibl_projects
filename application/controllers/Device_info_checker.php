@@ -15,6 +15,7 @@ class Device_info_checker extends CI_Controller {
     }
 
     public function index() {
+        $this->my_session->authorize("canViewDeviceAuthorization");
         $data['deviceInfo'] = json_encode($this->device_info_model_checker->getUnapprovedDevice());
         $data["pageTitle"] = "Device Iinformation Checker";
         $data["body_template"] = "device_info_checker/unapproved_device.php";
@@ -22,73 +23,71 @@ class Device_info_checker extends CI_Controller {
     }
 
     public function getDeviceForApproval($id) {
+        $this->my_session->authorize("canApproveDevice");
 
-        //$this->output->set_template('theme2');
-        //$authorizationModules = $this->session->userdata('authorizationModules');
-       // if (strpos($authorizationModules, device_authorization) > -1) {
+        $dbData = $this->device_info_model_checker->getDeviceById($id);
 
-            $dbData = $this->device_info_model_checker->getDeviceById($id);
+        $data['makerActionDtTm'] = $dbData['makerActionDt'] . " " . $dbData['makerActionTm'];
+        $data['checkerActionDtTm'] = $dbData['checkerActionDt'] . " " . $dbData['checkerActionTm'];
+        if ($data['checkerActionDtTm'] == " ") {
+            $data['checkerActionDtTm'] = "";
+        }
 
-            $data['makerActionDtTm'] = $dbData['makerActionDt'] . " " . $dbData['makerActionTm'];
-            $data['checkerActionDtTm'] = $dbData['checkerActionDt'] . " " . $dbData['checkerActionTm'];
-            if ($data['checkerActionDtTm'] == " ") {
-                $data['checkerActionDtTm'] = "";
-            }
+        $data['makerActionDtTm_c'] = $dbData['makerActionDt_c'] . " " . $dbData['makerActionTm_c'];
+        $data['checkerActionDtTm_c'] = $dbData['checkerActionDt_c'] . " " . $dbData['checkerActionTm_c'];
+        if ($data['checkerActionDtTm_c'] == " ") {
+            $data['checkerActionDtTm_c'] = "";
+        }
 
-            $data['makerActionDtTm_c'] = $dbData['makerActionDt_c'] . " " . $dbData['makerActionTm_c'];
-            $data['checkerActionDtTm_c'] = $dbData['checkerActionDt_c'] . " " . $dbData['checkerActionTm_c'];
-            if ($data['checkerActionDtTm_c'] == " ") {
-                $data['checkerActionDtTm_c'] = "";
-            }
+        // reason for changed data
+        $data['checkerActionComment'] = $dbData['checkerActionComment'];
+        if ($data['checkerActionComment'] != NULL) {
+            $data['reasonModeOfDisplay'] = "display: block;";
+        } else {
+            $data['reasonModeOfDisplay'] = "display: none;";
+        }
 
-            // reason for changed data
-            $data['checkerActionComment'] = $dbData['checkerActionComment'];
-            if ($data['checkerActionComment'] != NULL) {
-                $data['reasonModeOfDisplay'] = "display: block;";
-            } else {
-                $data['reasonModeOfDisplay'] = "display: none;";
-            }
-
-            // reason for published data
-            $data['checkerActionComment_c'] = $dbData['checkerActionComment_c'];
-            if ($data['checkerActionComment_c'] != NULL) {
-                $data['reasonModeOfDisplay_c'] = "display: block;";
-            } else {
-                $data['reasonModeOfDisplay_c'] = "display: none;";
-            }
+        // reason for published data
+        $data['checkerActionComment_c'] = $dbData['checkerActionComment_c'];
+        if ($data['checkerActionComment_c'] != NULL) {
+            $data['reasonModeOfDisplay_c'] = "display: block;";
+        } else {
+            $data['reasonModeOfDisplay_c'] = "display: none;";
+        }
 
 
-            if ($dbData['deviceId_c'] != NULL) {
-                $data['publishDataModeOfDisplay_c'] = "display: block;";
-            } else {
-                $data['publishDataModeOfDisplay_c'] = "display: none;";
-            }
+        if ($dbData['deviceId_c'] != NULL) {
+            $data['publishDataModeOfDisplay_c'] = "display: block;";
+        } else {
+            $data['publishDataModeOfDisplay_c'] = "display: none;";
+        }
 
-            // active & inactive
-            if ($dbData['isActive'] == "1") {
-                $data['isActive'] = "Active";
-            } else if ($dbData['isActive'] == "0") {
-                $data['isActive'] = "Inactive";
-            }
+        // active & inactive
+        if ($dbData['isActive'] == "1") {
+            $data['isActive'] = "Active";
+        } else if ($dbData['isActive'] == "0") {
+            $data['isActive'] = "Inactive";
+        }
 
-            if ($dbData['isActive_c'] == "1") {
-                $data['isActive_c'] = "Active";
-            } else if ($dbData['isActive_c'] == "0") {
-                $data['isActive_c'] = "Inactive";
-            } else {
-                $data['isActive_c'] = "";
-            }
-            $data['deviceInfo'] = $dbData;
-           
-            $data["pageTitle"]="Device Information Checker";
-            $data["body_template"]="device_info_checker/device_approve_form.php";
-            $this->load->view('site_template.php', $data);
-       // } else {
-          //  echo "Authorization Module Not Given";
-       // }
+        if ($dbData['isActive_c'] == "1") {
+            $data['isActive_c'] = "Active";
+        } else if ($dbData['isActive_c'] == "0") {
+            $data['isActive_c'] = "Inactive";
+        } else {
+            $data['isActive_c'] = "";
+        }
+        $data['deviceInfo'] = $dbData;
+
+        $data["pageTitle"] = "Device Information Checker";
+        $data["body_template"] = "device_info_checker/device_approve_form.php";
+        $this->load->view('site_template.php', $data);
+        // } else {
+        //  echo "Authorization Module Not Given";
+        // }
     }
 
     public function approveOrRejectDevice() {
+        $this->my_session->authorize("canApproveDevice");
         $authorizationModules = $this->session->userdata('authorizationModules');
         if (strpos($authorizationModules, device_authorization) > -1) {
             $data['checkerAction'] = $_POST['checkerAction'];

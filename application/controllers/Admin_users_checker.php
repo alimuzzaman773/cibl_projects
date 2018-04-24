@@ -16,6 +16,7 @@ class Admin_users_checker extends CI_Controller {
     }
 
     public function index() {
+        $this->my_session->authorize("canViewAdminUserAuthorization");
         $data['adminUsers'] = json_encode($this->admin_users_model_checker->getUnapprovedUsers());
         $data['pageTitle'] = 'Admin User Checker';
         $data["body_template"] = "admin_users_checker/all_user_view.php";
@@ -23,6 +24,7 @@ class Admin_users_checker extends CI_Controller {
     }
 
     public function getUserForApproval($id) {
+        $this->my_session->authorize("canApproveAdminUser");
         $dbData = $this->admin_users_model_checker->getUserById($id);
 
         $dbData['email'] = $this->bocrypter->Decrypt($dbData['email']);
@@ -159,6 +161,7 @@ class Admin_users_checker extends CI_Controller {
     }
 
     public function checkUserInteraction($id, $makerActionDtTmPost, $checkerActionDtTmPost) {
+        $this->my_session->authorize("canApproveLimitPackage");
         $checkUserInteraction = 1;
         $actualdata = $this->admin_users_model_checker->getUserById($id);
         $makerActionDtTm = $actualdata['makerActionDt'] . " " . $actualdata['makerActionTm'];
@@ -171,14 +174,4 @@ class Admin_users_checker extends CI_Controller {
         }
         return $checkUserInteraction;
     }
-
-    // public function UpdateUpdateCheckerApprove($id, $data)
-    // {
-    //     $this->db->where('deviceId', $id);
-    //     $this->db->update('device_info_mc', $data);
-    //     $query = $this->db->get_where('device_info_mc', array('deviceId' => $id));
-    //     $result = $query->row_array();
-    //     $this->db->where('deviceId', $id);
-    //     $this->db->update('device_info', $result);
-    // }
 }

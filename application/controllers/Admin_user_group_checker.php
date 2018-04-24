@@ -13,27 +13,16 @@ class Admin_user_group_checker extends CI_Controller {
     }
 
     public function index() {
+        $this->my_session->authorize("canViewAdminUserGroupAuthorization");
         $data['groups'] = json_encode($this->admin_user_group_model_checker->getUnapprovedGroups());
         $data["pageTitle"] = "Priority Request";
         $data["body_template"] = "admin_user_group_checker/overall_view.php";
         $this->load->view('site_template.php', $data);
-        /*
-          $this->output->set_template('theme2');
-          $authorizationModules = $this->session->userdata('authorizationModules');
-          if (strpos($authorizationModules, admin_user_group_authorization) > -1) {
-          $data['groups'] = json_encode($this->admin_user_group_model_checker->getUnapprovedGroups());
-          $this->load->view('admin_user_group_checker/overall_view.php', $data);
-          } else {
-          echo "Authorization Module Not Given";
-          }
-         */
     }
 
     public function getGroupForApproval($id) {
-        //  $this->output->set_template('theme2');
-        // $authorizationModules = $this->session->userdata('authorizationModules');
-        //  if (strpos($authorizationModules, admin_user_group_authorization) > -1) {
-
+        $this->my_session->authorize("canApproveAdminUserGroup");
+        
         $dbData = $this->admin_user_group_model_checker->getGroupById($id);
         if (empty($dbData)) {
             redirect('admin_user_group_checker');

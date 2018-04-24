@@ -13,6 +13,7 @@ class Biller_setup_checker extends CI_Controller {
     }
 
     public function index() {
+        $this->my_session->authorize("canViewBillerSetupAuthorization");
         $data['unapprovedBillers'] = json_encode($this->biller_setup_model_checker->getUnapprovedBillers());
         $data["pageTitle"] = "Biller Setup Checker";
         $data["body_template"] = "biller_setup_checker/unapproved_billers.php";
@@ -20,120 +21,121 @@ class Biller_setup_checker extends CI_Controller {
     }
 
     public function getBillerFroApproval($id) {
+        $this->my_session->authorize("canApproveBillerSetup");
 
-            $dbData = $this->biller_setup_model_checker->getBillerById($id);
-            $data['makerActionDtTm'] = $dbData['makerActionDt'] . " " . $dbData['makerActionTm'];
-            $data['checkerActionDtTm'] = $dbData['checkerActionDt'] . " " . $dbData['checkerActionTm'];
-            if ($data['checkerActionDtTm'] == " ") {
-                $data['checkerActionDtTm'] = "";
-            }
+        $dbData = $this->biller_setup_model_checker->getBillerById($id);
+        $data['makerActionDtTm'] = $dbData['makerActionDt'] . " " . $dbData['makerActionTm'];
+        $data['checkerActionDtTm'] = $dbData['checkerActionDt'] . " " . $dbData['checkerActionTm'];
+        if ($data['checkerActionDtTm'] == " ") {
+            $data['checkerActionDtTm'] = "";
+        }
 
-            $data['makerActionDtTm_c'] = $dbData['makerActionDt_c'] . " " . $dbData['makerActionTm_c'];
-            $data['checkerActionDtTm_c'] = $dbData['checkerActionDt_c'] . " " . $dbData['checkerActionTm_c'];
-            if ($data['checkerActionDtTm_c'] == " ") {
-                $data['checkerActionDtTm_c'] = "";
-            }
+        $data['makerActionDtTm_c'] = $dbData['makerActionDt_c'] . " " . $dbData['makerActionTm_c'];
+        $data['checkerActionDtTm_c'] = $dbData['checkerActionDt_c'] . " " . $dbData['checkerActionTm_c'];
+        if ($data['checkerActionDtTm_c'] == " ") {
+            $data['checkerActionDtTm_c'] = "";
+        }
 
-            // reason for changed data
-            $data['checkerActionComment'] = $dbData['checkerActionComment'];
-            if ($data['checkerActionComment'] != NULL) {
-                $data['reasonModeOfDisplay'] = "display: block;";
-            } else {
-                $data['reasonModeOfDisplay'] = "display: none;";
-            }
+        // reason for changed data
+        $data['checkerActionComment'] = $dbData['checkerActionComment'];
+        if ($data['checkerActionComment'] != NULL) {
+            $data['reasonModeOfDisplay'] = "display: block;";
+        } else {
+            $data['reasonModeOfDisplay'] = "display: none;";
+        }
 
-            // reason for published data
-            $data['checkerActionComment_c'] = $dbData['checkerActionComment_c'];
-            if ($data['checkerActionComment_c'] != NULL) {
-                $data['reasonModeOfDisplay_c'] = "display: block;";
-            } else {
-                $data['reasonModeOfDisplay_c'] = "display: none;";
-            }
+        // reason for published data
+        $data['checkerActionComment_c'] = $dbData['checkerActionComment_c'];
+        if ($data['checkerActionComment_c'] != NULL) {
+            $data['reasonModeOfDisplay_c'] = "display: block;";
+        } else {
+            $data['reasonModeOfDisplay_c'] = "display: none;";
+        }
 
 
-            if ($dbData['billerId_c'] != NULL) {
-                $data['publishDataModeOfDisplay_c'] = "display: block;";
-            } else {
-                $data['publishDataModeOfDisplay_c'] = "display: none;";
-            }
+        if ($dbData['billerId_c'] != NULL) {
+            $data['publishDataModeOfDisplay_c'] = "display: block;";
+        } else {
+            $data['publishDataModeOfDisplay_c'] = "display: none;";
+        }
 
-            // active & inactive
-            if ($dbData['isActive'] == "1") {
-                $data['isActive'] = "Active";
-            } else if ($dbData['isActive'] == "0") {
-                $data['isActive'] = "Inactive";
-            }
+        // active & inactive
+        if ($dbData['isActive'] == "1") {
+            $data['isActive'] = "Active";
+        } else if ($dbData['isActive'] == "0") {
+            $data['isActive'] = "Inactive";
+        }
 
-            if ($dbData['isActive_c'] == "1") {
-                $data['isActive_c'] = "Active";
-            } else if ($dbData['isActive_c'] == "0") {
-                $data['isActive_c'] = "Inactive";
-            } else {
-                $data['isActive_c'] = "";
-            }
+        if ($dbData['isActive_c'] == "1") {
+            $data['isActive_c'] = "Active";
+        } else if ($dbData['isActive_c'] == "0") {
+            $data['isActive_c'] = "Inactive";
+        } else {
+            $data['isActive_c'] = "";
+        }
 
-            $data['biller'] = $dbData;
-            $data["pageTitle"]="Biller Setup Checker";
-            $data["body_template"]="biller_setup_checker/approve_form.php";
-            $this->load->view('site_template.php', $data);
+        $data['biller'] = $dbData;
+        $data["pageTitle"] = "Biller Setup Checker";
+        $data["body_template"] = "biller_setup_checker/approve_form.php";
+        $this->load->view('site_template.php', $data);
     }
 
     public function getReason() {
-            $data['checkerAction'] = $this->input->post("checkerAction");
-            $id = $this->input->post("billerId");
-            $makerActionDtTm =  $this->input->post("makerActionDtTm");
-            $checkerActionDtTm =$this->input->post("checkerActionDtTm");
-            $dbData = $this->biller_setup_model_checker->getBillerById($id);
+        $data['checkerAction'] = $this->input->post("checkerAction");
+        $id = $this->input->post("billerId");
+        $makerActionDtTm = $this->input->post("makerActionDtTm");
+        $checkerActionDtTm = $this->input->post("checkerActionDtTm");
+        $dbData = $this->biller_setup_model_checker->getBillerById($id);
 
-            if ($dbData['makerActionBy'] == $this->my_session->userId) {
-                echo "You can not authorize your own maker action";
-            } else {
-                if ($data['checkerAction'] == "approve") {
-                    $chkdata['checkerActionDt'] = date("Y-m-d");
-                    $chkdata['checkerActionTm'] = date("G:i:s");
-                    $chkdata['isPublished'] = 1;
-                    $chkdata['checkerActionBy'] =  $this->my_session->userId;
-                    $chkdata['checkerAction'] = "Approved";
-                    $chkdata['checkerActionComment'] = NULL;
-                    $chkdata['mcStatus'] = 1;
+        if ($dbData['makerActionBy'] == $this->my_session->userId) {
+            echo "You can not authorize your own maker action";
+        } else {
+            if ($data['checkerAction'] == "approve") {
+                $chkdata['checkerActionDt'] = date("Y-m-d");
+                $chkdata['checkerActionTm'] = date("G:i:s");
+                $chkdata['isPublished'] = 1;
+                $chkdata['checkerActionBy'] = $this->my_session->userId;
+                $chkdata['checkerAction'] = "Approved";
+                $chkdata['checkerActionComment'] = NULL;
+                $chkdata['mcStatus'] = 1;
 
-                    $res = $this->checkUserInteraction($id, $makerActionDtTm, $checkerActionDtTm);
+                $res = $this->checkUserInteraction($id, $makerActionDtTm, $checkerActionDtTm);
 
-                    if ($res == 0) {
-                        if ($dbData['isPublished'] == 0) {
-                            // update and insert
-                            $this->biller_setup_model_checker->UpdateInsertCheckerApprove($id, $chkdata);
-                        } else if ($dbData['isPublished'] == 1) {
-                            // update and update
-                            $this->biller_setup_model_checker->UpdateUpdateCheckerApprove($id, $chkdata);
-                        }
-
-                        // activity log starts here >> implemented in model
-                        redirect('biller_setup_checker');
-                    } else {
-                        // redirect
-                        echo "interaction";
+                if ($res == 0) {
+                    if ($dbData['isPublished'] == 0) {
+                        // update and insert
+                        $this->biller_setup_model_checker->UpdateInsertCheckerApprove($id, $chkdata);
+                    } else if ($dbData['isPublished'] == 1) {
+                        // update and update
+                        $this->biller_setup_model_checker->UpdateUpdateCheckerApprove($id, $chkdata);
                     }
-                } else if ($data['checkerAction'] == 'reject') {
-                    $data['checkerActionDt'] = date("Y-m-d");
-                    $data['checkerActionTm'] = date("G:i:s");
-                    $data['checkerActionBy'] =  $this->my_session->userId;
-                    $data['checkerAction'] = "Rejected";
-                    $data['checkerActionComment'] =$this->input->post("newReason"); 
-                    $data['mcStatus'] = 2;
 
-                    $res = $this->checkUserInteraction($id, $makerActionDtTm, $checkerActionDtTm);
+                    // activity log starts here >> implemented in model
+                    redirect('biller_setup_checker');
+                } else {
+                    // redirect
+                    echo "interaction";
+                }
+            } else if ($data['checkerAction'] == 'reject') {
+                $data['checkerActionDt'] = date("Y-m-d");
+                $data['checkerActionTm'] = date("G:i:s");
+                $data['checkerActionBy'] = $this->my_session->userId;
+                $data['checkerAction'] = "Rejected";
+                $data['checkerActionComment'] = $this->input->post("newReason");
+                $data['mcStatus'] = 2;
 
-                    if ($res == 0) {
-                        // update
-                        $this->biller_setup_model_checker->checkerReject($id, $data);
-                        redirect('biller_setup_checker');
-                    } else {
-                        // redirect
-                        echo "interaction";
-                    }
+                $res = $this->checkUserInteraction($id, $makerActionDtTm, $checkerActionDtTm);
+
+                if ($res == 0) {
+                    // update
+                    $this->biller_setup_model_checker->checkerReject($id, $data);
+                    redirect('biller_setup_checker');
+                } else {
+                    // redirect
+                    echo "interaction";
                 }
             }
+        }
     }
 
     public function checkUserInteraction($id, $makerActionDtTmPost, $checkerActionDtTmPost) {

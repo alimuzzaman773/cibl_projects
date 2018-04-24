@@ -15,6 +15,7 @@ class Pin_generation_checker extends CI_Controller {
     }
 
     public function index() {
+        $this->my_session->authorize("canViewPinResetAuthorization");
         $data["pageTitle"] = "Pin Reset Checker";
         $data['resetAction'] = json_encode($this->generate_eblskyid_model_checker->getUnapprovedResetAction());
         $data["body_template"] = "generate_pin_checker/unapproved_reset_action.php";
@@ -22,6 +23,7 @@ class Pin_generation_checker extends CI_Controller {
     }
 
     public function getResetActionForApproval($id) {
+        $this->my_session->authorize("canApprovePinReset");
 
         $dbData = $this->generate_eblskyid_model_checker->getUnapprovedResetActionById($id);
 
@@ -70,9 +72,8 @@ class Pin_generation_checker extends CI_Controller {
         $this->load->view('site_template.php', $data);
     }
 
-    public function approveOrReject() { // for reset action approval //
-        // $authorizationModules = $this->session->userdata('authorizationModules');
-        // if (strpos($authorizationModules, pin_reset_authorization) > -1) {
+    public function approveOrReject() {
+        $this->my_session->authorize("canApprovePinReset");
         $data['checkerAction'] = $this->input->post("checkerAction");
         $id = $this->input->post("eblSkyId");
         $makerActionDtTm = $this->input->post("makerActionDtTm");
@@ -162,9 +163,6 @@ class Pin_generation_checker extends CI_Controller {
                 }
             }
         }
-        //   } else {
-        //      echo "Authorization module not given";
-        //  }
     }
 
     public function checkUserInteraction($id, $makerActionDtTmPost, $checkerActionDtTmPost) {
