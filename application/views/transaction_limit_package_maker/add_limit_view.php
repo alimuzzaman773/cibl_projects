@@ -1,13 +1,11 @@
-<title>Limit Package</title>
-<div class="breadcrum">Add Limit</div>
+<h3 class="title-underlined">Add Limit</h3>
 
-<div class="container" style="margin-top:50px">
+<div class="container">
     <label>Group Name</label>
     <input class="textbox" type="text" name="groupName" id="groupName" value="<?= $groupName ?>" readonly><br><br>
 </div>
 
 <input hidden class="textbox" type="text" name="selectedActionName" id="selectedActionName" value="<?= $selectedActionName ?>">
-
 <div class="container" id="assignPackage">
     <table class="table table-striped table-bordered">
         <thead>
@@ -69,7 +67,6 @@
         record.packageName = record.packageName;
     })
 
-    
     self.create = function()
     {
       $(function() {

@@ -8,7 +8,7 @@ class Admin_user_group_model_maker extends CI_Model {
 
     public function getAllGroups() {
         $this->db->where('userGroupId !=', 1);
-        $this->db->where('makerActionBy =', $this->my_session->adminUserId);
+        $this->db->where('makerActionBy =', $this->my_session->userId);
         $this->db->or_where('mcStatus =', 1);
         $query = $this->db->get('admin_users_group_mc');
         return $query->result();
