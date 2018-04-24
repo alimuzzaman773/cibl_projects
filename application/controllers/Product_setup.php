@@ -14,6 +14,7 @@ class Product_setup extends CI_Controller {
     }
 
     function index() {
+        $this->my_session->authorize("canViewProduct");
         try {
             $crud = new grocery_CRUD();
             $crud->set_theme(TABLE_THEME);

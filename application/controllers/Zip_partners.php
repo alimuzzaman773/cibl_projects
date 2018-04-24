@@ -15,6 +15,7 @@ class Zip_partners extends CI_Controller {
     }
 
     function index($params = null, $id = null) {
+        $this->my_session->authorize("canViewZipPartner");
         try {
             $crud = new grocery_CRUD();
 
