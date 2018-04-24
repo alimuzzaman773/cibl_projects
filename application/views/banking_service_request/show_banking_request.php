@@ -69,7 +69,7 @@
                 </td>
             </tr>
             <tr data-ng-show="banking_list.length <= 0">
-                <td colspan="13">No data found</td>
+                <td colspan="9">No data found</td>
             </tr>
         </tbody>
     </table>
