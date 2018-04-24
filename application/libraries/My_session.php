@@ -224,6 +224,7 @@ Class My_session {
     }
 
     public function authorize($permissionString, $userLevel = array()) {
+        $ci =& get_instance();
         if (isset($this->permissions[$permissionString])) {
             if (!empty($userLevel)):
                 foreach ($userLevel as $val):
@@ -231,12 +232,27 @@ Class My_session {
                         return true;
                     endif;
                 endforeach;
-
+                if ($ci->input->is_ajax_request()):
+                    $json = array(
+                        "success" => false,
+                        "msg" => "Not allowed. You need the permission :: {$permissionString} to perform this action"
+                    );
+                    my_json_output($json);
+                endif;
                 die("Not Allowed");
             endif;
 
             return true;
         }
+        
+        
+        if ($ci->input->is_ajax_request()):
+            $json = array(
+                "success" => false,
+                "msg" => "Not allowed. You need the permission :: {$permissionString} to perform this action"
+            );
+            my_json_output($json);
+        endif;
 
         die("Not Allowed");
     }
@@ -248,6 +264,7 @@ Class My_session {
                     if ($this->userLevel == $val):
                         return true;
                     endif;
+
                 endforeach;
 
                 return false;

@@ -7,26 +7,20 @@ class Transaction_limit_setup_maker extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
-        date_default_timezone_set('Asia/Dhaka');
-
-        $this->load->database();
-        $this->load->helper('url');
         $this->load->model('transaction_limit_setup_model_maker');
-
-
-        $this->load->model('login_model');
         $this->load->library('my_session');
-
         $this->my_session->checkSession();
     }
 
     function index() {
+        $this->my_session->authorize("canViewLimitPackage");
         $data['packages'] = json_encode($this->transaction_limit_setup_model_maker->getAllPackages());
         $data['body_template'] = 'transaction_limit_package_maker/overall_view.php';
         $this->load->view('site_template.php', $data);
     }
 
     function createGroup($selectedActionName = NULL) {
+        $this->my_session->authorize("canAddLimitPackage");
         $data['message'] = "";
         $data['selectedActionName'] = $selectedActionName;
         $data["body_template"] = "transaction_limit_package_maker/add_package_view.php";
@@ -34,59 +28,46 @@ class Transaction_limit_setup_maker extends CI_Controller {
     }
 
     public function assignGroup() {
-        $this->output->set_template('theme2');
-        $moduleCodes = $this->session->userdata('moduleCodes');
-        $actionCodes = $this->session->userdata('actionCodes');
-        $moduleCodes = explode("|", $moduleCodes);
-        $actionCodes = explode("#", $actionCodes);
-        $index = array_search(limit_package_module, $moduleCodes);
-        if ($index > -1) {
-            $moduleWiseActionCodes = $actionCodes[$index];
-            if (strpos($moduleWiseActionCodes, "add") > -1) {
-                $this->output->set_template('theme2');
-                $data['selectedActionName'] = $_POST['selectedActionName'];
-                if (isset($_POST['packageName'])) {
-                    $data['groupName'] = $_POST['groupName'];
-                    $groupNameCheck = $this->transaction_limit_setup_model_maker->getGroupByName($data['groupName']); // To check if group exists
-                    if ($groupNameCheck) {
-                        $data['message'] = 'The group "' . $data['groupName'] . '" already exists';
-                        $this->load->view('transaction_limit_package_maker/add_package_view.php', $data);
-                    } else {
-                        $var = $_POST['packageName'];
-                        foreach ($var as $index => $value) {
-                            if ($value == 1) {
-                                $array[] = array('packageId' => $value,
-                                    'packageName' => "Own Account Transfer");
-                            }
-                            if ($value == 2) {
-                                $array[] = array('packageId' => $value,
-                                    'packageName' => "EBL Account Transfer");
-                            }
-                            if ($value == 3) {
-                                $array[] = array('packageId' => $value,
-                                    'packageName' => "Other Bank Transfer");
-                            }
-                            if ($value == 4) {
-                                $array[] = array('packageId' => $value,
-                                    'packageName' => "Bills Pay");
-                            }
-                        }
-                        $data['packages'] = json_encode($array);
-                        $this->load->view('transaction_limit_package_maker/add_limit_view.php', $data);
-                    }
-                } else {
-                    $data['message'] = "At least One Package Must Be Selected";
-                    $this->load->view('transaction_limit_package_maker/add_package_view.php', $data);
-                }
+        $this->my_session->authorize("canAddLimitPackage");
+        $data['selectedActionName'] = $this->input->post("selectedActionName");
+        if (isset($_POST['packageName'])) {
+            $data['groupName'] = $_POST['groupName'];
+            $groupNameCheck = $this->transaction_limit_setup_model_maker->getGroupByName($data['groupName']); // To check if group exists
+            if ($groupNameCheck) {
+                $data['message'] = 'The group "' . $data['groupName'] . '" already exists';
+                $data["body_template"] = 'transaction_limit_package_maker/add_package_view.php';
             } else {
-                echo "Action Not given";
+                $var = $_POST['packageName'];
+                foreach ($var as $index => $value) {
+                    if ($value == 1) {
+                        $array[] = array('packageId' => $value,
+                            'packageName' => "Own Account Transfer");
+                    }
+                    if ($value == 2) {
+                        $array[] = array('packageId' => $value,
+                            'packageName' => "EBL Account Transfer");
+                    }
+                    if ($value == 3) {
+                        $array[] = array('packageId' => $value,
+                            'packageName' => "Other Bank Transfer");
+                    }
+                    if ($value == 4) {
+                        $array[] = array('packageId' => $value,
+                            'packageName' => "Bills Pay");
+                    }
+                }
+                $data['packages'] = json_encode($array);
+                $data["body_template"] = "transaction_limit_package_maker/add_limit_view.php";
             }
         } else {
-            echo "not allowed";
+            $data['message'] = "At least One Package Must Be Selected";
+            $data["body_template"] = 'transaction_limit_package_maker/add_package_view.php';
         }
+        $this->load->view('site_template.php', $data);
     }
 
     public function saveGroup() {
+        $this->my_session->authorize("canAddLimitPackage");
         $groupName = $_POST['group_name'];
         $ownAccount = isset($_POST['own_acc_transfer']) ? $_POST['own_acc_transfer'] : array();
         $eblAccount = isset($_POST['ebl_acc_transfer']) ? $_POST['ebl_acc_transfer'] : array();
@@ -162,7 +143,7 @@ class Transaction_limit_setup_maker extends CI_Controller {
         $dbData['makerActionCode'] = 'add';
         $dbData['makerActionDt'] = date("y-m-d");
         $dbData['makerActionTm'] = date("G:i:s");
-        $dbData['makerActionBy'] = $this->session->userdata('adminUserId');
+        $dbData['makerActionBy'] = $this->my_session->userId;
         $dbData['isPublished'] = 0;
         $dbData['isActive'] = 1;
 
@@ -177,11 +158,9 @@ class Transaction_limit_setup_maker extends CI_Controller {
     }
 
     function editTransactionLimitPackage($data, $selectedActionName = NULL, $message = NULL) {
+        $this->my_session->authorize("canEditLimitPackage");
         $dbData = $this->transaction_limit_setup_model_maker->getGroupById($data);
-
         $var['packages'] = json_encode($dbData);
-
-
         $var['checkerActionComment'] = $dbData['checkerActionComment'];
 
         if ($var['checkerActionComment'] != NULL) {
@@ -189,8 +168,6 @@ class Transaction_limit_setup_maker extends CI_Controller {
         } else {
             $var['reasonModeOfDisplay'] = "display: none;";
         }
-
-
 
         if ($message == NULL) {
             $var['message'] = "Group name can be updated here and 
@@ -205,6 +182,7 @@ class Transaction_limit_setup_maker extends CI_Controller {
     }
 
     function editGroup() {
+        $this->my_session->authorize("canEditLimitPackage");
         $data['appsGroupId'] = $_POST['appsGroupId'];
         $data['selectedActionName'] = $_POST['selectedActionName'];
         if (!isset($_POST['packageName'])) {
@@ -247,6 +225,7 @@ class Transaction_limit_setup_maker extends CI_Controller {
     }
 
     public function updateGroup() {
+        $this->my_session->authorize("canEditLimitPackage");
         $groupId = $_POST['group_id'];
         $groupName = $_POST['group_name'];
         $ownAccount = isset($_POST['own_acc_transfer']) ? $_POST['own_acc_transfer'] : array();
@@ -325,12 +304,12 @@ class Transaction_limit_setup_maker extends CI_Controller {
         $dbData['makerActionTm'] = date("G:i:s");
         $dbData['makerActionBy'] = $this->my_session->userId;
 
-
         $this->transaction_limit_setup_model_maker->updateUserGroupInfo($dbData, $groupId);
         echo 1;
     }
 
     function packageActive() {
+        $this->my_session->authorize("canActiveLimitPackage");
         $appsGroupId = explode("|", $_POST['appsGroupId']);
         $appsGroupIdString = $_POST['appsGroupId'];
         $checkData = $this->chkPermission($appsGroupId);
@@ -374,6 +353,7 @@ class Transaction_limit_setup_maker extends CI_Controller {
     }
 
     function packageInactive() {
+        $this->my_session->authorize("canInactiveLimitPackage");
         $appsGroupId = explode("|", $_POST['appsGroupId']);
         $appsGroupIdString = $_POST['appsGroupId'];
         $checkData = $this->chkPermission($appsGroupId);

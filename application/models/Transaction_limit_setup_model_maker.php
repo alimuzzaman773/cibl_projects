@@ -4,13 +4,9 @@ class Transaction_limit_setup_model_maker extends CI_Model {
 
     function __construct() {
         parent::__construct();
-        date_default_timezone_set('Asia/Dhaka');
-
-        $this->load->database();
     }
 
-    function getAllPackages() 
-    {
+    function getAllPackages() {
         $this->db->where('makerActionBy', $this->my_session->userId);
         $this->db->or_where('mcStatus', 1);
         $this->db->order_by("userGroupName", "ASC");
