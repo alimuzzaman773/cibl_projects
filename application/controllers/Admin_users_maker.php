@@ -15,6 +15,7 @@ class Admin_users_maker extends CI_Controller {
     }
 
     function index() {
+        $this->my_session->authorize("canViewAdminUsersMaker");
         $adminUserData = $this->admin_users_model_maker->getAllUsers();
 
         foreach ($adminUserData as $index => $value) {
@@ -28,6 +29,7 @@ class Admin_users_maker extends CI_Controller {
     }
 
     function addNewUser($selectedActionName = NULL) {
+        $this->my_session->authorize("canAddAdminUsersMaker");
         $data['userGroups'] = $this->admin_users_model_maker->getAllGroups();
         $data['selectedActionName'] = $selectedActionName;
         $data['message'] = "";
@@ -38,6 +40,7 @@ class Admin_users_maker extends CI_Controller {
     }
 
     public function insertNewUser() {
+        $this->my_session->authorize("canAddAdminUsersMaker");
         $password = $this->input->post('password1');
         $data['fullName'] = $this->input->post('fullName');
         $data['adminUserName'] = $this->input->post('userId');
@@ -79,6 +82,7 @@ class Admin_users_maker extends CI_Controller {
     }
 
     public function editUser($data, $selectedActionName = NULL, $message = NULL) {
+        $this->my_session->authorize("canEditAdminUsersMaker");
         $tableData = $this->admin_users_model_maker->getAdminUserById($data);
 
         $tableData['email'] = $this->bocrypter->Decrypt($tableData['email']);
@@ -103,6 +107,7 @@ class Admin_users_maker extends CI_Controller {
     }
 
     public function updateAdminUser() {
+        $this->my_session->authorize("canEditAdminUsersMaker");
         $adminUserId = $this->input->post('adminUserId');
         $email = $this->input->post('email');
         $data['adminUserName'] = $this->input->post('userId');
@@ -131,6 +136,7 @@ class Admin_users_maker extends CI_Controller {
     }
 
     public function adminUserActive() {
+        $this->my_session->authorize("canActiveAdminUsersMaker");
         $adminUserId = explode("|", $this->input->post('adminUserId'));
         $adminUserIdString = $this->input->post('adminUserId');
         $checkData = $this->chkPermission($adminUserId);
@@ -157,6 +163,7 @@ class Admin_users_maker extends CI_Controller {
     }
 
     public function adminUserInactive() {
+        $this->my_session->authorize("canInactiveAdminUsersMaker");
         $adminUserId = explode("|", $this->input->post('adminUserId'));
         $adminUserIdString = $this->input->post('adminUserId');
         ;
@@ -183,6 +190,7 @@ class Admin_users_maker extends CI_Controller {
     }
 
     public function adminUserLock() {
+        $this->my_session->authorize("canLockAdminUsersMaker");
         $adminUserId = explode("|", $this->input->post('adminUserId'));
         $adminUserIdString = $this->input->post('adminUserId');
         $checkData = $this->chkPermission($adminUserId);
@@ -208,6 +216,7 @@ class Admin_users_maker extends CI_Controller {
     }
 
     public function adminUserUnlock() {
+        $this->my_session->authorize("canUnlockAdminUsersMaker");
         $adminUserId = explode("|", $this->input->post('adminUserId'));
         $adminUserIdString = $this->input->post('adminUserId');
         $checkData = $this->chkPermission($adminUserId);

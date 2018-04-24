@@ -7,64 +7,48 @@ class Client_registration extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
-        date_default_timezone_set('Asia/Dhaka');
 
-        $this->load->database();
-        $this->load->helper('url');
         $this->load->library('my_session');
         $this->load->model('client_registration_model');
         $this->load->model('common_model');
-        $this->load->model('login_model'); // for formating user information with library function
-        /*if ($this->login_model->check_session()) {
-            redirect('/admin_login/index');
-        }*/
-        
+        $this->load->model('login_model');
         $this->my_session->checkSession();
     }
 
-    function index() 
-    {        
-        //$data['appsUsers'] = json_encode($this->client_registration_model->getAllAppsUsers());
-        //$data['verifiedDevice'] = json_encode($this->client_registration_model->countVerifiedDevice());
-        //$data['nonVerifiedDevice'] = json_encode($this->client_registration_model->countNonVerifiedDevice());
-        //$data['totalDevice'] = json_encode($this->client_registration_model->countTotalDevice());
-        $data['actionCodes'] = @$actionCodes;
-        $data['actionNames'] = @$actionNames;
-        
+    function index() {
+        $this->my_session->authorize("canViewAppUser");
         $data['pageTitle'] = "Apps user list";
-        
         $data['body_template'] = 'client_registration/client_registration_view.php';
         $this->load->view('site_template.php', $data);
-        
     }
-    
-    function ajax_get_app_users()
-    {
-        $p['get_count'] = (bool)$this->input->get("get_count",true);
-        $p['limit'] = $this->input->get('limit',true);
+
+    function ajax_get_app_users() {
+        $this->my_session->authorize("canViewAppUser");
+        $p['get_count'] = (bool) $this->input->get("get_count", true);
+        $p['limit'] = $this->input->get('limit', true);
         $p['offset'] = $this->input->get('offset', true);
-        
+
         $json = array();
-        if($p['get_count']){
+        if ($p['get_count']) {
             $params['get_count'] = 1;
-            $result = $this->client_registration_model->getAllAppsUsers($params);            
+            $result = $this->client_registration_model->getAllAppsUsers($params);
             //echo $this->db->last_query();
-            if($result):
+            if ($result):
                 $json['total'] = $result->row()->total;
             endif;
         }
-        
+
         unset($p['get_count']);
         $result = $this->client_registration_model->getAllAppsUsers($p);
-        if($result):
-            $json['app_users'] = $result->result(); 
+        if ($result):
+            $json['app_users'] = $result->result();
         endif;
-        
+
         my_json_output($json);
     }
 
-    function viewUser()
-    {   
+    function viewUser() {
+        $this->my_session->authorize("canViewAppUser");
         if (isset($_GET['skyId'])) {
             $skyId = $_GET['skyId'];
             $data['userInfo'] = $this->client_registration_model->getAppsUsersById($skyId); // decision needed whether to show from main table or shadow
@@ -72,64 +56,62 @@ class Client_registration extends CI_Controller {
             $data['accountInfo'] = json_encode($this->login_model->checkAccount($data['userInfo']));
             $data['body_template'] = 'client_registration/apps_user_detail_view.php';
             $this->load->view('site_template.php', $data);
-        }
-        else{
+        } else {
             show_404();
         }
-            
     }
 
-    function deviceInfo() 
-    {        
-            if (isset($_GET['skyId']) && isset($_GET['eblSkyId'])) {
-                $data['skyId'] = $_GET['skyId'];
-                $tableData = $this->client_registration_model->getDeviceBySkyid($data['skyId']);
-                if (!empty($tableData)) {
-                    $data['eblSkyId'] = $tableData[0]['eblSkyId'];
-                } else {
-                    $data['eblSkyId'] = $_GET['eblSkyId'];
-                }
-                $data['deviceInfo'] = json_encode($tableData);
+    function deviceInfo() {
+        $this->my_session->authorize("canViewAppUserDevice");
+        if (isset($_GET['skyId']) && isset($_GET['eblSkyId'])) {
+            $data['skyId'] = $_GET['skyId'];
+            $tableData = $this->client_registration_model->getDeviceBySkyid($data['skyId']);
+            if (!empty($tableData)) {
+                $data['eblSkyId'] = $tableData[0]['eblSkyId'];
             } else {
-                $data['skyId'] = "";
-                $data['eblSkyId'] = "";
-                $data['deviceInfo'] = json_encode($this->client_registration_model->getDeviceBySkyid());
+                $data['eblSkyId'] = $_GET['eblSkyId'];
             }
-            
-            $data['body_template'] = 'client_registration/device_info_view.php';
-            $this->load->view('site_template.php', $data);
-        
+            $data['deviceInfo'] = json_encode($tableData);
+        } else {
+            $data['skyId'] = "";
+            $data['eblSkyId'] = "";
+            $data['deviceInfo'] = json_encode($this->client_registration_model->getDeviceBySkyid());
+        }
+
+        $data['body_template'] = 'client_registration/device_info_view.php';
+        $this->load->view('site_template.php', $data);
     }
 
-    function addDeviceInfo() {        
+    function addDeviceInfo() {
+        $this->my_session->authorize("canViewAddUserDevice");
         if (isset($_GET['skyId']) && isset($_GET['eblSkyId'])) {
             $data['skyId'] = $_GET['skyId'];
             $data['eblSkyId'] = $_GET['eblSkyId'];
             $data['selectedActionName'] = 'Add';
 
             $data['message'] = "";
-            $data['body_template'] = 'client_registration/enter_imei_view.php'; 
+            $data['body_template'] = 'client_registration/enter_imei_view.php';
             $this->load->view('site_template.php', $data);
-        }        
+        }
     }
 
-    function insertDevice() 
-    {
+    function insertDevice() {
+        $this->my_session->authorize("canAddAppUserDevice");
         $this->load->library("form_validation");
         //$this->form_validation = &$this;
         $this->form_validation->set_data($_POST);
         $this->form_validation->set_rules("skyId", "SKY ID", "trim|required");
         $this->form_validation->set_rules("eblSkyId", "EBL SKY ID", "trim|required");
         $this->form_validation->set_rules("imeiNo", "imeiNo", "trim|required");
-        
-        if($this->form_validation->run() === false):
+
+        if ($this->form_validation->run() === false):
             $json = array(
                 "success" => false,
                 "msg" => validation_errors('<p>', '</p>')
             );
             my_json_output($json);
         endif;
-        
+
         $loginId = $this->my_session->userId;
 
         $data['skyId'] = $_POST['skyId'];
@@ -157,33 +139,19 @@ class Client_registration extends CI_Controller {
                 "msg" => $data['message']
             );
             my_json_output($json);
-        } 
-
-        // sending mail after first device add
-        // $deviceData = $this->client_registration_model->getDeviceBySkyid($data['skyId']);
-        // if(empty($deviceData)){
-        //     $email = $this->client_registration_model->getAppsUsersById($data['skyId']);
-        //     $maildata['to'] = $email['userEmail'];
-        //     $maildata['subject'] = "Device Activation";
-        //     $maildata['body'] = '<p>Dear Sir/Madam,</p>
-        //                          <p>Your EBL SKYBANKING account registration process is completed.</p>
-        //                          <p>Please activate your device using provided EBL SKYBANKING ID and Password to access the Banking / Bills Pay / Fund Transfer section.</p>
-        //                          <p>Please ignore this email, if you have already activated your device.</p>
-        //                          <p>Thanks & Regards, <br/>EBL SKY AdminPanel</p>';
-        //     //$this->common_model->send_mail($maildata);
-        // }
+        }
         $result = $this->client_registration_model->insertImeiNo($data);
-        
+
         $json = array("success" => false);
-        if((int)$result > 0){
+        if ((int) $result > 0) {
             $json['success'] = true;
         }
-        
+
         my_json_output($json);
     }
 
-    function editDevice() 
-    {   
+    function editDevice() {
+        $this->my_session->authorize("canEditAppUserDevice");
         if (isset($_GET['skyId']) && isset($_GET['eblSkyId']) && isset($_GET['imeiNo'])) {
             $data['deviceId'] = $_GET['deviceId'];
             $data['skyId'] = $_GET['skyId'];
@@ -205,11 +173,10 @@ class Client_registration extends CI_Controller {
             $data['body_template'] = 'client_registration/edit_imei_view.php';
             $this->load->view('site_template.php', $data);
         }
-            
     }
 
-    function updateDevice() 
-    {
+    function updateDevice() {
+        $this->my_session->authorize("canEditAppUserDevice");
         $this->load->library("form_validation");
         //$this->form_validation = &$this;
         $this->form_validation->set_data($_POST);
@@ -217,17 +184,17 @@ class Client_registration extends CI_Controller {
         $this->form_validation->set_rules("eblSkyId", "EBL SKY ID", "trim|required");
         $this->form_validation->set_rules("imeiNo", "imeiNo", "trim|required");
         $this->form_validation->set_rules("deviceId", "Device ID", "trim|required|integer|greater_than[0]");
-        
-        if($this->form_validation->run() === false):
+
+        if ($this->form_validation->run() === false):
             $json = array(
                 "success" => false,
                 "msg" => validation_errors('<p>', '</p>')
             );
             my_json_output($json);
         endif;
-       
+
         $loginId = $this->my_session->userId;
-        
+
         $data['deviceId'] = $_POST['deviceId'];
         $data['skyId'] = $_POST['skyId'];
         $data['eblSkyId'] = $_POST['eblSkyId'];
@@ -235,14 +202,13 @@ class Client_registration extends CI_Controller {
         $data['selectedActionName'] = $_POST['selectedActionName'];
 
         $count = $this->client_registration_model->checkDuplicateImei($data);
-        if ($count > 0) 
-        {
+        if ($count > 0) {
             $checkImei = $this->client_registration_model->getImeiByNumber($data['imeiNo']);
-            $data['msg'] = 'The IMEI No. "' . $data['imeiNo'] . '" is already assigned to ESB ID "' . $checkImei['eblSkyId'] . '"';            
+            $data['msg'] = 'The IMEI No. "' . $data['imeiNo'] . '" is already assigned to ESB ID "' . $checkImei['eblSkyId'] . '"';
             $data['success'] = false;
             my_json_output($data);
-        } 
-        
+        }
+
         $deviceId = $data['deviceId'];
         $updateData['imeiNo'] = $data['imeiNo'];
         $updateData['updateDtTm'] = date("Y-m-d G:i:s");
@@ -255,16 +221,16 @@ class Client_registration extends CI_Controller {
         $updateData['makerActionBy'] = $loginId;
         $updateData['updatedBy'] = $loginId;
 
-        $this->client_registration_model->updateImeiNo($updateData, $deviceId);        
+        $this->client_registration_model->updateImeiNo($updateData, $deviceId);
         $json = array(
             "success" => true,
             "msg" => "saved"
         );
-        my_json_output($json);        
+        my_json_output($json);
     }
 
-    function userActive() 
-    {        
+    function userActive() {
+        $this->my_session->authorize("canActiveAppUser");
         $eblSkyId = explode("|", $_POST['eblSkyId']);
         $skyId = explode("|", $_POST['skyId']);
         $selectedActionName = $_POST['selectedActionName'];
@@ -283,24 +249,24 @@ class Client_registration extends CI_Controller {
             $updateArray[] = $updateData;
         }
         $this->db->update_batch('apps_users_mc', $updateArray, 'skyId');
-        
-        if(count($updateArray) > 0):
+
+        if (count($updateArray) > 0):
             $this->db->update_batch('apps_users_mc', $updateArray, 'skyId');
             $json = array(
                 "success" => true
             );
             my_json_output($json);
         endif;
-        
+
         $json = array(
             "success" => false,
             "msg" => "error processing:: no data provided"
         );
-        my_json_output($json);    
+        my_json_output($json);
     }
 
-    function userInactive() 
-    {
+    function userInactive() {
+        $this->my_session->authorize("canInactiveAppUser");
         $eblSkyId = explode("|", $_POST['eblSkyId']);
         $skyId = explode("|", $_POST['skyId']);
         $selectedActionName = $_POST['selectedActionName'];
@@ -317,7 +283,7 @@ class Client_registration extends CI_Controller {
             );
             $updateArray[] = $updateData;
         }
-        
+
         if (count($updateArray) > 0):
             $this->db->update_batch('apps_users_mc', $updateArray, 'skyId');
             $json = array(
@@ -333,8 +299,8 @@ class Client_registration extends CI_Controller {
         my_json_output($json);
     }
 
-    function userLock()
-    {   
+    function userLock() {
+        $this->my_session->authorize("canLockAppUser");
         $eblSkyId = explode("|", $_POST['eblSkyId']);
         $skyId = explode("|", $_POST['skyId']);
         $selectedActionName = $_POST['selectedActionName'];
@@ -351,8 +317,8 @@ class Client_registration extends CI_Controller {
             );
             $updateArray[] = $updateData;
         }
-        if(count($updateArray) > 0):
-            $this->db->update_batch('apps_users_mc', $updateArray, 'skyId');            
+        if (count($updateArray) > 0):
+            $this->db->update_batch('apps_users_mc', $updateArray, 'skyId');
             $json = array(
                 "success" => true
             );
@@ -365,8 +331,8 @@ class Client_registration extends CI_Controller {
         my_json_output($json);
     }
 
-    function userUnlock() 
-    {        
+    function userUnlock() {
+        $this->my_session->authorize("canUnlockAppUser");
         $eblSkyId = explode("|", $_POST['eblSkyId']);
         $skyId = explode("|", $_POST['skyId']);
         $selectedActionName = $_POST['selectedActionName'];
@@ -384,8 +350,8 @@ class Client_registration extends CI_Controller {
             );
             $updateArray[] = $updateData;
         }
-                
-        if(count($updateArray) > 0):
+
+        if (count($updateArray) > 0):
             $this->db->update_batch('apps_users_mc', $updateArray, 'skyId');
             $json = array(
                 "success" => true
@@ -396,11 +362,11 @@ class Client_registration extends CI_Controller {
             "success" => false,
             "msg" => "error processing:: no data provided"
         );
-        my_json_output($json);            
+        my_json_output($json);
     }
 
-    function deviceActive() 
-    {   
+    function deviceActive() {
+        $this->my_session->authorize("canActiveAppUserDevice");
         $imeiNo = explode("|", $_POST['imeiNo']);
         $selectedActionName = $_POST['selectedActionName'];
         $updateArray = array();
@@ -414,18 +380,18 @@ class Client_registration extends CI_Controller {
                 "makerActionDt" => date("y-m-d"),
                 "makerActionTm" => date("G:i:s"),
                 "makerActionBy" => $this->my_session->userId
-            );        
+            );
             $updateArray[] = $updateData;
         }
-        
-        if(count($updateArray) > 0):
+
+        if (count($updateArray) > 0):
             $this->db->update_batch('device_info_mc', $updateArray, 'imeiNo');
             $json = array(
                 "success" => true
             );
             my_json_output($json);
         endif;
-        
+
         $json = array(
             "success" => false,
             "msg" => "error processing:: no data provided"
@@ -433,8 +399,8 @@ class Client_registration extends CI_Controller {
         my_json_output($json);
     }
 
-    function deviceInactive() 
-    {        
+    function deviceInactive() {
+        $this->my_session->authorize("canInactiveAppUserDevice");
         $imeiNo = explode("|", $_POST['imeiNo']);
         $selectedActionName = $_POST['selectedActionName'];
         $updateArray = array();
@@ -451,9 +417,9 @@ class Client_registration extends CI_Controller {
             );
             $updateArray[] = $updateData;
         }
-        
-        if(count($updateArray) > 0):
-            $this->db->update_batch('device_info_mc', $updateArray, 'imeiNo');  
+
+        if (count($updateArray) > 0):
+            $this->db->update_batch('device_info_mc', $updateArray, 'imeiNo');
             $json = array(
                 "success" => true
             );
@@ -464,11 +430,10 @@ class Client_registration extends CI_Controller {
             "msg" => "error processing:: no data provided"
         );
         my_json_output($json);
-            
     }
 
-    function deviceUnlock() 
-    {        
+    function deviceUnlock() {
+        $this->my_session->authorize("canUnlockAppUserDevice");
         $imeiNo = explode("|", $_POST['imeiNo']);
         $selectedActionName = $_POST['selectedActionName'];
         $updateArray = array();
@@ -485,25 +450,24 @@ class Client_registration extends CI_Controller {
             );
             $updateArray[] = $updateData;
         }
-        
-        if(count($updateArray) > 0):
+
+        if (count($updateArray) > 0):
             $this->db->update_batch('device_info_mc', $updateArray, 'imeiNo');
             $json = array(
                 "success" => true
             );
             my_json_output($json);
         endif;
-        
+
         $json = array(
             "success" => false,
             "msg" => "error processing:: no data provided"
         );
         my_json_output($json);
-            
     }
 
-    function deviceLock() 
-    {
+    function deviceLock() {
+        $this->my_session->authorize("canLockAppUserDevice");
         $imeiNo = explode("|", $_POST['imeiNo']);
         $selectedActionName = $_POST['selectedActionName'];
         $updateArray = array();
@@ -519,46 +483,42 @@ class Client_registration extends CI_Controller {
             );
             $updateArray[] = $updateData;
         }
-        
-        if(count($updateArray) > 0):
+
+        if (count($updateArray) > 0):
             $this->db->update_batch('device_info_mc', $updateArray, 'imeiNo');
             $json = array(
                 "success" => true
             );
             my_json_output($json);
         endif;
-        
+
         $json = array(
             "success" => false,
             "msg" => "error processing:: no data provided"
         );
         my_json_output($json);
-        
-            
     }
 
-    function userDelete() 
-    {   
+    function userDelete() {
         $skyId = (int) $this->input->post("skyId");
-        if ((int)$skyId <= 0) {
+        if ((int) $skyId <= 0) {
             $json = array(
                 "msg" => "no sky id provided",
                 "success" => false
             );
             my_json_output($json);
-        }    
-        
+        }
+
         $res = $this->client_registration_model->countVerifiedDevice($skyId);
-        if ($res)
-        {
+        if ($res) {
             $json = array(
                 "msg" => "User cannot be deleted because user already has {$res->num_rows()} verified device/s",
                 "devices" => $res->result(),
                 "success" => false
             );
             my_json_output($json);
-        } 
-        
+        }
+
         $data["mcStatus"] = 0;
         $data["makerAction"] = "Delete";
         $data["salt2"] = "delete";
@@ -567,13 +527,11 @@ class Client_registration extends CI_Controller {
         $data["makerActionTm"] = date("G:i:s");
         $data["makerActionBy"] = $this->my_session->userId;
         $this->client_registration_model->userDeleteChange($data, $skyId);
-        
+
         $json = array(
             "success" => true
         );
-        my_json_output($json);  
-        
-           
+        my_json_output($json);
     }
 
 }
