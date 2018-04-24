@@ -15,6 +15,7 @@ class News_events extends CI_Controller {
     }
 
     function index() {
+        $this->my_session->authorize("canViewNewsEvents");
         try {
             $crud = new grocery_CRUD();
             $crud->set_theme(TABLE_THEME);

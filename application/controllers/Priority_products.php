@@ -15,6 +15,7 @@ class Priority_products extends CI_Controller {
     }
 
     function index() {
+        $this->my_session->authorize("canViewPriorityProduct");
         try {
             $crud = new grocery_CRUD();
 

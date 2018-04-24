@@ -16,24 +16,11 @@ class Push_notification extends CI_Controller {
     }
 
     public function index() {
+        $this->my_session->authorize("canViewNotificationSetup");
 
         $data['sentMessages'] = json_encode($this->push_notification_model->getAllMessages());
         $data['body_template'] = "push_notification/view_all_messages.php";
         $this->load->view("site_template.php", $data);
-
-//        $moduleCodes = $this->session->userdata('contentSetupModules');
-//        $moduleCodes = explode("|", $moduleCodes);
-//        $index = array_search(notification, $moduleCodes);
-//        if ($index > -1) {
-//
-//
-//            $data['sentMessages'] = json_encode($this->push_notification_model->getAllMessages());
-//            $this->output->set_template('theme2');
-//            $this->load->view('push_notification/view_all_messages.php', $data);
-//        } else {
-//            echo "not allowed";
-//            die();
-//        }
     }
 
     public function writeMessage() {

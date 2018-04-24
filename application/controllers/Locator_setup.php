@@ -15,6 +15,7 @@ class Locator_setup extends CI_Controller {
     }
 
     function index($params = null, $id = null) {
+        $this->my_session->authorize("canViewLocatorSetup");
         try {
             $crud = new grocery_CRUD();
             $crud->set_theme(TABLE_THEME);

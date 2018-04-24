@@ -13,6 +13,7 @@ class Discount_partners extends CI_Controller {
     }
 
     function index() {
+        $this->my_session->authorize("canViewDiscountPartners");
         try {
             $crud = new grocery_CRUD();
 
