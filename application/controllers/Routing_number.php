@@ -10,11 +10,11 @@ class Routing_number extends CI_Controller {
 
         $this->load->library("my_session");
         $this->my_session->checkSession();
-
         $this->load->library('grocery_CRUD');
     }
 
     function index($params = null) {
+        $this->my_session->authorize("canDetailsRoutingNumber");
         try {
             $crud = new grocery_CRUD();
             $crud->set_theme(TABLE_THEME);

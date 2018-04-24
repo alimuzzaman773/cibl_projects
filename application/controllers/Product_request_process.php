@@ -9,16 +9,18 @@ class Product_request_process extends CI_Controller {
         parent::__construct();
         $this->load->library("my_session");
         $this->my_session->checkSession();
-        $this->load->model(array('product_request_process_model','common_model','login_model'));
+        $this->load->model(array('product_request_process_model', 'common_model', 'login_model'));
     }
 
     public function index() {
+        $this->my_session->authorize("canViewProductRequest");
         $data["pageTitle"] = "Product Request";
         $data["body_template"] = "product_request_process/show_product_request.php";
         $this->load->view('site_template.php', $data);
     }
-    
-    function get_requests_ajax(){
+
+    function get_requests_ajax() {
+        $this->my_session->authorize("canViewProductRequest");
         $params['limit'] = (int) $this->input->get("limit", true);
         $params['offset'] = (int) $this->input->get("offset", true);
         $params['get_count'] = (bool) $this->input->get("get_count", true);
@@ -44,86 +46,66 @@ class Product_request_process extends CI_Controller {
         }
         my_json_output($data);
     }
-/*
-    public function getRequest() {
-        $data["fromDate"] = $this->input->get("fromDate");
-        $data["toDate"] = $this->input->get("toDate");
-        if ($data["fromDate"] && $data["toDate"]) {
-            $data["pageTitle"] = "Product Request";
-            $data['productRequest'] = json_encode($this->product_request_process_model->getProductRequestByDate($data));
-            $data["body_template"] = "product_request_process/show_product_request.php";
-            $this->load->view('site_template.php', $data);
-        }
-    }
-    */
+
+    /*
+      public function getRequest() {
+      $data["fromDate"] = $this->input->get("fromDate");
+      $data["toDate"] = $this->input->get("toDate");
+      if ($data["fromDate"] && $data["toDate"]) {
+      $data["pageTitle"] = "Product Request";
+      $data['productRequest'] = json_encode($this->product_request_process_model->getProductRequestByDate($data));
+      $data["body_template"] = "product_request_process/show_product_request.php";
+      $this->load->view('site_template.php', $data);
+      }
+      }
+     */
 
     public function processRequestById($id) {
-  
-       // $moduleCodes = $this->session->userdata('serviceRequestModules');
-       // $moduleCodes = explode("|", $moduleCodes);
-       // $index = array_search(product_sr, $moduleCodes);
-       // if ($index > -1) {
+        $this->my_session->authorize("canEmailProductRequest");
+        $productRequest = $this->product_request_process_model->getSingleRequestById($id);
+        $mailData['to'] = "";
+        $mailData['body'] = "";
+        $mailData['subject'] = $productRequest['productName'];
+        $strings['productRequest'] = "name,contactNo,email,myLocation,productName,creationDtTm";
 
-            $productRequest = $this->product_request_process_model->getSingleRequestById($id);
+        $replaceArray = array('applyId' => 'Apply ID',
+            'productId' => 'Product ID',
+            'name' => 'Name',
+            'contactNo' => 'Contact No.',
+            'email' => 'Email',
+            'myLocation' => 'Location',
+            'productName' => 'Product Name',
+            'preferredCallDtTm' => 'Preferred Call Date',
+            'creationDtTm' => 'Request Date');
 
-            $mailData['to'] = "";
-            $mailData['body'] = "";
-            $mailData['subject'] = $productRequest['productName'];
-
-            $strings['productRequest'] = "name,contactNo,email,myLocation,productName,creationDtTm";
-
-            $replaceArray = array('applyId' => 'Apply ID',
-                'productId' => 'Product ID',
-                'name' => 'Name',
-                'contactNo' => 'Contact No.',
-                'email' => 'Email',
-                'myLocation' => 'Location',
-                'productName' => 'Product Name',
-                'preferredCallDtTm' => 'Preferred Call Date',
-                'creationDtTm' => 'Request Date');
-
-            foreach ($productRequest as $key => $value) {
-                if (strpos($strings['productRequest'], $key) > - 1) {
-                    $mailData['body'] .= "<p>" . $replaceArray[$key] . ':  ' . $value . "<p>";
-                }
+        foreach ($productRequest as $key => $value) {
+            if (strpos($strings['productRequest'], $key) > - 1) {
+                $mailData['body'] .= "<p>" . $replaceArray[$key] . ':  ' . $value . "<p>";
             }
+        }
 
-            $mailData['applyId'] = $id;
-            
-         $mailData["pageTitle"] = "Product Request Mail";
+        $mailData['applyId'] = $id;
+
+        $mailData["pageTitle"] = "Product Request Mail";
         $mailData["body_template"] = "product_request_process/mail_form.php";
         $this->load->view('site_template.php', $mailData);
-        
-         //   $this->output->set_template('theme2');
-          //  $this->load->view('product_request_process/mail_form', $mailData);
-       // } else {
-          //  echo "not allowed";
-         //   die();
-       // }
     }
 
     public function sendMail() {
-      // $moduleCodes = $this->session->userdata('serviceRequestModules');
-      //  $moduleCodes = explode("|", $moduleCodes);
-      //  $index = array_search(product_sr, $moduleCodes);
-      //  if ($index > -1) {
-            $applyId = $this->input->post("applyId");
-            $maildata['to'] =$this->input->post("to");
-            $maildata['cc'] = $this->input->post("cc");
-            $maildata['bcc'] = $this->input->post("bcc");
-            $maildata['subject'] = $this->input->post("subject");
-            $bodyInstruction =$this->input->post("bodyInstruction");
-            $maildata['body'] =$this->input->post("body"). "<br></br>" . $bodyInstruction;
-            $isSuccess = $this->common_model->send_service_mail($maildata);
-            
-            if ($isSuccess) {
-                $this->product_request_process_model->statusChange($applyId, $maildata, $bodyInstruction);
-                redirect('product_request_process');
-            }
-      //  } else {
-      //      echo "not allowed";
-      //      die();
-     //   }
+        $this->my_session->authorize("canEmailProductRequest");
+        $applyId = $this->input->post("applyId");
+        $maildata['to'] = $this->input->post("to");
+        $maildata['cc'] = $this->input->post("cc");
+        $maildata['bcc'] = $this->input->post("bcc");
+        $maildata['subject'] = $this->input->post("subject");
+        $bodyInstruction = $this->input->post("bodyInstruction");
+        $maildata['body'] = $this->input->post("body") . "<br></br>" . $bodyInstruction;
+        $isSuccess = $this->common_model->send_service_mail($maildata);
+
+        if ($isSuccess) {
+            $this->product_request_process_model->statusChange($applyId, $maildata, $bodyInstruction);
+            redirect('product_request_process');
+        }
     }
 
 }

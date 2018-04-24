@@ -11,45 +11,17 @@ class Banking_service_request extends CI_Controller {
     }
 
     public function getRequests() {
-
-        //$moduleCodes = $this->session->userdata('serviceRequestModules');
-        //$moduleCodes = explode("|", $moduleCodes);
-        //$index = array_search(banking_sr, $moduleCodes);
-        //if ($index > -1) {
-
-
+        $this->my_session->authorize("canViewBankingRequest");
         $moduleName = "Banking";
         $data['pServiceTypeCode'] = "0";
-
-        /*
-          $data['cServiceTypeCode'] = "0";
-          $data['parentServiceList'] = $this->banking_service_request_model->getAllServiceTypeByModule($moduleName, $data['pServiceTypeCode']);
-          $data['BankingRequestList'] = json_encode($this->banking_service_request_model->getAllBankingRequest());
-
-          if (isset($_POST['Prequest'])) {
-          if ($_POST['Prequest'] != "0") {
-          $data['cServiceTypeCode'] = $_POST['Prequest'];
-          $data['childServiceList'] = $this->banking_service_request_model->getAllServiceTypeByModule($moduleName, $data['pServiceTypeCode'], $data['cServiceTypeCode']);
-          }
-          }
-          if (isset($_POST['Crequest'])) {
-          if ($_POST['Crequest'] != "0") {
-          $data['pServiceTypeCode'] = $_POST['Crequest'];
-          $data['BankingRequestList'] = json_encode($this->banking_service_request_model->getAllBankingRequestByTypeCode($_POST['Crequest']));
-          }
-          } */
-
         $data["pageTitle"] = "Banking Service";
         $data['parentServiceList'] = $this->banking_service_request_model->getAllServiceTypeByModule($moduleName, $data['pServiceTypeCode']);
         $data["body_template"] = "banking_service_request/show_banking_request.php";
         $this->load->view('site_template.php', $data);
-        // } else {
-        // echo "not allowed";
-        //  die();
-        //}
     }
 
     function get_child_service() {
+        $this->my_session->authorize("canViewBankingRequest");
         $typeId = (int) $this->input->get("type_code", true);
         $result = $this->banking_service_request_model->getChildService($typeId);
         $data["child_list"] = array();
@@ -61,6 +33,7 @@ class Banking_service_request extends CI_Controller {
     }
 
     function get_requests_ajax() {
+        $this->my_session->authorize("canViewBankingRequest");
         $params['limit'] = (int) $this->input->get("limit", true);
         $params['offset'] = (int) $this->input->get("offset", true);
         $params['get_count'] = (bool) $this->input->get("get_count", true);
@@ -87,27 +60,16 @@ class Banking_service_request extends CI_Controller {
     }
 
     public function processRequestById($id) {
-        //$moduleCodes = $this->session->userdata('serviceRequestModules');
-        //$moduleCodes = explode("|", $moduleCodes);
-        //$index = array_search(banking_sr, $moduleCodes);
-        // if ($index > -1) {
-
-
-
+        $this->my_session->authorize("canEmailBankingRequest");
         $request = $this->banking_service_request_model->getSingleRequestById($id);
-
         $mailData['to'] = "";
         $mailData['body'] = "";
         $mailData['subject'] = $request['serviceName'];
-
-
-
         $strings['nomineeChange'] = "userName,accNo,currentNominee,newNominee,referenceNo,requestDtTm";
         $strings['newCheckBook'] = "userName,accNo,noOfLeaves,collectionMethod,referenceNo,requestDtTm";
         $strings['positivePay'] = "userName,accNo,payeeName,dtOfIssue,chequeNo,amount,referenceNo,requestDtTm";
         $strings['loan'] = "userName,accNo,referenceNo,requestDtTm,collectionMethod";
         $strings['statementCertificate'] = "userName,accNo,pFromDt,pToDt,collectionMethod,referenceNo,requestDtTm";
-
 
 // cards related
         $strings['vcasEnrolment'] = "userName,referenceNo,requestDtTm,eblSkyId,clientId,userMobNo1,userEmail";
@@ -119,8 +81,6 @@ class Banking_service_request extends CI_Controller {
         $strings['FPenableDisable'] = "userName,accCardNo,foreignPart,pFromDt,pToDt,referenceNo,requestDtTm,eblSkyId,clientId,userMobNo1,userEmail";
         $strings['duplicateStatement'] = "userName,accCardNo,pFromDt,pToDt,collectionMethod,referenceNo,requestDtTm,eblSkyId,clientId,userMobNo1,userEmail";
         $strings['limitConversion'] = "userName,accCardNo,convertMyLimit,convAmnt,referenceNo,requestDtTm,eblSkyId,clientId,userMobNo1,userEmail";
-
-
 
         $replaceArray = array('skyId' => 'Sky ID',
             'userName' => 'User Name',
@@ -166,7 +126,6 @@ class Banking_service_request extends CI_Controller {
                 }
             }
         }
-
 
         if ($request['typeCode'] == "0601") { // for new cheque book under cheque category
             foreach ($request as $key => $value) {
@@ -259,48 +218,30 @@ class Banking_service_request extends CI_Controller {
         }
 
         $mailData['serviceId'] = $id;
-
         $mailData["pageTitle"] = "Banking Service";
         $mailData["body_template"] = "banking_service_request/mail_form.php";
         $this->load->view('site_template.php', $mailData);
-
-        //} else {
-        // echo "not allowed";
-        // die();
-        // }
     }
 
     public function sendMail() {
-
-        // $moduleCodes = $this->session->userdata('serviceRequestModules');
-        // $moduleCodes = explode("|", $moduleCodes);
-        //  $index = array_search(banking_sr, $moduleCodes);
-        //  if ($index > -1) {
-
+        $this->my_session->authorize("canEmailBankingRequest");
         $serviceId = $this->input->post("serviceId");
         $maildata["to"] = $this->input->post("to");
         //----new-----//
-
         $maildata['cc'] = $this->input->post("cc");
         $maildata['bcc'] = $this->input->post("bcc");
         //-------------//
         $maildata['subject'] = $this->input->post("subject");
 
-
         $bodyInstruction = $this->input->post("bodyInstruction");
         $maildata['body'] = $this->input->post("body") . "<br></br>" . $bodyInstruction;
 
-        //$maildata['body'] = $_POST['body'];
         $isSuccess = $this->common_model->send_service_mail($maildata);
 
         if ($isSuccess) {
             $this->banking_service_request_model->statusChange($serviceId, $maildata, $bodyInstruction);
             redirect('banking_service_request/getRequests');
         }
-        // } else {
-        //    echo "not allowed";
-        die();
-        // }
     }
 
 }

@@ -136,7 +136,6 @@ class Transaction_limit_setup_maker extends CI_Controller {
             $dbData['obtEffectiveDate'] = date("y-m-d");
         }
 
-
         // for maker checker
         $dbData['mcStatus'] = 0;
         $dbData['makerAction'] = $_POST['selected_action_name'];
@@ -146,7 +145,6 @@ class Transaction_limit_setup_maker extends CI_Controller {
         $dbData['makerActionBy'] = $this->my_session->userId;
         $dbData['isPublished'] = 0;
         $dbData['isActive'] = 1;
-
 
         $groupNameCheck = $this->transaction_limit_setup_model_maker->getGroupByName($groupName); // To check if group exists
         if ($groupNameCheck) {
