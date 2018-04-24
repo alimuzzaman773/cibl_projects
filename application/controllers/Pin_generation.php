@@ -15,12 +15,14 @@ class Pin_generation extends CI_Controller {
     }
 
     public function index() {
+        $this->my_session->authorize("canViewPin");
         $data['pageTitle'] = 'Pin Request';
         $data["body_template"] = "generate_pin/generate_pin.php";
         $this->load->view('site_template.php', $data);
     }
 
     function get_pin_request_list() {
+        $this->my_session->authorize("canCreateNewRquestPin");
         $params['limit'] = (int) $this->input->get("limit", true);
         $params['offset'] = (int) $this->input->get("offset", true);
         $params['get_count'] = (bool) $this->input->get("get_count", true);
@@ -49,6 +51,7 @@ class Pin_generation extends CI_Controller {
     }
 
     function get_pin_list() {
+        $this->my_session->authorize("canViewPin");
         $params['limit'] = (int) $this->input->get("limit", true);
         $params['offset'] = (int) $this->input->get("offset", true);
         $params['get_count'] = (bool) $this->input->get("get_count", true);
@@ -77,6 +80,7 @@ class Pin_generation extends CI_Controller {
     }
 
     public function newRequest($selectedActionName) {
+        $this->my_session->authorize("canCreateNewRquestPin");
         $data['selectedActionName'] = $selectedActionName;
         $data['message'] = "";
         $data['pageTitle'] = 'New Request';
@@ -85,6 +89,7 @@ class Pin_generation extends CI_Controller {
     }
 
     public function insertNewRequest() {
+        $this->my_session->authorize("canCreateNewRquestPin");
         $data['totalPin'] = $this->input->post('totalPin');
         $data['mcStatus'] = 0;
         $data['makerAction'] = $this->input->post('selectedActionName');
@@ -98,6 +103,7 @@ class Pin_generation extends CI_Controller {
     }
 
     public function editRequest($id, $selectedActionName, $message = NULL) {
+        $this->my_session->authorize("canCreateNewRquestPin");
         $this->output->set_template('theme2');
         $moduleCodes = $this->session->userdata('moduleCodes');
         $actionCodes = $this->session->userdata('actionCodes');
@@ -125,6 +131,7 @@ class Pin_generation extends CI_Controller {
     }
 
     public function updatePinRequest() {
+        $this->my_session->authorize("canCreateNewRquestPin");
         $id = $this->input->post('requestId');
         $selectedActionName = $this->input->post('selectedActionName');
         $tableData = $this->generate_eblskyid_model->getPinRequestById($id);
@@ -150,6 +157,7 @@ class Pin_generation extends CI_Controller {
     }
 
     public function generatePin() {
+        $this->my_session->authorize("canCreatePin");
         $this->output->set_template('theme2');
         $moduleCodes = $this->session->userdata('moduleCodes');
         $actionCodes = $this->session->userdata('actionCodes');
@@ -178,6 +186,7 @@ class Pin_generation extends CI_Controller {
     }
 
     public function viewPinByAction() {
+        $this->my_session->authorize("canViewPin");
         $viewData['pageTitle'] = 'Pin Numbers';
         $viewData["body_template"] = "generate_pin/view_pin.php";
         $this->load->view('site_template.php', $viewData);

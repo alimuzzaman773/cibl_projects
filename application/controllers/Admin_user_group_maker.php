@@ -14,6 +14,7 @@ class Admin_user_group_maker extends CI_Controller {
     }
 
     public function index() {
+        $this->my_session->authorize("canViewAdminUserGroup");
         $data['pageTitle'] = "Admin User Group";
         $data['adminGroups'] = json_encode($this->admin_user_group_model_maker->getAllGroups());
         $data["body_template"] = "admin_user_group_maker/overall_view.php";
