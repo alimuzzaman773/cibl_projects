@@ -142,6 +142,11 @@
                                             <?php if (ci_check_permission("canViewPinCreateMenu")): ?>
                                                 <li><a href="<?= base_url() . 'pin_generation/viewPinByAction' ?>">Pin</a></li>
                                             <?php endif; ?>
+                                            <?php if (ci_check_permission("canViewPermissionMenu")): ?>
+                                            <li>
+                                                <a href="<?= base_url() ?>permission">Permission</a>
+                                            </li>
+                                            <?php endif; ?>
                                         </ul>
                                         <ul class="col-md-2 col-xs-12 list-unstyled">
                                             <li><p><b>Checker</b></p></li>

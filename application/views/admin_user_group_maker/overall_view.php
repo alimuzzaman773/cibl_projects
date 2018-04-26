@@ -56,14 +56,7 @@
                                                     <i class="glyphicon glyphicon-pencil"></i> Edit
                                                 </a>
                                             </li>
-                                        <?php endif; ?>
-                                        <?php if (ci_check_permission("canPermissionAdminUserGroup")): ?>
-                                            <li>
-                                                <a href="<?= base_url() ?>permission">
-                                                    <i class="glyphicon glyphicon-eye-open"></i> Permission
-                                                </a>
-                                            </li>
-                                        <?php endif; ?>
+                                        <?php endif; ?>                            
                                         <?php if (ci_check_permission("canSetuPermissionAdminUserGroup")): ?>
                                             <li>
                                                 <a href="<?= base_url() ?>admin_user_group_maker/set_permission/{{i.userGroupId}}">
