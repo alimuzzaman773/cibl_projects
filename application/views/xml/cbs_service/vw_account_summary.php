@@ -1,0 +1,4 @@
+<QUERY_ACC_SUMMARY>						
+    <CUSTOMERID><?= $customerId ?></CUSTOMERID>
+    <CUSTTOMERACCNO><?= $accountNumber ?></CUSTTOMERACCNO>
+</QUERY_ACC_SUMMARY>
