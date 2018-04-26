@@ -17,11 +17,11 @@
                 echo '<h1 class="title-underlined">' . $k . '</h1>';
                 foreach ($permissions['category'][$k] as $v):
                     //$checked = (isset($v->name)) ? "checked" : "";
-                    $checked = (isset($existingPermission[$v->name])) ? "checked" : "";
+                    $checked = (isset($existingPermission[$v->permissionId])) ? "checked" : "";
                     ?>
                     <div class="form-group col-xs-12 col-md-6 col-sm-6">
                         <label>
-                            <input type="checkbox" value="<?= $v->name ?>" name="permissions[]" <?= $checked ?>/> <?= $v->name ?>
+                            <input type="checkbox" value="<?= $v->permissionId ?>" name="permissions[]" <?= $checked ?>/> <?= $v->name ?>
                         </label>                
                         <small><i><?= $v->description ?></i></small>
                     </div>    

@@ -116,6 +116,7 @@ class Admin_login extends CI_Controller {
     }
 
     function dashboard() {
+        //d($_SESSION);
         $data['pageTitle'] = "Dashboard";
         $data['body_template'] = "dashboard.php";
         $this->load->view("site_template.php", $data);

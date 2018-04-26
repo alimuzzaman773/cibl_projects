@@ -135,13 +135,35 @@ Class My_session {
     }
 
     private function createPermissionArray($parray) {
-        $pstring = explode(";", $parray);
+        $pstring = explode(",", $parray);
+        if (count($pstring) <= 0):
+            $_SESSION['permissions'] = array();
+            return $_SESSION['permissions'];
+        endif;
 
-        foreach ($pstring as $key => $val) {
-            $_SESSION['permissions'][$val] = $val;
-        }
-        array_pop($_SESSION['permissions']);
+        $ci = & get_instance();
+        foreach ($pstring as $ps):
+            $ci->db->or_where("permissionId", $ps);
+        endforeach;
+
+        $result = $ci->db->from(TBL_PERMISSIONS)->get();
+        //d($ci->db->last_query());
+        $permissions = array();
+        foreach ($result->result() as $r):
+            $permissions[$r->name] = array(
+                'permissionId' => $r->permissionId,
+                'name' => $r->name
+            );
+        endforeach;
+        //d($permissions);
+        $_SESSION['permissions'] = $permissions;
         return $_SESSION['permissions'];
+
+        /* foreach ($pstring as $key => $val) {
+          $_SESSION['permissions'][$val] = $val;
+          }
+          array_pop($_SESSION['permissions']);
+          return $_SESSION['permissions']; */
     }
 
     public function log_in($user_name, $password) {
@@ -224,7 +246,7 @@ Class My_session {
     }
 
     public function authorize($permissionString, $userLevel = array()) {
-        $ci =& get_instance();
+        $ci = & get_instance();
         if (isset($this->permissions[$permissionString])) {
             if (!empty($userLevel)):
                 foreach ($userLevel as $val):
@@ -244,8 +266,8 @@ Class My_session {
 
             return true;
         }
-        
-        
+
+
         if ($ci->input->is_ajax_request()):
             $json = array(
                 "success" => false,
