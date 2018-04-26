@@ -310,7 +310,7 @@ class Apps_users extends CI_Controller {
             $this->db->update('apps_users_mc', $userInfo);
             redirect('client_registration');
         } else if ($action == "d") {
-            $this->output->set_template('theme2');
+            //$this->output->set_template('theme2');
 
             if ($groupData['oatMinTxnLim'] > 0) {
                 $array[] = array('packageId' => 1,
@@ -336,7 +336,9 @@ class Apps_users extends CI_Controller {
                                 <br> Now Assign Group For User or Cancle Keep Default Setting.";
             $viewData['packages'] = json_encode($array);
             $viewData['group'] = json_encode($groupData);
-            $this->load->view('apps_users/user_group.php', $viewData);
+            
+            $viewData['body_template'] = 'apps_users/user_group.php';
+            $this->load->view('site_template.php', $viewData);
         }
     }
 
