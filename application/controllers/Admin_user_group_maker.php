@@ -228,13 +228,9 @@ class Admin_user_group_maker extends CI_Controller {
     public function editModule($id, $selectedActionName = NULL, $message = NULL) {
         $tableData = $this->admin_user_group_model_maker->getUserGroupById($id);
 
-
-
         $var['userGroupId'] = $id;
         $var['adminGroup'] = $tableData;
         $var['modules'] = $this->admin_user_group_model_maker->getAllModules();
-
-
         $var['checkerActionComment'] = $tableData['checkerActionComment'];
 
         if ($var['checkerActionComment'] != NULL) {
@@ -242,7 +238,6 @@ class Admin_user_group_maker extends CI_Controller {
         } else {
             $var['reasonModeOfDisplay'] = "display: none;";
         }
-
 
         $var['authorizationModuleCodes'] = json_encode(explode("|", $tableData['authorizationModules']));
         $var['contentSetupModulesCodes'] = json_encode(explode("|", $tableData['contentSetupModules']));
@@ -293,8 +288,6 @@ class Admin_user_group_maker extends CI_Controller {
             '08' => 'Priority Request',
             '09' => 'Product Request',
             '10' => 'Banking Request');
-
-
 
         $var['selectedActionName'] = $selectedActionName;
         $var['pageTitle'] = "Edit Module";
