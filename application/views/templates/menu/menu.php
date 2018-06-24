@@ -143,9 +143,9 @@
                                                 <li><a href="<?= base_url() . 'pin_generation/viewPinByAction' ?>">Pin</a></li>
                                             <?php endif; ?>
                                             <?php if (ci_check_permission("canViewPermissionMenu")): ?>
-                                            <li>
-                                                <a href="<?= base_url() ?>permission">Permission</a>
-                                            </li>
+                                                <li>
+                                                    <a href="<?= base_url() ?>permission">Permission</a>
+                                                </li>
                                             <?php endif; ?>
                                         </ul>
                                         <ul class="col-md-2 col-xs-12 list-unstyled">
@@ -267,6 +267,23 @@
                                         <li><a href="<?= base_url() . 'reports/priority_request' ?>">Priority Request</a></li>
                                         <li><a href="<?= base_url() . 'reports/product_request' ?>">Product Request</a></li>
                                         <li><a href="<?= base_url() . 'reports/banking_request' ?>">Banking Request</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </li>    
+                </ul>
+            </li>
+            <li class="dropdown yamm-fw">
+                <a href="#" id="dropModules" role="button" data-toggle="dropdown">Call Center<b class="caret"></b></a>
+                <ul id="dropModules" class="dropdown-menu" role="menu" aria-labelledby="dropModules">                    
+                    <li class="">
+                        <div class="yamm-content">
+                            <div class="row">                                    
+                                <div class="clearfix mb">
+                                    <ul class="col-md-2 col-xs-12 list-unstyled">
+                                        <li><p><b>Apps User</b></p></li>
+                                        <li><a href="<?= base_url() . 'call_center/#/user_list' ?>">User Authorized</a></li>
                                     </ul>
                                 </div>
                             </div>

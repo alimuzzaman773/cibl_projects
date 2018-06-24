@@ -12,7 +12,7 @@ class Client_registration_model extends CI_Model {
     public function getAllAppsUsers($p) 
     {
         if(isset($p['get_count']) && (int)$p['get_count'] > 0):
-            $this->db->select('count(*) as total',false);            
+            $this->db->select('count(*) as total', false);            
         else:
             $this->db->select('apps_users_mc.*, apps_users_group.userGroupName');
         endif;
