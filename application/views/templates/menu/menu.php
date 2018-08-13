@@ -234,6 +234,7 @@
                     </ul>
                 </li>
             <?php endif; ?>
+            <!--
             <li class="dropdown yamm-fw">
                 <a href="#" id="dropModules" role="button" data-toggle="dropdown">Reports<b class="caret"></b></a>
                 <ul id="dropModules" class="dropdown-menu" role="menu" aria-labelledby="dropModules">                    
@@ -291,6 +292,7 @@
                     </li>    
                 </ul>
             </li>
+            -->
         </ul>
     </div><!--/.nav-collapse -->
 </div>
