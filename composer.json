@@ -7,5 +7,5 @@
             "email": "your@email.here"
         }
     ],
-    "require": {}
+    "require": {"phpseclib/mcrypt_compat": "^1.0"}
 }
