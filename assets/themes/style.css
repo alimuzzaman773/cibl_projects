@@ -196,12 +196,12 @@ a.navbar-brand {
 }
 
 .navbar-edotco {
-    background-color: #005e32;
+    background-color: #008f4c;
     /*border-color: #003d20;*/
-    background-image: -webkit-gradient(linear, left 0%, left 100%, from(#00914d), to(#005e32));
-    background-image: -webkit-linear-gradient(top, #00914d, 0%, #005e32, 100%);
-    background-image: -moz-linear-gradient(top, #00914d 0%, #005e32 100%);
-    background-image: linear-gradient(to bottom, #00914d 0%, #005e32 100%);
+    background-image: -webkit-gradient(linear, left 0%, left 100%, from(#00914d), to(#008f4c));
+    background-image: -webkit-linear-gradient(top, #00914d, 0%, #008f4c, 100%);
+    background-image: -moz-linear-gradient(top, #00914d 0%, #008f4c 100%);
+    background-image: linear-gradient(to bottom, #00914d 0%, #008f4c 100%);
     background-repeat: repeat-x;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff00914d', endColorstr='#ff005e32', GradientType=0);
 }
