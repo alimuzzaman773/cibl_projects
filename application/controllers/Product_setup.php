@@ -18,7 +18,7 @@ class Product_setup extends CI_Controller {
         try {
             $crud = new grocery_CRUD();
             $crud->set_theme(TABLE_THEME);
-            $crud->set_subject('Product');
+            $crud->set_subject('Product & Services');
             $crud->set_table(TBL_PRODUCT_SETUP);
 
             $crud->required_fields('parentName', 'childName', 'productName');
@@ -70,7 +70,7 @@ class Product_setup extends CI_Controller {
             $output = $crud->render();
             $output->css = "";
             $output->js = "";
-            $output->pageTitle = "Product";
+            $output->pageTitle = "Product & Services";
             $output->base_url = base_url();
 
             $output->body_template = "product/index.php";

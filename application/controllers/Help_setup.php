@@ -19,7 +19,7 @@ class Help_setup extends CI_Controller {
         try {
             $crud = new grocery_CRUD();
             $crud->set_theme(TABLE_THEME);
-            $crud->set_subject('Help');
+            $crud->set_subject('Terms & Conditions');
             $crud->set_table('help_center');
 
             $crud->columns('helpText');

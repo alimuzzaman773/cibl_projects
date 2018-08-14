@@ -1,2 +1,2 @@
-<h2 class="title-underlined">Help</h2>
+<h2 class="title-underlined">Terms & Conditions</h2>
 <?= $output ?>

@@ -19,7 +19,7 @@ class Locator_setup extends CI_Controller {
         try {
             $crud = new grocery_CRUD();
             $crud->set_theme(TABLE_THEME);
-            $crud->set_subject('Location');
+            $crud->set_subject('ATM & Branch Locator');
             $crud->set_table('atms');
             $crud->required_fields('eblNearYou', 'eblDivision', 'ATMName', 'AddressLine1', 'AddressLine2', 'City');
 
@@ -78,7 +78,7 @@ class Locator_setup extends CI_Controller {
             $output = $crud->render();
             $output->css = "";
             $output->js = "";
-            $output->pageTitle = "Locations";
+            $output->pageTitle = "ATM & Branch Locator";
             $output->base_url = base_url();
 
             $output->body_template = 'locator_setup/index.php';

@@ -45,16 +45,16 @@
                                     <div class="clearfix mb">
                                         <?php if (ci_check_permission("canViewProductsSetupMenu")): ?>
                                             <ul class="col-md-2 col-xs-12 list-unstyled">
-                                                <li><p><b>Products Setup</b></p></li>
-                                                <li><a href="<?= base_url() . 'product_setup/index' ?>">Products</a></li>
-                                                <li><a href="<?= base_url() . 'product_setup/index/add' ?>">Add Products</a></li>
+                                                <li><p><b>Product & Services Setup</b></p></li>
+                                                <li><a href="<?= base_url() . 'product_setup/index' ?>">Product & Services</a></li>
+                                                <li><a href="<?= base_url() . 'product_setup/index/add' ?>">Add Product & Services</a></li>
                                             </ul>
                                         <?php endif; ?>
                                         <?php if (ci_check_permission("canViewLocationSetupMenu")): ?>
                                             <ul class="col-md-2 col-xs-12 list-unstyled">
-                                                <li><p><b>Location Setup</b></p></li>
-                                                <li><a href="<?= base_url() . 'locator_setup/index' ?>">Location</a></li>
-                                                <li><a href="<?= base_url() . 'locator_setup/index/add' ?>">Add Location</a></li>
+                                                <li><p><b>ATM & Branch Locator Setup</b></p></li>
+                                                <li><a href="<?= base_url() . 'locator_setup/index' ?>">ATM & Branch Locator</a></li>
+                                                <li><a href="<?= base_url() . 'locator_setup/index/add' ?>">Add ATM & Branch Locator</a></li>
                                             </ul>
                                         <?php endif; ?>
                                         <?php if (ci_check_permission("canViewZipPartnersSetupMenu")): ?>
@@ -66,16 +66,16 @@
                                         <?php endif; ?>
                                         <?php if (ci_check_permission("canViewPrioritySetupMenu")): ?>
                                             <ul class="col-md-2 col-xs-12 list-unstyled">
-                                                <li><p><b>Priority Setup</b></p></li>
-                                                <li><a href="<?= base_url() . 'priority_products/index' ?>">Priority</a></li>
-                                                <li><a href="<?= base_url() . 'priority_products/index/add' ?>">Add Priority</a></li>
+                                                <li><p><b>Comfort Pay Partners Setup</b></p></li>
+                                                <li><a href="<?= base_url() . 'priority_products/index' ?>">Comfort Pay Partners</a></li>
+                                                <li><a href="<?= base_url() . 'priority_products/index/add' ?>">Add Comfort Pay Partners</a></li>
                                             </ul>
                                         <?php endif; ?>
                                         <?php if (ci_check_permission("canViewBenefitsSetupMenu")): ?>
                                             <ul class="col-md-2 col-xs-12 list-unstyled">
-                                                <li><p><b>Benefits Setup</b></p></li>
-                                                <li><a href="<?= base_url() . 'discount_partners/index' ?>">Benefits</a></li>
-                                                <li><a href="<?= base_url() . 'discount_partners/index/add' ?>">Add Benefits</a></li>
+                                                <li><p><b>Discount Partners Setup</b></p></li>
+                                                <li><a href="<?= base_url() . 'discount_partners/index' ?>">Discount Partners</a></li>
+                                                <li><a href="<?= base_url() . 'discount_partners/index/add' ?>">Add Discount Partners</a></li>
                                             </ul>
                                         <?php endif; ?>
                                         <?php if (ci_check_permission("canViewNewsAndEventsSetupMenu")): ?>
@@ -104,8 +104,8 @@
                                         <?php endif; ?>
                                         <?php if (ci_check_permission("canViewHelpSetupMenu")): ?>
                                             <ul class="col-md-2 col-xs-12 list-unstyled">
-                                                <li><p><b>Help</b></p></li>
-                                                <li><a href="<?= base_url() . 'help_setup' ?>">Help</a></li>
+                                                <li><p><b>Terms & Conditions</b></p></li>
+                                                <li><a href="<?= base_url() . 'help_setup' ?>">Terms & Conditions</a></li>
                                                 <li><a href="<?= base_url() . 'help_setup/complaintInfo' ?>">Complaint Info</a></li>
                                             </ul>
                                         <?php endif; ?>
