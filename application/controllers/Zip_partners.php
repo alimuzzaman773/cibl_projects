@@ -20,7 +20,7 @@ class Zip_partners extends CI_Controller {
             $crud = new grocery_CRUD();
 
             $crud->set_theme(TABLE_THEME);
-            $crud->set_subject('Zip Partners');
+            $crud->set_subject('Comfort Pay Partners');
 
             $crud->set_table('zip_partners');
 
@@ -74,7 +74,7 @@ class Zip_partners extends CI_Controller {
             $output = $crud->render();
             $output->css = "";
             $output->js = "";
-            $output->pageTitle = "Zip Partners";
+            $output->pageTitle = "Comfort Pay Partners";
             $output->base_url = base_url();
 
             $output->body_template = "zip_partners/index.php";

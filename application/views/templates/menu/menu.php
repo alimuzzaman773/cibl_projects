@@ -59,16 +59,16 @@
                                         <?php endif; ?>
                                         <?php if (ci_check_permission("canViewZipPartnersSetupMenu")): ?>
                                             <ul class="col-md-2 col-xs-12 list-unstyled">
-                                                <li><p><b>Zip Partners</b></p></li>
-                                                <li><a href="<?= base_url() . 'zip_partners/index' ?>">Zip Partners</a></li>
-                                                <li><a href="<?= base_url() . 'zip_partners/index/add' ?>">Add Zip Partners</a></li>
+                                                <li><p><b>Comfort Pay Partners</b></p></li>
+                                                <li><a href="<?= base_url() . 'zip_partners/index' ?>">Comfort Pay Partners</a></li>
+                                                <li><a href="<?= base_url() . 'zip_partners/index/add' ?>">Add Comfort Pay Partners</a></li>
                                             </ul>
                                         <?php endif; ?>
                                         <?php if (ci_check_permission("canViewPrioritySetupMenu")): ?>
                                             <ul class="col-md-2 col-xs-12 list-unstyled">
-                                                <li><p><b>Comfort Pay Partners Setup</b></p></li>
-                                                <li><a href="<?= base_url() . 'priority_products/index' ?>">Comfort Pay Partners</a></li>
-                                                <li><a href="<?= base_url() . 'priority_products/index/add' ?>">Add Comfort Pay Partners</a></li>
+                                                <li><p><b>Priority Setup</b></p></li>
+                                                <li><a href="<?= base_url() . 'priority_products/index' ?>">Priority Setup</a></li>
+                                                <li><a href="<?= base_url() . 'priority_products/index/add' ?>">Add Priority Setup</a></li>
                                             </ul>
                                         <?php endif; ?>
                                         <?php if (ci_check_permission("canViewBenefitsSetupMenu")): ?>
