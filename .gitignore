@@ -45,6 +45,7 @@ assets/public/files/*
 
 #remote database.php
 application/config/database.php
+application/config/config.php
 
 demos/
 demos/*

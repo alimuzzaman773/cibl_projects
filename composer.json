@@ -1,0 +1,11 @@
+{
+    "name": "vendor/obl-bo",
+    "description": "Description of project obl_bo.",
+    "authors": [
+        {
+            "name": "Shahin",
+            "email": "your@email.here"
+        }
+    ],
+    "require": {"phpseclib/mcrypt_compat": "^1.0"}
+}
