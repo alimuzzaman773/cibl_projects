@@ -62,7 +62,7 @@ class Push_notification extends CI_Controller {
 
         $message_array = array('message' => $data['headLine']);
 
-        $url = 'http://192.168.5.81/eblapi/send_push_notification/sendPush';
+        $url = 'http://27.147.135.164/pbl_api/send_push_notification/sendPush';
 
 
 

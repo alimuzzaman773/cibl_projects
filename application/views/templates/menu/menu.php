@@ -19,12 +19,12 @@
                 </a>
                 <ul id="menuHome" class="dropdown-menu" role="menu" aria-labelledby="dropHome">
                     <li>
-                        <a href="<?= base_url() . 'home' ?>">
+                        <a href="<?= base_url(); ?>">
                             <i class="glyphicon glyphicon-home"></i> Home
                         </a>
                     </li>
                     <li>
-                        <a href="<?= base_url() . 'profile' ?>">
+                        <a href="<?= base_url(); ?>">
                             <i class="glyphicon glyphicon-user"></i> Profile
                         </a>
                     </li>
