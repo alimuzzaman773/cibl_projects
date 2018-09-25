@@ -197,7 +197,7 @@
         <footer>
             <div class="container">
                 <hr />
-                <p class="text-center">&copy; PREMIER PLUS</p>
+                <p class="text-center">&copy; PREMIER BANK</p>
             </div>
         </footer>
     </body>
