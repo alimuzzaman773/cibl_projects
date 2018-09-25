@@ -24,6 +24,7 @@
                         <th>Current Address</th>
                         <th>Gender</th>
                         <th>DOB</th>
+                        <th>Remarks</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -40,6 +41,7 @@
                         <td>{{i.currAddress}}</td>
                         <td>{{i.gender}}</td>
                         <td>{{i.dob}}</td>
+                        <td>{{i.remarks}}</td>
                         <td>
                             <div class="dropdown pull-right">
                                 <button class="btn btn-primary btn-xs dropdown-toggle" type="button" data-toggle="dropdown">
@@ -50,19 +52,24 @@
                                         <a href="<?= base_url() . "call_center/#/user_approve/" ?>{{i.skyId}}">
                                             <i class="glyphicon glyphicon-flash"></i> Details
                                         </a>
-                                    </li> 
+                                    </li>
+                                    <li>
+                                        <a style="cursor: pointer" ng-click="sendPasswordResetPin(i.skyId);">
+                                            <i class="glyphicon glyphicon-send"></i> Send Password Reset Pin
+                                        </a>
+                                    </li>
                                 </ul>
                             </div>
                         </td>
                     </tr>
                     <tr data-ng-show="user_list.length <= 0">
-                        <td colspan="12">No data found</td>
+                        <td colspan="13">No data found</td>
                     </tr>
                 </tbody>
             </table>
             <div class="text-center">
                 <dir-pagination-controls on-page-change="pageChanged(newPageNumber)" template-url="<?= base_url() ?>assets/angularjs/directives/dirPagination.tpl.html"></dir-pagination-controls>
-            </div>                
+            </div>             
         </div>
     </div>
 </div>

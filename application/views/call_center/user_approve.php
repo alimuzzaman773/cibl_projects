@@ -3,8 +3,9 @@
         <h2 class="title-underlined ng-scope">User Approve</h2>
     </div>
 </div>
-<div class="row">
-    <div class="col-xs-12 col-sm-12">
+
+<div class="row" data-ng-if="user.skyId != undefined">
+    <div class="col-xs-12 col-sm-12 col-md-12">
         <table class="table table-striped table-bordered">
             <thead>
                 <tr class="bg-primary">
@@ -76,7 +77,8 @@
             </tr>
         </table>
     </div>
-    <div class="col-xs-12 col-sm-12">
+    
+    <div class="col-xs-12 col-sm-12 col-md-12" data-ng-if="user_accounts.length > 0">
         <table class="table table-striped table-bordered">
             <thead>
                 <tr class="bg-primary">
@@ -90,15 +92,16 @@
                 <th>Currency</th>
             </tr>
 
-            <tr>
-                <td>1223131</td>
-                <td>C</td>
-                <td>High Performance Account (HPA)</td>
-                <td>BDT</td>
+            <tr data-ng-repeat="ua in user_accounts track by $index">
+                <td>{{ua.accNo}}</td>
+                <td>{{ua.accTypeName}} ({{ua.accTypeCode}})</td>
+                <td>{{ua.accName}}</td>
+                <td>{{ua.accCurrency}}</td>
             </tr>
         </table>
     </div>
-    <div class="col-xs-12 col-sm-12">
+    
+    <div class="col-xs-12 col-sm-12 col-md-12" data-ng-if="user_cards.length > 0">
         <table class="table table-striped table-bordered">
             <thead>
                 <tr class="bg-primary">
@@ -120,10 +123,18 @@
         </table>
     </div>
     <div class="col-xs-12 col-sm-12">
-        <div class="btn-group">
-            <a href="#" class="btn btn-sm btn-primary" data-ng-click="approveUser(user.skyId)">Approve</a>
-            <a href="<?php echo base_url(); ?>call_center/#/user_list" class="btn btn-sm btn-danger">Cancel</a>
-        </div>
+        <form name="testform">
+            <div class="btn-group">
+                <button class="btn btn-md btn-primary" id="test" ng-show="user.makerActionBy <= 0 && user.checkerActionBy > 0" data-ng-click="approveUser(user.skyId)">
+                    <i class="glyphicon glyphicon-check"></i> Maker Approve
+                </button>         
+            </div>
+             <div class="btn-group">
+                <a class="btn btn-md btn-primary" id="test2" ng-show="(user.checkerActionBy <= 0 && user.makerActionBy <= 0)" ng-click="approveUserChecker(user.skyId)">
+                    <i class="glyphicon glyphicon-check"></i> Checker Approve
+                </a>         
+            </div> 
+            
+        </form>
     </div>
 </div>
-

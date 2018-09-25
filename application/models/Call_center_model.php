@@ -15,10 +15,13 @@ class Call_center_model extends CI_Model {
         endif;
 
         $this->db->from('apps_users_mc aum')
-                ->where('aum.isLocked', 0)
                 ->group_start()
-                ->where('callCenterApprove', 'unapproved')
-                ->or_where('callCenterApprove', 'pending')
+                //->where('aum.isLocked', 0)
+                ->where("isPublished", 0)
+                ->where("isActive", 0)
+                ->where("appsGroupId", 0)
+                //->where('callCenterApprove', 'unapproved')
+                //->or_where('callCenterApprove', 'pending')
                 ->group_end()
                 //->where('aum.isActive', 1)
                 //->where('aum.isPublished', 0)
@@ -35,11 +38,16 @@ class Call_center_model extends CI_Model {
 
     function getUserInfo($userId) {
 
-        $this->db->select('*')
-                ->from('apps_users_mc')
-                //->where('aum.isActive', 1)
-                //->where('aum.isPublished', 0)
-                ->where("skyId", $userId);
+        $this->db->select('aum.*, ra.raId, ra.entityType, ra.entityNumber, ra.created_on', false)
+                ->from('apps_users_mc aum')
+                ->join("registration_attempts ra", "ra.skyId = aum.skyId", "inner")
+                ->where('aum.isLocked', 0)
+                ->where("aum.isPublished", 0)
+                ->where("aum.isActive", 0)
+                ->where("aum.appsGroupId", 0)
+                ->where("aum.skyId", $userId)
+                ->order_by("ra.raId", "DESC")
+                ->limit(1);
 
         $result = $this->db->get();
 
@@ -49,22 +57,153 @@ class Call_center_model extends CI_Model {
         return false;
     }
 
-    function userApproved($userId) {
+    function getUserInfoForPasswordReset($userId) {
 
-        $data = array(
-            "callCenterApprove" => "pending"
+        $this->db->select('aum.*, ra.raId, ra.entityType, ra.entityNumber, ra.created_on', false)
+                ->from('apps_users aum')
+                ->join("registration_attempts ra", "ra.skyId = aum.skyId", "inner")
+                ->where('aum.remarks', 'Password Reset Request')
+                ->where('aum.isLocked', 1)
+                ->where("aum.isPublished", 1)
+                ->where("aum.isActive", 1)
+                ->where("aum.skyId", $userId)
+                ->order_by("ra.raId", "DESC")
+                ->limit(1);
+
+        $result = $this->db->get();
+
+        if ($result->num_rows() > 0) {
+            return $result;
+        }
+        return false;
+    }
+
+    function getUserAccounts($userId, $accountNo = null) {
+        $this->db->select('ai.*, at.accTypeName', false)
+                ->from('account_info ai')
+                ->join("account_type at", "at.accTypeCode = ai.accTypeCode", "left")
+                ->where("ai.skyId", $userId);
+
+        if ($accountNo != null):
+            $this->db->where("ai.accNo", $accountNo);
+        endif;
+
+        $result = $this->db->get();
+        if ($result->num_rows() > 0) {
+            return $result;
+        }
+        return false;
+    }
+
+    function getRegistrationDetails($skyId) {
+        $this->db->select("ra.*", false)
+                ->from("registration_attempts ra")
+                ->join("apps_users_mc au", "au.skyId = ra.skyId", "inner")
+                ->where("ra.skyId", $skyId)
+                ->order_by("ra.raId", "DESC")
+                ->limit(1);
+
+        $result = $this->db->get();
+        if ($result->num_rows() > 0) {
+            return $result;
+        }
+        return false;
+    }
+
+    function userApproveChecker($userId) {
+        $userInfo = array(
+            "checkerAction" => 'Account Activation',
+            "checkerActionDt" => date("Y-m-d"),
+            "checkerActionTm" => date("H:i:s"),
+            "checkerActionBy" => $this->my_session->userId,
         );
-
         $this->db->where("skyId", $userId)
-                ->group_start()
-                ->where("callCenterApprove", "unapproved")
-                ->or_where("callCenterApprove", "pending")
-                ->group_end()
-                //->where("isActive",0)
-                //->where('isPublished', 0)
-                ->update("apps_users_mc", $data);
+                ->update("apps_users_mc", $userInfo);
+        return array(
+            "success" => true,
+            "msg" => "success"
+        );
+    }
 
-        return $userId;
+    function activateAppUserAccount($skyId, $pin, $raId = null) {
+        try {
+            $this->db->select("aum.*")
+                    ->from("apps_users_mc aum")
+                    ->where('aum.isLocked', 0)
+                    ->where("aum.isPublished", 0)
+                    ->where("aum.isActive", 0)
+                    ->where("aum.appsGroupId", 0)
+                    ->where("aum.skyId", $skyId);
+
+            $result = $this->db->get();
+            if ($result->num_rows() <= 0):
+                return array(
+                    "success" => false,
+                    "msg" => "no apps user found"
+                );
+            endif;
+
+            $userInfo = $result->row_array();
+
+            $userInfoMerge = array(
+                "makerAction" => 'Account Activation',
+                "makerActionDt" => date("Y-m-d"),
+                "makerActionTm" => date("H:i:s"),
+                "makerActionBy" => $this->my_session->userId,
+                "passWord" => md5($pin),
+                "pinExpiryReferenceTm" => date("Y-m-d H:i:s"),
+                "isActive" => 1,
+                "isPublished" => 1,
+                "isLocked" => 0,
+                "isReset" => 1
+            );
+
+            $userInfo = array_merge($userInfo, $userInfoMerge);
+
+            $this->db->reset_query();
+            $this->db->select("au.*", false)
+                    ->from("apps_users au")
+                    ->where("au.skyId", $userInfo['skyId']);
+
+            $appsUser = $this->db->get();
+            if ($appsUser->num_rows() > 0):
+                return array(
+                    "success" => false,
+                    "msg" => "Apps User already exists"
+                );
+            endif;
+
+            $this->db->reset_query();
+
+            $this->db->trans_begin();
+            $this->db->insert("apps_users", $userInfo);
+
+            $this->db->reset_query();
+            $this->db->where("skyId", $skyId)
+                    ->update("device_info", array("isVaryfied" => 1));
+
+            /* $this->db->reset_query();
+              $this->db->where("skyId", $skyId)
+              ->update("apps_users_mc", array("isPublished" => 1)); */
+
+            if ($this->db->trans_status() === FALSE) {
+                throw new Exception("could not activate apps user in " . __CLASS__ . "::" . __FUNCTION__ . "::" . __LINE__);
+            }
+
+            $this->db->trans_commit();
+
+            return array(
+                "success" => true,
+                "userInfo" => $userInfo
+            );
+        } catch (Exception $ex) {
+            $this->db->trans_rollback();
+
+            return array(
+                "success" => false,
+                "msg" => $ex->getMessage()
+            );
+        }
     }
 
     function approveConfirmation($userId) {

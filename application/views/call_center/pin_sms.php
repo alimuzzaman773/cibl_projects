@@ -1,0 +1,1 @@
+Dear user, your PREMIER account has been activated. Your One Time PREMIER PIN: <?=$pin?>
