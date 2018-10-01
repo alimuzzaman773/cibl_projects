@@ -4,8 +4,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Welcome extends CI_Controller {
 
+    function sms_test() {
+        $this->load->library("sms_service");
+
+        $params = array(
+            'mobileNo' => "01711519594",
+            'message' => "test message"
+        );
+        $smsResult = $this->sms_service->smsService($params);
+        var_dump($smsResult);
+    }
+
     function email_test() {
-        
+
         include_once APPPATH . "libraries/phpmailer/phpmailer.php";
         $mailer = new PHPMailer(true);
         try {

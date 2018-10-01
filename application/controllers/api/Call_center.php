@@ -100,9 +100,9 @@ class Call_center extends CI_Controller {
             $mailData["to"] = dummy_email;
         endif;
 
-        $mailData["from"] = "mobapp@nrbc.com";
-        $mailData["fromName"] = "mobapp@nrbc.com";
-        $mailData["subject"] = "NRBCBank Mobile APP - Account Activation PIN";
+        $mailData["from"] = "mobapp@pbl.com";
+        $mailData["fromName"] = "mobapp@pbl.com";
+        $mailData["subject"] = "PREMIER Mobile APP - Account Activation PIN";
         $mailData["body"] = $this->load->view("call_center/pin_mail.php", $otpData, true);
         $res = $this->mailer_model->sendMail($mailData);
         /* if (!$res["success"]) {
