@@ -16,44 +16,15 @@ class Welcome extends CI_Controller {
     }
 
     function email_test() {
-
-        include_once APPPATH . "libraries/phpmailer/phpmailer.php";
-        $mailer = new PHPMailer(true);
-        try {
-            $mailer->IsHTML(true);
-
-            set_smtp_config($mailer);
-
-            $mailer->AddAddress("khalifa.shahin@gmail.com", "Shahin Khalifa");
-
-            $mailer->AddReplyTo("testuser103@premierbankltd.com", "PREMIER BANK");
-            $mailer->From = "testuser103@premierbankltd.com";
-            $mailer->FromName = "PREMIER Bank Limited";
-
-            $mailer->Subject = "Your OTP for PREMIER Account Activation";
-
-            $mailer->Body = "Test email <b>PREMIER</b>";
-            $mailer->Send();
-
-            d(array(
-                "success" => true,
-                "body" => $mailer->Body
-            ));
-        } catch (phpmailerException $e) {
-            error_log($e->getMessage());
-            d(array(
-                "success" => false,
-                "msg" => "could not send email",
-                "ex" => $e->getMessage()
-            ));
-        } catch (Exception $e) {
-            error_log($e->getMessage());
-            d(array(
-                "success" => false,
-                "msg" => "could not send email",
-                "ex" => $e->getMessage()
-            ));
-        }
+                
+        $this->load->model("mailer_model");
+        $mailData["to"] = "khalifa.shahin@gmail.com";
+        $mailData["from"] = "info@pbl.com";
+        $mailData["subject"] = "subject";
+        $mailData["body"] = "body";
+        $emailResult = $this->mailer_model->sendMail($mailData);
+        var_dump($emailResult);
+        
     }
 
     public function index() {

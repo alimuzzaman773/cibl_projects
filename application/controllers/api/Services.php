@@ -1,9 +1,6 @@
-<?php
+<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-if (!defined('BASEPATH'))
-    exit('No direct script access allowed');
-
-class Service extends CI_Controller {
+class Services extends CI_Controller {
 
     function __construct() {
         parent::__construct();
@@ -59,8 +56,8 @@ class Service extends CI_Controller {
         $this->load->library('form_validation');
         $this->form_validation->set_data($params);
 
-        $this->form_validation->set_rules('mobileNo', 'Mobile No', 'trim|required|regex_match[/^[0-9]{11}$/]');
-        $this->form_validation->set_rules('message', 'Message', 'required');
+        $this->form_validation->set_rules('mobileNo', 'Mobile No', 'trim|required');
+        $this->form_validation->set_rules('message', 'Message', 'trim|required');
 
         if ($this->form_validation->run() == FALSE):
             $json = array(

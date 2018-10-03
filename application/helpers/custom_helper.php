@@ -116,7 +116,7 @@ function rrn_no() {
 if (!function_exists('set_smtp_config')) {
 
     function set_smtp_config(&$mailer) {
-        /*
+        
         $mailer->IsSMTP();
         $mailer->CharSet = 'UTF-8';
         $mailer->SMTPDebug = 1;
@@ -125,15 +125,15 @@ if (!function_exists('set_smtp_config')) {
         $mailer->Port = 25;
         $mailer->Username = 'testuser103';
         $mailer->Password = 'Asdf1234';
-        */
-       
+        
+       /*
         $mailer->SMTPAuth = true;
         $mailer->SMTPSecure = 'ssl';
         $mailer->Host = 'smtp.mailgun.org';
         $mailer->Port = 465;
         $mailer->Username = "postmaster@travelshoptours.com";
         $mailer->Password = '8a4a14930f9aeedd885ef8dbfddee654';
-   
+   */
     }
 
 }
