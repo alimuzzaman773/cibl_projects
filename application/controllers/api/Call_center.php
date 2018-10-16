@@ -68,7 +68,66 @@ class Call_center extends CI_Controller {
         my_json_output($json);
     }
 
-    function user_approve($userId) {
+    function resend_user_pin($userId)
+    {
+        $this->load->model(array('mailer_model', 'call_center_model'));
+
+        $getUserInfo = $this->call_center_model->getUserInfo((int) $userId);
+        if (!$getUserInfo) {
+            $json = array(
+                "success" => false,
+                "msg" => "User information not found"
+            );
+            my_json_output($json);
+        }
+
+        $userInfo = $getUserInfo->row();
+
+        srand(rand(1000000, 9999999));
+        $pin = rand(1000000, 9999999);
+
+        $uData = array(
+            "passWord" => md5($pin),
+            "pinExpiryReferenceTm" => date("Y-m-d H:i:s")
+        );        
+
+        $this->db->where("skyId", $userInfo->skyId)
+                 ->update("apps_users", $uData);
+        
+        $otpData = array(
+            "pin" => $pin,
+            "eblSkyId" => $userInfo->eblSkyId
+        );
+
+        $mailData["to"] = $userInfo->userEmail;
+        if (defined('dummy_email')):
+            $mailData["to"] = dummy_email;
+        endif;
+
+        $mailData["from"] = "mobapp@pbl.com";
+        $mailData["fromName"] = "mobapp@pbl.com";
+        $mailData["subject"] = "Premier Mobile APP - Account Activation PIN";
+        $mailData["body"] = $this->load->view("call_center/pin_mail.php", $otpData, true);
+        $res = $this->mailer_model->sendMail($mailData);
+        /* if (!$res["success"]) {
+          $json = array(
+          "success" => false,
+          "msg" => $res['msg'],
+          );
+          my_json_output($json);
+          } */
+
+        $json = array(
+            "success" => true,
+            "userInfo" => $user['userInfo'],
+            "mailRes" => $res,
+            "pin" => $pin
+        );
+        my_json_output($json);        
+    }
+    
+    function user_approve($userId) 
+    {        
         $this->load->model(array('mailer_model', 'call_center_model'));
 
         $getUserInfo = $this->call_center_model->getUserInfo((int) $userId);
@@ -95,16 +154,31 @@ class Call_center extends CI_Controller {
             "eblSkyId" => $userInfo->eblSkyId
         );
 
-        $mailData["to"] = $userInfo->userEmail;
-        if (defined('dummy_email')):
-            $mailData["to"] = dummy_email;
-        endif;
+        $otp_channel = $this->input->post("otp_channel");
+        
+        $res = null;
+        if($otp_channel == "email"):
+            $mailData["to"] = $userInfo->userEmail;
+            if (defined('dummy_email')):
+                $mailData["to"] = dummy_email;
+            endif;
 
-        $mailData["from"] = "mobapp@pbl.com";
-        $mailData["fromName"] = "mobapp@pbl.com";
-        $mailData["subject"] = "PREMIER Mobile APP - Account Activation PIN";
-        $mailData["body"] = $this->load->view("call_center/pin_mail.php", $otpData, true);
-        $res = $this->mailer_model->sendMail($mailData);
+            $mailData["from"] = "mobapp@pbl.com";
+            $mailData["fromName"] = "mobapp@pbl.com";
+            $mailData["subject"] = "Premier Mobile APP - Account Activation PIN";
+            $mailData["body"] = $this->load->view("call_center/pin_mail.php", $otpData, true);
+            $res = $this->mailer_model->sendMail($mailData);
+        else:
+            $smsData = array(
+                "mobileNo" => "88".ltrim($userInfo->userMobNo1,"88"),
+                "message" => "You one time account activation pin is {$pin} for Premier APP Account : {$userInfo->eblSkyId}"
+            );
+            
+            $this->load->library("sms_service");
+            $res = $this->sms_service->smsService($smsData);
+        endif;
+        
+        
         /* if (!$res["success"]) {
           $json = array(
           "success" => false,
@@ -247,9 +321,9 @@ class Call_center extends CI_Controller {
                 $mailData["to"] = dummy_email;
             endif;
 
-            $mailData["from"] = "skybanking@ebl.com";
-            $mailData["fromName"] = "skybanking@ebl.com";
-            $mailData["subject"] = "EBL SKYBANKING - Password Reset PIN";
+            $mailData["from"] = "mobapp@pbl.com";
+            $mailData["fromName"] = "mobapp@pbl.com";
+            $mailData["subject"] = "Premier - Password Reset PIN";
             $mailData["body"] = $this->load->view("call_center/pin_reset.php", $otpData, true);
             $res = $this->mailer_model->sendMail($mailData);
 

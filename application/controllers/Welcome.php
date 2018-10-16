@@ -18,12 +18,15 @@ class Welcome extends CI_Controller {
     function email_test() {
                 
         $this->load->model("mailer_model");
+        
         $mailData["to"] = "khalifa.shahin@gmail.com";
         $mailData["from"] = "info@pbl.com";
         $mailData["subject"] = "subject";
         $mailData["body"] = "body";
         $emailResult = $this->mailer_model->sendMail($mailData);
         var_dump($emailResult);
+        
+        
         
     }
 

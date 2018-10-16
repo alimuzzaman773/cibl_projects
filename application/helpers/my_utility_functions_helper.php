@@ -51,25 +51,6 @@ if ( ! function_exists('encrypt_user_pass'))
     }
 }
 
-if ( ! function_exists('set_smtp_config'))
-{
-    function set_smtp_config(&$mailer)
-    {
-        $mailer->IsSMTP();                    
-        $mailer->CharSet = 'UTF-8';
-        $mailer->SMTPDebug = 0;  
-        $mailer->SMTPAuth = true;  
-        $mailer->SMTPSecure = 'ssl'; 
-        //$mailer->Host = 'cloudwebx10.newtekwebhosting.com';
-        $mailer->Host = 'smtp.mailgun.org';
-        $mailer->Port = 465; 
-        //$mailer->Username = "sales@travelshoptours.com";  
-        $mailer->Username = "postmaster@travelshoptours.com";
-        //$mailer->Password = 'd%O}&%OF%$eD';
-        $mailer->Password = '8a4a14930f9aeedd885ef8dbfddee654';
-    }
-}
-
 if ( ! function_exists('get_site_currency'))
 {
     function get_site_currency()

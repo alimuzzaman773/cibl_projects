@@ -71,7 +71,7 @@ class Services extends CI_Controller {
 
         $params = array(
             'mobileNo' => $params['mobileNo'],
-            'message' => $params['mobileNo']
+            'message' => $params['message']
         );
 
         $smsResult = $this->sms_service->smsService($params);
