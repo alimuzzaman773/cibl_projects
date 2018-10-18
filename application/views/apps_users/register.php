@@ -1,17 +1,15 @@
 <h2 class="title-underlined">Apps User Registration</h2>
-<form class="form" id="form" method="get" action="">
+<form class="form-inline" id="form" method="get" action="">
     <div class="form-group col-sm-3 col-xs-12">
         <label>Account Number</label>
         <input type="text" value="" id="account_number" name="account_number" class="form-control" />
-    </div>
-    <div class="form-group">
         <button class="btn btn-primary" onclick="return app.search();">
             <i class="glyphicon glyphicon-search"></i> Search
         </button>
-    </div>    
-    <div id="response">
-    </div>    
+    </div>
 </form>
+<br />
+<div id="response"></div>
 <script>
     var app = app || {};
     
@@ -52,9 +50,7 @@
         }
         app.showModal();
         
-        var $data = {
-            account_number : $("#account_number").val()
-        };
+        var $data = $("#registration").serialize();
         
         $.ajax({
             type : 'post',
@@ -66,7 +62,8 @@
                 console.log(data);
                 if(data.success){
                     alert("Registration is complete");
-                    return;
+                    window.location.reload();
+                    return false;
                 }
                 alert(data.msg);
                 

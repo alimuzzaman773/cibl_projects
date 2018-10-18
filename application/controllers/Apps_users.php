@@ -28,7 +28,13 @@ class Apps_users extends MX_Controller {
     function get_customer_info()
     {
         $account_number = $this->input->get('account_number', NULL);
-        
+        if (trim($account_number) == "") {
+            $json = array(
+                "success" => false,
+                "msg" => "Please provide an account number"
+            );
+            my_json_output($json);
+        }
         $this->load->library('cbs_services');
         
         $cbsData = array(
@@ -62,7 +68,7 @@ class Apps_users extends MX_Controller {
         $json = array(
             'success' => true,
             'aInfo' => $accountInfo,
-            'view' => $this->load->view('apps_users/render_apps_user.php', array('aInfo' => (object)$accountInfo), true)
+            'view' => $this->load->view('apps_users/render_apps_user.php', array('aInfo' => (object)$accountInfo, 'account_number' => $account_number), true)
         );
         my_json_output($json);
     }
@@ -194,6 +200,7 @@ class Apps_users extends MX_Controller {
         
         $otpResult = false;
         
+        $otp_channel = $this->input->post('otp_channel', true);
         if($userInfo['success']):
             $this->load->model('Mailer_model');
             //sms or email user
