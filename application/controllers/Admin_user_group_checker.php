@@ -133,9 +133,9 @@ class Admin_user_group_checker extends CI_Controller {
     }
 
     public function getReason() {
-        $this->output->set_template('theme2');
-        $authorizationModules = $this->session->userdata('authorizationModules');
-        if (strpos($authorizationModules, admin_user_group_authorization) > -1) {
+        //$this->output->set_template('theme2');
+        //$authorizationModules = $this->session->userdata('authorizationModules');
+        //if (strpos($authorizationModules, admin_user_group_authorization) > -1) {
 
             $data['checkerAction'] = $_POST['checkerAction'];
             $id = $_POST['userGroupId'];
@@ -145,7 +145,7 @@ class Admin_user_group_checker extends CI_Controller {
             $dbData = $this->admin_user_group_model_checker->getGroupById($id);
 
 
-            if ($dbData['makerActionBy'] == $this->session->userdata('adminUserId')) {
+            if ($dbData['makerActionBy'] == $this->my_session->userId) {
                 echo "You can not authorize your own maker action";
             } else {
                 if ($data['checkerAction'] == "approve") {
@@ -153,7 +153,7 @@ class Admin_user_group_checker extends CI_Controller {
                     $chkdata['checkerActionDt'] = date("Y-m-d");
                     $chkdata['checkerActionTm'] = date("G:i:s");
                     $chkdata['isPublished'] = 1;
-                    $chkdata['checkerActionBy'] = $this->session->userdata('adminUserId');
+                    $chkdata['checkerActionBy'] = $this->my_session->userId;
                     $chkdata['checkerAction'] = "Approved";
                     $chkdata['checkerActionComment'] = NULL;
                     $chkdata['mcStatus'] = 1;
@@ -181,7 +181,7 @@ class Admin_user_group_checker extends CI_Controller {
 
                     $data['checkerActionDt'] = date("Y-m-d");
                     $data['checkerActionTm'] = date("G:i:s");
-                    $data['checkerActionBy'] = $this->session->userdata('adminUserId');
+                    $data['checkerActionBy'] = $this->my_session->userId;
                     $data['checkerAction'] = "Rejected";
                     $data['checkerActionComment'] = $_POST['newReason'];
                     $data['mcStatus'] = 2;
@@ -198,9 +198,7 @@ class Admin_user_group_checker extends CI_Controller {
                     }
                 }
             }
-        } else {
-            echo "Authorization Module Not Given";
-        }
+        
     }
 
     public function checkUserInteraction($id, $makerActionDtTmPost, $checkerActionDtTmPost) {

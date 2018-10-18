@@ -161,7 +161,7 @@ class Admin_user_group_maker extends CI_Controller {
         $result = $this->admin_user_group_model_maker->getUGinfo($id);
 
         if (!$result):
-            return FALSE;
+            show_error("No user group info found");
         endif;
 
         $data['uginfo'] = $result->row();

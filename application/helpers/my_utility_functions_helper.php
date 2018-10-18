@@ -410,6 +410,20 @@ if ( ! function_exists('get_billing_month'))
     }
 }
 
+if (!function_exists('getAccountNo')) {
+
+    function getAccountNo($accounNumber) {
+       return substr($accounNumber,4, strlen($accounNumber));       
+    }
+}
+
+if (!function_exists('getBranchId')) {
+
+    function getBranchId($accounNumber) {
+       return substr($accounNumber,0,4);
+    }
+}
+
 
 // ------------------------------------------------------------------------
 /* End of file my_utility_functions_helper.php */

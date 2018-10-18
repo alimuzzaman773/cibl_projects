@@ -95,8 +95,8 @@ class Admin_user_group_model_checker extends CI_Model {
 
         // prepare data for activity log //
         $activityLog = array('activityJson' => json_encode($result),
-            'adminUserId' => $this->session->userdata('adminUserId'),
-            'adminUserName' => $this->session->userdata('username'),
+            'adminUserId' => $this->my_session->userId,
+            'adminUserName' => $this->my_session->userName,
             'tableName' => 'admin_users_group',
             'moduleName' => 'admin_user_group_module',
             'moduleCode' => '05',
@@ -119,8 +119,8 @@ class Admin_user_group_model_checker extends CI_Model {
 
         // prepare data for activity log //
         $activityLog = array('activityJson' => json_encode($result),
-            'adminUserId' => $this->session->userdata('adminUserId'),
-            'adminUserName' => $this->session->userdata('username'),
+            'adminUserId' => $this->my_session->userId,
+            'adminUserName' => $this->my_session->userName,
             'tableName' => 'admin_users_group',
             'moduleName' => 'admin_user_group_module',
             'moduleCode' => '05',

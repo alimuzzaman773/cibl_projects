@@ -36,3 +36,7 @@ label.error{
 input.error, select.error, input[type='checkbox'].error,input[type='radio'].error{
     /*  border: 1px solid red;*/
 }
+
+.bold {
+    font-weight: bold;
+}

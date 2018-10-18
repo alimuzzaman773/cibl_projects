@@ -89,5 +89,100 @@ class Apps_users_model extends CI_Model {
         $query = $this->db->get('apps_users_mc');
         return $query->result_array();
     }
+    
+    function getAccountSerial($userInfo, $accountInfo, $deviceInfo = array()) {
+        $esbPrefix = "PBL";
+        $esbIdOffset = 1000000;
+
+        $id = 0;
+        $esbData = FALSE;
+        $attempts = 0;
+        $logs = array();
+        while ($attempts <= 3):
+            $this->db->reset_query();
+
+            $sql = 'select max(oau.eblId) as eblId from (SELECT CAST(SUBSTRING(au.eblSkyId, 4) AS SIGNED) as eblId from apps_users_mc au) oau';
+            $result = $this->db->query($sql);
+            if ($result->num_rows() > 0):
+                $id = $result->row()->eblId;
+            endif;
+
+            $newEsbId = $esbIdOffset + 1;
+            if ($id > $esbIdOffset):
+                $newEsbId = $id + 1;
+            endif;
+
+            $esbData = array(
+                "skyId" => NULL,
+                "eblSkyId" => $esbPrefix . $newEsbId
+            );
+
+            try {
+                $this->db->trans_begin();
+
+                $this->db->reset_query();
+                $this->db->insert("apps_users_mc", $esbData);
+
+                $esbData['skyId'] = $this->db->insert_id();
+
+                $this->db->reset_query();
+                unset($userInfo['accountInfo']);
+
+                $this->db->where("skyId", $esbData['skyId'])
+                        ->update("apps_users_mc", $userInfo);
+
+
+                foreach ($accountInfo as $k => $v):
+                    $accountInfo[$k]['skyId'] = $esbData['skyId'];
+                endforeach;
+
+                if (count($accountInfo)):
+                    $this->db->reset_query();
+                    $this->db->insert_batch("account_info", $accountInfo);
+                endif;
+
+                //$this->db->reset_query();
+                //$deviceInfo['skyId'] = $esbData['skyId'];
+                //$this->db->insert("device_info", $deviceInfo);
+
+                $this->db->reset_query();
+
+                if ($this->db->trans_status() == false):
+                    throw new Exception("error in transaction");
+                endif;
+
+                $attempts++;
+
+                $this->db->trans_commit();
+
+                break;
+            } catch (Exception $e) {
+                $this->db->trans_rollback();
+
+                $attempts++;
+                $esbData = false;
+                $logs[] = $e->getMessage();
+            }
+
+            if ($attempts == 3) {
+                break;
+            }
+
+        endwhile;
+
+        if ($esbData === false) {
+            return array(
+                "success" => false,
+                "msg" => "could not generate PREMIER id",
+                "log" => $logs
+            );
+        }
+
+        return array(
+            "success" => true,
+            "esbInfo" => $esbData,
+            "logs" => $logs
+        );
+    }
 
 }

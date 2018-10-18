@@ -609,3 +609,8 @@ fieldset[disabled] .btn-primary.active {
 .doc-list li:hover {
     background-color: #f4f4f4;
 }
+
+
+.bold {
+    font-weight: bold;
+}
