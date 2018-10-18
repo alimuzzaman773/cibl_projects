@@ -1,6 +1,6 @@
 <h2 class="title-underlined">Apps User Registration</h2>
 <form class="form" id="form" method="get" action="">
-    <div class="form-group">
+    <div class="form-group col-sm-3 col-xs-12">
         <label>Account Number</label>
         <input type="text" value="" id="account_number" name="account_number" class="form-control" />
     </div>

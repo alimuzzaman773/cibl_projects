@@ -28,6 +28,13 @@
     </tr>
 </table>
 
+<div class="form-group col-sm-3 col-xs-12">
+    <label>Notification Channel</label>
+    <select class="form-control" name="otp_channel" id="otp_channel">
+        <option value="email">Email</option>
+        <option value="sms">SMS</option>
+    </select>
+</div>
 <button class="btn btn-primary" onclick="return app.confirmRegistration()">
     <i class="glyphicon glyphicon-check"></i> Confirm Registration
 </button>
