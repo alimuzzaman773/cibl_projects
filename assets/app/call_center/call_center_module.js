@@ -30,6 +30,15 @@ CallCenterModuleApp.controller('CallCenterController', ['$scope', '$http', '$rou
         $scope.currentPageNumber = 1;
         $scope.uid = $routeParams.uid;
         $scope.user = {};
+        
+        $scope.resetSkyId = null;
+        $scope.otp_channel_pin = 'sms';
+
+        $scope.showResetModal = function($skyId) {
+            $scope.resetSkyId = $skyId;
+            $('#resetModal').modal('show');
+            return false;
+        };
 
         $scope.pagination = {
             current: 1
@@ -161,24 +170,30 @@ CallCenterModuleApp.controller('CallCenterController', ['$scope', '$http', '$rou
         };
         
         $scope.sendPasswordResetPin = function($skyId){
-            app.showModal();
             if (!confirm("Do you really want to send the new password pin?")) {
+                $('#resetModal').modal('hide');
                 return false;
             }
-            $http({method: 'post', data: jQuery.param({'skyId' : $skyId}), url: app.baseUrl + 'api/call_center/confirm_password_reset/'})
+            $scope.resetSkyId = null;
+            $('#resetModal').modal('hide');
+            app.showModal();
+            $http({method: 'post', data: jQuery.param({'skyId' : $skyId, otp_channel : $scope.otp_channel_pin}), url: app.baseUrl + 'api/call_center/confirm_password_reset/'})
             .success(function (data) {
+                
                 app.hideModal();
+                $('#resetModal').modal('hide');
                 if (data.success === false) {
                     alert(data.msg);
                     return false;
                 }
                 
-                alert("Password pin has been emailed");
+                alert("Password pin has been sent");
                 window.location.href = app.baseUrl + "call_center/#/user_list/";
                 
             })
             .error(function () {
                 app.hideModal();
+                $('#resetModal').modal('hide');
                 alert("There was a problem, please try again.")
             });
             return false;

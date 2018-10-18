@@ -4,6 +4,29 @@
     </div>
 </div>
 
+<div class="modal fade bs-example-modal-sm" tabindex="-1" id="resetModal" role="dialog" aria-labelledby="resetModal">
+  <div class="modal-dialog modal-sm" role="document">
+      <div class="modal-content">
+      <div class="modal-header bg-primary">
+          Please select the PIN Sending Channel
+      </div>
+          <div class="modal-body">
+              <select class="form-control" data-ng-model="otp_channel_pin">
+                  <option value="sms">SMS</option>
+                  <option value="email">EMAIL</option>
+              </select>
+              
+          </div>
+          
+      <div class="modal-footer">
+          <button class="btn btn-primary" data-ng-click="sendPasswordResetPin(resetSkyId);">
+              Confirm and send PIN
+          </button>
+      </div>
+      </div>
+  </div>
+</div>
+
 <div class="col-md-12 col-sm-12 text-right" data-ng-show="totalCount > 0">        
     <span class="label label-primary"> Displaying: {{ ((per_page * currentPageNumber) - (per_page - 1))}} to {{ upper_range()}} of {{ totalCount}}</span>            
 </div>
@@ -54,7 +77,7 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a style="cursor: pointer" ng-click="sendPasswordResetPin(i.skyId);">
+                                        <a style="cursor: pointer" ng-click="showResetModal(i.skyId);">
                                             <i class="glyphicon glyphicon-send"></i> Send Password Reset Pin
                                         </a>
                                     </li>

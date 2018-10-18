@@ -41,7 +41,7 @@ class Call_center_model extends CI_Model {
         $this->db->select('aum.*, ra.raId, ra.entityType, ra.entityNumber, ra.created_on', false)
                 ->from('apps_users_mc aum')
                 ->join("registration_attempts ra", "ra.skyId = aum.skyId", "left")
-                ->where('aum.isLocked', 0)
+                //->where('aum.isLocked', 0)
                 ->where("aum.isPublished", 0)
                 ->where("aum.isActive", 0)
                 ->where("aum.appsGroupId", 0)
@@ -59,15 +59,13 @@ class Call_center_model extends CI_Model {
 
     function getUserInfoForPasswordReset($userId) {
 
-        $this->db->select('aum.*, ra.raId, ra.entityType, ra.entityNumber, ra.created_on', false)
+        $this->db->select('aum.*', false)
                 ->from('apps_users aum')
-                ->join("registration_attempts ra", "ra.skyId = aum.skyId", "inner")
                 ->where('aum.remarks', 'Password Reset Request')
                 ->where('aum.isLocked', 1)
-                ->where("aum.isPublished", 1)
+                //->where("aum.isPublished", 1)
                 ->where("aum.isActive", 1)
                 ->where("aum.skyId", $userId)
-                ->order_by("ra.raId", "DESC")
                 ->limit(1);
 
         $result = $this->db->get();
