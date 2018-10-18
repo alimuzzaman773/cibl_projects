@@ -40,7 +40,7 @@ class Call_center_model extends CI_Model {
 
         $this->db->select('aum.*, ra.raId, ra.entityType, ra.entityNumber, ra.created_on', false)
                 ->from('apps_users_mc aum')
-                ->join("registration_attempts ra", "ra.skyId = aum.skyId", "inner")
+                ->join("registration_attempts ra", "ra.skyId = aum.skyId", "left")
                 ->where('aum.isLocked', 0)
                 ->where("aum.isPublished", 0)
                 ->where("aum.isActive", 0)
