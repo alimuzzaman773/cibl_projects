@@ -10,7 +10,7 @@ class Sms_service {
             "user" => "pblib",
             "pass" => "PBLib5m5",
             "sms[0][0]" => ltrim($smsData['mobileNo']),
-            "sms[0][1]" => urlencode($smsData['message']),
+            "sms[0][1]" => $smsData['message'],
             "sms[0][2]" => "123456",
             "sid" => "PBLIB"
         );

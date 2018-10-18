@@ -99,7 +99,7 @@ CallCenterModuleApp.controller('CallCenterController', ['$scope', '$http', '$rou
             $http({method: 'post', url: app.baseUrl + 'api/call_center/user_approve_checker/' + userId})
             .success(function (data) {
                 app.hideModal();
-                if (data.success === false) {
+                if (data.success == false) {
                     alert(data.msg);
                     return false;
                 }
@@ -112,17 +112,22 @@ CallCenterModuleApp.controller('CallCenterController', ['$scope', '$http', '$rou
             return false; 
         };
 
+        $scope.otp_channel = 'email';
         $scope.approveUser = function (userId) 
         {
             if(!confirm("Do you really want to activate this user?")){
                 return false;
             }
             
+            var $pData = {
+                otp_channel : jQuery("#otp_channel").val()
+            };
+            
             app.showModal();
-            $http({method: 'get', url: app.baseUrl + 'api/call_center/user_approve/' + userId})
+            $http({method: 'post', url: app.baseUrl + 'api/call_center/user_approve/' + userId, data: jQuery.param($pData)})
             .success(function (data) {
                 app.hideModal();
-                if (data.success === false) {
+                if (data.success == false) {
                     alert(data.msg);
                     return false;
                 }

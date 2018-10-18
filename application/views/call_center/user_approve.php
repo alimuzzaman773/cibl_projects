@@ -122,8 +122,15 @@
             </tr>
         </table>
     </div>
-    <div class="col-xs-12 col-sm-12">
+    <div class="col-xs-12 col-sm-3 col-md-3">
         <form name="testform">
+            <div class="form-group" ng-if="user.makerActionBy <= 0 && user.checkerActionBy > 0">
+                <label>PIN Sending Channel</label>
+                <select class="form-control input-sm" id="otp_channel" ng-model="otp_channel">
+                    <option value="email">email</option>
+                    <option value="sms">sms</option>
+                </select>
+            </div>    
             <div class="btn-group">
                 <button class="btn btn-md btn-primary" id="test" ng-show="user.makerActionBy <= 0 && user.checkerActionBy > 0" data-ng-click="approveUser(user.skyId)">
                     <i class="glyphicon glyphicon-check"></i> Maker Approve

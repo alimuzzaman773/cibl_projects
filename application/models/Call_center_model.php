@@ -173,18 +173,19 @@ class Call_center_model extends CI_Model {
                 );
             endif;
 
-            $this->db->reset_query();
 
             $this->db->trans_begin();
+            
+            $this->db->reset_query();
+            $this->db->where("skyId", $skyId)
+                     ->update("apps_users_mc", $userInfoMerge);
+            
+            $this->db->reset_query();
             $this->db->insert("apps_users", $userInfo);
-
+            
             $this->db->reset_query();
             $this->db->where("skyId", $skyId)
                     ->update("device_info", array("isVaryfied" => 1));
-
-            /* $this->db->reset_query();
-              $this->db->where("skyId", $skyId)
-              ->update("apps_users_mc", array("isPublished" => 1)); */
 
             if ($this->db->trans_status() === FALSE) {
                 throw new Exception("could not activate apps user in " . __CLASS__ . "::" . __FUNCTION__ . "::" . __LINE__);
