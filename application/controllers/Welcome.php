@@ -14,6 +14,18 @@ class Welcome extends CI_Controller {
         $smsResult = $this->sms_service->smsService($params);
         var_dump($smsResult);
     }
+    
+    function mail(){
+        $this->load->library("email_service");
+         $params = array(
+                'email' => "khalifa.shahin@gmail.com",
+                'subject' => "Your OTP for PREMIER Account Activation",
+                'body' => "test"
+            );
+
+            $res = $this->email_service->emailService($params);
+            var_dump($res);
+    }
 
     function email_test() {
                 
@@ -27,7 +39,7 @@ class Welcome extends CI_Controller {
         var_dump($emailResult);
         
         
-        
+   
     }
 
     public function index() {

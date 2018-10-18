@@ -106,3 +106,4 @@ define('ROOT_DIR', dirname(dirname(dirname(__FILE__))));
 define('DS', DIRECTORY_SEPARATOR);
 
 define('cbs_data_from_dummy', TRUE);
+define('API_URL', "http://172.20.163.19/pbl_api/");
