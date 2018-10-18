@@ -320,6 +320,18 @@ class Call_center extends CI_Controller {
             $this->db->where("skyId", $userInfo->skyId)
                     ->update("apps_users", $udata);
 
+            $this->db->reset_query();
+            $mcData = array(
+                "isActive" => 1,
+                "isPublished" => 1,
+                "isLocked" => 0,
+                'remarks' => '',
+                'isReset' => 1,
+                'wrongAttempts' => 0
+            );
+            $this->db->where("skyId", $userInfo->skyId)
+                    ->update("apps_users_mc", $mcData);
+            
             $otpData = array(
                 "pin" => $pin,
                 "eblSkyId" => $userInfo->eblSkyId
