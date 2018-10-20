@@ -13,7 +13,88 @@ class Admin_user_group_maker extends CI_Controller {
         $this->load->model('admin_user_group_model_maker');
     }
 
-    public function index() {
+    function index() {
+        $this->my_session->authorize("canViewAdminUserGroup");
+        try {
+            $crud = new grocery_CRUD();
+            $crud->set_theme(TABLE_THEME);
+            $crud->set_subject('Admin User Group');
+            $crud->set_table(TBL_ADMIN_USERS_GROUP_MC);
+            $crud->where('mcStatus', 1);
+            $crud->order_by('userGroupId', 'desc');
+
+            $crud->required_fields('userGroupName');
+            $crud->columns('userGroupName', 'isLocked', 'isActive', 'mcStatus');
+
+            if ((int) $this->uri->segment(4) > 0):
+                $crud->set_rules("userGroupName", "User Group Name", "trim|required");
+            else:
+                $crud->set_rules("userGroupName", "User Group Name", "trim|required|is_unique[" . TBL_ADMIN_USERS_GROUP_MC . ".userGroupName]");
+            endif;
+
+            $time = date("Y-m-d H:i:s");
+            $status = 0;
+
+            $crud->add_fields('userGroupName', 'machine_name', 'isLocked', 'isActive', 'mcStatus', 'makerAction', 'makerActionCode', 'creationDtTm', 'updateDtTm');
+            $crud->edit_fields('userGroupName', 'machine_name', 'isLocked', 'isActive', 'mcStatus', 'makerAction', 'makerActionCode', 'updateDtTm');
+
+            $crud->change_field_type('creationDtTm', 'hidden', $time);
+            $crud->change_field_type('updateDtTm', 'hidden', $time);
+            $crud->change_field_type('mcStatus', 'hidden', $status);
+            $crud->change_field_type('makerAction', 'hidden', 'add');
+            $crud->change_field_type('makerActionCode', 'hidden', '01');
+
+//            $crud->callback_before_insert(array($this, function($post_array) {
+//                    $post_array['makerAction'] = "add";
+//                    $post_array['makerActionCode'] = "01";
+//                    return $post_array;
+//                }));
+//            
+//            $crud->callback_before_update(array($this, function($post_array) {
+//                    $post_array['makerAction'] = "add";
+//                    $post_array['makerActionCode'] = "01";
+//                    return $post_array;
+//                }));
+
+            if (ci_check_permission("canSetuPermissionAdminUserGroup")) {
+                $icon = base_url() . "/assets/images/permission.png";
+                $crud->add_action("Set Permission", $icon, base_url() . 'admin_user_group_maker/set_permission/');
+            }
+
+            if (!ci_check_permission("canEditAdminUserGroup")):
+                $crud->unset_edit();
+            endif;
+
+            if (!ci_check_permission("canAddAdminUserGroup")):
+                $crud->unset_add();
+            endif;
+
+            if (!ci_check_permission("canDeleteAdminUserGroup")):
+                $crud->unset_delete();
+            endif;
+
+            $crud->unset_list();
+
+            $output = $crud->render();
+            $output->css = "";
+            $output->js = "";
+            $output->pageTitle = "Admin User Group";
+            $output->base_url = base_url();
+
+            $output->body_template = "admin_user_group_maker/user_group_index.php";
+            $output->crudState = $crud->getState();
+            $this->load->view("site_template.php", $output);
+        } catch (Exception $e) {
+            if ($e->getCode() == "14") {
+                return $this->group_old();
+            } else {
+                show_error($e->getMessage() . ' --- ' . $e->getTraceAsString());
+            }
+        }
+    }
+
+    // Will be removed
+    public function group_old() {
         $this->my_session->authorize("canViewAdminUserGroup");
         $data['pageTitle'] = "Admin User Group";
         $data['adminGroups'] = json_encode($this->admin_user_group_model_maker->getAllGroups());
@@ -125,7 +206,7 @@ class Admin_user_group_maker extends CI_Controller {
     }
 
     public function createAdminUserGroup() {
-        $loginId = $this->session->userdata('adminUserId');
+        $loginId = $this->my_session->userId;
 
         if (isset($_POST['groupName']) && isset($_POST['moduleCodes']) && isset($_POST['actionCodes']) && isset($_POST['moduleActionId'])) {
 
@@ -158,15 +239,19 @@ class Admin_user_group_maker extends CI_Controller {
 
     function set_permission($id = null) {
 
-        $result = $this->admin_user_group_model_maker->getUGinfo($id);
+        $result = $this->admin_user_group_model_maker->getUGinfoMC($id);
 
         if (!$result):
-            show_error("No user group info found");
+            return FALSE;
         endif;
 
         $data['uginfo'] = $result->row();
         //d($result->row()->permissions);
-        $data['existingPermission'] = explode(",", $data['uginfo']->permissions);
+        $data['existingPermission'] = array();
+        $p = explode(",", $data['uginfo']->permissions);
+        foreach ($p as $k => $v):
+            $data['existingPermission'][$v] = $v;
+        endforeach;
         //d($data['existingPermission']);
         $pres = $this->db->get(TBL_PERMISSIONS)->result();
 
@@ -358,7 +443,7 @@ class Admin_user_group_maker extends CI_Controller {
     }
 
     public function editAdminUserGroup() {
-        $loginId = $this->session->userdata('adminUserId');
+        $loginId = $this->my_session->userId;
 
         if (isset($_POST['groupName']) && isset($_POST['moduleCodes']) && isset($_POST['actionCodes']) && isset($_POST['moduleActionId'])) {
 

@@ -15,8 +15,8 @@ Class Permission extends CI_Controller {
     }
 
     function index() 
-    {
-        $this->my_session->authorize("canViewPermission");
+    {   
+        //$this->my_session->authorize("canViewPermission");
         try {
             $crud = new grocery_CRUD();
 

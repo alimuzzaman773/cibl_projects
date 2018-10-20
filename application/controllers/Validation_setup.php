@@ -13,11 +13,11 @@ class Validation_setup extends CI_Controller {
     }
 
     function index($params = null) {
-        $this->my_session->authorize("canReadPasswordPolicy");
+        $this->my_session->authorize("canViewPasswordPolicy");
         try {
             $crud = new grocery_CRUD();
             $crud->set_theme(TABLE_THEME);
-            $crud->set_subject('Complaint Info');
+            $crud->set_subject('Password Policy');
             $crud->set_table('validation_group_mc');
 
             $codes = $this->getValidationCodes();
@@ -69,20 +69,11 @@ class Validation_setup extends CI_Controller {
             if (!ci_check_permission("canEditPasswordPolicy")):
                 $crud->unset_edit();
             endif;
-            if (!ci_check_permission("canReadPasswordPolicy")):
-                $crud->unset_read();
-            endif;
-            if (!ci_check_permission("canExportPasswordPolicy")):
-                $crud->unset_export();
-            endif;
-            if (!ci_check_permission("canPrintPasswordPolicy")):
-                $crud->unset_print();
-            endif;
 
             $output = $crud->render();
             $output->css = "";
             $output->js = "";
-            $output->pageTitle = "Complaint Info";
+            $output->pageTitle = "Password Policy";
             $output->base_url = base_url();
 
             $output->body_template = "crud/index.php";

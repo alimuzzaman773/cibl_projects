@@ -15,7 +15,7 @@ class Bill_type_setup extends CI_Controller {
     }
 
     public function index($params = null) {
-        $this->my_session->authorize("canReadBillType");
+        $this->my_session->authorize("canViewBillType");
         try {
             $crud = new grocery_CRUD();
             $crud->set_theme(TABLE_THEME);
@@ -47,17 +47,9 @@ class Bill_type_setup extends CI_Controller {
             if (!ci_check_permission("canAddBillType")):
                 $crud->unset_add();
             endif;
+
             if (!ci_check_permission("canEditBillType")):
                 $crud->unset_edit();
-            endif;
-            if (!ci_check_permission("canReadBillType")):
-                $crud->unset_read();
-            endif;
-            if (!ci_check_permission("canExportBillType")):
-                $crud->unset_export();
-            endif;
-            if (!ci_check_permission("canPrintBillType")):
-                $crud->unset_print();
             endif;
 
             $output = $crud->render();

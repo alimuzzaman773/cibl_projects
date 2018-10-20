@@ -23,7 +23,9 @@
                         <td>{{($index + 1)}}</td>
                         <td>{{i.userGroupName}}</td>
                         <td>{{i.makerAction}}</td>
-                        <td>{{i.status}}</td>
+                        <td>
+                            <span data-ng-class="{'text-success': i.status == '1', 'text-danger': i.status == '0'}">{{i.status=='1' ? 'Approved' : 'Wait for approve'}}</span>
+                        </td>
                         <td>
                             <div class="dropdown pull-right">
                                 <button class="btn btn-primary btn-xs dropdown-toggle" type="button" data-toggle="dropdown">
