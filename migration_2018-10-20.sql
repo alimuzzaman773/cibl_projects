@@ -1,0 +1,2 @@
+ALTER TABLE `apps_users` ADD `userName2` VARCHAR(255) NULL DEFAULT NULL AFTER `homeBranchCode`, ADD UNIQUE (`userName2`);
+ALTER TABLE `apps_users_mc` ADD `userName2` VARCHAR(256) NULL DEFAULT NULL AFTER `homeBranchCode`, ADD UNIQUE (`userName2`);
