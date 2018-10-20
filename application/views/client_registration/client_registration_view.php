@@ -1,7 +1,11 @@
 <h1 class="title-underlined">
     Apps User
     <?php if(ci_check_permission("canAddAppUser")): ?>
-    <a href="<?php echo base_url(). 'apps_users/addAppsUser/Add'; ?>" class="btn btn-primary pull-right">
+    <a href="<?php echo base_url(). 'apps_users/addAppsUser/Add'; ?>" class="btn btn-primary pull-right hidden">
+        <i class="glyphicon glyphicon-plus"></i> Add User
+    </a>
+    
+    <a href="<?php echo base_url(). 'apps_users/register'; ?>" class="btn btn-primary pull-right">
         <i class="glyphicon glyphicon-plus"></i> Add User
     </a>
     <?php endif;?>
@@ -48,7 +52,7 @@
                         </button>
                         <ul class="dropdown-menu">
                             <?php if(ci_check_permission("canEditAppUser")): ?>
-                            <li>
+                            <li class="hidden">
                                 <a href="<?=base_url()?>apps_users/editAppsUser?eblSkyId={{a.eblSkyId}}&cfId={{a.cfId}}&clientId={{a.clientId}}&skyId={{a.skyId}}&selectedActionName=Edit">
                                     <i class="glyphicon glyphicon-edit"></i> Edit
                                 </a>

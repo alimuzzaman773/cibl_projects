@@ -53,11 +53,11 @@ class Client_registration extends CI_Controller {
             $skyId = $_GET['skyId'];
             $data['userInfo'] = $this->client_registration_model->getAppsUsersById($skyId); // decision needed whether to show from main table or shadow
             $data['deviceInfo'] = json_encode($this->client_registration_model->getDeviceBySkyid($skyId));
-            $data['accountInfo'] = json_encode($this->login_model->checkAccount($data['userInfo']));
+            $data['accountInfo'] = json_encode($this->login_model->checkAccount($data['userInfo']));            
             $data['body_template'] = 'client_registration/apps_user_detail_view.php';
             $this->load->view('site_template.php', $data);
         } else {
-            show_404();
+            show_error('No user found');
         }
     }
 
@@ -83,7 +83,7 @@ class Client_registration extends CI_Controller {
     }
 
     function addDeviceInfo() {
-        $this->my_session->authorize("canViewAddUserDevice");
+        //$this->my_session->authorize("canViewAddUserDevice");
         if (isset($_GET['skyId']) && isset($_GET['eblSkyId'])) {
             $data['skyId'] = $_GET['skyId'];
             $data['eblSkyId'] = $_GET['eblSkyId'];

@@ -14,14 +14,14 @@ class Client_registration_model extends CI_Model {
         if(isset($p['get_count']) && (int)$p['get_count'] > 0):
             $this->db->select('count(*) as total', false);            
         else:
-            $this->db->select('apps_users_mc.*, apps_users_group.userGroupName');
+            $this->db->select('apps_users_mc.*, apps_users_group.userGroupName', false);
         endif;
             
         $this->db->from('apps_users_mc');
-        $this->db->join('apps_users_group', 'apps_users_mc.appsGroupId = apps_users_group.appsGroupId');
-        $this->db->where("apps_users_mc.salt2 IS Null");
-        $this->db->where('apps_users_mc.makerActionBy', $this->my_session->userId);
-        $this->db->or_where('apps_users_mc.mcStatus =', 1);
+        $this->db->join('apps_users_group', 'apps_users_mc.appsGroupId = apps_users_group.appsGroupId', 'left');
+        //$this->db->where("apps_users_mc.salt2 IS Null");
+        //$this->db->where('apps_users_mc.makerActionBy', $this->my_session->userId);
+        //$this->db->or_where('apps_users_mc.mcStatus =', 1);
         $this->db->order_by('skyId', 'desc');
         
         if(isset($p['limit']) && (int)$p['limit'] > 0){
@@ -67,7 +67,7 @@ class Client_registration_model extends CI_Model {
 
         $this->db->select('apps_users_mc.*, apps_users_group.userGroupName');
         $this->db->from('apps_users_mc');
-        $this->db->join('apps_users_group', 'apps_users_group.appsGroupId = apps_users_mc.appsGroupId');
+        $this->db->join('apps_users_group', 'apps_users_group.appsGroupId = apps_users_mc.appsGroupId', 'left');
         $this->db->where('skyId', $data);
         return $this->db->get()->row_array();
     }

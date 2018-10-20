@@ -88,112 +88,108 @@ class Device_info_checker extends CI_Controller {
 
     public function approveOrRejectDevice() {
         $this->my_session->authorize("canApproveDevice");
-        $authorizationModules = $this->session->userdata('authorizationModules');
-        if (strpos($authorizationModules, device_authorization) > -1) {
-            $data['checkerAction'] = $_POST['checkerAction'];
-            $id = $_POST['deviceId'];
-            $skyId = $_POST['skyId'];
-            $makerActionDtTm = $_POST['makerActionDtTm'];
-            $checkerActionDtTm = $_POST['checkerActionDtTm'];
-            $dbData = $this->device_info_model_checker->getDeviceById($id);
+        //$authorizationModules = $this->session->userdata('authorizationModules');
+        //if (strpos($authorizationModules, device_authorization) > -1) {
+        $data['checkerAction'] = $_POST['checkerAction'];
+        $id = $_POST['deviceId'];
+        $skyId = $_POST['skyId'];
+        $makerActionDtTm = $_POST['makerActionDtTm'];
+        $checkerActionDtTm = $_POST['checkerActionDtTm'];
+        $dbData = $this->device_info_model_checker->getDeviceById($id);
 
-            if ($dbData['makerActionBy'] == $this->session->userdata('adminUserId')) {
-                echo "You can not authorize your own maker action";
-            } else {
-                if ($data['checkerAction'] == "approve") {
-                    $appsUserpublishChk = $this->device_info_model_checker->getUserPublishedInfo($skyId);
+        if ($data['checkerAction'] == "approve") 
+        {
+            $appsUserpublishChk = $this->device_info_model_checker->getUserPublishedInfo($skyId);
 
-                    if ($appsUserpublishChk['isPublished'] == 1) {
-                        $chkdata['checkerActionDt'] = date("Y-m-d");
-                        $chkdata['checkerActionTm'] = date("G:i:s");
-                        $chkdata['isPublished'] = 1;
-                        $chkdata['checkerActionBy'] = $this->session->userdata('adminUserId');
-                        $chkdata['checkerAction'] = "Approved";
-                        $chkdata['checkerActionComment'] = NULL;
-                        $chkdata['mcStatus'] = 1;
+            if ((int)$appsUserpublishChk['isPublished'] != 1) 
+            {
+                show_error('Apps User in not published yet');
+            }
+            
+            $chkdata['checkerActionDt'] = date("Y-m-d");
+            $chkdata['checkerActionTm'] = date("G:i:s");
+            $chkdata['isPublished'] = 1;
+            $chkdata['checkerActionBy'] = $this->session->userdata('adminUserId');
+            $chkdata['checkerAction'] = "Approved";
+            $chkdata['checkerActionComment'] = NULL;
+            $chkdata['mcStatus'] = 1;
 
-                        $res = $this->checkUserInteraction($id, $makerActionDtTm, $checkerActionDtTm);
+            $res = $this->checkUserInteraction($id, $makerActionDtTm, $checkerActionDtTm);
+            if($res != 0):
+                show_error("Meanwhine some action was performed on data.
+                                    <br> Please go back to check the latest state.
+                                     <a href='device_info_checker/getDeviceForApproval/".$id."'>Go Back</a>");
+            endif;
+            
+            if ($dbData['isPublished'] == 0)
+            {
 
-                        if ($res == 0) {
-                            if ($dbData['isPublished'] == 0) {
+                $deviceNumber = $this->device_info_model_checker->countDevice($skyId);  //checke for first device add. run a count on main table
 
-                                $deviceNumber = $this->device_info_model_checker->countDevice($skyId);  //checke for first device add. run a count on main table
-
-                                if ($deviceNumber == 0) {
-                                    if (ctype_digit($appsUserpublishChk['userMobNo1'])) {
-                                        $smsData['mobileNo'] = $appsUserpublishChk['userMobNo1'];
-                                        $smsData['message'] = 'Please activate your EBL SKYBANKING service with the ID & Password you have collected from an EBL Branch';
-                                        $smsServiceResponse = $this->sms_service->smsService($smsData); // *** notifying user *** // 
-                                    }
-
-
-                                    if ($appsUserpublishChk['userEmail'] != "Not Available") {
-                                        $maildata['to'] = $appsUserpublishChk['userEmail'];
-                                        $maildata['subject'] = "Device Activation";
-                                        $maildata['body'] = '<p>Dear Sir/Madam,</p>
-                                                             <p>Your EBL SKYBANKING account registration process is completed.</p>
-                                                             <p>Please activate your device using provided EBL SKYBANKING ID and Password to access the Banking / Bills Pay / Fund Transfer section.</p>
-                                                             <p>Please ignore this email, if you have already activated your device.</p>
-                                                             <p>Thanks & Regards, <br/>EBL SKYBANKING AdminPanel</p>';
-                                        $this->common_model->send_mail($maildata);
-                                    }
-                                }
-
-                                // update and insert
-                                $this->device_info_model_checker->UpdateInsertCheckerApprove($id, $chkdata);
-                            } else if ($dbData['isPublished'] == 1) {
-                                // update and update
-                                $this->device_info_model_checker->UpdateUpdateCheckerApprove($id, $chkdata);
-                            }
-
-
-                            // activity log starts here
-
-                            redirect('device_info_checker');
-                        } else {
-                            // redirect
-                            // echo "interaction";
-                            $this->output->set_template('theme2');
-                            $data['message'] = "Meanwhine some action was performed on data.
-                                                <br> Please go back to check the latest state.";
-                            $data['backUrl'] = "device_info_checker/getDeviceForApproval/" . $id;
-                            $this->load->view('warning/warning_view', $data);
-                        }
-                    } else {
-                        // warning //
-                        $this->output->set_template('theme2');
-                        $data['message'] = "Apps user needs to be approved first";
-                        $data['backUrl'] = "device_info_checker/getDeviceForApproval/" . $id;
-                        $this->load->view('warning/warning_view', $data);
+                if ($deviceNumber == 0)
+                {
+                    if (ctype_digit($appsUserpublishChk['userMobNo1']))
+                    {
+                        $smsData['mobileNo'] = $appsUserpublishChk['userMobNo1'];
+                        $smsData['message'] = 'Please activate your EBL SKYBANKING service with the ID & Password you have collected from an EBL Branch';
+                        $smsServiceResponse = $this->sms_service->smsService($smsData); // *** notifying user *** // 
                     }
-                } else if ($data['checkerAction'] == 'reject') {
-                    $data['checkerActionDt'] = date("Y-m-d");
-                    $data['checkerActionTm'] = date("G:i:s");
-                    $data['checkerActionBy'] = $this->session->userdata('adminUserId');
-                    $data['checkerAction'] = "Rejected";
-                    $data['checkerActionComment'] = $_POST['newReason'];
-                    $data['mcStatus'] = 2;
 
-                    $res = $this->checkUserInteraction($id, $makerActionDtTm, $checkerActionDtTm);
 
-                    if ($res == 0) {
-                        // update
-                        $this->device_info_model_checker->checkerReject($id, $data);
-                        redirect('device_info_checker');
-                    } else {
-                        // redirect
-                        // echo "interaction";
-                        $this->output->set_template('theme2');
-                        $data['message'] = "Meanwhine some action was performed on data.
-                                            <br> Please go back to check the latest state.";
-                        $data['backUrl'] = "device_info_checker/getDeviceForApproval/" . $id;
-                        $this->load->view('warning/warning_view', $data);
+                    if ($appsUserpublishChk['userEmail'] != "Not Available")
+                    {
+                        $maildata['to'] = $appsUserpublishChk['userEmail'];
+                        $maildata['subject'] = "Device Activation";
+                        $maildata['body'] = '<p>Dear Sir/Madam,</p>
+                                             <p>Your EBL SKYBANKING account registration process is completed.</p>
+                                             <p>Please activate your device using provided EBL SKYBANKING ID and Password to access the Banking / Bills Pay / Fund Transfer section.</p>
+                                             <p>Please ignore this email, if you have already activated your device.</p>
+                                             <p>Thanks & Regards, <br/>EBL SKYBANKING AdminPanel</p>';
+                        $this->common_model->send_mail($maildata);
                     }
                 }
+
+                // update and insert
+                $this->device_info_model_checker->UpdateInsertCheckerApprove($id, $chkdata);
+            } 
+            else if ($dbData['isPublished'] == 1)
+            {
+                // update and update
+                $this->device_info_model_checker->UpdateUpdateCheckerApprove($id, $chkdata);
             }
-        } else {
-            echo "Authorization module not given";
+
+
+            // activity log starts here
+
+            redirect('device_info_checker');
+        } 
+        else if ($data['checkerAction'] == 'reject') 
+        {
+            $data['checkerActionDt'] = date("Y-m-d");
+            $data['checkerActionTm'] = date("G:i:s");
+            $data['checkerActionBy'] = $this->session->userdata('adminUserId');
+            $data['checkerAction'] = "Rejected";
+            $data['checkerActionComment'] = $_POST['newReason'];
+            $data['mcStatus'] = 2;
+
+            $res = $this->checkUserInteraction($id, $makerActionDtTm, $checkerActionDtTm);
+
+            if ($res == 0) {
+                // update
+                $this->device_info_model_checker->checkerReject($id, $data);
+                redirect('device_info_checker');
+            } else {
+                // redirect
+                // echo "interaction";
+                $this->output->set_template('theme2');
+                $data['message'] = "Meanwhine some action was performed on data.
+                                    <br> Please go back to check the latest state.";
+                $data['backUrl'] = "device_info_checker/getDeviceForApproval/" . $id;
+                $this->load->view('warning/warning_view', $data);
+            }
         }
+        
+        
     }
 
     public function checkUserInteraction($id, $makerActionDtTmPost, $checkerActionDtTmPost) {
