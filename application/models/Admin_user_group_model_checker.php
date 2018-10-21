@@ -12,8 +12,8 @@ class Admin_user_group_model_checker extends CI_Model {
     public function getUnapprovedGroups() {
         $this->db->order_by('userGroupId', 'desc');
         $this->db->where('mcStatus =', 0);
-        $this->db->where('userGroupId !=', 1); // not showing super admin
-        $this->db->where('makerActionBy !=', $this->my_session->userId);
+        //$this->db->where('userGroupId !=', 1); // not showing super admin
+        //$this->db->where('makerActionBy !=', $this->my_session->userId);
         $this->db->select('admin_users_group_mc.*');
         $query = $this->db->get('admin_users_group_mc');
         return $query->result();
@@ -112,7 +112,9 @@ class Admin_user_group_model_checker extends CI_Model {
 
         $query = $this->db->get_where('admin_users_group_mc', array('userGroupId' => $id));
         $result = $query->row_array();
-
+        
+        $result['mcStatus'] = 1;
+        
         $this->db->where('userGroupId', $id);
         $this->db->update('admin_users_group', $result);
 

@@ -276,9 +276,9 @@ class Admin_user_group_maker extends CI_Controller {
         if ($action == "edit_permissions"):
             $ugid = $this->input->post("userGroupId", true);
             $permission = $this->input->post("permissions", true);
-
+            sort($permission);
             $permission_string = implode(",", $permission);
-
+            
             $result = $this->admin_user_group_model_maker->updatePermission($ugid, $permission_string);
 
             if (!$result):

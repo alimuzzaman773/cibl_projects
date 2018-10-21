@@ -145,9 +145,9 @@ class Admin_user_group_checker extends CI_Controller {
         $dbData = $this->admin_user_group_model_checker->getGroupById($id);
 
 
-        if ($dbData['makerActionBy'] == $this->my_session->userId) {
-            echo "You can not authorize your own maker action";
-        } else {
+        //if ($dbData['makerActionBy'] == $this->my_session->userId) {
+         //   echo "You can not authorize your own maker action";
+        //} else {
             if ($data['checkerAction'] == "approve") {
 
                 $chkdata['checkerActionDt'] = date("Y-m-d");
@@ -197,7 +197,7 @@ class Admin_user_group_checker extends CI_Controller {
                     echo "interaction";
                 }
             }
-        }
+        //}
         //} 
     }
 
