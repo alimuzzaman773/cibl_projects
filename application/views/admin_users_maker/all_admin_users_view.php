@@ -10,7 +10,6 @@
         </div>
     </div>
 </div>
-
 <div class="container" id="AdminUserModule" data-ng-controller="AdminUserController">
     <div class="row">
         <div class="col-md-12 col-xs-12">
@@ -21,6 +20,7 @@
                             <th class="text-center hidden"><input type="checkbox" id="selectAll" data-ng-model="selectAll" /></th>
                             <th>SL#</th>                            
                             <th>Full Name</th>
+                            <th>User Name</th>
                             <th>Admin User Group</th>
                             <th>Email</th>
                             <th>Lock/Unlock</th>
@@ -34,6 +34,7 @@
                             <td class="text-center hidden"><input type="checkbox" id="selectAll" data-ng-model="i.isLocked" data-ng-true-value="true" data-ng-false-value="false" /></td>
                             <td class="text-center hidden"><input type="checkbox" id="selectAll" data-ng-model="i.isChecked" data-ng-true-value="true" data-ng-false-value="false" /></td>
                             <td>{{($index + 1)}}</td>
+                            <td>{{i.fullName}}</td>
                             <td>{{i.adminUserName}}</td>
                             <td>{{i.userGroupName}}</td>
                             <td>{{i.email}}</td>
@@ -100,11 +101,9 @@
         </div>
     </div>
 </div>
-
 <?php
 ci_add_js(asset_url() . 'app/admin_user/admin_user_module.js');
 ?>
-
 <script type="text/javascript" charset="utf-8">
     var app = app || {};
     app.adminUsers = <?= $adminUsers ?>;

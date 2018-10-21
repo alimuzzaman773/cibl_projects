@@ -54,17 +54,9 @@ class Product_setup extends CI_Controller {
             if (!ci_check_permission("canAddProduct")):
                 $crud->unset_add();
             endif;
+
             if (!ci_check_permission("canEditProduct")):
                 $crud->unset_edit();
-            endif;
-            if (!ci_check_permission("canReadProduct")):
-                $crud->unset_read();
-            endif;
-            if (!ci_check_permission("canExportProduct")):
-                $crud->unset_export();
-            endif;
-            if (!ci_check_permission("canPrintProduct")):
-                $crud->unset_print();
             endif;
 
             $output = $crud->render();

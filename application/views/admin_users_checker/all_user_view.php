@@ -29,7 +29,9 @@
                             <td>{{i.adminUserName}}</td>
                             <td>{{i.userGroupName}}</td>
                             <td>{{i.makerAction}}</td>
-                            <td>{{i.mcStatus}}</td>
+                            <td>
+                                <span data-ng-class="{'text-success': i.mcStatus == '1', 'text-danger': i.mcStatus == '0'}">{{i.mcStatus=='1' ? 'Approved' : 'Wait for approve'}}</span>
+                            </td>
                             <td>
                                 <div class="dropdown pull-right">
                                     <button class="btn btn-primary btn-xs dropdown-toggle" type="button" data-toggle="dropdown">

@@ -4,7 +4,7 @@
             <h3 class="title-underlined ng-scope">
                 <?= $pageTitle ?>
                 <?php if (ci_check_permission("canAddAdminUserGroup")): ?>
-                    <a href="<?php echo base_url(); ?>admin_user_group_maker/selectModule/Add" class="btn btn-primary btn-xs pull-right">
+                    <a href="<?php echo base_url(); ?>admin_user_group_maker/index/add" class="btn btn-primary btn-xs pull-right">
                         <i class="fa fa-plus"></i> Add Admin User Group
                     </a>
                 <?php endif; ?>
@@ -52,11 +52,11 @@
                                     <ul class="dropdown-menu">
                                         <?php if (ci_check_permission("canEditAdminUserGroup")): ?>
                                             <li>
-                                                <a href="<?= base_url() ?>admin_user_group_maker/editModule/{{i.userGroupId}}/edit">
+                                                <a href="<?= base_url() ?>admin_user_group_maker/index/edit/{{i.userGroupId}}">
                                                     <i class="glyphicon glyphicon-pencil"></i> Edit
                                                 </a>
                                             </li>
-                                        <?php endif; ?>                            
+                                        <?php endif; ?>
                                         <?php if (ci_check_permission("canSetuPermissionAdminUserGroup")): ?>
                                             <li>
                                                 <a href="<?= base_url() ?>admin_user_group_maker/set_permission/{{i.userGroupId}}">

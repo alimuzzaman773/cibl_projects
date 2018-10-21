@@ -71,6 +71,7 @@
                                     <td width="100"><button class="btn btn-success" onclick="cancelReason(); return false;">Cancel Reason</button></td>
                                 </tr>
                             </table>
+                            <br>
                             <div id="newReasonDiv" style="display: none" >
                                 <h3 style="color:red" >New Reject Reason</h3>
                                 <textarea name="newReason" id="newReason" cols="40" rows="5"></textarea>

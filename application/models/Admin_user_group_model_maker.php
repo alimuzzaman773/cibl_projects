@@ -10,7 +10,7 @@ class Admin_user_group_model_maker extends CI_Model {
         $this->db->where('userGroupId !=', 1);
         $this->db->where('makerActionBy =', $this->my_session->userId);
         $this->db->or_where('mcStatus =', 1);
-        $query = $this->db->get('admin_users_group_mc');
+        $query = $this->db->get(TBL_ADMIN_USERS_GROUP_MC);
         return $query->result();
     }
 
@@ -48,27 +48,27 @@ class Admin_user_group_model_maker extends CI_Model {
         $userGroupId = $data['userGroupId'];
         $userGroupName = $data['groupName'];
         $this->db->where("userGroupName = '$userGroupName' AND userGroupId != '$userGroupId'");
-        $this->db->from('admin_users_group_mc');
+        $this->db->from(TBL_ADMIN_USERS_GROUP_MC);
         $count = $this->db->count_all_results();
         return $count;
     }
 
     public function insertAdminUserGroup($data) {
-        $this->db->insert('admin_users_group_mc', $data);
+        $this->db->insert(TBL_ADMIN_USERS_GROUP_MC, $data);
     }
 
     public function updateAdminUserGroup($data, $id) {
         $this->db->where('userGroupId', $id);
-        $this->db->update('admin_users_group_mc', $data);
+        $this->db->update(TBL_ADMIN_USERS_GROUP_MC, $data);
     }
 
     public function getUserGroupByName($data) {
-        $query = $this->db->get_where('admin_users_group_mc', array('userGroupName' => $data));
+        $query = $this->db->get_where(TBL_ADMIN_USERS_GROUP_MC, array('userGroupName' => $data));
         return $query->row_array();
     }
 
     public function getUserGroupById($data) {
-        $query = $this->db->get_where('admin_users_group_mc', array('userGroupId' => $data));
+        $query = $this->db->get_where(TBL_ADMIN_USERS_GROUP_MC, array('userGroupId' => $data));
         return $query->row_array();
     }
 
@@ -82,11 +82,21 @@ class Admin_user_group_model_maker extends CI_Model {
         return false;
     }
 
+    function getUGinfoMC($gpid) {
+        $this->db->where("userGroupId", $gpid);
+        $result = $this->db->get(TBL_ADMIN_USERS_GROUP_MC);
+
+        if ($result->num_rows() > 0) {
+            return $result;
+        }
+        return false;
+    }
+
     function updatePermission($ugid, $permission) {
         $data['permissions'] = $permission;
+        $data['mcStatus'] = 0;
         $this->db->where("userGroupId", $ugid)
-                ->update('admin_users_group', $data);
-        
+                ->update(TBL_ADMIN_USERS_GROUP_MC, $data);
         return true;
     }
 

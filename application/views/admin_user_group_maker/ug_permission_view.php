@@ -1,6 +1,6 @@
 <h2 class="title-underlined">User Group Permissions<a href="<?= base_url() . "admin_user_group_maker" ?>" class="btn btn-primary btn-xs pull-right"><span class="glyphicon glyphicon-backward"></span> Back to user group list</a></h2>
 <form class="forms" action="<?= $base_url . 'admin_user_group_maker/update_permission/' ?>" method="post" />
-<table cellpadding="0" cellspacing="1" border="0" style="width:100%" class="table table-bordered table-striped">
+<table cellpadding="0" cellspacing="1" border="0" style="width:100%;" class="table table-bordered table-striped">
     <tr>
         <th colspan="2">User Group Information</th>        
     </tr>        
@@ -12,11 +12,11 @@
         <td class="td"><label>Permissions</label></td>
         <td class="td form-inline">            
             <?php
-            //d($permissions['category']);
+            //d($existingPermission);
             foreach ($permissions['category'] as $k => $p):
                 echo '<h1 class="title-underlined">' . $k . '</h1>';
                 foreach ($permissions['category'][$k] as $v):
-                    //$checked = (isset($v->name)) ? "checked" : "";
+                    //        $checked = (isset($v->name)) ? "checked" : "";
                     $checked = (isset($existingPermission[$v->permissionId])) ? "checked" : "";
                     ?>
                     <div class="form-group col-xs-12 col-md-6 col-sm-6">

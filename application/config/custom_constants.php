@@ -23,11 +23,17 @@ define("DB_PREFIX", "");
 
 define("TBL_ADMIN_USERS", DB_PREFIX . "admin_users");
 define("TBL_ADMIN_USERS_GROUP", DB_PREFIX . "admin_users_group");
+define("TBL_ADMIN_USERS_GROUP_MC", DB_PREFIX . "admin_users_group_mc");
 define("TBL_PERMISSIONS", DB_PREFIX . "permissions");
 define("TBL_ACTION", DB_PREFIX . "action");
 define("TBL_PRODUCT_SETUP", DB_PREFIX . "product_setup");
 define("TBL_PRODUCT_TYPE_SETUP", DB_PREFIX . "product_type_setup");
-
+define("TBL_ZIP_PARTNERS", "zip_partners");
+define("TBL_DISCOUNT_PARTNERS", "discount_partners");
+define("TBL_APPOINTMENT", DB_PREFIX . "appointment");
+define("TBL_ATMS", DB_PREFIX . "atms");
+define("TBL_ADVERTISEMENT", DB_PREFIX . "advertisement");
+define("TBL_VALIDATION", DB_PREFIX . "validation");
 
 // All Constant Variables:
 define ("PRODUCT_REQUEST_REPORTING_MAIL", serialize(array( 'mail1'=>"abc@gmail.com", 'mail2'=> "abc@yahoo.com")));

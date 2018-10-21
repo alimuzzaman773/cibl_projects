@@ -14,7 +14,7 @@ class Routing_number extends CI_Controller {
     }
 
     function index($params = null) {
-        $this->my_session->authorize("canDetailsRoutingNumber");
+        $this->my_session->authorize("canViewRoutingNumber");
         try {
             $crud = new grocery_CRUD();
             $crud->set_theme(TABLE_THEME);
@@ -34,17 +34,9 @@ class Routing_number extends CI_Controller {
             if (!ci_check_permission("canAddRoutingNumber")):
                 $crud->unset_add();
             endif;
+            
             if (!ci_check_permission("canEditRoutingNumber")):
                 $crud->unset_edit();
-            endif;
-            if (!ci_check_permission("canDetailsRoutingNumber")):
-                $crud->unset_read();
-            endif;
-            if (!ci_check_permission("canExportRoutingNumber")):
-                $crud->unset_export();
-            endif;
-            if (!ci_check_permission("canPrintRoutingNumber")):
-                $crud->unset_print();
             endif;
 
             $output = $crud->render();

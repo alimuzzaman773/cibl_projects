@@ -5,7 +5,6 @@
             <thead>
                 <tr>
                     <th style="text-align: center" >Changed Data</th>
-                    <th style="text-align: center; <?= $publishDataOfDisplay_c ?>" >Published data</th>
                 </tr>
             </thead>
             <tbody >
@@ -19,79 +18,13 @@
                             <input hidden type="text" name="checkerActionDtTm" id="checkerActionDtTm" value="<?= $checkerActionDtTm ?>">
                             <input hidden type="text" name="checkerAction" id="checkerAction" value="" >
                             <br><br>
-
-                            <?php
-                            foreach ($moduleIds as $index => $value) {
-                                $var = 0;
-                                ?>
-                                <div style="margin-top:50px" id="<?= $value . "dv" ?>">
-                                    <?php
-                                    foreach ($modulesActions as $item) {
-                                        if ($value == $item['moduleId']) {
-                                            if ($var == 0) {
-                                                ?>
-                                                <div> <input class="textbox" type="text" name="moduleCode" id="<?= $value . "mName" ?>" value="<?= $item['moduleName'] ?>" readonly> </div>
-                                                <?php
-                                                $var = 1;
-                                            }
-                                            ?>
-                                            <input hidden class="textbox" type="text" name="moduleId" id="<?= $item['moduleActionId'] . "maId" ?>" value="<?= $item['moduleId'] ?>">
-                                            <input hidden class="textbox" type="text" name="moduleCode" id="<?= $item['moduleActionId'] . "mCode" ?>" value="<?= $item['moduleCode'] ?>">
-                                            <input hidden class="textbox" type="text" name="actionCode" id="<?= $item['moduleActionId'] . "aCode" ?>" value="<?= $item['actionCode'] ?>">
-                                            <input id="<?= $item['moduleActionId'] ?>" class="actionCheckbox" style="margin-right: 15px" type="checkbox" name="actionCode[]" value="<?= $item['moduleActionId'] ?>" onclick="return false"><label> <?= $item['actionName'] ?> </label><br>
-                                        <?php } ?>      
-                                    <?php } ?>
-                                </div>
-                            <?php } ?>
-                            <br><br>
-
-                            <h4>Authorization Modules</h4>
-                            <br><br>
-                            <?php foreach ($authorizationModules as $index => $value) { ?>
-                                <input id="<?= "AM" . $index ?>" style="margin-right: 15px" type="checkbox" name="authorizationModuleCodes[]" value="<?= $index ?>" onclick="return false"><label> <?= $value ?> </label><br>
-                            <?php } ?>
-                            <br><br>
-
-
-                            <br><br>
-                            <h4>Content Setup</h4>
-                            <br><br>
-                            <?php foreach ($contentSetupModules as $index => $value) { ?>
-                                <input id="<?= "CMS" . $index ?>" style="margin-right: 15px" type="checkbox" name="contentSetupModuleCodes[]" value="<?= $index ?>" onclick="return false"><label> <?= $value ?> </label><br>
-                            <?php } ?>
-                            <br><br>
-
-
-                            <br><br>
-                            <h4>Service Request</h4>
-                            <br><br>
-                            <?php foreach ($serviceRequestModules as $index => $value) { ?>
-                                <input id="<?= "SR" . $index ?>" style="margin-right: 15px" type="checkbox" name="serviceRequestModuleCodes[]" value="<?= $index ?>" onclick="return false"><label> <?= $value ?> </label><br>
-                            <?php } ?>
-                            <br><br>
-                            <h4>Report Type Modules</h4>
-                            <br><br>
-                            <?php foreach ($reportTypeModules as $index => $value) { ?>
-                                <input id="<?= "RTM" . $index ?>" style="margin-right: 15px" type="checkbox" name="reportTypeModuleCodes[]" value="<?= $index ?>" onclick="return false"><label> <?= $value ?> </label><br>
-                            <?php } ?>
-                            <br><br>
-                            <table class="table table-striped table-bordered">    
-                                <tr>
-                                    <th align="left" scope="row">Maker Action</th>
-                                    <td><?= $userGroup['makerAction'] ?></td>
-                                </tr>
-
-                                <tr>
-                                    <th align="left" scope="row">Maker Action Date Time</th>
-                                    <td><?= $makerActionDtTm ?></td>
-                                </tr>
-                            </table>
                             <table width="100" border="0" cellpadding="2">
                                 <tr>
                                     <td width="100"><button class="btn btn-success" onclick="writeReason(); return false;">Write New Reason</button></td>
                                     <td width="100"><button class="btn btn-success" onclick="cancelReason(); return false;">Cancel Reason</button></td>
                                 </tr>
                             </table>
+                            <br><br>
                             <div id="newReasonDiv" style="display: none" >
                                 <h3 style="color:red" >New Reject Reason</h3>
                                 <textarea name="newReason" id="newReason" cols="40" rows="5"></textarea>
@@ -110,76 +43,6 @@
                                 <td width="100"><button class="btn btn-danger" onclick="reject(); return false;">Reject</button></td>
                             </tr>
                         </table>
-                    </td> 
-
-                    <td style="text-align:left; <?= $publishDataOfDisplay_c ?>">
-
-                        <input class="textbox" type="text" name="groupName_c" id="groupName_c" value="<?= $userGroup['userGroupName_c'] ?>" readonly>
-                        <br><br>
-                        <?php
-                        foreach ($moduleIds as $index => $value) {
-                            $var = 0;
-                            ?>
-                            <div style="margin-top:50px" id="<?= $value . "dv_c" ?>">
-                                <?php
-                                foreach ($modulesActions as $item) {
-                                    if ($value == $item['moduleId']) {
-                                        if ($var == 0) {
-                                            ?>
-                                            <div> <input class="textbox" type="text" name="moduleCode_c" id="<?= $value . "mName_c" ?>" value="<?= $item['moduleName'] ?>" readonly> </div>
-                                            <?php
-                                            $var = 1;
-                                        }
-                                        ?>
-                                        <input hidden class="textbox" type="text" name="moduleId_c" id="<?= $item['moduleActionId'] . "maId_c" ?>" value="<?= $item['moduleId'] ?>">
-                                        <input hidden class="textbox" type="text" name="moduleCode_c" id="<?= $item['moduleActionId'] . "mCode_c" ?>" value="<?= $item['moduleCode'] ?>">
-                                        <input hidden class="textbox" type="text" name="actionCode_c" id="<?= $item['moduleActionId'] . "aCode_c" ?>" value="<?= $item['actionCode'] ?>">
-                                        <input id="<?= $item['moduleActionId'] . "_c" ?>" class="actionCheckbox" style="margin-right: 15px" type="checkbox" name="actionCode[]_c" value="<?= $item['moduleActionId'] ?>" onclick="return false"><label> <?= $item['actionName'] ?> </label><br>
-                                    <?php } ?>      
-                                <?php } ?>
-                            </div>
-                        <?php } ?>
-                        <br><br>
-
-                        <br><br>
-                        <h4>Authorization Modules</h4>
-                        <br><br>
-                        <?php foreach ($authorizationModules as $index => $value) { ?>
-                            <input id="<?= "AM" . $index . "_c" ?>" style="margin-right: 15px" type="checkbox" name="authorizationModuleCodes_c[]" value="<?= $index ?>" onclick="return false"><label> <?= $value ?> </label><br>
-                        <?php } ?>
-
-                        <br><br>
-                        <h4>Content Setup</h4>
-                        <br><br>
-                        <?php foreach ($contentSetupModules as $index => $value) { ?>
-                            <input id="<?= "CMS" . $index . "_c" ?>" style="margin-right: 15px" type="checkbox" name="contentSetupModuleCodes_c[]" value="<?= $index ?>" onclick="return false"><label> <?= $value ?> </label><br>
-                        <?php } ?>
-                        <br><br>
-                        <h4>Service Request</h4>
-                        <br><br>
-                        <?php foreach ($serviceRequestModules as $index => $value) { ?>
-                            <input id="<?= "SR" . $index . "_c" ?>" style="margin-right: 15px" type="checkbox" name="serviceRequestModuleCodes_c[]" value="<?= $index ?>" onclick="return false"><label> <?= $value ?> </label><br>
-                        <?php } ?>
-                        <br><br>
-                        <h4>Report Type Modules</h4>
-                        <br><br>
-                        <?php foreach ($reportTypeModules as $index => $value) { ?>
-                            <input id="<?= "RTM" . $index . "_c" ?>" style="margin-right: 15px" type="checkbox" name="reportTypeModuleCodes_c[]" value="<?= $index ?>" onclick="return false"><label> <?= $value ?> </label><br>
-                        <?php } ?>
-                        <br><br>
-
-                        <table class="table table-striped table-bordered">    
-                            <tr>
-                                <th align="left" scope="row">Maker Action</th>
-                                <td><?= $userGroup['makerAction_c'] ?></td>
-                            </tr>
-
-                            <tr>
-                                <th align="left" scope="row">Maker Action Date Time</th>
-                                <td><?= $makerActionDtTm_c ?></td>
-                            </tr>
-                        </table>
-
                     </td>
                 </tr>
             </tbody>
