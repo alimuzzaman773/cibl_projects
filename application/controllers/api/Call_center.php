@@ -341,7 +341,7 @@ class Call_center extends CI_Controller {
             if($otp_channel == "sms"):
                 $smsData = array(
                     "mobileNo" => "88" . ltrim($userInfo->userMobNo1, "88"),
-                    "message" => "You one time account activation pin is {$pin}"
+                    "message" => "Your one time account activation pin is {$pin}"
                 );
 
                 $this->load->library("sms_service");
