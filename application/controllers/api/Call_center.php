@@ -148,7 +148,7 @@ class Call_center extends CI_Controller {
         
         $json = array(
             "success" => true,
-            "userInfo" => $user['userInfo'],
+            "userInfo" => $userInfo,
             "otpRes" => $otpRes
         );
         my_json_output($json);
