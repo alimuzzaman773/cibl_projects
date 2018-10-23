@@ -105,7 +105,7 @@
                                         <?php if (ci_check_permission("canViewHelpSetupMenu")): ?>
                                             <ul class="col-md-2 col-xs-12 list-unstyled">
                                                 <li><p><b>Terms & Conditions</b></p></li>
-                                                <li><a href="<?= base_url() . 'help_setup' ?>">Terms & Conditions</a></li>
+                                                <li><a href="<?= base_url() . 'help_setup' ?>">App Contents</a></li>
                                                 <li><a href="<?= base_url() . 'help_setup/complaintInfo' ?>">Complaint Info</a></li>
                                             </ul>
                                         <?php endif; ?>
