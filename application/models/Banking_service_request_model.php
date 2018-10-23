@@ -91,31 +91,28 @@ class Banking_service_request_model extends CI_Model {
 
     function getAllBankingRequest($params = array()) {
         if (isset($params['count']) && $params['count'] == true) {
-            $this->db->select("COUNT(service_request_bank.serviceId) as total");
+            $this->db->select("COUNT(sb.serviceId) as total");
         } else {
-            $this->db->select('service_request_bank.serviceId,
-                           service_request_bank.skyId,
-                           service_request_bank.typeCode,
-                           service_request_bank.referenceNo,
-                           service_request_bank.mobileNo,
-                           service_request_bank.reason,
-                           service_request_bank.requestDtTm,
-                           service_request_bank.status1,
-                           apps_users.userName,
-                           apps_users.eblSkyId,
-                           service_type.serviceName', FALSE);
+            $this->db->select('sb.serviceId, sb.skyId,sb.typeCode,sb.referenceNo,sb.mobileNo,
+                           sb.reason,sb.requestDtTm,sb.status1,au.userName,au.eblSkyId,st.serviceName,
+                           ag.userGroupName, 
+                           ag.oatMinTxnLim, ag.oatMaxTxnLim, ag.oatDayTxnLim, ag.oatNoOfTxn, ag.oatEffectiveDate,
+                           ag.pbMinTxnLim, ag.pbMaxTxnLim, ag.pbDayTxnLim, ag.pbNoOfTxn, ag.pbEffectiveDate,
+                           ag.eatMinTxnLim, ag.eatMaxTxnLim, ag.eatDayTxnLim, ag.eatNoOfTxn, ag.eatEffectiveDate,
+                           ag.obtMinTxnLim, ag.obtMaxTxnLim, ag.obtDayTxnLim, ag.obtNoOfTxn, ag.obtEffectiveDate', FALSE);
         }
 
-        $this->db->from('product_apply_request');
-        $this->db->from('service_request_bank');
-        $this->db->join('service_type', 'service_request_bank.typeCode = service_type.serviceTypeCode');
-        $this->db->join('apps_users', 'service_request_bank.skyId = apps_users.skyId');
+        $this->db->from('service_request_bank sb');
+        //$this->db->join('product_apply_request pr');
+        $this->db->join('service_type st', 'sb.typeCode = st.serviceTypeCode', 'inner');
+        $this->db->join('apps_users au', 'sb.skyId = au.skyId', 'left');
+        $this->db->join("apps_users_group ag", "ag.appsGroupId = sb.appsGroupId", "left");
 
-        if (isset($params['type_code']) && trim($params['type_code']) != "") {
-            $this->db->where("service_request_bank.typeCode", $params['type_code']);
+        if (isset($params['type_code']) && trim($params['type_code']) != "") {            
+            $this->db->where("sb.typeCode", $params['type_code']);
         }
 
-        $this->db->order_by("service_request_bank.serviceId", "desc");
+        $this->db->order_by("sb.serviceId", "desc");
 
         if (isset($params['limit']) && (int) $params['limit'] > 0) {
             $offset = (isset($params['offset'])) ? $params['offset'] : 0;
@@ -277,6 +274,65 @@ class Banking_service_request_model extends CI_Model {
                 $bankingReqMailArr[] = $data;
             }
             $this->db->insert_batch('banking_request_mail', $bankingReqMailArr);
+        }
+    }
+    
+    function setAppsUserGroup($skyId, $groupId, $serviceId = null)
+    {
+        try {
+            $groupData = array(
+                "appsGroupId" => $groupId
+            );
+
+            $appsUserGroup = $this->db->where("appsGroupId", $groupId)
+                                      ->get("apps_users_group");
+
+            if ($appsUserGroup->num_rows() <= 0):
+                return array(
+                    'success' => false,
+                    'msg' => "Package limit information not found"
+                );
+            endif;    
+            
+            $appsUserGroup = $appsUserGroup->row();
+
+            $grpSuffix = array("oat", "pb", "eat", "obt");
+            $groupArray = array(
+                "MinTxnLim", "MaxTxnLim", "DayTxnLim", "NoOfTxn", /* "LastDtTm" */
+            );
+
+            $groupFields = array();
+            foreach ($grpSuffix as $sf):
+                foreach ($groupArray as $gp):
+                    $gname = $sf . $gp;
+                    $groupFields[$gname] = $gname;
+                endforeach;
+            endforeach;
+
+            foreach ($groupFields as $k => $v):
+                $groupData[$v] = $appsUserGroup->{$v};
+            endforeach;
+            //d($groupData);
+
+            $this->db->reset_query();
+            $this->db->where("skyId", $skyId)
+                     ->update("apps_users", $groupData);
+            
+            $this->db->reset_query();
+            if((int)$serviceId > 0):
+                $this->db->where("serviceId", $serviceId)
+                         ->update("service_request_bank", array("status1" => 1));
+            endif;
+            
+            return array(
+                'success' => true
+            );
+            
+        } catch (Exception $ex) {
+            return array(
+                'success' => false,
+                'msg' => $ex->getMessage()
+            );
         }
     }
 

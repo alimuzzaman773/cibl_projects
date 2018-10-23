@@ -69,6 +69,7 @@ BankingModuleApp.controller("BankingController", ["$scope", "$http", function ($
         };
 
         $scope.getRequest = function () {
+            app.showModal();
             var $params = {
                 type_code: $scope.parent_code
             };
@@ -77,6 +78,7 @@ BankingModuleApp.controller("BankingController", ["$scope", "$http", function ($
                 url: app.baseUrl + "banking_service_request/get_child_service",
                 params: $params
             }).then(function (response) {
+                app.hideModal();
                 var $result = response.data;
                 $scope.child_list = $result.child_list;
             }, function (response) {
@@ -90,9 +92,45 @@ BankingModuleApp.controller("BankingController", ["$scope", "$http", function ($
             $scope.searchParams.type_code = $scope.type_code;
             $scope.getResultsPage(1);
         };
+        
+        $scope.activateLimitPackage = function($serviceId) {
+            if(!confirm('Do you really want to activate this package of the user? Before Activating please make sure: you have fixed the limit in the internet banking for this user')){
+                return fasle;
+            }
+            
+            app.showModal();
+            var $params = {
+                service_id: $serviceId
+            };
+            $http({
+                method: "post",
+                url: app.baseUrl + "banking_service_request/activate_limit_package",
+                data: jQuery.param($params),
+            }).then(function (response) {
+                app.hideModal();
+                var $result = response.data;
+                //$scope.child_list = $result.child_list;
+                if($result.success == false){
+                    alert($result.msg);
+                    return false;
+                }
+                
+                alert("Limit package successfully activated for this user");
+            }, function (response) {
+                app.hideModal();
+                alert("There was a problem, please try again later");
+            });
+            return false;
+        }
+
+        $scope.showPackage = function($serviceId){
+            $("#lp-"+$serviceId).slideToggle();
+            return false;
+        };
 
         $scope.init = function () {
-            $scope.getResultsPage(1);
+            console.log('init banking request module');
+            //$scope.getResultsPage(1);
         };
 
         $scope.init();

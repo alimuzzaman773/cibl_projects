@@ -44,7 +44,7 @@
             <thead>
             <tr>
                 <th width="55">SL No</th>
-                <th width="71">SKY ID</th>
+                <th width="71">Apps ID</th>
                 <th width="115">Date Time</th>
                 <th width="132">Customer ID</th>
                 <th width="87">Customer Name</th>

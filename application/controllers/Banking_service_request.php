@@ -15,20 +15,21 @@ class Banking_service_request extends CI_Controller {
         $moduleName = "Banking";
         $data['pServiceTypeCode'] = "0";
         $data["pageTitle"] = "Banking Service";
-        $data['parentServiceList'] = $this->banking_service_request_model->getAllServiceTypeByModule($moduleName, $data['pServiceTypeCode']);
+        $data['parentServiceList'] = $this->banking_service_request_model->getAllServiceTypeByModule($moduleName, $data['pServiceTypeCode']);        
         $data["body_template"] = "banking_service_request/show_banking_request.php";
         $this->load->view('site_template.php', $data);
     }
 
     function get_child_service() {
         $this->my_session->authorize("canViewBankingRequest");
-        $typeId = (int) $this->input->get("type_code", true);
+        $typeId = $this->input->get("type_code", true);
         $result = $this->banking_service_request_model->getChildService($typeId);
         $data["child_list"] = array();
         if ($result) {
             $data["child_list"] = $result->result();
         }
         $data["success"] = true;
+        $data['q'] = $this->db->last_query();
         my_json_output($data);
     }
 
@@ -56,6 +57,8 @@ class Banking_service_request extends CI_Controller {
         if ($result) {
             $data['banking_list'] = $result->result();
         }
+        
+        $data['q'] = log_last_query($data['q']);
         my_json_output($data);
     }
 
@@ -242,6 +245,44 @@ class Banking_service_request extends CI_Controller {
             $this->banking_service_request_model->statusChange($serviceId, $maildata, $bodyInstruction);
             redirect('banking_service_request/getRequests');
         }
+    }
+    
+    function activate_limit_package()
+    {
+        $serviceId = (int)$this->input->post('service_id', true);
+        
+        $result = $this->banking_service_request_model->getSingleRequestById($serviceId);
+        if(empty($result)):
+            $json = array(
+                'success' => false,
+                'msg' => "No service request information found"
+            );
+            my_json_output($json);
+        endif;
+        
+        $result = (object)$result;
+        if((int)$result->status1 == 1):
+            $json = array(
+                'success' => false,
+                'msg' => "Service request already processed"
+            );
+            my_json_output($json);
+        endif;
+        
+        $response = $this->banking_service_request_model->setAppsUserGroup($result->skyId, $result->appsGroupId, $result->serviceId);
+        if(!$response['success']){
+            $json = array(
+                'success' => false,
+                'msg' => $response['msg'],
+                'res' => $response
+            );
+            my_json_output($json);
+        }
+        
+        $json = array(
+            'success' => true
+        );
+        my_json_output($json);
     }
 
 }

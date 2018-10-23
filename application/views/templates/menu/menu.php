@@ -93,7 +93,7 @@
                                         <?php if (ci_check_permission("canViewNotificationSetupMenu")): ?>
                                             <ul class="col-md-2 col-xs-12 list-unstyled">
                                                 <li><p><b>Notification</b></p></li>
-                                                <li><a href="<?= base_url() . 'push_notification' ?>">Notify to aps user</a></li>
+                                                <li><a href="<?= base_url() . 'notification' ?>">Notify to aps user</a></li>
                                             </ul>
                                         <?php endif; ?>
                                         <?php if (ci_check_permission("canViewAdvertisementSetupMenu")): ?>
@@ -105,7 +105,7 @@
                                         <?php if (ci_check_permission("canViewHelpSetupMenu")): ?>
                                             <ul class="col-md-2 col-xs-12 list-unstyled">
                                                 <li><p><b>Terms & Conditions</b></p></li>
-                                                <li><a href="<?= base_url() . 'help_setup' ?>">Terms & Conditions</a></li>
+                                                <li><a href="<?= base_url() . 'help_setup' ?>">App Contents</a></li>
                                                 <li><a href="<?= base_url() . 'help_setup/complaintInfo' ?>">Complaint Info</a></li>
                                             </ul>
                                         <?php endif; ?>
@@ -140,7 +140,7 @@
                                             <?php endif; ?>
 
                                             <?php if (ci_check_permission("canViewPinCreateMenu")): ?>
-                                                <li><a href="<?= base_url() . 'pin_generation/viewPinByAction' ?>">Pin</a></li>
+                                                <li><a class="hidden" href="<?= base_url() . 'pin_generation/viewPinByAction' ?>">Pin</a></li>
                                             <?php endif; ?>
                                             <?php if (ci_check_permission("canViewPermissionMenu")): ?>
                                                 <li>
@@ -167,7 +167,7 @@
                                             <?php endif; ?>
 
                                             <?php if (ci_check_permission("canViewDeviceAuthorizationMenu")): ?>
-                                                <li><a href="<?= base_url() . 'device_info_checker' ?>">Device Authorization</a></li>
+                                                <li><a class="hidden" href="<?= base_url() . 'device_info_checker' ?>">Device Authorization</a></li>
                                             <?php endif; ?>
 
                                             <?php if (ci_check_permission("canViewBillerSetupAuthorizationMenu")): ?>
@@ -175,11 +175,11 @@
                                             <?php endif; ?>
 
                                             <?php if (ci_check_permission("canViewPinResetAuthorizationMenu")): ?>
-                                                <li><a href="<?= base_url() . 'pin_generation_checker' ?>">Pin Reset Authorization</a></li>
+                                                <li><a class="hidden" href="<?= base_url() . 'pin_generation_checker' ?>">Pin Reset Authorization</a></li>
                                             <?php endif; ?>
 
                                             <?php if (ci_check_permission("canViewPinCreateAuthorizationMenu")): ?>
-                                                <li><a href="<?= base_url() . 'pin_create_checker' ?>">Pin Create Authorization</a></li>
+                                                <li><a class="hidden" href="<?= base_url() . 'pin_create_checker' ?>">Pin Create Authorization</a></li>
                                             <?php endif; ?>
 
                                             <?php if (ci_check_permission("canViewPasswordPolicyAuthorizationMenu")): ?>
@@ -187,7 +187,7 @@
                                             <?php endif; ?>
 
                                             <?php if (ci_check_permission("canViewAppsUserDeleteAuthorizationMenu")): ?>
-                                                <li><a href="<?= base_url() . 'apps_user_delete_checker' ?>">Apps User Delete Authorization</a></li>
+                                                <li><a class="hidden" href="<?= base_url() . 'apps_user_delete_checker' ?>">Apps User Delete Authorization</a></li>
                                             <?php endif; ?>
                                         </ul>
                                         <ul class="col-md-2 col-xs-12 list-unstyled">
@@ -235,7 +235,7 @@
                     </ul>
                 </li>
             <?php endif; ?>
-            <!--
+
             <li class="dropdown yamm-fw">
                 <a href="#" id="dropModules" role="button" data-toggle="dropdown">Reports<b class="caret"></b></a>
                 <ul id="dropModules" class="dropdown-menu" role="menu" aria-labelledby="dropModules">                    
@@ -276,24 +276,6 @@
                     </li>    
                 </ul>
             </li>
-            <li class="dropdown yamm-fw">
-                <a href="#" id="dropModules" role="button" data-toggle="dropdown">Call Center<b class="caret"></b></a>
-                <ul id="dropModules" class="dropdown-menu" role="menu" aria-labelledby="dropModules">                    
-                    <li class="">
-                        <div class="yamm-content">
-                            <div class="row">                                    
-                                <div class="clearfix mb">
-                                    <ul class="col-md-2 col-xs-12 list-unstyled">
-                                        <li><p><b>Apps User</b></p></li>
-                                        <li><a href="<?= base_url() . 'call_center/#/user_list' ?>">User Authorized</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </li>    
-                </ul>
-            </li>
-            -->
             <li class="dropdown yamm-fw">
                 <a href="#" id="dropModules" role="button" data-toggle="dropdown">Call Center<b class="caret"></b></a>
                 <ul id="dropModules" class="dropdown-menu" role="menu" aria-labelledby="dropModules">                    

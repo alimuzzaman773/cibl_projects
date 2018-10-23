@@ -153,8 +153,8 @@ if ( ! function_exists('log_last_query'))
      * @return mixed array or the parameter itself
      */
     function log_last_query(&$q)
-    {
-        if(SHOW_QUERY_IN_JSON)
+    {        
+        if(defined('SHOW_QUERY_IN_JSON') && SHOW_QUERY_IN_JSON)
         {
             $CI =& get_instance();
             $q[] = $CI->db->last_query();

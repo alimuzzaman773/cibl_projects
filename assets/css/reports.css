@@ -1,0 +1,49 @@
+
+.card_container {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 30px;
+}
+
+.container_title {
+    margin: 0 auto;
+    font-size: 20px;;
+    background-color: #ddd;
+    padding: 7px;
+}
+
+.report-form-container{ border:1px solid #ddd;  margin:7px; background-color: #f9f9f9}
+.report-form-container h1{ background-color: #eee; font-size:15px; font-weight: bold; padding: 5px 10px; margin: 0; color: #777; border-bottom: 1px solid #ddd; margin-bottom: 10px}
+.report-form{ padding:0 10px;}
+.report-form table tr td{ padding: 3px; font-size: 15px}
+.report-form table tr td span{ font-weight: bold; color: #666; font-size: 13px}
+.report-form input[type='date'], .report-form select{ border: 1px solid #ddd; border-radius:2px}
+.report-form input[type='date']{width: 180px !important; height: 26px;}
+.report-form select{width: 180px; height: 25px}
+.report-form input[type='submit']{width: 100px; height: 25px}
+
+#show-report{ border: 1px solid #ddd; margin:0 7px; padding: 5px; padding-top: 15px}
+#show-report table{ border-collapse:collapse; width: 100%; border-top:1px solid #ddd }
+#show-report table thead tr th{ background-color: #eee; color: #666; font-size: 14px; padding: 5px; font-weight: bold; border:1px solid #ddd}
+#show-report table tbody tr td{ border:1px solid #ddd; font-size: 14px; padding: 4px}
+.bottom{  padding: 0; overflow: hidden;}
+.dataTables_paginate{ margin-right: 2px !important;}
+#datepicker1, #datepicker2{ border-radius: 2px; border:1px solid #ddd; height: 25px; width:180px;padding:4px 7px}
+
+#show-report .dt-buttons{float: right;padding:0px 3px 5px 3px;}
+#show-report .dataTables_length{margin-top:10px;}
+#show-report .dataTables_filter{margin-top:3px;margin-right: 5px;}
+#show-report .dataTables_info{margin-top: -35px;margin-bottom: 8px}
+#show-report .dropdown-header a{ padding-left: 7px !important;}
+#show-report .col-sm-4  ul li a, .col-sm-6  ul li a{ padding-left: 7px !important;}
+.dataTables_length { margin-bottom: 25px !important;}
+.dataTables_filter  input[type="search"]{border:1px solid #ddd !important; height: 27px; width: 200px}
+.paginate_button{ padding:3px 8px !important;}
+.data-title{ margin: 0; padding: 0; background-color: #eee; padding: 5px; border: 1px solid #ddd; font-weight: bold; color: #444; font-size: 12px; text-transform: uppercase}
+.data-bottom{ background-color: #fff !important;}
+.report-btn{ text-align: right;padding-bottom: 10px}
+.hide-tag{ visibility: hidden !important;}
+.dataTables_length select{ padding: 5px !important; width: 70px !important;}
+#actionSelect{ padding: 3px; width: 150px !important; border-radius: 3px !important; height: 30px}
+.text-field-bottom{margin-bottom:5px;}
+.mail-table tr td{padding:5px;}

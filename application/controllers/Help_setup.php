@@ -19,18 +19,21 @@ class Help_setup extends CI_Controller {
         try {
             $crud = new grocery_CRUD();
             $crud->set_theme(TABLE_THEME);
-            $crud->set_subject('Terms & Conditions');
+            $crud->set_subject('App Content');
             $crud->set_table('help_center');
 
-            $crud->columns('helpText');
+            $crud->columns('machineName', 'title', 'helpText');
 
-            $crud->display_as('helpText', 'Help');
+            $crud->display_as('machineName', 'Machine Name');
+            $crud->display_as('title', 'Title');
+            $crud->display_as('helpText', 'Content');
+
 
             $time = date("Y-m-d H:i:s");
             $creatorId = $this->my_session->userId;
 
-            $crud->add_fields('helpText', 'creationDtTm', 'updateDtTm');
-            $crud->edit_fields('helpText', 'updateDtTm');
+            $crud->add_fields('machineName', 'title', 'helpText', 'creationDtTm', 'updateDtTm');
+            $crud->edit_fields('machineName', 'title', 'helpText', 'updateDtTm');
 
             $crud->change_field_type('creationDtTm', 'hidden', $time);
             $crud->change_field_type('updateDtTm', 'hidden', $time);
@@ -58,7 +61,7 @@ class Help_setup extends CI_Controller {
             $output = $crud->render();
             $output->css = "";
             $output->js = "";
-            $output->pageTitle = "Help";
+            $output->pageTitle = "Settings";
             $output->base_url = base_url();
 
             $output->body_template = "help/index.php";
