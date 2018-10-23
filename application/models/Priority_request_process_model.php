@@ -52,8 +52,8 @@ class Priority_request_process_model extends CI_Model {
         }
         
         $this->db->from('service_request');
-        $this->db->join('service_type', 'service_request.typeCode = service_type.serviceTypeCode');
-        $this->db->join('apps_users', 'service_request.skyId = apps_users.skyId');
+        $this->db->join('service_type', 'service_request.typeCode = service_type.serviceTypeCode', "inner");
+        $this->db->join('apps_users', 'service_request.skyId = apps_users.skyId',"left");
 
         if (isset($params['type_code']) && trim($params['type_code']) != "") {
             $this->db->where("typeCode", $params['type_code']);

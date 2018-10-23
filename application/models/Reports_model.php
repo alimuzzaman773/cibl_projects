@@ -18,7 +18,7 @@ class Reports_model extends CI_Model {
         } else if ($status == "locked") {
             $value = "isLocked=1 AND isPublished=1";
         }
-        $query = $this->db->query("SELECT * FROM apps_users_mc WHERE " . $value);
+        $query = $this->db->query("SELECT * FROM apps_users WHERE " . $value);
 
         return ($query->num_rows() > 0) ? $query->result() : false;
     }

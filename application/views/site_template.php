@@ -139,6 +139,22 @@
         <?= render_css() ?>        
         <!-- custom js -->
         <?= render_js() ?>
+		
+		<!-- report-->    
+		<script src="<?php echo base_url(); ?>assets/data_table/data_table.min.js"></script>
+		<script src="<?php echo base_url(); ?>assets/data_table/dataTables.buttons.js"></script>
+		<script src="<?php echo base_url(); ?>assets/data_table/jszip.js"></script>
+		<script src="<?php echo base_url(); ?>assets/data_table/pdfmake.js"></script>
+		<script src="<?php echo base_url(); ?>assets/data_table/vfs_fonts.js"></script>
+		<script src="<?php echo base_url(); ?>assets/data_table/buttons.html5.js"></script>
+		<script src="<?php echo base_url(); ?>assets/data_table/buttons.flash.js"></script>
+		<script src="<?php echo base_url(); ?>assets/data_table/buttons.print.js"></script>
+		<script src="<?php echo base_url(); ?>assets/js/reports.js"></script>
+		<script src="<?php echo base_url(); ?>assets/datepicker/jquery-ui.min.js"></script>
+		<link href="<?php echo base_url(); ?>assets/data_table/data_table.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/reports.css">
+		<link rel="stylesheet" href="<?php echo base_url(); ?>assets/datepicker/jquery-ui.min.css">
+		<!--end of report--> 
 
         <script>
             app.checkUserLoginStatus = function () {

@@ -32,6 +32,7 @@
                 <th>SL#</th>
                 <th>Service Name</th>
                 <th>Apps User ID</th>
+                <th data-ng-if="type_code == 'lp'">Limit Package</th>
                 <th>Reference No.</th>
                 <th>User Name</th>
                 <th>Contact No.</th>
@@ -46,6 +47,15 @@
                 <td>{{(per_page * (currentPageNumber - 1)) + ($index + 1)}}</td>
                 <td>{{ item.serviceName}}</td>
                 <td>{{ item.eblSkyId}}</td>
+                <td data-ng-if="type_code == 'lp'">
+                    {{item.userGroupName}} <button class="btn btn-xs btn-default pull-right" data-ng-click="showPackage(item.serviceId);"><i class="glyphicon glyphicon-eye-open"></i></button><br />
+                    <small style="display:none" id="lp-{{item.serviceId}}">
+                        <b>oatMinTxnLim:</b> {{item.oatMinTxnLim}}, <b>oatMaxTxnLim:</b> {{item.oatMaxTxnLim}}, <b>oatDayTxnLim:</b> {{item.oatDayTxnLim}}, <b>oatNoOfTxn:</b> {{item.oatNoOfTxn}} <br />
+                        <b>eatMinTxnLim:</b> {{item.eatMinTxnLim}}, <b>eatMaxTxnLim:</b> {{item.eatMaxTxnLim}}, <b>eatDayTxnLim:</b> {{item.eatDayTxnLim}}, <b>eatNoOfTxn:</b> {{item.eatNoOfTxn}} <br />
+                        <b>obtMinTxnLim:</b> {{item.obtMinTxnLim}}, <b>obtMaxTxnLim:</b> {{item.obtMaxTxnLim}}, <b>obtDayTxnLim:</b> {{item.obtDayTxnLim}}, <b>obtNoOfTxn:</b> {{item.obtNoOfTxn}} <br />
+                        <b>pbMinTxnLim:</b> {{item.pbMinTxnLim}}, <b>pbMaxTxnLim:</b> {{item.pbMaxTxnLim}}, <b>pbDayTxnLim:</b> {{item.pbDayTxnLim}}, <b>pbNoOfTxn:</b> {{item.pbNoOfTxn}}
+                    </small>
+                </td>
                 <td>{{ item.referenceNo}}</td>
                 <td>{{ item.userName}}</td>
                 <td>{{ item.mobileNo}}</td>
@@ -64,12 +74,19 @@
                                 </a>
                             </li>  
                             <?php endif;?>
+                            <?php if (ci_check_permission("canActivateUserLimitPackage")): ?>
+                            <li data-ng-if="type_code == 'lp' && item.status1 == '0'">
+                                <a style="cursor: pointer" data-ng-click="activateLimitPackage(item.serviceId)">
+                                    <i class="glyphicon glyphicon-alert"></i> Activate Limit Package
+                                </a>
+                            </li>  
+                            <?php endif;?>
                         </ul>
                     </div>
                 </td>
             </tr>
             <tr data-ng-show="banking_list.length <= 0">
-                <td colspan="9">No data found</td>
+                <td colspan="11">No data found</td>
             </tr>
         </tbody>
     </table>
@@ -89,6 +106,7 @@ ci_add_js(asset_url() . 'app/service_request/banking_module.js');
 
 </script>
 
+<?php if(true == false): ?>
 <!--
 
     <table data-bind="dataTable: { dataSource : records, rowTemplate: 'rowTemplate',
@@ -185,7 +203,7 @@ ci_add_js(asset_url() . 'app/service_request/banking_module.js');
 </script>
 
 -->
-
+<?php endif; ?>
 
 
 

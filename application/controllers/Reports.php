@@ -5,25 +5,11 @@ if (!defined('BASEPATH'))
 
 class Reports extends CI_Controller {
 
-//    function __construct() {
-//        parent::__construct();
-//        date_default_timezone_set('Asia/Dhaka');
-//        $this->load->database();
-//        $this->load->helper('url');
-//        $this->load->model('reports_model');
-//        $this->load->model('login_model');
-//        $this->load->library('session');
-//        if ($this->login_model->check_session()) {
-//            redirect('/admin_login/index');
-//        }
-//    }
-    
     function __construct() {
         parent::__construct();
 
         $this->load->library("my_session");
         $this->my_session->checkSession();
-
         $this->load->model('reports_model');
     }
 
@@ -38,389 +24,317 @@ class Reports extends CI_Controller {
 
     //Active User Report Form Pick
     public function user_status() {
-        //$moduleCodes = $this->session->userdata('reportTypeModules');
-        //$moduleCodes = explode("|", $moduleCodes);
-        //$index = array_search(user_status, $moduleCodes);
-        //if ($index > -1) {
-            //$this->output->set_template('theme2');
-            $status = $this->input->get('status');
-            try {
-                $data['rows'] = array();
-                if ($status):
-                    $r = $this->reports_model->get_user_status($status);
-                    if ($r):
-                        $data['rows'] = $r;
-                    endif;
-                endif;
-                $data['pageTitle'] = "Complaint Info";
-                $data['body_template'] = 'reports/user_status.php';
-                $this->load->view('site_template.php', $data);
-            } catch (Exception $e) {
-                echo $e->getMessage();
-            }
-        //} else {
-           // echo "not allowed";
-        //}
+        //$this->my_session->authorize("canViewUserStatusReport");
+        
+        $status = $this->input->get('status', true);
+        $data['rows'] = array();
+        if ($status):
+            $r = $this->reports_model->get_user_status($status);
+            if ($r):
+                $data['rows'] = $r;
+            endif;
+        endif;
+        
+        $data['pageTitle'] = "User Status Report";
+        $data['body_template'] = 'reports/user_status.php';
+        $this->load->view('site_template.php', $data);
     }
 
-    //Fund transfer Form Adding
+//Fund transfer Form Adding
     public function fund_transfer() {
 
-        $moduleCodes = $this->session->userdata('reportTypeModules');
-        $moduleCodes = explode("|", $moduleCodes);
-        $index = array_search(fund_transfer, $moduleCodes);
-        if ($index > -1) {
+        //$this->my_session->authorize("canViewFundTransferReport");
 
-            $this->output->set_template('theme2');
-            $type = $this->input->get('type');
-            $from = $this->input->get('from');
-            $to = $this->input->get('to');
-            try {
-                $data['rows'] = array();
-                $value = range_validation($from, $to);
-                if ($value == "ok") {
-                    if ($type && $from && $to):
-                        $r = $this->reports_model->get_fund_transfer($type, $from, $to);
-                        if ($r):
-                            $data['rows'] = $r;
-                        endif;
-                    endif;
-                }
-                $data['msg'] = $value;
-                $this->load->view('reports/fund_transfer', $data);
-            } catch (Exception $e) {
-                echo $e->getMessage();
-            }
-        } else {
-            echo "not allowed";
+        $type = $this->input->get('type', true);
+        $from = $this->input->get('from', true);
+        $to = $this->input->get('to', true);
+
+        $data['rows'] = array();
+        $value = range_validation($from, $to);
+        if ($value == "ok") {
+            if ($type && $from && $to):
+                $r = $this->reports_model->get_fund_transfer($type, $from, $to);
+                if ($r):
+                    $data['rows'] = $r;
+                endif;
+            endif;
         }
+        $data['msg'] = $value;
+        $data['pageTitle'] = "Fund Transfer Report";
+        $data['body_template'] = 'reports/fund_transfer.php';
+        $this->load->view('site_template.php', $data);
     }
 
-    //Other Bank Fund transfer Form Adding
+//Other Bank Fund transfer Form Adding
     public function other_fund_transfer() {
 
-        $moduleCodes = $this->session->userdata('reportTypeModules');
-        $moduleCodes = explode("|", $moduleCodes);
-        $index = array_search(other_fund_transfer, $moduleCodes);
-        if ($index > -1) {
+        //$this->my_session->authorize("canViewOtherFundTransferReport");
 
-            $this->output->set_template('theme2');
-            $from = $this->input->get('from');
-            $to = $this->input->get('to');
-            try {
-                $data['rows'] = array();
-                $value = range_validation($from, $to);
-                if ($value == "ok") {
-                    if ($from && $to):
-                        $r = $this->reports_model->get_other_fund_transfer($from, $to);
-                        if ($r):
-                            $data['rows'] = $r;
-                        endif;
-                    endif;
-                }
-                $data['msg'] = $value;
-                $this->load->view('reports/other_fund_transfer', $data);
-            } catch (Exception $e) {
-                echo $e->getMessage();
-            }
-        } else {
-            echo "not allowed";
+        $from = $this->input->get('from', true);
+        $to = $this->input->get('to', true);
+
+        $data['rows'] = array();
+        $value = range_validation($from, $to);
+        if ($value == "ok") {
+            if ($from && $to):
+                $r = $this->reports_model->get_other_fund_transfer($from, $to);
+                if ($r):
+                    $data['rows'] = $r;
+                endif;
+            endif;
         }
+        
+        $data['msg'] = $value;
+        $data['pageTitle'] = "Other Bank Transfer Report";
+        $data['body_template'] = 'reports/other_fund_transfer.php';
+        $this->load->view('site_template.php', $data);
     }
 
-    //Bill pay date by date
+//Bill pay date by date
     public function bill_pay() {
-        $moduleCodes = $this->session->userdata('reportTypeModules');
-        $moduleCodes = explode("|", $moduleCodes);
-        $index = array_search(billing_info, $moduleCodes);
-        if ($index > -1) {
-            $this->output->set_template('theme2');
-            $type = $this->input->get('type');
-            $from = $this->input->get('from');
-            $to = $this->input->get('to');
-            try {
-                $data['rows'] = array();
-                $value = range_validation($from, $to);
-                if ($value == "ok") {
-                    if ($type && $from && $to):
-                        $r = $this->reports_model->get_bill_pay($type, $from, $to);
-                        if ($r):
-                            $data['rows'] = $r;
-                            $data['type'] = $type;
-                        endif;
-                    endif;
-                }
-                $data['msg'] = $value;
-                $this->load->view('reports/bill_pay', $data);
-            } catch (Exception $e) {
-                echo $e->getMessage();
-            }
-        } else {
-            echo "not allowed";
+
+        //$this->my_session->authorize("canViewBillPayReport");
+        
+        $type = $this->input->get('type', true);
+        $from = $this->input->get('from', true);
+        $to = $this->input->get('to', true);
+
+        $data['rows'] = array();
+        $value = range_validation($from, $to);
+        if ($value == "ok") {
+            if ($type && $from && $to):
+                $r = $this->reports_model->get_bill_pay($type, $from, $to);
+                if ($r):
+                    $data['rows'] = $r;
+                    $data['type'] = $type;
+                endif;
+            endif;
         }
+        $data['msg'] = $value;
+        $data['pageTitle'] = "Bill Pay Report";
+        $data['body_template'] = 'reports/bill_pay.php';
+        $this->load->view('site_template.php', $data);
     }
 
-    //All customer information
+//All customer information
     public function customer_info() {
-        $moduleCodes = $this->session->userdata('reportTypeModules');
-        $moduleCodes = explode("|", $moduleCodes);
-        $index = array_search(customer_info, $moduleCodes);
-        if ($index > -1) {
+        
+        //$this->my_session->authorize("canViewCustomerInfoReport");
 
-            $this->output->set_template('theme2');
-            $from = $this->input->get('from');
-            $to = $this->input->get('to');
-            try {
-                $data['rows'] = array();
-                $value = range_validation($from, $to);
-                if ($value == "ok") {
-                    if ($from && $to):
-                        $r = $this->reports_model->get_customer_info($from, $to);
-                        if ($r):
-                            $data['rows'] = $r;
-                        endif;
-                    endif;
-                }
-                $data['msg'] = $value;
-                $this->load->view('reports/customer_info', $data);
-            } catch (Exception $e) {
-                echo $e->getMessage();
-            }
-        } else {
-            echo "not allowed";
+        $from = $this->input->get('from', true);
+        $to = $this->input->get('to', true);
+
+        $data['rows'] = array();
+        $value = range_validation($from, $to);
+        if ($value == "ok") {
+            if ($from && $to):
+                $r = $this->reports_model->get_customer_info($from, $to);
+                if ($r):
+                    $data['rows'] = $r;
+                endif;
+            endif;
         }
+        
+        $data['msg'] = $value;
+        $data['pageTitle'] = "Customer Information Report";
+        $data['body_template'] = 'reports/customer_info.php';
+        $this->load->view('site_template.php', $data);
     }
 
-    //User login information date to date
+//User login information date to date
     public function user_login_info() {
-        $moduleCodes = $this->session->userdata('reportTypeModules');
-        $moduleCodes = explode("|", $moduleCodes);
-        $index = array_search(user_login_info, $moduleCodes);
-        if ($index > -1) {
-            $this->output->set_template('theme2');
-            $from = $this->input->get('from');
-            $to = $this->input->get('to');
-            try {
-                $data['rows'] = array();
-                $value = range_validation($from, $to);
-                if ($value == "ok") {
-                    if ($from && $to):
-                        $r = $this->reports_model->get_login_info($from, $to);
-                        if ($r):
-                            $data['rows'] = $r;
-                        endif;
-                    endif;
-                }
-                $data['msg'] = $value;
+        //$this->my_session->authorize("canViewUserLoginInfoReport");
 
-                $this->load->view('reports/user_login_info', $data);
-            } catch (Exception $e) {
-                echo $e->getMessage();
-            }
-        } else {
-            echo "not allowed";
+        $from = $this->input->get('from', true);
+        $to = $this->input->get('to', true);
+
+        $data['rows'] = array();
+        $value = range_validation($from, $to);
+        if ($value == "ok") {
+            if ($from && $to):
+                $r = $this->reports_model->get_login_info($from, $to);
+                if ($r):
+                    $data['rows'] = $r;
+                endif;
+            endif;
         }
+        
+        $data['msg'] = $value;
+        $data['pageTitle'] = "User Login Information Report";
+        $data['body_template'] = 'reports/user_login_info.php';
+        $this->load->view('site_template.php', $data);
     }
 
-    //User ID modification from BO
+//User ID modification from BO
     public function id_modification() {
-        $moduleCodes = $this->session->userdata('reportTypeModules');
-        $moduleCodes = explode("|", $moduleCodes);
-        $index = array_search(user_id_modification, $moduleCodes);
-        if ($index > -1) {
+        
+        //$this->my_session->authorize("canViewIdModificationReport");
 
-            $this->output->set_template('theme2');
-            $from = $this->input->get('from');
-            $to = $this->input->get('to');
-            try {
-                $data['rows'] = array();
-                $value = range_validation($from, $to);
-                if ($value == "ok") {
-                    if ($from && $to):
-                        $r = $this->reports_model->get_id_modification($from, $to);
-                        if ($r):
-                            $data['rows'] = $r;
-                        endif;
-                    endif;
-                }
-                $data['msg'] = $value;
-                $this->load->view('reports/id_modification', $data);
-            } catch (Exception $e) {
-                echo $e->getMessage();
-            }
-        } else {
-            echo "not allowed";
+        $from = $this->input->get('from', true);
+        $to = $this->input->get('to', true);
+
+        $data['rows'] = array();
+        $value = range_validation($from, $to);
+        if ($value == "ok") {
+            if ($from && $to):
+                $r = $this->reports_model->get_id_modification($from, $to);
+                if ($r):
+                    $data['rows'] = $r;
+                endif;
+            endif;
         }
+        
+        $data['msg'] = $value;
+        $data['pageTitle'] = "ID Modification Report";
+        $data['body_template'] = 'reports/id_modification.php';
+        $this->load->view('site_template.php', $data);
     }
 
-    //Priority Request Form Adding
+//Priority Request Form Adding
     public function priority_request() {
-        $moduleCodes = $this->session->userdata('reportTypeModules');
-        $moduleCodes = explode("|", $moduleCodes);
-        $index = array_search(priority_request, $moduleCodes);
-        if ($index > -1) {
+        //$this->my_session->authorize("canViewPriorityRequestReport");
 
-            $this->output->set_template('theme2');
-            $from = $this->input->get('from');
-            $to = $this->input->get('to');
-            try {
-                $value = range_validation($from, $to);
-                $views["rows"] = array();
-                if ($value == "ok") {
-                    if ($from && $to) {
-                        $r = $this->reports_model->get_priority_request($from, $to);
-                        $mailData = $this->reports_model->get_priority_mail($from, $to);
-                        if ($r) {
-                            foreach ($r as $item) {
-                                $serviceId = $item->serviceRequestID;
-                                $data["referenceNo"] = $item->referenceNo;
-                                $data["eblSkyId"] = $item->eblSkyId;
-                                $data["userEmail"] = $item->userEmail;
-                                $data["status"] = $item->status;
-                                $data["accTitle"] = $item->name;
-                                $data["customerId"] = $item->customerID;
-                                $data["requestDtTm"] = $item->requestDtTm;
-                                $data["mobileNo"] = $item->userMobNo1;
-                                $data["myLocation"] = $item->myLocation;
-                                $data["serviceName"] = $item->serviceName;
-                                $data["mailCountSummary"] = "";
-                                if ($mailData) {
-                                    $mailCount = "";
-                                    foreach ($mailData as $counter) {
-                                        if ($serviceId == $counter->requestApplyId) {
-                                            $mailCount = $mailCount . $counter->receivedMail . ", To : " . $counter->toCounter . ", CC : " . $counter->ccCounter . ", BCC : " . $counter->bccCounter . "<br>";
-                                        }
-                                    }
-                                    $data["mailCountSummary"] = $mailCount;
+        $from = $this->input->get('from', true);
+        $to = $this->input->get('to', true);
+
+        $value = range_validation($from, $to);
+        $views["rows"] = array();
+        if ($value == "ok") {
+            if ($from && $to) {
+                $r = $this->reports_model->get_priority_request($from, $to);
+                $mailData = $this->reports_model->get_priority_mail($from, $to);
+                if ($r) {
+                    foreach ($r as $item) {
+                        $serviceId = $item->serviceRequestID;
+                        $data["referenceNo"] = $item->referenceNo;
+                        $data["eblSkyId"] = $item->eblSkyId;
+                        $data["userEmail"] = $item->userEmail;
+                        $data["status"] = $item->status;
+                        $data["accTitle"] = $item->name;
+                        $data["customerId"] = $item->customerID;
+                        $data["requestDtTm"] = $item->requestDtTm;
+                        $data["mobileNo"] = $item->userMobNo1;
+                        $data["myLocation"] = $item->myLocation;
+                        $data["serviceName"] = $item->serviceName;
+                        $data["mailCountSummary"] = "";
+                        if ($mailData) {
+                            $mailCount = "";
+                            foreach ($mailData as $counter) {
+                                if ($serviceId == $counter->requestApplyId) {
+                                    $mailCount = $mailCount . $counter->receivedMail . ", To : " . $counter->toCounter . ", CC : " . $counter->ccCounter . ", BCC : " . $counter->bccCounter . "<br>";
                                 }
-                                $viewData[] = $data;
                             }
-                            $views["rows"] = $viewData;
+                            $data["mailCountSummary"] = $mailCount;
                         }
+                        $viewData[] = $data;
                     }
+                    $views["rows"] = $viewData;
                 }
-                $views['msg'] = $value;
-                $this->load->view('reports/priority_request', $views);
-            } catch
-            (Exception $e) {
-                echo $e->getMessage();
             }
-        } else {
-            echo "not allowed";
         }
+        $views['msg'] = $value;
+        $views['pageTitle'] = "Priority Request Report";
+        $views['body_template'] = 'reports/priority_request.php';
+        $this->load->view('site_template.php', $views);
     }
 
-    //Priority Request Form Adding
+//Priority Request Form Adding
     public function product_request() {
-        $moduleCodes = $this->session->userdata('reportTypeModules');
-        $moduleCodes = explode("|", $moduleCodes);
-        $index = array_search(product_request, $moduleCodes);
-        if ($index > -1) {
+        
+        //$this->my_session->authorize("canViewProductRequestReport");
 
-            $this->output->set_template('theme2');
-            $from = $this->input->get('from');
-            $to = $this->input->get('to');
-            try {
-                $value = range_validation($from, $to);
-                $views["rows"] = array();
-                if ($value == "ok") {
-                    if ($from && $to) {
-                        $r = $this->reports_model->get_product_request($from, $to);
-                        $mailData = $this->reports_model->get_product_mail($from, $to);
+        $from = $this->input->get('from', true);
+        $to = $this->input->get('to', true);
 
-                        if ($r) {
-                            foreach ($r as $item) {
-                                $applyId = $item->applyId;
-                                $data["productId"] = $item->productId;
-                                $data["status"] = $item->status;
-                                $data["name"] = $item->name;
-                                $data["contactNo"] = $item->contactNo;
-                                $data["email"] = $item->email;
-                                $data["myLocation"] = $item->myLocation;
-                                $data["productName"] = $item->productName;
-                                $data["creationDtTm"] = $item->creationDtTm;
-                                $data["mailCountSummary"] = "";
-                                if ($mailData) {
-                                    $mailCount = "";
-                                    foreach ($mailData as $counter) {
-                                        if ($applyId == $counter->requestApplyId) {
-                                            $mailCount = $mailCount . $counter->receivedMail . ", To : " . $counter->toCounter . ", CC : " . $counter->ccCounter . ", BCC : " . $counter->bccCounter . "<br>";
-                                        }
-                                    }
-                                    $data["mailCountSummary"] = $mailCount;
+        $value = range_validation($from, $to);
+        $views["rows"] = array();
+        if ($value == "ok") {
+            if ($from && $to) {
+                $r = $this->reports_model->get_product_request($from, $to);
+                $mailData = $this->reports_model->get_product_mail($from, $to);
+
+                if ($r) {
+                    foreach ($r as $item) {
+                        $applyId = $item->applyId;
+                        $data["productId"] = $item->productId;
+                        $data["status"] = $item->status;
+                        $data["name"] = $item->name;
+                        $data["contactNo"] = $item->contactNo;
+                        $data["email"] = $item->email;
+                        $data["myLocation"] = $item->myLocation;
+                        $data["productName"] = $item->productName;
+                        $data["creationDtTm"] = $item->creationDtTm;
+                        $data["mailCountSummary"] = "";
+                        if ($mailData) {
+                            $mailCount = "";
+                            foreach ($mailData as $counter) {
+                                if ($applyId == $counter->requestApplyId) {
+                                    $mailCount = $mailCount . $counter->receivedMail . ", To : " . $counter->toCounter . ", CC : " . $counter->ccCounter . ", BCC : " . $counter->bccCounter . "<br>";
                                 }
-                                $viewData[] = $data;
                             }
-                            $views["rows"] = $viewData;
+                            $data["mailCountSummary"] = $mailCount;
                         }
+                        $viewData[] = $data;
                     }
+                    $views["rows"] = $viewData;
                 }
-                $views['msg'] = $value;
-                $this->load->view('reports/product_request', $views);
-            } catch
-            (Exception $e) {
-                echo $e->getMessage();
             }
-        } else {
-            echo "not allowed";
         }
+        $views['msg'] = $value;
+        $views['pageTitle'] = "Product Requests Report";
+        $views['body_template'] = 'reports/product_request.php';
+        $this->load->view('site_template.php', $views);
     }
 
-    //Priority Request Form Adding
-    public function banking_request() {
-        $moduleCodes = $this->session->userdata('reportTypeModules');
-        $moduleCodes = explode("|", $moduleCodes);
-        $index = array_search(banking_request, $moduleCodes);
-        if ($index > -1) {
 
-            $this->output->set_template('theme2');
-            $from = $this->input->get('from');
-            $to = $this->input->get('to');
-            try {
-                $value = range_validation($from, $to);
-                $views["rows"] = array();
-                if ($value == "ok") {
-                    if ($from && $to) {
-                        $r = $this->reports_model->get_banking_request($from, $to);
-                        $mailData = $this->reports_model->get_banking_mail($from, $to);
-                        if ($r) {
-                            foreach ($r as $item) {
-                                $serviceId = $item->serviceId;
-                                $data["referenceNo"] = $item->referenceNo;
-                                $data["eblSkyId"] = $item->eblSkyId;
-                                $data["userEmail"] = $item->userEmail;
-                                $data["status"] = $item->status1;
-                                $data["accTitle"] = $item->accTitle;
-                                $data["customerId"] = $item->customerId;
-                                $data["requestDtTm"] = $item->requestDtTm;
-                                $data["mobileNo"] = $item->userMobNo1;
-                                $data["accNo"] = $item->accNo;
-                                $data["serviceName"] = $item->serviceName;
-                                $data["mailCountSummary"] = "";
-                                if ($mailData) {
-                                    $mailCount = "";
-                                    foreach ($mailData as $counter) {
-                                        if ($serviceId == $counter->requestApplyId) {
-                                            $mailCount = $mailCount . $counter->receivedMail . ", To : " . $counter->toCounter . ", CC : " . $counter->ccCounter . ", BCC : " . $counter->bccCounter . "<br>";
-                                        }
-                                    }
-                                    $data["mailCountSummary"] = $mailCount;
+    public function banking_request() {
+
+        //$this->my_session->authorize("canViewBankingRequestReport");
+        
+        $from = $this->input->get('from', true);
+        $to = $this->input->get('to', true);
+
+        $value = range_validation($from, $to);
+        $views["rows"] = array();
+        
+        if ($value == "ok") {
+            if ($from && $to) {
+                $r = $this->reports_model->get_banking_request($from, $to);
+                $mailData = $this->reports_model->get_banking_mail($from, $to);
+                if ($r) {
+                    foreach ($r as $item) {
+                        $serviceId = $item->serviceId;
+                        $data["referenceNo"] = $item->referenceNo;
+                        $data["eblSkyId"] = $item->eblSkyId;
+                        $data["userEmail"] = $item->userEmail;
+                        $data["status"] = $item->status1;
+                        $data["accTitle"] = $item->accTitle;
+                        $data["customerId"] = $item->customerId;
+                        $data["requestDtTm"] = $item->requestDtTm;
+                        $data["mobileNo"] = $item->userMobNo1;
+                        $data["accNo"] = $item->accNo;
+                        $data["serviceName"] = $item->serviceName;
+                        $data["mailCountSummary"] = "";
+                        if ($mailData) {
+                            $mailCount = "";
+                            foreach ($mailData as $counter) {
+                                if ($serviceId == $counter->requestApplyId) {
+                                    $mailCount = $mailCount . $counter->receivedMail . ", To : " . $counter->toCounter . ", CC : " . $counter->ccCounter . ", BCC : " . $counter->bccCounter . "<br>";
                                 }
-                                $viewData[] = $data;
                             }
-                            $views["rows"] = $viewData;
+                            $data["mailCountSummary"] = $mailCount;
                         }
+                        $viewData[] = $data;
                     }
+                    $views["rows"] = $viewData;
                 }
-                $views['msg'] = $value;
-                $this->load->view('reports/banking_request', $views);
-            } catch
-            (Exception $e) {
-                echo $e->getMessage();
             }
-        } else {
-            echo "not allowed";
         }
+        
+        $views['msg'] = $value;
+        $views['pageTitle'] = "Banking Requests Report";
+        $views['body_template'] = 'reports/banking_request.php';
+        $this->load->view('site_template.php', $views);
     }
 
 }

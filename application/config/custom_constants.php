@@ -83,7 +83,7 @@ define('product_sr', "02");
 define('banking_sr', "03");
 //** Added by Sanjit 21-06-2016****
 
-define("BANK_NAME","EBL");
+define("BANK_NAME","PBL");
 // **** Report Type Modules *****
 define('user_status', "01");
 define('customer_info', "02");
@@ -112,7 +112,7 @@ define('ROOT_DIR', dirname(dirname(dirname(__FILE__))));
 define('DS', DIRECTORY_SEPARATOR);
 
 if(!defined('cbs_data_from_dummy')):
-    define('cbs_data_from_dummy', false);    
+    define('cbs_data_from_dummy', true);    
 endif;
 define('API_URL', "http://172.20.163.19/pbl_api/");
 define('CBS_URL', "http://192.168.0.128:86/api/");

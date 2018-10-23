@@ -25,7 +25,7 @@
         <tr>
             <th>SL No</th>
             <th>Customer ID</th>
-            <th>EBL Sky ID</th>
+            <th>Apps ID</th>
             <th>Reciver Name</th>
             <th>Bank Name</th>
             <th>Reciver Branch</th>

@@ -31,7 +31,7 @@
                 <th>SL No</th>
                 <th>Customer ID</th>
                 <th>Client ID</th>
-                <th><?php echo BANK_NAME; ?> Sky ID</th>
+                <th><?php echo BANK_NAME; ?> ID</th>
                 <th>Customer Name</th>
                 <th>Mobile No</th>
                 <th>Email ID</th>          
