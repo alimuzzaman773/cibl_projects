@@ -9,7 +9,7 @@
         <meta name="author" content="">
         <link rel="shortcut icon" href="<?= asset_url() ?>favicon.ico">
 
-        <title><?= isset($pageTitle) ? $pageTitle : 'NoTitle' ?> | SkyBank</title>
+        <title><?= isset($pageTitle) ? $pageTitle : 'NoTitle' ?> | Premier Bank Ltd</title>
 
         <!-- Bootstrap core CSS -->
         <link href="<?= theme_path() ?>bootstrap/css/bootstrap.min.css" rel="stylesheet">
