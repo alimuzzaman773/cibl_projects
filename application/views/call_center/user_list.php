@@ -76,7 +76,7 @@
                                             <i class="glyphicon glyphicon-flash"></i> Details
                                         </a>
                                     </li>
-                                    <li>
+                                    <li data-ng-if="i.isLocked == '1' && i.remarks = 'Password Reset Request'">
                                         <a style="cursor: pointer" ng-click="showResetModal(i.skyId, 'pin_send');">
                                             <i class="glyphicon glyphicon-send"></i> Send Password Reset Pin
                                         </a>

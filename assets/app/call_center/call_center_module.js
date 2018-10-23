@@ -178,7 +178,7 @@ CallCenterModuleApp.controller('CallCenterController', ['$scope', '$http', '$rou
         };
         
         $scope.sendPasswordResetPin = function($skyId){
-            if($scope.pin_sending_url == NULL){
+            if($scope.pin_sending_url == null){
                 alert('PIN sending URL is not defined');
                 return false;
             }

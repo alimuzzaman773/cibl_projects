@@ -69,7 +69,16 @@ class Call_center extends CI_Controller {
         my_json_output($json);
     }
 
-    function resend_user_pin($userId) {
+    function resend_user_pin() {
+        $userId = (int)$this->input->post("skyId", true);
+        if((int)$userId <= 0):
+            $data = array(
+                'success' => false,
+                'msg' => 'no user id provided'
+            );
+            my_json_output($data);
+        endif;
+        
         $otp_channel =  $this->input->post("otp_channel", true);
         if (!in_array($otp_channel, array('sms', 'email'))):
             $data = array(
@@ -80,8 +89,11 @@ class Call_center extends CI_Controller {
         endif;
         
         $this->load->model(array('mailer_model', 'call_center_model'));
-
-        $getUserInfo = $this->call_center_model->getUserInfo((int) $userId);
+        $uInfo = $this->db->where('skyId', (int)$userId)
+                          ->where("isPublished", 1)
+                          ->get('apps_users');        
+        
+        $getUserInfo = $uInfo->num_rows() > 0 ? $uInfo : false; //$this->call_center_model->getUserInfo((int) $userId);
         if (!$getUserInfo) {
             $json = array(
                 "success" => false,
@@ -395,7 +407,7 @@ class Call_center extends CI_Controller {
                 "success" => true,
                 "userInfo" => $userInfo,
                 "mailRes" => $otpRes,
-                "pin" => $pin
+                //"pin" => $pin
             );
             my_json_output($json);
         } catch (Exception $ex) {
