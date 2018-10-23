@@ -77,8 +77,14 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a style="cursor: pointer" ng-click="showResetModal(i.skyId);">
+                                        <a style="cursor: pointer" ng-click="showResetModal(i.skyId, 'pin_send');">
                                             <i class="glyphicon glyphicon-send"></i> Send Password Reset Pin
+                                        </a>
+                                    </li>
+                                    
+                                    <li>
+                                        <a style="cursor: pointer" ng-click="showResetModal(i.skyId, 'pin_resend');">
+                                            <i class="glyphicon glyphicon-send"></i> Resend PIN
                                         </a>
                                     </li>
                                 </ul>

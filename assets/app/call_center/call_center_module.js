@@ -34,8 +34,16 @@ CallCenterModuleApp.controller('CallCenterController', ['$scope', '$http', '$rou
         $scope.resetSkyId = null;
         $scope.otp_channel_pin = 'sms';
 
-        $scope.showResetModal = function($skyId) {
+        $scope.pin_sending_url = null;
+        $scope.showResetModal = function($skyId, $type) {
             $scope.resetSkyId = $skyId;
+            if($type =='pin_send'){
+                $scope.pin_sending_url = 'confirm_password_reset';
+            }
+            else if($type =='pin_resend'){
+                $scope.pin_sending_url = 'resend_user_pin';
+            }
+                    
             $('#resetModal').modal('show');
             return false;
         };
@@ -170,16 +178,23 @@ CallCenterModuleApp.controller('CallCenterController', ['$scope', '$http', '$rou
         };
         
         $scope.sendPasswordResetPin = function($skyId){
+            if($scope.pin_sending_url == NULL){
+                alert('PIN sending URL is not defined');
+                return false;
+            }
+            
             if (!confirm("Do you really want to send the new password pin?")) {
                 $('#resetModal').modal('hide');
                 return false;
-            }
+            }            
             $scope.resetSkyId = null;
             $('#resetModal').modal('hide');
             app.showModal();
-            $http({method: 'post', data: jQuery.param({'skyId' : $skyId, otp_channel : $scope.otp_channel_pin}), url: app.baseUrl + 'api/call_center/confirm_password_reset/'})
-            .success(function (data) {
-                
+            $http({
+                method: 'post', 
+                data: jQuery.param({'skyId' : $skyId, otp_channel : $scope.otp_channel_pin}), 
+                url: app.baseUrl + 'api/call_center/'+$scope.pin_sending_url})
+            .success(function (data) {                
                 app.hideModal();
                 $('#resetModal').modal('hide');
                 if (data.success === false) {
@@ -187,6 +202,7 @@ CallCenterModuleApp.controller('CallCenterController', ['$scope', '$http', '$rou
                     return false;
                 }
                 
+                $scope.pin_sending_url = null;
                 alert("Password pin has been sent");
                 window.location.href = app.baseUrl + "call_center/#/user_list/";
                 
