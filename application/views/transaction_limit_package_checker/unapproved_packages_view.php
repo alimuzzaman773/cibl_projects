@@ -18,6 +18,7 @@
                             <th>SL#</th>
                             <th>Group Name</th>
                             <th>Maker Action</th>
+                            <th>Active/Inactive</th>
                             <th>Status</th>
                             <th>Action</th>
                         </tr>
@@ -28,7 +29,12 @@
                             <td>{{($index + 1)}}</td>
                             <td>{{i.userGroupName}}</td>
                             <td>{{i.makerAction}}</td>
-                            <td>{{i.mcStatus}}</td>
+                            <td>
+                                <span data-ng-class="{'text-success': i.isActive == '1', 'text-danger': i.isActive == '0'}">{{i.isActive=='1' ? 'Active' : 'Inactive'}}</span>
+                            </td>
+                            <td>
+                                <span data-ng-class="{'text-success': i.mcStatus == '1', 'text-danger': i.mcStatus == '0'}">{{i.mcStatus=='1' ? 'Approved' : 'Wait for approve'}}</span>
+                            </td>
                             <td>
                                 <div class="dropdown pull-right">
                                     <button class="btn btn-primary btn-xs dropdown-toggle" type="button" data-toggle="dropdown">
@@ -36,12 +42,12 @@
                                     </button>
                                     <ul class="dropdown-menu">
                                         <?php if (ci_check_permission("canApproveLimitPackage")): ?>
-                                        <li>
-                                            <a href="<?= base_url() ?>transaction_limit_setup_checker/getPackageForApproval/{{i.appsGroupId}}">
-                                                <i class="glyphicon glyphicon-pencil"></i> Approve
-                                            </a>
-                                        </li> 
-                                        <?php endif;?>
+                                            <li>
+                                                <a href="<?= base_url() ?>transaction_limit_setup_checker/getPackageForApproval/{{i.appsGroupId}}">
+                                                    <i class="glyphicon glyphicon-pencil"></i> Approve
+                                                </a>
+                                            </li> 
+                                        <?php endif; ?>
                                     </ul>
                                 </div>
                             </td>

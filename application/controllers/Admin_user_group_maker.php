@@ -33,28 +33,18 @@ class Admin_user_group_maker extends CI_Controller {
             endif;
 
             $time = date("Y-m-d H:i:s");
-            $status = 0;
 
             $crud->add_fields('userGroupName', 'machine_name', 'isLocked', 'isActive', 'mcStatus', 'makerAction', 'makerActionCode', 'creationDtTm', 'updateDtTm');
             $crud->edit_fields('userGroupName', 'machine_name', 'isLocked', 'isActive', 'mcStatus', 'makerAction', 'makerActionCode', 'updateDtTm');
 
             $crud->change_field_type('creationDtTm', 'hidden', $time);
             $crud->change_field_type('updateDtTm', 'hidden', $time);
-            $crud->change_field_type('mcStatus', 'hidden', $status);
-            $crud->change_field_type('makerAction', 'hidden', 'add');
-            $crud->change_field_type('makerActionCode', 'hidden', '01');
+            $crud->change_field_type('mcStatus', 'hidden');
+            $crud->change_field_type('makerAction', 'hidden');
+            $crud->change_field_type('makerActionCode', 'hidden');
 
-//            $crud->callback_before_insert(array($this, function($post_array) {
-//                    $post_array['makerAction'] = "add";
-//                    $post_array['makerActionCode'] = "01";
-//                    return $post_array;
-//                }));
-//            
-//            $crud->callback_before_update(array($this, function($post_array) {
-//                    $post_array['makerAction'] = "add";
-//                    $post_array['makerActionCode'] = "01";
-//                    return $post_array;
-//                }));
+            $crud->callback_before_update(array($this, 'set_updata_callback'));
+            $crud->callback_before_insert(array($this, 'set_insert_callback'));
 
             if (ci_check_permission("canSetuPermissionAdminUserGroup")) {
                 $icon = base_url() . "/assets/images/permission.png";
@@ -91,6 +81,20 @@ class Admin_user_group_maker extends CI_Controller {
                 show_error($e->getMessage() . ' --- ' . $e->getTraceAsString());
             }
         }
+    }
+
+    function set_insert_callback($post_array) {
+        $post_array['mcStatus'] = 0;
+        $post_array['makerAction'] = "add";
+        $post_array['makerActionCode'] = '01';
+        return $post_array;
+    }
+
+    function set_updata_callback($post_array, $primary_key) {
+        $post_array['mcStatus'] = 0;
+        $post_array['makerAction'] = "edit";
+        $post_array['makerActionCode'] = '02';
+        return $post_array;
     }
 
     // Will be removed
@@ -276,9 +280,9 @@ class Admin_user_group_maker extends CI_Controller {
         if ($action == "edit_permissions"):
             $ugid = $this->input->post("userGroupId", true);
             $permission = $this->input->post("permissions", true);
-            sort($permission);
+
             $permission_string = implode(",", $permission);
-            
+
             $result = $this->admin_user_group_model_maker->updatePermission($ugid, $permission_string);
 
             if (!$result):

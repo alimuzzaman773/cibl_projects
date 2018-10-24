@@ -6,13 +6,14 @@
     </div>
     <div class="row">
         <div class="col-md-12 col-xs-12">
-            
+
             <table class="table table-bordered table-condensed table-striped table-hover" >          
                 <thead>
                     <tr class="bg-primary">
                         <th>SL#</th>
                         <th>Admin User Group</th>
                         <th>Maker Action</th>
+                        <th>Lock/Unlock</th>
                         <th>Status</th>
                         <th>Action</th>
                     </tr>
@@ -24,6 +25,9 @@
                         <td>{{i.userGroupName}}</td>
                         <td>{{i.makerAction}}</td>
                         <td>
+                            <span data-ng-class="{'text-danger': i.isLocked == '1', 'text-success': i.isLocked == '0'}">{{i.isLocked=='1' ? 'Locked' : 'Unlocked'}}</span>
+                        </td>
+                        <td>
                             <span data-ng-class="{'text-success': i.status == '1', 'text-danger': i.status == '0'}">{{i.status=='1' ? 'Approved' : 'Wait for approve'}}</span>
                         </td>
                         <td>
@@ -33,12 +37,12 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                     <?php if (ci_check_permission("canApproveAdminUserGroup")): ?>
-                                    <li>
-                                        <a href="<?= base_url() ?>admin_user_group_checker/getGroupForApproval/{{i.userGroupId}}">
-                                            <i class="glyphicon glyphicon-pencil"></i> Approve
-                                        </a>
-                                    </li> 
-                                    <?php endif;?>
+                                        <li>
+                                            <a href="<?= base_url() ?>admin_user_group_checker/getGroupForApproval/{{i.userGroupId}}">
+                                                <i class="glyphicon glyphicon-pencil"></i> Approve
+                                            </a>
+                                        </li> 
+                                    <?php endif; ?>
                                 </ul>
                             </div>
                         </td>
