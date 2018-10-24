@@ -4,6 +4,10 @@
     </div>
 </div>
 
+<div class="col-md-12 col-xs-12 col-sm-12" data-ng-if="user.skyId == undefined">
+    User is already approved
+</div>
+
 <div class="row" data-ng-if="user.skyId != undefined">
     <div class="col-xs-12 col-sm-12 col-md-12">
         <table class="table table-striped table-bordered">

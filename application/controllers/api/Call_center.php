@@ -33,7 +33,7 @@ class Call_center extends CI_Controller {
             $json['user_list'] = $result->result();
         endif;
 
-        //$json['q']=$this->db->last_query();
+        $json['q']=$this->db->last_query();
         my_json_output($json);
     }
 
