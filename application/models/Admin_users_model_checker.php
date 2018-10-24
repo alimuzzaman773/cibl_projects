@@ -10,7 +10,7 @@ class Admin_users_model_checker extends CI_Model {
         $this->db->order_by("adminUserId", "desc");
         $this->db->where('admin_users_mc.mcStatus =', 0);
         $this->db->where('adminUserId !=', 1);
-        $this->db->where('admin_users_mc.makerActionBy !=', $this->my_session->adminUserId);
+        //$this->db->where('admin_users_mc.makerActionBy !=', $this->my_session->adminUserId); // Told me Arif Vai
         $this->db->select('admin_users_mc.*, admin_users_group.userGroupName');
         $this->db->from('admin_users_mc');
         $this->db->join('admin_users_group', 'admin_users_mc.adminUserGroup = admin_users_group.userGroupId');
@@ -100,6 +100,50 @@ class Admin_users_model_checker extends CI_Model {
     public function checkerReject($id, $data) {
         $this->db->where('adminUserId', $id);
         $this->db->update('admin_users_mc', $data);
+    }
+
+    function getUserList($params = array()) {
+        if (isset($params['count']) && $params['count'] == true) {
+            $this->db->select("COUNT(adminUserId) as total");
+        } else {
+            $this->db->select('u.adminUserId, u.fullName, u.designation, u.position, u.email, u.empId, u.mobile, u.branchCode');
+        }
+
+        $this->db->from(TBL_ADMIN_USERS . " u");
+
+        if (isset($params['adminUserId']) && (int) $params['adminUserId'] > 0) {
+            $this->db->where("u.adminUserId", $params['adminUserId']);
+        }
+
+        if (isset($params['branchCode']) && $params['branchCode'] != "") {
+            $this->db->where("u.branchCode", $params['branchCode']);
+        }
+
+        if (isset($params['limit']) && (int) $params['limit'] > 0) {
+            $offset = (isset($params['offset'])) ? $params['offset'] : 0;
+            $this->db->limit($params['limit'], $offset);
+        }
+
+        $result = $this->db->order_by("u.adminUserId", "DESC")->get();
+
+        if ($result->num_rows() > 0) {
+            return $result;
+        }
+        return false;
+    }
+
+    function getUser($id = null) {
+        $this->db->select('u.adminUserId, u.fullName, u.email, u.empId, u.mobile')
+                ->from(TBL_ADMIN_USERS . " u")
+                ->where("u.adminUserId", $id);
+
+        $result = $this->db->get();
+
+        if ($result->num_rows() > 0):
+            return $result;
+        endif;
+
+        return false;
     }
 
 }

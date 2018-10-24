@@ -32,6 +32,44 @@ class Admin_user_group_checker extends CI_Controller {
         $data['moduleIds'] = $this->admin_user_group_model_checker->getAllModules();
         $data['userGroup'] = $dbData;
 
+        // For Permission List
+        $data['existingPermission'] = array();
+        if (!empty($dbData['permissions'])):
+            //$ugMcInfo = $result->row();
+            //d($result->row()->permissions);
+            $p = explode(",", $dbData['permissions']);
+            foreach ($p as $k => $v):
+                $data['existingPermission'][$v] = $v;
+            endforeach;
+        endif;
+
+        $result = $this->admin_user_group_model_checker->getUGinfo($id);
+        $data['ugPermission'] = array();
+        $data['ugInfo'] = array();
+        if ($result):
+            $data['ugInfo'] = $result->row();
+            //d($result->row()->permissions);
+            $p = explode(",", $data['ugInfo']->permissions);
+            foreach ($p as $k => $v):
+                $data['ugPermission'][$v] = $v;
+            endforeach;
+        endif;
+
+        //d($data['existingPermission']);
+        $pres = $this->db->get(TBL_PERMISSIONS)->result();
+
+        $data['permissions'] = array();
+
+        foreach ($pres as $p):
+            if (!isset($data['permissions']['category'][$p->category])) {
+                $data['permissions']['category'][$p->category] = array();
+            }
+            $data['permissions']['category'][$p->category][] = $p;
+
+        endforeach;
+
+        // End Permission List Code
+
 
         $data['authorizationModules'] = array('01' => 'Apps Users Authorization',
             '02' => 'Device Authorization',
@@ -145,58 +183,59 @@ class Admin_user_group_checker extends CI_Controller {
         $dbData = $this->admin_user_group_model_checker->getGroupById($id);
 
 
-        //if ($dbData['makerActionBy'] == $this->my_session->userId) {
-         //   echo "You can not authorize your own maker action";
-        //} else {
-            if ($data['checkerAction'] == "approve") {
+        // Told me Arif vai, open this condition
+//        if ($dbData['makerActionBy'] == $this->my_session->adminUserId) {
+//            echo "You can not authorize your own maker action";
+//        } else {
+        if ($data['checkerAction'] == "approve") {
 
-                $chkdata['checkerActionDt'] = date("Y-m-d");
-                $chkdata['checkerActionTm'] = date("G:i:s");
-                $chkdata['isPublished'] = 1;
-                $chkdata['checkerActionBy'] = $this->my_session->userId;
-                $chkdata['checkerAction'] = "Approved";
-                $chkdata['checkerActionComment'] = NULL;
-                $chkdata['mcStatus'] = 1;
+            $chkdata['checkerActionDt'] = date("Y-m-d");
+            $chkdata['checkerActionTm'] = date("G:i:s");
+            $chkdata['isPublished'] = 1;
+            $chkdata['checkerActionBy'] = $this->my_session->userId;
+            $chkdata['checkerAction'] = "Approved";
+            $chkdata['checkerActionComment'] = NULL;
+            $chkdata['mcStatus'] = 1;
 
-                $res = $this->checkUserInteraction($id, $makerActionDtTm, $checkerActionDtTm);
+            $res = $this->checkUserInteraction($id, $makerActionDtTm, $checkerActionDtTm);
 
-                if ($res == 0) {
-                    if ($dbData['isPublished'] == 0) {
-                        // update and insert
-                        $this->admin_user_group_model_checker->UpdateInsertCheckerApprove($id, $chkdata);
-                    } else if ($dbData['isPublished'] == 1) {
-                        // update and update
-                        $this->admin_user_group_model_checker->UpdateUpdateCheckerApprove($id, $chkdata);
-                    }
-
-
-                    // activity log starts here >> implemented in model
-                    redirect('admin_user_group_checker');
-                } else {
-                    // redirect
-                    echo "interaction";
+            if ($res == 0) {
+                if ($dbData['isPublished'] == 0) {
+                    // update and insert
+                    $this->admin_user_group_model_checker->UpdateInsertCheckerApprove($id, $chkdata);
+                } else if ($dbData['isPublished'] == 1) {
+                    // update and update
+                    $this->admin_user_group_model_checker->UpdateUpdateCheckerApprove($id, $chkdata);
                 }
-            } else if ($data['checkerAction'] == "reject") {
 
 
-                $data['checkerActionDt'] = date("Y-m-d");
-                $data['checkerActionTm'] = date("G:i:s");
-                $data['checkerActionBy'] = $this->my_session->userId;
-                $data['checkerAction'] = "Rejected";
-                $data['checkerActionComment'] = $_POST['newReason'];
-                $data['mcStatus'] = 2;
-
-                $res = $this->checkUserInteraction($id, $makerActionDtTm, $checkerActionDtTm);
-
-                if ($res == 0) {
-                    // update
-                    $this->admin_user_group_model_checker->checkerReject($id, $data);
-                    redirect('admin_user_group_checker');
-                } else {
-                    // redirect
-                    echo "interaction";
-                }
+                // activity log starts here >> implemented in model
+                redirect('admin_user_group_checker');
+            } else {
+                // redirect
+                echo "interaction";
             }
+        } else if ($data['checkerAction'] == "reject") {
+
+
+            $data['checkerActionDt'] = date("Y-m-d");
+            $data['checkerActionTm'] = date("G:i:s");
+            $data['checkerActionBy'] = $this->my_session->userId;
+            $data['checkerAction'] = "Rejected";
+            $data['checkerActionComment'] = $_POST['newReason'];
+            $data['mcStatus'] = 2;
+
+            $res = $this->checkUserInteraction($id, $makerActionDtTm, $checkerActionDtTm);
+
+            if ($res == 0) {
+                // update
+                $this->admin_user_group_model_checker->checkerReject($id, $data);
+                redirect('admin_user_group_checker');
+            } else {
+                // redirect
+                echo "interaction";
+            }
+        }
         //}
         //} 
     }

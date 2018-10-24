@@ -95,7 +95,6 @@ class Admin_users_checker extends CI_Controller {
             $data['isLocked_c'] = "";
         }
 
-
         $data['adminUser'] = $dbData;
         $data['pageTitle'] = 'Admin User Approve';
         $data["body_template"] = "admin_users_checker/admin_user_approve_form.php";
@@ -109,55 +108,56 @@ class Admin_users_checker extends CI_Controller {
         $checkerActionDtTm = $this->input->post('checkerActionDtTm');
         $dbData = $this->admin_users_model_checker->getUserById($id);
 
-        if ($dbData['makerActionBy'] == $this->my_session->adminUserId) {
-            echo "You can not authorize your own maker action";
-        } else {
-            if ($data['checkerAction'] == "approve") {
-                $chkdata['checkerActionDt'] = date("Y-m-d");
-                $chkdata['checkerActionTm'] = date("G:i:s");
-                $chkdata['isPublished'] = 1;
-                $chkdata['checkerActionBy'] = $this->my_session->adminUserId;
-                $chkdata['checkerAction'] = "Approved";
-                $chkdata['checkerActionComment'] = NULL;
-                $chkdata['mcStatus'] = 1;
+        // Told me Arif vai, open this condition
+//        if ($dbData['makerActionBy'] == $this->my_session->adminUserId) {
+//            echo "You can not authorize your own maker action";
+//        } else {
+        if ($data['checkerAction'] == "approve") {
+            $chkdata['checkerActionDt'] = date("Y-m-d");
+            $chkdata['checkerActionTm'] = date("G:i:s");
+            $chkdata['isPublished'] = 1;
+            $chkdata['checkerActionBy'] = $this->my_session->adminUserId;
+            $chkdata['checkerAction'] = "Approved";
+            $chkdata['checkerActionComment'] = NULL;
+            $chkdata['mcStatus'] = 1;
 
-                $res = $this->checkUserInteraction($id, $makerActionDtTm, $checkerActionDtTm);
+            $res = $this->checkUserInteraction($id, $makerActionDtTm, $checkerActionDtTm);
 
-                if ($res == 0) {
-                    if ($dbData['isPublished'] == 0) {
-                        // update and insert
-                        $this->admin_users_model_checker->UpdateInsertCheckerApprove($id, $chkdata);
-                    } else if ($dbData['isPublished'] == 1) {
-                        // update and update
-                        $this->admin_users_model_checker->UpdateUpdateCheckerApprove($id, $chkdata);
-                    }
-
-                    // activity log starts here >> implemented in model
-                    redirect('admin_users_checker');
-                } else {
-                    // redirect
-                    echo "interaction";
+            if ($res == 0) {
+                if ($dbData['isPublished'] == 0) {
+                    // update and insert
+                    $this->admin_users_model_checker->UpdateInsertCheckerApprove($id, $chkdata);
+                } else if ($dbData['isPublished'] == 1) {
+                    // update and update
+                    $this->admin_users_model_checker->UpdateUpdateCheckerApprove($id, $chkdata);
                 }
-            } else if ($data['checkerAction'] == 'reject') {
-                $data['checkerActionDt'] = date("Y-m-d");
-                $data['checkerActionTm'] = date("G:i:s");
-                $data['checkerActionBy'] = $this->my_session->userId;
-                $data['checkerAction'] = "Rejected";
-                $data['checkerActionComment'] = $this->input->post('newReason');
-                $data['mcStatus'] = 2;
 
-                $res = $this->checkUserInteraction($id, $makerActionDtTm, $checkerActionDtTm);
+                // activity log starts here >> implemented in model
+                redirect('admin_users_checker');
+            } else {
+                // redirect
+                echo "interaction";
+            }
+        } else if ($data['checkerAction'] == 'reject') {
+            $data['checkerActionDt'] = date("Y-m-d");
+            $data['checkerActionTm'] = date("G:i:s");
+            $data['checkerActionBy'] = $this->my_session->userId;
+            $data['checkerAction'] = "Rejected";
+            $data['checkerActionComment'] = $this->input->post('newReason');
+            $data['mcStatus'] = 2;
 
-                if ($res == 0) {
-                    // update
-                    $this->admin_users_model_checker->checkerReject($id, $data);
-                    redirect('admin_users_checker');
-                } else {
-                    // redirect
-                    echo "interaction";
-                }
+            $res = $this->checkUserInteraction($id, $makerActionDtTm, $checkerActionDtTm);
+
+            if ($res == 0) {
+                // update
+                $this->admin_users_model_checker->checkerReject($id, $data);
+                redirect('admin_users_checker');
+            } else {
+                // redirect
+                echo "interaction";
             }
         }
+        //}
     }
 
     public function checkUserInteraction($id, $makerActionDtTmPost, $checkerActionDtTmPost) {
