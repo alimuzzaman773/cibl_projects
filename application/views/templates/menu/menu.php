@@ -126,7 +126,7 @@
                                 <div class="row">                                    
                                     <div class="clearfix mb">
                                         <ul class="col-md-2 col-xs-12 list-unstyled">
-                                            <li><p><b>Users/Pin</b></p></li>
+                                            <li><p><b>Maker</b></p></li>
                                             <?php if (ci_check_permission("canViewAdminUserCreateMenu")): ?>
                                                 <li><a href="<?= base_url() . 'admin_users_maker' ?>">Admin Users</a></li>
                                             <?php endif; ?>
@@ -142,10 +142,17 @@
                                             <?php if (ci_check_permission("canViewPinCreateMenu")): ?>
                                                 <li><a class="hidden" href="<?= base_url() . 'pin_generation/viewPinByAction' ?>">Pin</a></li>
                                             <?php endif; ?>
+                                            <?php if (ci_check_permission("canViewBillerSetupMenu")): ?>
+                                                <li><a href="<?= base_url() . 'biller_setup_maker' ?>">Biller Setup</a></li>
+                                            <?php endif; ?>
+                                            <?php if (ci_check_permission("canViewLimitPackgaeMenu")): ?>
+                                                <li><a href="<?= base_url() . 'transaction_limit_setup_maker' ?>">Transaction Package Limit</a></li>
+                                            <?php endif; ?>
+                                            <?php if (ci_check_permission("canViewPasswordPolicyMenu")): ?>
+                                                <li><a href="<?= base_url() . 'validation_setup' ?>">Password Policy</a></li>
+                                            <?php endif; ?>
                                             <?php if (ci_check_permission("canViewPermissionMenu")): ?>
-                                                <li>
-                                                    <a href="<?= base_url() ?>permission">Permission</a>
-                                                </li>
+                                                <li class="hide"><a href="<?= base_url() ?>permission">Permission</a></li>
                                             <?php endif; ?>
                                         </ul>
                                         <ul class="col-md-2 col-xs-12 list-unstyled">
@@ -153,23 +160,18 @@
                                             <?php if (ci_check_permission("canViewAdminUserGroupAuthorizationMenu")): ?>
                                                 <li><a href="<?= base_url() . 'admin_user_group_checker' ?>">Admin User Group Authorization</a></li>
                                             <?php endif; ?>
-
                                             <?php if (ci_check_permission("canViewAdminUserAuthorizationMenu")): ?>
                                                 <li><a href="<?= base_url() . 'admin_users_checker' ?>">Admin User Authorization</a></li>
                                             <?php endif; ?>
-
                                             <?php if (ci_check_permission("canViewLimitSetupAuthorizationMenu")): ?>
-                                                <li><a href="<?= base_url() . 'transaction_limit_setup_checker' ?>">Limit Package Authorization</a></li>
+                                                <li><a href="<?= base_url() . 'transaction_limit_setup_checker' ?>">Transaction Package Limit Authorization</a></li>
                                             <?php endif; ?>
-
                                             <?php if (ci_check_permission("canViewAppsUserAuthorizationMenu")): ?>
                                                 <li><a href="<?= base_url() . 'client_registration_checker' ?>">Apps Users Authorization</a></li>
                                             <?php endif; ?>
-
                                             <?php if (ci_check_permission("canViewDeviceAuthorizationMenu")): ?>
                                                 <li><a class="hidden" href="<?= base_url() . 'device_info_checker' ?>">Device Authorization</a></li>
                                             <?php endif; ?>
-
                                             <?php if (ci_check_permission("canViewBillerSetupAuthorizationMenu")): ?>
                                                 <li><a href="<?= base_url() . 'biller_setup_checker' ?>">Biller Setup Authorization</a></li>
                                             <?php endif; ?>
@@ -208,24 +210,13 @@
                                         <ul class="col-md-2 col-xs-12 list-unstyled">
                                             <li><p><b>Configuration</b></p></li>
                                             <?php if (ci_check_permission("canViewPasswordPolicyMenu")): ?>
-                                                <li><a href="<?= base_url() . 'validation_setup' ?>">Password Policy</a></li>
                                                 <li><a href="<?= base_url() . 'password_policy_setup' ?>">Password Policy Setup</a></li>
                                             <?php endif; ?>
-
-                                            <?php if (ci_check_permission("canViewBillerSetupMenu")): ?>
-                                                <li><a href="<?= base_url() . 'biller_setup_maker' ?>">Biller Setup</a></li>
-                                            <?php endif; ?>
-
                                             <?php if (ci_check_permission("canViewRoutingNumberMenu")): ?>
                                                 <li><a href="<?= base_url() . 'routing_number' ?>">Routing Number Setup</a></li>
                                             <?php endif; ?>
-
                                             <?php if (ci_check_permission("canViewBillerSetupMenu")): ?>
                                                 <li><a href="<?= base_url() . 'bill_type_setup' ?>">Bill Type Setup</a></li>
-                                            <?php endif; ?>
-
-                                            <?php if (ci_check_permission("canViewLimitPackgaeMenu")): ?>
-                                                <li><a href="<?= base_url() . 'transaction_limit_setup_maker' ?>">Transaction Package Limit</a></li>
                                             <?php endif; ?>
                                         </ul>
                                     </div>
