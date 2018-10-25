@@ -125,7 +125,7 @@
                             <div class="yamm-content">
                                 <div class="row">                                    
                                     <div class="clearfix mb">
-                                        <ul class="col-md-2 col-xs-12 list-unstyled">
+                                        <ul class="col-md-3 col-xs-12 list-unstyled">
                                             <li><p><b>Maker</b></p></li>
                                             <?php if (ci_check_permission("canViewAdminUserCreateMenu")): ?>
                                                 <li><a href="<?= base_url() . 'admin_users_maker' ?>">Admin Users</a></li>
@@ -155,7 +155,7 @@
                                                 <li class="hide"><a href="<?= base_url() ?>permission">Permission</a></li>
                                             <?php endif; ?>
                                         </ul>
-                                        <ul class="col-md-2 col-xs-12 list-unstyled">
+                                        <ul class="col-md-3 col-xs-12 list-unstyled">
                                             <li><p><b>Checker</b></p></li>
                                             <?php if (ci_check_permission("canViewAdminUserGroupAuthorizationMenu")): ?>
                                                 <li><a href="<?= base_url() . 'admin_user_group_checker' ?>">Admin User Group Authorization</a></li>
@@ -185,14 +185,14 @@
                                             <?php endif; ?>
 
                                             <?php if (ci_check_permission("canViewPasswordPolicyAuthorizationMenu")): ?>
-                                                <li><a href="<?= base_url() . 'password_policy_checker' ?>">Password</a></li>
+                                                <li><a href="<?= base_url() . 'password_policy_checker' ?>">Password Policy Authorization</a></li>
                                             <?php endif; ?>
 
                                             <?php if (ci_check_permission("canViewAppsUserDeleteAuthorizationMenu")): ?>
                                                 <li><a class="hidden" href="<?= base_url() . 'apps_user_delete_checker' ?>">Apps User Delete Authorization</a></li>
                                             <?php endif; ?>
                                         </ul>
-                                        <ul class="col-md-2 col-xs-12 list-unstyled">
+                                        <ul class="col-md-3 col-xs-12 list-unstyled">
                                             <li><p><b>Request Process</b></p></li>
 
                                             <?php if (ci_check_permission("canViewProductRequestMenu")): ?>
@@ -207,7 +207,7 @@
                                                 <li><a href="<?= base_url() . 'banking_service_request/getRequests' ?>">Banking</a></li>
                                             <?php endif; ?>
                                         </ul>
-                                        <ul class="col-md-2 col-xs-12 list-unstyled">
+                                        <ul class="col-md-3 col-xs-12 list-unstyled">
                                             <li><p><b>Configuration</b></p></li>
                                             <?php if (ci_check_permission("canViewPasswordPolicyMenu")): ?>
                                                 <li><a href="<?= base_url() . 'password_policy_setup' ?>">Password Policy Setup</a></li>
@@ -218,7 +218,7 @@
                                             <?php if (ci_check_permission("canViewBillerSetupMenu")): ?>
                                                 <li><a href="<?= base_url() . 'bill_type_setup' ?>">Bill Type Setup</a></li>
                                             <?php endif; ?>
-                                                <li><a href="<?= base_url() . 'account_type/index' ?>">Account Type Setup</a></li>
+                                            <li><a href="<?= base_url() . 'account_type/index' ?>">Account Type Setup</a></li>
                                         </ul>
                                     </div>
                                 </div>
