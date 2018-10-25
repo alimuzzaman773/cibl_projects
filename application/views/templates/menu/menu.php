@@ -218,6 +218,7 @@
                                             <?php if (ci_check_permission("canViewBillerSetupMenu")): ?>
                                                 <li><a href="<?= base_url() . 'bill_type_setup' ?>">Bill Type Setup</a></li>
                                             <?php endif; ?>
+                                                <li><a href="<?= base_url() . 'account_type/index' ?>">Account Type Setup</a></li>
                                         </ul>
                                     </div>
                                 </div>
