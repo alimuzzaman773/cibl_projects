@@ -242,6 +242,7 @@
                                         <li><a href="<?= base_url() . 'reports/user_login_info' ?>">User Last Login Information</a></li>
                                         <li><a href="<?= base_url() . 'reports/fund_transfer' ?>">Fund Transfer</a></li>
                                         <li><a href="<?= base_url() . 'reports/other_fund_transfer' ?>">Other Fund Transfer</a></li>
+                                        <li><a href="<?= base_url() . 'reports/app_user_activity_log' ?>">Apps User Activity Log</a></li>
                                     </ul>
                                     <ul class="col-md-2 col-xs-12 list-unstyled">
                                         <li><p><b>Admin Reports</b></p></li>

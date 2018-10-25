@@ -34,6 +34,9 @@ define("TBL_APPOINTMENT", DB_PREFIX . "appointment");
 define("TBL_ATMS", DB_PREFIX . "atms");
 define("TBL_ADVERTISEMENT", DB_PREFIX . "advertisement");
 define("TBL_VALIDATION", DB_PREFIX . "validation");
+define("TBL_APP_USERS", DB_PREFIX . "apps_users");
+define("TBL_APP_USER_ACTIVITY_LOG", DB_PREFIX . "app_user_activity_log");
+define("TBL_DEVICE_INFO", DB_PREFIX . "device_info");
 
 // All Constant Variables:
 define ("PRODUCT_REQUEST_REPORTING_MAIL", serialize(array( 'mail1'=>"abc@gmail.com", 'mail2'=> "abc@yahoo.com")));

@@ -336,5 +336,49 @@ class Reports extends CI_Controller {
         $views['body_template'] = 'reports/banking_request.php';
         $this->load->view('site_template.php', $views);
     }
+    
+    function app_user_activity_log() 
+    {   
+        //$this->my_session->authorize("canViewPermission");
+        try {
+            $crud = new grocery_CRUD();
+
+            $crud->set_theme(TABLE_THEME);
+            $crud->set_subject('Apps User Activity Log');
+
+            $crud->set_table(TBL_APP_USER_ACTIVITY_LOG);
+            
+            $crud->set_relation('skyId', TBL_APP_USERS, 'eblSkyId');
+            $crud->set_relation('deviceId', TBL_DEVICE_INFO, 'imeiNo');
+
+            $crud->display_as("deviceId", "Device Info")
+                    ->display_as("skyId", "User Name");
+            
+            $crud->columns('skyId', 'deviceId', 'commDtTm', 'actionName', 'actionCode');
+
+//            $time = date("Y-m-d H:i:s");
+//
+//            $crud->add_fields('skyId', 'deviceId', 'category', 'commDtTm', 'actionName', 'actionCode');
+//            $crud->edit_fields('skyId', 'deviceId', 'category', 'commDtTm', 'actionName', 'actionCode');
+//
+//            $crud->change_field_type('creationDtTm', 'hidden', $time);
+//            $crud->change_field_type('updateDtTm', 'hidden', $time);
+
+            $crud->unset_delete();
+            $crud->unset_add();
+            $crud->unset_edit();
+
+            $output = $crud->render();
+            $output->css = "";
+            $output->js = "";
+            $output->pageTitle = "Apps User Activity Log";
+            $output->base_url = base_url();
+
+            $output->body_template = "crud/index.php";
+            $this->load->view("site_template.php", $output);
+        } catch (Exception $e) {
+            show_error($e->getMessage() . ' --- ' . $e->getTraceAsString());
+        }
+    }
 
 }
