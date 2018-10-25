@@ -116,7 +116,7 @@ if (!function_exists('set_smtp_config')) {
 
     function set_smtp_config(&$mailer) {
 
-	    $mailer->IsSMTP();                    
+	$mailer->IsSMTP();                    
         $mailer->CharSet = 'UTF-8';
         $mailer->SMTPDebug = 2;  
         $mailer->SMTPAuth = true;  
