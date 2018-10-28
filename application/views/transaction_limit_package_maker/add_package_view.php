@@ -14,7 +14,7 @@
             <label>Group Name</label>
             <input class="textbox" type="text" name="groupName" id="groupName" required><br><br>
             <input style="margin-right: 15px" type="checkbox" name="packageName[]" value="1"><label> Own Account Transfer</label><br>
-            <input style="margin-right: 15px" type="checkbox" name="packageName[]" value="2"><label> EBL Account Transfer</label><br>
+            <input style="margin-right: 15px" type="checkbox" name="packageName[]" value="2"><label> PBL Account Transfer</label><br>
             <input style="margin-right: 15px" type="checkbox" name="packageName[]" value="3"><label> Other Bank Transfer</label><br>
             <input style="margin-right: 15px" type="checkbox" name="packageName[]" value="4"><label> Bills Pay</label><br>
 

@@ -89,4 +89,45 @@ class Services extends CI_Controller {
         );
         my_json_output($json);
     }
+    
+    function get_complaint_info_list() {
+        $params['limit'] = (int) $this->input->get("limit", true);
+        $params['offset'] = (int) $this->input->get("offset", true);
+        $params['search'] = $this->input->get("search", true);
+        $params['complaintInfoId'] = (int) $this->input->get("complaintInfoId", true);
+        $params['get_count'] = true;
+
+        $this->load->model("help_setup_model");
+        $data['total'] = 0;
+        $data['list'] = array();
+
+        if ((int) $params['get_count'] > 0) {
+            $countParams = $params;
+            unset($countParams['limit']);
+            unset($countParams['offset']);
+            $countParams['count'] = true;
+            $countRes = $this->help_setup_model->getComplaintInfoList($countParams);
+            if ($countRes):
+                $data['total'] = $countRes->row()->total;
+            endif;
+        }
+
+        $result = $this->help_setup_model->getComplaintInfoList($params);
+        if (!$result):
+            $json = array(
+                "success" => false,
+                "list" => [],
+                "total" => 0,
+                "msg" => "No Info Found!"
+            );
+
+            echo json_encode($json);
+            die();
+        endif;
+
+        $data['success'] = true;
+        $data['list'] = $result->result();
+
+        my_json_output($data);
+    }
 }
