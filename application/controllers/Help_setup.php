@@ -24,6 +24,8 @@ class Help_setup extends CI_Controller {
 
             $crud->columns('machineName', 'title', 'helpText');
 
+            $crud->unique_fields('machineName');
+
             $crud->display_as('machineName', 'Machine Name');
             $crud->display_as('title', 'Title');
             $crud->display_as('helpText', 'Content');
@@ -79,7 +81,7 @@ class Help_setup extends CI_Controller {
             $crud->set_table(TBL_COMPLAINT_INFO);
 
             $crud->required_fields('empName', 'email');
-            
+
             if ((int) $this->uri->segment(4) > 0):
                 $crud->set_rules("email", "Email", "trim|xss_clean|required|valid_email");
             else:

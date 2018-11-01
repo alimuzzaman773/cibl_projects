@@ -286,6 +286,10 @@
                     </li>    
                 </ul>
             </li>
+           
+        </ul>
+        <ul class="nav navbar-nav pull-right">
+            <li class="yamm-fw" style="color: #fff; margin-top: 5px;">User Name : <?php echo $this->my_session->userName?> <br>User Group : <?php echo $this->my_session->group; ?></li>
         </ul>
     </div><!--/.nav-collapse -->
 </div>

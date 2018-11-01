@@ -22,7 +22,11 @@ class Priority_request_process extends CI_Controller {
         $params['limit'] = (int) $this->input->get("limit", true);
         $params['offset'] = (int) $this->input->get("offset", true);
         $params['get_count'] = (bool) $this->input->get("get_count", true);
-        $params['type_code'] = $this->input->get("type_code", true);
+        $params['type_code'] = $this->input->get("typeCode", true);
+        $params['apps_id'] = $this->input->get("appsId", true);
+        $params['reference_no'] = $this->input->get("referenceNo", true);
+        $params['customer_name'] = $this->input->get("customerName", true);
+        $params['mobile_no'] = $this->input->get("mobileNo", true);
 
         $data['total'] = array();
         $data['priority_list'] = array();

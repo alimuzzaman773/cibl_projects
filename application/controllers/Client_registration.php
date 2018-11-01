@@ -23,14 +23,23 @@ class Client_registration extends CI_Controller {
     }
 
     function ajax_get_app_users() {
+        
         $this->my_session->authorize("canViewAppUser");
         $p['get_count'] = (bool) $this->input->get("get_count", true);
         $p['limit'] = $this->input->get('limit', true);
         $p['offset'] = $this->input->get('offset', true);
+        $p['apps_id'] = $this->input->get('appsId', true);
+        $p['cif_id'] = $this->input->get('cifId', true);
+        $p['customer_name'] = $this->input->get('customerName', true);
+        $p['mobile_number'] = $this->input->get('mobileNo', true);
+        $p['lock_status'] = (int)$this->input->get('lockStatus', true);
 
-        $json = array();
+        $json = array();    
         if ($p['get_count']) {
+            $params = $p;
             $params['get_count'] = 1;
+            unset($params['limit']);
+            unset($params['offset']);
             $result = $this->client_registration_model->getAllAppsUsers($params);
             //echo $this->db->last_query();
             if ($result):
@@ -43,6 +52,7 @@ class Client_registration extends CI_Controller {
         if ($result):
             $json['app_users'] = $result->result();
         endif;
+        
 
         my_json_output($json);
     }

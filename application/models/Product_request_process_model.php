@@ -13,6 +13,14 @@ class Product_request_process_model extends CI_Model {
         return $this->db->insert('product_apply_request', $data);
     }
 
+    public function getAllService() {
+        $query = $this->db->select("*")
+                ->from("product_setup")
+                ->get();
+
+        return $query->num_rows() > 0 ? $query : FALSE;
+    }
+
     public function getProductRequestByDate($params = array()) {
 
         if (isset($params['count']) && $params['count'] == true) {
@@ -22,6 +30,18 @@ class Product_request_process_model extends CI_Model {
         }
 
         $this->db->from('product_apply_request');
+
+        if (isset($params['product_id']) && (int) $params['product_id'] > 0) {
+            $this->db->where("productId", $params['product_id']);
+        }
+
+        if (isset($params['customer_name']) && (int) $params['customer_name'] > 0) {
+            $this->db->like("name", $params['customer_name'], "both");
+        }
+
+        if (isset($params['mobile_no']) && (int) $params['mobile_no'] > 0) {
+            $this->db->where("contactNo", $params['mobile_no']);
+        }
 
         if ((isset($params['from_date']) && trim($params['from_date']) != "") && (isset($params['to_date']) && trim($params['to_date']) != "")) {
             $this->db->where('creationDtTm >=', $params["from_date"])

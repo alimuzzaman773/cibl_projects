@@ -2,20 +2,62 @@
 
 <div class="container" id="ProductModuleApp" data-ng-controller="ProductController">    
 
-    <div class="row">       
-        <div class="col-xs-4 col-sm-3">
+    <div class="row">
+        <div class="col-sm-2">
+            <div class="form-group">
+                <label>Product Type</label> 
+                <select class="form-control input-sm" ng-model="searchParams.product_id">
+                    <option value="">All Product</option>
+                    <?php foreach ($service_list as $item) { ?>
+                        <option value="<?= $item->productId ?>"><?= $item->productName ?></option>
+                    <?php } ?>
+                </select>
+            </div>
+        </div>
+
+        <div class="col-sm-2">
+            <div class="form-group">
+                <label>Customer Name</label> 
+                <input type="text"
+                       placeholder="Customer Name"
+                       class="input-sm form-control"
+                       ng-model="searchParams.customer_name"/>
+            </div>
+        </div>
+
+        <div class="col-sm-2">
+            <div class="form-group">
+                <label>Mobile No</label> 
+                <input type="text"
+                       placeholder="Mobile Number"
+                       class="input-sm form-control"
+                       ng-model="searchParams.mobile_no"/>
+            </div>
+        </div>
+
+        <div class="col-sm-2">
             <div class="form-group">
                 <label>From Date</label> 
-                <input type="text" name="fromDate" id="fromDate" class="form-control input-sm" ng-model="searchParams.from_date" placeholder="Search by From Date"/>
+                <input type="text" 
+                       id="fromDate" 
+                       class="form-control input-sm" 
+                       ng-model="searchParams.from_date" 
+                       placeholder="Search by From Date"/>
             </div>
         </div>
-        <div class="col-xs-4 col-sm-3">
+
+        <div class="col-sm-2">
             <div class="form-group">
                 <label>To Date</label> 
-                <input type="text" name="toDate" id="toDate"  class="form-control input-sm" ng-model="searchParams.to_date" placeholder="Search by To Date"/>
+                <input type="text" 
+                       id="toDate" 
+                       class="form-control input-sm" 
+                       ng-model="searchParams.to_date"
+                       placeholder="Search by To Date"/>
             </div>
         </div>
-        <div class="col-xs-4 col-sm-2">
+
+        <div class="col-sm-2">
             <div class="form-group">
                 <label style="display:block" class="hidden-xs">&nbsp;&nbsp;</label>
                 <button class="btn btn-primary btn-sm" data-ng-click="getResultsPage(1)">
@@ -25,7 +67,7 @@
                     <i class="glyphicon glyphicon-refresh"></i> Reset
                 </button>
             </div>
-        </div>       
+        </div>    
     </div>
 
     <table class="table table-bordered table-hover table-condensed">
@@ -60,12 +102,12 @@
                         </button>
                         <ul class="dropdown-menu">
                             <?php if (ci_check_permission("canEmailProductRequest")): ?>
-                            <li>
-                                <a href="<?= base_url() . "product_request_process/processRequestById/" ?>{{item.applyId}}">
-                                    <i class="glyphicon glyphicon-envelope"></i> Email
-                                </a>
-                            </li>  
-                            <?php endif;?>
+                                <li>
+                                    <a href="<?= base_url() . "product_request_process/processRequestById/" ?>{{item.applyId}}">
+                                        <i class="glyphicon glyphicon-envelope"></i> Email
+                                    </a>
+                                </li>  
+                            <?php endif; ?>
                         </ul>
                     </div>
                 </td>

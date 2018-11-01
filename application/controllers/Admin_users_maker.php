@@ -21,11 +21,48 @@ class Admin_users_maker extends CI_Controller {
         foreach ($adminUserData as $index => $value) {
             $adminUserData[$index]->email = $this->bocrypter->Decrypt($adminUserData[$index]->email);
         }
-
+        $data['group_list']=$this->admin_users_model_maker->getAllGroups();
         $data['adminUsers'] = json_encode($adminUserData);
         $data['pageTitle'] = 'Admin User';
         $data["body_template"] = "admin_users_maker/all_admin_users_view.php";
         $this->load->view('site_template.php', $data);
+    }
+
+    function ajax_get_admin_users() {
+
+        $this->my_session->authorize("canViewAdminUsersMaker");
+        $p['get_count'] = (bool) $this->input->get("get_count", true);
+        $p['limit'] = $this->input->get('limit', true);
+        $p['offset'] = $this->input->get('offset', true);
+        $p['user_name'] = $this->input->get('user_name', true);
+        $p['group_id'] = $this->input->get('group_id', true);
+        $p['email'] =$this->input->get('email', true);
+        $p['lock_status'] = (int) $this->input->get('lockStatus', true);
+
+        if( $p['email'] != ""){
+            $p["email"]=$this->bocrypter->Encrypt($p['email']);
+        }
+        
+        $json = array();
+        if ($p['get_count']) {
+            $params = $p;
+            $params['get_count'] = 1;
+            unset($params['limit']);
+            unset($params['offset']);
+            $result = $this->admin_users_model_maker->getAllAdminUsers($params);
+            //echo $this->db->last_query();
+            if ($result):
+                $json['total'] = $result->row()->total;
+            endif;
+        }
+
+        unset($p['get_count']);
+        $result = $this->admin_users_model_maker->getAllAdminUsers($p);
+        if ($result):
+            $json['user_list'] = $result->result();
+        endif;
+
+        my_json_output($json);
     }
 
     function addNewUser($selectedActionName = NULL) {

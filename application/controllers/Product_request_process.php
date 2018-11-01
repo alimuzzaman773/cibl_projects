@@ -15,6 +15,11 @@ class Product_request_process extends CI_Controller {
     public function index() {
         $this->my_session->authorize("canViewProductRequest");
         $data["pageTitle"] = "Product Request";
+        $data['service_list'] =array();
+        $result=$this->product_request_process_model->getAllService();
+        if($result){
+        $data['service_list'] = $result->result();
+        }
         $data["body_template"] = "product_request_process/show_product_request.php";
         $this->load->view('site_template.php', $data);
     }
@@ -24,6 +29,9 @@ class Product_request_process extends CI_Controller {
         $params['limit'] = (int) $this->input->get("limit", true);
         $params['offset'] = (int) $this->input->get("offset", true);
         $params['get_count'] = (bool) $this->input->get("get_count", true);
+        $params['product_id'] = (int)$this->input->get("product_id", true);
+        $params['customer_name'] = $this->input->get("customer_name", true);
+        $params['mobile_no'] = $this->input->get("mobile_no", true);
         $params['from_date'] = $this->input->get("from_date", true);
         $params['to_date'] = $this->input->get("to_date", true);
 

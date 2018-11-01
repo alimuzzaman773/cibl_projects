@@ -82,6 +82,39 @@ class Admin_user_group_maker extends CI_Controller {
             }
         }
     }
+    
+    function ajax_get_admin_group() {
+
+        $this->my_session->authorize("canViewAdminUserGroup");
+        $p['get_count'] = (bool) $this->input->get("get_count", true);
+        $p['limit'] = $this->input->get('limit', true);
+        $p['offset'] = $this->input->get('offset', true);
+        
+        $p['group_name'] = $this->input->get('group_name', true);
+        $p['lock_status'] = (int) $this->input->get('lock_status', true);
+        
+        $json = array();
+        if ($p['get_count']) {
+            $params = $p;
+            $params['get_count'] = 1;
+            unset($params['limit']);
+            unset($params['offset']);
+            $result = $this->admin_user_group_model_maker->getAllAdminGroup($params);
+            //echo $this->db->last_query();
+            if ($result):
+                $json['total'] = $result->row()->total;
+            endif;
+        }
+
+        unset($p['get_count']);
+        $result = $this->admin_user_group_model_maker->getAllAdminGroup($p);
+        if ($result):
+            $json['group_list'] = $result->result();
+        endif;
+
+        my_json_output($json);
+    }
+
 
     function set_insert_callback($post_array) {
         $post_array['mcStatus'] = 0;

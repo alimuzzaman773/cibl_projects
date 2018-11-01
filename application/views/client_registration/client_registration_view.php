@@ -1,132 +1,203 @@
 <h1 class="title-underlined">
     Apps User
-    <?php if(ci_check_permission("canAddAppUser")): ?>
-    <a href="<?php echo base_url(). 'apps_users/addAppsUser/Add'; ?>" class="btn btn-primary pull-right hidden">
-        <i class="glyphicon glyphicon-plus"></i> Add User
-    </a>
-    
-    <a href="<?php echo base_url(). 'apps_users/register'; ?>" class="btn btn-primary pull-right">
-        <i class="glyphicon glyphicon-plus"></i> Add User
-    </a>
-    <?php endif;?>
-</h1>
-<div class="table-responsive" id="AppUserModule" data-ng-controller="AppUsersController as AppUsersController">
+    <?php if (ci_check_permission("canAddAppUser")): ?>
+        <a href="<?php echo base_url() . 'apps_users/addAppsUser/Add'; ?>" class="btn btn-primary pull-right hidden">
+            <i class="glyphicon glyphicon-plus"></i> Add User
+        </a>
 
-    <table class="table table-striped table-bordered" id="referenceTable">
-        <thead>
-            <tr class="bg-primary">
-                <th>SKY ID</th>
-                <th>Apps ID</th>
-                <th>CIF ID</th>
-                <th>Client ID</th>
-                <th>Lock/Unlock</th>
-                <th>Active/Inactive</th>
-                <th>Status</th>
-                <th>User Name</th>
-                <th>User Group</th>
-                <th>Date of Birth</th>
-                <th>Email</th>
-                <th>Gender</th>
-                <td>Action</td>
-            </tr>
-        </thead>
-        <tbody>
-            <tr dir-paginate="a in app_users | itemsPerPage: per_page track by $index"
-                total-items="totalCount" current-page="pagination.current">
-                <td>{{a.skyId}}</td>
-                <td>{{a.eblSkyId}}</td>
-                <td>{{a.cfId}}</td>
-                <td>{{a.clientId}}</td>
-                <td data-ng-class="{'test' : setStatus($index), 'bg-success' : a.isLocked == 1, 'bg-danger' : a.isLocked == 0}">{{a.isLocked == 1 ? 'Locked' : 'Unlocked'}}</td>
-                <td data-ng-class="{'bg-success' : a.isActive == 1, 'bg-danger' : a.isActive == 0}">{{a.isActive == 1 ? 'Active' : 'Inactive'}}</td>
-                <td class="{{a.statusColor}}">{{a.status}}</td>                
-                <td>{{a.userName}}</td>
-                <td>{{a.userGroupName}}</td>
-                <td>{{a.dob}}</td>
-                <td>{{a.userEmail}}</td>
-                <td>{{a.gender}}</td>
-                <td>
-                    <div class="dropdown pull-right">
-                        <button class="btn btn-primary btn-xs dropdown-toggle" type="button" data-toggle="dropdown">
-                            Action <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <?php if(ci_check_permission("canEditAppUser")): ?>
-                            <li class="hidden">
-                                <a href="<?=base_url()?>apps_users/editAppsUser?eblSkyId={{a.eblSkyId}}&cfId={{a.cfId}}&clientId={{a.clientId}}&skyId={{a.skyId}}&selectedActionName=Edit">
-                                    <i class="glyphicon glyphicon-edit"></i> Edit
-                                </a>
-                            </li>
-                            <?php endif;?>
-                            <?php if(ci_check_permission("canViewAppUserDevice")): ?>
-                            <li>
-                                <a href="<?=base_url()?>client_registration/deviceInfo?skyId={{a.skyId}}&eblSkyId={{a.eblSkyId}}">
-                                    <i class="glyphicon glyphicon-dashboard"></i> View Devices
-                                </a>
-                            </li>
-                            <?php endif;?>
-                            <?php if(ci_check_permission("canViewAppUser")): ?>
-                            <li>
-                                <a href="<?=base_url()?>client_registration/viewUser?skyId={{a.skyId}}">
-                                    <i class="glyphicon glyphicon-list-alt"></i> Detail View
-                                </a>
-                            </li>
-                            <?php endif;?>
-                            <?php if(ci_check_permission("canLockAppUser")): ?>
-                            <li data-ng-if="a.isLocked == 0">
-                                <a data-ng-click="lock_unlock(a, 'Lock', 'userLock');">
-                                    <i class="glyphicon glyphicon-lock"></i> Lock
-                                </a>
-                            </li> 
-                            <?php endif;?>
-                            <?php if(ci_check_permission("canUnlockAppUser")): ?>
-                            <li data-ng-if="a.isLocked == 1">
-                                <a data-ng-click="lock_unlock(a, 'Unlock', 'userUnlock');">
-                                    <i class="glyphicon glyphicon-refresh"></i> Unlock
-                                </a>
-                            </li> 
-                            <?php endif;?>
-                            <?php if(ci_check_permission("canActiveAppUser")): ?>
-                            <li data-ng-if="a.isActive == 0">
-                                <a data-ng-click="activate_deactivate(a, 'Active', 'userActive');">
-                                    <i class="glyphicon glyphicon-flash"></i> Active
-                                </a>
-                            </li> 
-                            <?php endif;?>
-                            <?php if(ci_check_permission("canInactiveAppUser")): ?>
-                            <li data-ng-if="a.isActive == 1">
-                                <a data-ng-click="activate_deactivate(a, 'Inactive', 'userInactive');">
-                                    <i class="glyphicon glyphicon-flash"></i> Inactive
-                                </a>
-                            </li> 
-                            <?php endif;?>
-                            <?php if(ci_check_permission("canDeleteAppUser")): ?>
-                            <li>
-                                <a data-ng-click="deleteUser(a)">
-                                    <i class="glyphicon glyphicon-trash"></i> Delete
-                                </a>
-                            </li> 
-                            <?php endif;?>
-                        </ul>
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <div class="box-footer clearfix text-center">
-        <dir-pagination-controls on-page-change="pageChanged(newPageNumber)"
-                                 template-url="<?= base_url() ?>assets/angularjs/directives/dirPagination.tpl.html"></dir-pagination-controls>
-    </div>  
+        <a href="<?php echo base_url() . 'apps_users/register'; ?>" class="btn btn-primary pull-right">
+            <i class="glyphicon glyphicon-plus"></i> Add User
+        </a>
+    <?php endif; ?>
+</h1>
+<div  id="AppUserModule" data-ng-controller="AppUsersController as AppUsersController">
+    <div class="row">
+        <div class="col-sm-2">
+            <div class="form-group">
+                <label>Apps ID</label> 
+                <input type="text"
+                       placeholder="Apps ID"
+                       class="input-sm form-control"
+                       ng-model="searchParams.apps_id"/>
+            </div>
+        </div>
+
+        <div class="col-sm-2">
+            <div class="form-group">
+                <label>CIF ID</label> 
+                <input type="text"
+                       placeholder="CIF ID"
+                       class="input-sm form-control"
+                       ng-model="searchParams.cif_id"/>
+            </div>
+        </div>
+
+        <div class="col-sm-2">
+            <div class="form-group">
+                <label>Customer Name</label> 
+                <input type="text"
+                       placeholder="Customer ID"
+                       class="input-sm form-control"
+                       ng-model="searchParams.customer_name"/>
+            </div>
+        </div>
+
+        <div class="col-sm-2">
+            <div class="form-group search_panel">
+                <label>Mobile No</label> 
+                <input type="text"
+                       placeholder="Mobile No"
+                       class="input-sm form-control"
+                       ng-model="searchParams.mobile_no"/>
+            </div>
+        </div>
+
+        <div class="col-sm-2">
+            <div class="form-group">
+                <label>Lock Status</label> 
+                <select class="input-sm form-control"
+                        ng-model="searchParams.lock_status">
+                    <option value="0" selected>Unlock</option>
+                    <option value="1">Lock</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="form-group">
+                <label>Action</label> 
+                <div class="button-group">
+                    <button class="btn btn-primary btn-sm"
+                            data-ng-click="getResultsPage(1)">
+                        <i class="glyphicon glyphicon-search"></i> Search
+                    </button>
+
+                    <button class="btn btn-primary btn-sm"
+                            data-ng-click="resetSearch();">
+                        <i class="glyphicon glyphicon-refresh"></i> Reset
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+
+        <table class="table table-striped table-bordered" id="referenceTable">
+            <thead>
+                <tr class="bg-primary">
+                    <th>SL No</th>
+                    <th>Apps ID</th>
+                    <th>CIF ID</th>
+                    <th>Client ID</th>
+                    <th>Lock/Unlock</th>
+                    <th>Active/Inactive</th>
+                    <th>Status</th>
+                    <th>User Name</th>
+                    <th>User Group</th>
+                    <th>Date of Birth</th>
+                    <th>Email</th>
+                    <th>Gender</th>
+                    <td>Action</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr dir-paginate="a in app_users | itemsPerPage: per_page track by $index"
+                    total-items="totalCount" current-page="pagination.current">
+                     <td>{{(per_page * (currentPageNumber - 1)) + ($index + 1)}}</td>
+                    <td>{{a.eblSkyId}}</td>
+                    <td>{{a.cfId}}</td>
+                    <td>{{a.clientId}}</td>
+                    <td data-ng-class="{'test' : setStatus($index), 'bg-success' : a.isLocked == 1, 'bg-danger' : a.isLocked == 0}">{{a.isLocked == 1 ? 'Locked' : 'Unlocked'}}</td>
+                    <td data-ng-class="{'bg-success' : a.isActive == 1, 'bg-danger' : a.isActive == 0}">{{a.isActive == 1 ? 'Active' : 'Inactive'}}</td>
+                    <td class="{{a.statusColor}}">{{a.status}}</td>                
+                    <td>{{a.userName}}</td>
+                    <td>{{a.userGroupName}}</td>
+                    <td>{{a.dob}}</td>
+                    <td>{{a.userEmail}}</td>
+                    <td>{{a.gender}}</td>
+                    <td>
+                        <div class="dropdown pull-right">
+                            <button class="btn btn-primary btn-xs dropdown-toggle" type="button" data-toggle="dropdown">
+                                Action <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <?php if (ci_check_permission("canEditAppUser")): ?>
+                                    <li class="hidden">
+                                        <a href="<?= base_url() ?>apps_users/editAppsUser?eblSkyId={{a.eblSkyId}}&cfId={{a.cfId}}&clientId={{a.clientId}}&skyId={{a.skyId}}&selectedActionName=Edit">
+                                            <i class="glyphicon glyphicon-edit"></i> Edit
+                                        </a>
+                                    </li>
+                                <?php endif; ?>
+                                <?php if (ci_check_permission("canViewAppUserDevice")): ?>
+                                    <li>
+                                        <a href="<?= base_url() ?>client_registration/deviceInfo?skyId={{a.skyId}}&eblSkyId={{a.eblSkyId}}">
+                                            <i class="glyphicon glyphicon-dashboard"></i> View Devices
+                                        </a>
+                                    </li>
+                                <?php endif; ?>
+                                <?php if (ci_check_permission("canViewAppUser")): ?>
+                                    <li>
+                                        <a href="<?= base_url() ?>client_registration/viewUser?skyId={{a.skyId}}">
+                                            <i class="glyphicon glyphicon-list-alt"></i> Detail View
+                                        </a>
+                                    </li>
+                                <?php endif; ?>
+                                <?php if (ci_check_permission("canLockAppUser")): ?>
+                                    <li data-ng-if="a.isLocked == 0">
+                                        <a data-ng-click="lock_unlock(a, 'Lock', 'userLock');">
+                                            <i class="glyphicon glyphicon-lock"></i> Lock
+                                        </a>
+                                    </li> 
+                                <?php endif; ?>
+                                <?php if (ci_check_permission("canUnlockAppUser")): ?>
+                                    <li data-ng-if="a.isLocked == 1">
+                                        <a data-ng-click="lock_unlock(a, 'Unlock', 'userUnlock');">
+                                            <i class="glyphicon glyphicon-refresh"></i> Unlock
+                                        </a>
+                                    </li> 
+                                <?php endif; ?>
+                                <?php if (ci_check_permission("canActiveAppUser")): ?>
+                                    <li data-ng-if="a.isActive == 0">
+                                        <a data-ng-click="activate_deactivate(a, 'Active', 'userActive');">
+                                            <i class="glyphicon glyphicon-flash"></i> Active
+                                        </a>
+                                    </li> 
+                                <?php endif; ?>
+                                <?php if (ci_check_permission("canInactiveAppUser")): ?>
+                                    <li data-ng-if="a.isActive == 1">
+                                        <a data-ng-click="activate_deactivate(a, 'Inactive', 'userInactive');">
+                                            <i class="glyphicon glyphicon-flash"></i> Inactive
+                                        </a>
+                                    </li> 
+                                <?php endif; ?>
+                                <?php if (ci_check_permission("canDeleteAppUser")): ?>
+                                    <li>
+                                        <a data-ng-click="deleteUser(a)">
+                                            <i class="glyphicon glyphicon-trash"></i> Delete
+                                        </a>
+                                    </li> 
+                                <?php endif; ?>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="box-footer clearfix text-center">
+            <dir-pagination-controls on-page-change="pageChanged(newPageNumber)"
+                                     template-url="<?= base_url() ?>assets/angularjs/directives/dirPagination.tpl.html"></dir-pagination-controls>
+        </div>  
+    </div>
 </div>
 
 <?php
-ci_add_js(asset_url()."angularjs/directives/dirPagination.js");  
-ci_add_js(asset_url()."app/app_users.js")  
+ci_add_js(asset_url() . "angularjs/directives/dirPagination.js");
+ci_add_js(asset_url() . "app/app_users.js")
 ?>    
 
 <script type="text/javascript" charset="utf-8">
-    var initialData = <?= '[]'?>; //data for building initial table
-    
+    var initialData = <?= '[]' ?>; //data for building initial table
+
     var vm = function () {
         var self = this;
         self.records = ko.observableArray(initialData);
@@ -139,13 +210,12 @@ ci_add_js(asset_url()."app/app_users.js")
             record.check = ko.observable(false);
             record.detailView = ko.observable(false);
             record.deleted = ko.observable(false);
-	    
+
 
             if (record.isActive == 1) {
                 record.active = "Active";
                 record.activeColor = ko.observable("green");
-            }
-            else if (record.isActive == 0) {
+            } else if (record.isActive == 0) {
                 record.active = "Inactive";
                 record.activeColor = ko.observable("red");
             }
@@ -153,8 +223,7 @@ ci_add_js(asset_url()."app/app_users.js")
             if (record.isLocked == 1) {
                 record.lock = "Locked";
                 record.lockColor = ko.observable("red");
-            }
-            else if (record.isLocked == 0) {
+            } else if (record.isLocked == 0) {
                 record.lock = "Unlocked";
                 record.lockColor = ko.observable("green");
             }
@@ -169,7 +238,7 @@ ci_add_js(asset_url()."app/app_users.js")
                 record.status = "Rejected";
                 record.statusColor = ko.observable("red");
             }
-            
+
 
         });
 
@@ -453,8 +522,8 @@ ci_add_js(asset_url()."app/app_users.js")
         };
 
         self.deletedUser = function (item) {
-	
-           var r = confirm("Are you sure to delete this user?");
+
+            var r = confirm("Are you sure to delete this user?");
             if (r == true) {
                 $.ajax({
                     type: "POST",
@@ -464,8 +533,8 @@ ci_add_js(asset_url()."app/app_users.js")
 
                         if (res == 1) {
                             alert("User can't delete because of user device already verified.");
-                           
-                            
+
+
                         } else {
                             window.location = "<?= base_url() ?>client_registration";
                         }

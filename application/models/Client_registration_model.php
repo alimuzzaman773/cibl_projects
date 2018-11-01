@@ -9,26 +9,46 @@ class Client_registration_model extends CI_Model {
         $this->load->database();
     }
 
-    public function getAllAppsUsers($p) 
-    {
-        if(isset($p['get_count']) && (int)$p['get_count'] > 0):
-            $this->db->select('count(*) as total', false);            
+    public function getAllAppsUsers($p) {
+        if (isset($p['get_count']) && (int) $p['get_count'] > 0):
+            $this->db->select('count(*) as total', false);
         else:
             $this->db->select('apps_users_mc.*, apps_users_group.userGroupName', false);
         endif;
-            
+
         $this->db->from('apps_users_mc');
         $this->db->join('apps_users_group', 'apps_users_mc.appsGroupId = apps_users_group.appsGroupId', 'left');
         //$this->db->where("apps_users_mc.salt2 IS Null");
         //$this->db->where('apps_users_mc.makerActionBy', $this->my_session->userId);
         //$this->db->or_where('apps_users_mc.mcStatus =', 1);
-        $this->db->order_by('skyId', 'desc');
-        
-        if(isset($p['limit']) && (int)$p['limit'] > 0){
-            $offset = (isset($p['offset']) && $p['offset'] != null) ? (int)$p['offset'] : 0;
+
+        if (isset($p['apps_id']) && trim($p['apps_id']) != "") {
+            $this->db->where("eblSkyId", $p['apps_id']);
+        }
+
+        if (isset($p['cif_id']) && trim($p['cif_id']) != "") {
+            $this->db->where("cfId", $p['cif_id']);
+        }
+
+        if (isset($p['customer_name']) && trim($p['customer_name']) != "") {
+            $this->db->like('userName', $p['customer_name'], "both");
+        }
+
+        if (isset($p['mobile_no']) && trim($p['mobile_no']) != "") {
+            $this->db->where("userMobNo1", $p['mobile_no']);
+        }
+
+        if (isset($p['lock_status']) && (int) $p['lock_status'] <= 1) {
+            $this->db->where("isLocked", $p['lock_status']);
+        }
+
+        if (isset($p['limit']) && (int) $p['limit'] > 0) {
+            $offset = (isset($p['offset']) && $p['offset'] != null) ? (int) $p['offset'] : 0;
             $this->db->limit($p['limit'], $offset);
         }
-        
+
+        $this->db->order_by('skyId', 'desc');
+
         $query = $this->db->get();
         return $query->num_rows() > 0 ? $query : false;
     }
@@ -76,7 +96,7 @@ class Client_registration_model extends CI_Model {
         if ($data != NULL) {
             $this->db->select('apps_users_mc.eblSkyId, device_info_mc.*');
 
-        $this->db->where("(device_info_mc.makerActionBy =  {$this->db->escape($this->my_session->adminUserId)}
+            $this->db->where("(device_info_mc.makerActionBy =  {$this->db->escape($this->my_session->adminUserId)}
                      OR device_info_mc.mcStatus = 1) AND device_info_mc.skyId = " . $this->db->escape($data));
 
             $this->db->from('device_info_mc');
@@ -128,7 +148,7 @@ class Client_registration_model extends CI_Model {
 
     public function userDeleteChange($data, $skyId) {
         $this->db->where("skyId", $skyId)
-                 ->update("apps_users_mc", $data);
+                ->update("apps_users_mc", $data);
         return true;
     }
 

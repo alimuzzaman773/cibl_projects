@@ -1,17 +1,73 @@
 <h2 class="title-underlined">Priority Requests</h2>
 
 <div class="container" id="PriorityModuleApp" data-ng-controller="PriorityController">    
-    <div style="margin-bottom: 15px">
-        <div class="row">
-            <div class="col-xs-3 col-sm-3">
-                <div class="form-group">
-                    <label>Service Type</label> 
-                    <select class="form-control input-sm" ng-model="type_code" ng-change="getTypeRequest()">
-                        <option value="">All Request</option>
-                        <?php foreach ($service_list as $item) { ?>
-                            <option value="<?= $item->serviceTypeCode ?>"><?= $item->serviceName ?></option>
-                        <?php } ?>
-                    </select>
+
+    <div class="row">
+        <div class="col-sm-2">
+            <div class="form-group">
+                <label>Request Type</label> 
+                <select class="form-control input-sm" ng-model="searchParams.type_code">
+                    <option value="">All Request</option>
+                    <?php foreach ($service_list as $item) { ?>
+                        <option value="<?= $item->serviceTypeCode ?>"><?= $item->serviceName ?></option>
+                    <?php } ?>
+                </select>
+            </div>
+        </div>
+
+        <div class="col-sm-2">
+            <div class="form-group">
+                <label>Apps ID</label> 
+                <input type="text"
+                       placeholder="Apps ID"
+                       class="input-sm form-control"
+                       ng-model="searchParams.apps_id"/>
+            </div>
+        </div>
+
+        <div class="col-sm-2">
+            <div class="form-group">
+                <label>Reference Number</label> 
+                <input type="text"
+                       placeholder="Reference Number"
+                       class="input-sm form-control"
+                       ng-model="searchParams.reference_no"/>
+            </div>
+        </div>
+
+        <div class="col-sm-2">
+            <div class="form-group">
+                <label>Customer Name</label> 
+                <input type="text"
+                       placeholder="Customer Name"
+                       class="input-sm form-control"
+                       ng-model="searchParams.customer_name"/>
+            </div>
+        </div>
+
+        <div class="col-sm-2">
+            <div class="form-group">
+                <label>Mobile No</label> 
+                <input type="text"
+                       placeholder="Mobile Number"
+                       class="input-sm form-control"
+                       ng-model="searchParams.mobile_no"/>
+            </div>
+        </div>
+
+        <div class="col-sm-2">
+            <div class="form-group">
+                <label>Action</label> 
+                <div class="button-group">
+                    <button class="btn btn-primary btn-sm"
+                            data-ng-click="getResultsPage(1)">
+                        <i class="glyphicon glyphicon-search"></i> Search
+                    </button>
+
+                    <button class="btn btn-primary btn-sm"
+                            data-ng-click="resetSearch();">
+                        <i class="glyphicon glyphicon-refresh"></i> Reset
+                    </button>
                 </div>
             </div>
         </div>
@@ -49,12 +105,12 @@
                         </button>
                         <ul class="dropdown-menu">
                             <?php if (ci_check_permission("canEmailPriorityRequest")): ?>
-                            <li>
-                                <a href="<?= base_url() . "priority_request_process/processRequestById/" ?>{{item.serviceRequestID}}">
-                                    <i class="glyphicon glyphicon-envelope"></i> Email
-                                </a>
-                            </li>  
-                            <?php endif;?>
+                                <li>
+                                    <a href="<?= base_url() . "priority_request_process/processRequestById/" ?>{{item.serviceRequestID}}">
+                                        <i class="glyphicon glyphicon-envelope"></i> Email
+                                    </a>
+                                </li>  
+                            <?php endif; ?>
                         </ul>
                     </div>
                 </td>

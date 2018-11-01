@@ -9,6 +9,9 @@ ProductModuleApp.controller("ProductController", ["$scope", "$http", function ($
         $scope.currentPageNumber = 1;
 
         $scope.searchParams = {
+            product_id: 0,
+            customer_name: "",
+            mobile_no: "",
             from_date: "",
             to_date: ""
         };
@@ -23,6 +26,9 @@ ProductModuleApp.controller("ProductController", ["$scope", "$http", function ($
 
         $scope.resetSearch = function () {
             $scope.searchParams = {
+                product_id: 0,
+                customer_name: "",
+                mobile_no: "",
                 from_date: "",
                 to_date: ""
             };
@@ -37,7 +43,22 @@ ProductModuleApp.controller("ProductController", ["$scope", "$http", function ($
                 offset: $scope.per_page * (pageNumber - 1),
                 get_count: true
             };
-            
+
+            if ($scope.searchParams.product_id !== null
+                    && parseInt($scope.searchParams.product_id) > 0) {
+                $params.product_id = $scope.searchParams.product_id;
+            }
+
+            if ($scope.searchParams.customer_name !== null
+                    && $.trim($scope.searchParams.customer_name) !== "") {
+                 $params.customer_name = $scope.searchParams.customer_name;
+            }
+
+            if ($scope.searchParams.mobile_no !== null
+                    && $.trim($scope.searchParams.mobile_no) !== "") {
+                 $params.mobile_no = $scope.searchParams.mobile_no;
+            }
+
             if (($scope.searchParams.from_date !== null
                     && $.trim($scope.searchParams.from_date) !== "") &&
                     ($scope.searchParams.to_date !== null
