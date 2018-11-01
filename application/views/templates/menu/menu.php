@@ -278,7 +278,7 @@
                                 <div class="clearfix mb">
                                     <ul class="col-md-2 col-xs-12 list-unstyled">
                                         <li><p><b>Apps User</b></p></li>
-                                        <li><a href="<?= base_url() . 'call_center/#/user_list' ?>">User Authorized</a></li>
+                                        <li><a href="<?= base_url() . 'call_center/#/user_list' ?>">User Authorization</a></li>
                                     </ul>
                                 </div>
                             </div>

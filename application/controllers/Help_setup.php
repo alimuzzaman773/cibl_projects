@@ -76,17 +76,23 @@ class Help_setup extends CI_Controller {
             $crud = new grocery_CRUD();
             $crud->set_theme(TABLE_THEME);
             $crud->set_subject('Complaint Info');
-            $crud->set_table('complaint_info');
+            $crud->set_table(TBL_COMPLAINT_INFO);
 
-            $crud->required_fields('parentName', 'childName', 'productName');
+            $crud->required_fields('empName', 'email');
+            
+            if ((int) $this->uri->segment(4) > 0):
+                $crud->set_rules("email", "Email", "trim|xss_clean|required|valid_email");
+            else:
+                $crud->set_rules("email", "Email", "trim|xss_clean|required|valid_email|is_unique[" . TBL_COMPLAINT_INFO . ".email]");
+            endif;
 
-            $crud->columns('empName', 'designation', 'contactNo', 'contactDetails', 'isActive');
+            $crud->columns('empName', 'designation', 'contactNo', 'contactDetails', 'email', 'isActive');
 
             $time = date("Y-m-d H:i:s");
             $creatorId = $this->my_session->userId;
 
-            $crud->add_fields('empName', 'designation', 'contactNo', 'contactDetails', 'isActive', 'creationDtTm', 'updateDtTm');
-            $crud->edit_fields('empName', 'designation', 'contactNo', 'contactDetails', 'isActive', 'updateDtTm');
+            $crud->add_fields('empName', 'designation', 'contactNo', 'contactDetails', 'email', 'isActive', 'creationDtTm', 'updateDtTm');
+            $crud->edit_fields('empName', 'designation', 'contactNo', 'contactDetails', 'email', 'isActive', 'updateDtTm');
 
             $crud->change_field_type('creationDtTm', 'hidden', $time);
             $crud->change_field_type('updateDtTm', 'hidden', $time);
@@ -100,10 +106,11 @@ class Help_setup extends CI_Controller {
                     ->display_as('contactDetails', 'Contact Details');
 
             $crud->unset_delete();
+            $crud->unset_add();
 
-            if (!ci_check_permission("canAddHelpSetup")):
-                $crud->unset_add();
-            endif;
+//            if (!ci_check_permission("canAddHelpSetup")):
+//                $crud->unset_add();
+//            endif;
             if (!ci_check_permission("canEditHelpSetup")):
                 $crud->unset_edit();
             endif;
