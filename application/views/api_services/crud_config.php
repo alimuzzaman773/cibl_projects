@@ -8,23 +8,31 @@
             <table class="table table-bordered">
                 <thead>
                     <tr class="bg-primary">
-                        <th>Key</th>
-                        <th>Value</th> 
                         <th></th>
+                        <th>Type</th>
+                        <th style="width: 100px">Key</th>
+                        <th>Value</th> 
                     </tr>
                 </thead>
                 <tbody>
                     <tr data-ng-repeat="i in config_data track by $index">
                         <td>
+                            <button role="button" type="button" class="btn btn-xs btn-danger" data-ng-click="removeItem($index)">
+                                <i class="glyphicon glyphicon-trash"></i>
+                            </button>
+                        </td>
+                        <td>
+                            <select name="config_data_type[]" class="form-control" data-ng-model="i.type">
+                                <option value="">Select a type</option>
+                                <option value="header">Header</option>
+                                <option value="body">Body</option>
+                            </select>
+                        </td>
+                        <td style="width: 100px">
                             <input type="text" name="config_data_key[]" placeholder="Provide a key in small caps only" class="form-control" data-ng-model="i.key" />
                         </td>
                         <td>
                             <input type="text" name="config_data_val[]" placeholder="Provide a value" class="form-control" data-ng-model="i.val" />
-                        </td>
-                        <td>
-                            <button role="button" type="button" class="btn btn-xs btn-danger" data-ng-click="removeItem($index)">
-                                <i class="glyphicon glyphicon-trash"></i>
-                            </button>
                         </td>
                     </tr>
                     <tr data-ng-show="config_data.length <= 0">

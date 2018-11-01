@@ -28,17 +28,46 @@ class Api_services extends CI_Controller {
             $crud->required_fields(array('name','machine_name', 'api_url', 'method'));
             
             $crud->set_rules('name', 'Name', 'trim|required|xss_clean');  
+            $crud->set_rules('logo', 'Logo', 'trim|xss_clean');  
             $crud->set_rules('api_url', 'API Url', 'trim|xss_clean|required');
             $crud->set_rules('machine_name', 'Machine Name', 'trim|xss_clean|callback__checkMachineName');
-            
+            $crud->set_rules('vat_applicable', 'VAT Applicable', 'trim|xss_clean|required');
+            $crud->set_rules('tax_applicable', 'TAX Applicable', 'trim|xss_clean|required');
+            $crud->set_rules('vat_account', 'VAT Account', 'trim|xss_clean|required');
+            $crud->set_rules('tax_account', 'TAX Account', 'trim|xss_clean|required');
+                        
             $crud->columns('name','machine_name', 'api_url');
             
             $time = date("Y-m-d H:i:s");
-            $crud->add_fields('name','machine_name', 'method', 'api_url','config_data','created','updated');
-            $crud->edit_fields('name','machine_name', 'method', 'api_url', 'config_data', 'updated');
+            $crud->add_fields('logo','name','machine_name', 'method', 'api_url', 'vat_applicable', 'vat_account', 'tax_applicable', 'tax_account', 'config_data','created','updated');
+            $crud->edit_fields('logo','name','machine_name', 'method', 'api_url', 'vat_applicable', 'vat_account', 'tax_applicable', 'tax_account', 'config_data', 'updated');
             
-            $crud->change_field_type('created', 'hidden', $time);
-            $crud->change_field_type('updated', 'hidden', $time);           
+            $crud->field_type('created', 'hidden', $time);
+            $crud->field_type('updated', 'hidden', $time);           
+            
+            //$crud->field_type('vat_applicable', 'true_false');           
+            //$crud->field_type('tax_applicable', 'true_false');           
+            
+            $crud->callback_add_field('vat_applicable', function () {
+                return '<input type="radio" id="field-vat_applicable_yes" name="vat_applicable" value="1" /> Yes<br />'
+                      .'<input type="radio" id="field-vat_applicable_no" name="vat_applicable" value="0" /> No';
+            });
+            
+            $crud->callback_edit_field('vat_applicable', function ($value, $primary_key) {
+                return '<input type="radio" id="field-vat_applicable_yes" name="vat_applicable" value="1" '.($value=='1' ? 'checked="checked"' : "").' /> Yes<br />'
+                      .'<input type="radio" id="field-vat_applicable_no" name="vat_applicable" value="0" '.($value=='0' ? 'checked="checked"' : "").' /> No';
+            });
+            
+            $crud->callback_add_field('tax_applicable', function () {
+                return '<input type="radio" id="field-tax_applicable_yes" name="tax_applicable" value="1"  /> Yes<br />'
+                      .'<input type="radio" id="field-tax_applicable_no" name="tax_applicable" value="0" /> No';
+            });
+            
+            $crud->callback_edit_field('tax_applicable', function ($value, $primary_key) {
+                return '<input type="radio" id="field-tax_applicable_yes" name="tax_applicable" value="1" '.($value=='1' ? 'checked="checked"' : "").' /> Yes<br />'
+                      .'<input type="radio" id="field-tax_applicable_no" name="tax_applicable" value="0" '.($value=='0' ? 'checked="checked"' : "").' /> No';
+            });
+            
             
             $crud->callback_add_field('user_level', array($this, 'add_field_callback_level'));
             $crud->callback_edit_field('user_level', array($this, 'add_field_callback_level_selected'));
@@ -63,6 +92,8 @@ class Api_services extends CI_Controller {
             
             $crud->callback_before_insert(array($this,'changeConfigData'));
             $crud->callback_before_update(array($this,'changeConfigData'));
+            
+            $crud->set_field_upload("logo", 'assets/uploads');
             
             if(!isset($this->my_session->permissions['canAddUserGroup']))
             {                
@@ -104,10 +135,12 @@ class Api_services extends CI_Controller {
     
     function changeConfigData($post_array, $primary_key = null) {
         $configData = array();
+        $pt = $this->input->post('config_data_type',true);
         $pk = $this->input->post('config_data_key',true);
         $pv = $this->input->post('config_data_val',true);
         foreach($pk as $k => $v):
             $item = array(
+                'type' => $pt[$k],
                 'key' => $v,
                 'val' => $pv[$k]
             );
@@ -133,7 +166,7 @@ class Api_services extends CI_Controller {
                  ->from('api_services')
                  ->where("machine_name",$machineName);
         if($ugId > 0):
-            $this->db->where_not_in("id",array($ugId));
+            $this->db->where_not_in("api_service_id",array($ugId));
         endif;
         $result = $this->db->get();
         if($result->num_rows() > 0):
@@ -142,8 +175,11 @@ class Api_services extends CI_Controller {
         endif;
     }
     
-    function fields()
+    function fields($api_service_id)
     {
+        //get service info from service api model
+        
+        
         $this->my_session->checkSession();
         
         try{
@@ -156,7 +192,7 @@ class Api_services extends CI_Controller {
             $crud->set_subject('Api Service Fields');
             
             $crud->set_relation('api_service_id','api_services','{name}');
-            
+            $crud->where('api_service_fields.api_service_id', $api_service_id);
             $crud->required_fields(array('api_service_id','label', 'field_name', 'field_type', 'field_type_cast', 'is_required'));
             
             $crud->set_rules('api_service_id', 'Service ID', 'trim|required|xss_clean|integer|greater_than[0]');  
@@ -166,8 +202,8 @@ class Api_services extends CI_Controller {
             $crud->columns('api_service_id','label', 'field_name', 'field_type', 'field_type_cast', 'is_required');
             
             $time = date("Y-m-d H:i:s");
-            $crud->add_fields('api_service_id','label', 'field_name', 'field_type', 'field_format', 'data', 'field_type_cast', 'is_required','created','updated');
-            $crud->edit_fields('api_service_id','label', 'field_name', 'field_type','field_format', 'data', 'field_type_cast', 'is_required', 'updated');
+            $crud->add_fields('api_service_id','label', 'field_name', 'field_type', 'field_format', 'data', 'field_type_cast', 'service_type', 'is_required','created','updated');
+            $crud->edit_fields('api_service_id','label', 'field_name', 'field_type','field_format', 'data', 'field_type_cast', 'service_type', 'is_required', 'updated');
             
             $crud->change_field_type('created', 'hidden', $time);
             $crud->change_field_type('updated', 'hidden', $time);           
@@ -320,11 +356,9 @@ class Api_services extends CI_Controller {
         
         $this->load->library('form_validation');
         
-        $fieldParams = array();
-        foreach($serviceFields as $f):
-            $fieldParams[$f->name] = $this->input->post($f->name,true);
+        foreach($serviceFields as $f):            
             if((int)$f->is_required == 1):
-                $this->form_validation->set_rules($f->field_name, $f->label, 'trim|required');
+                $this->form_validation->set_rules($f->field_name, $f->label, 'trim|required|min_length[1]');
             endif;
         endforeach;
         
@@ -336,20 +370,67 @@ class Api_services extends CI_Controller {
             my_json_output($data);
         endif;
         
-        $apiUrl = $serviceInfo->api_url;
+        $fieldParams = array();
+        foreach($serviceFields as $f):
+            $fieldParams[$f->field_name] = $this->input->post($f->field_name,true);
+        endforeach;
+        
+        $apiUrl = 'http://api.sslwireless.com/api/bill-info';//$serviceInfo->api_url;
         
         include_once APPPATH . "libraries/Requests.php";
         Requests::register_autoloader();
+        
+        $config_array = json_decode($serviceInfo->config_data);
+        
+        $headers = array(
+            'AUTH-KEY' => 'XLVlwqLS7H1F42nr56ihYejgS8krAh8W',
+            'STK-CODE' => 'PBL'
+        );
+        
+        foreach($config_array as $k => $v):
+            if($v->type == "header"):
+            //    $headers[$v->key] = $v->val;
+            endif;
 
+            if($v->type == "body"):
+                $fieldParams[$v->key] = $v->val;
+            endif;            
+        endforeach;
+        
+        $fieldParams['transaction_id'] = time()."-".$service_id;
+        $fieldParams['payment_mode'] = 3;
+        $fieldParams['branch_code'] = '0104';
+        $fieldParams['channel_id'] = 3;
+        
+        $this->hook_fieldparams($fieldParams, $serviceInfo->machine_name);
+        d($fieldParams['transaction_id'],false);
+        //d($headers,false);
+        //d($fieldParams);
+        
+        #1. create a row in db - tbl_ssl_billpayments- id,api_service_id, bill_info_res, bill_payment_response   
+        //insert and get id
+                
+        #2. $fieldParams['transaction_id'] = tbl_ssl_billpayments.id
+        //assign trn id
+        
+        $billInfo = $this->call_bill_info($headers, $fieldParams);
+        d($billInfo['body'],false);
+        $bilPayment = $this->call_bill_payment($headers, $fieldParams);
+        d($bilPayment);
+    }
+    
+    function call_bill_info($headers, $fieldParams)
+    {
         try {
-            $url = $apiUrl;
-            $request = Requests::post($url, array(), http_build_query($fieldParams));
+            $url = 'http://api.sslwireless.com/api/bill-info';
+            $request = Requests::post($url, $headers, $fieldParams);
 
             $result = array(
                 "success" => $request->success,
                 "data" => $request->body,
                 "request" => $request
             );
+            
             return $result;
         } catch (Exception $e) {
             $error = array(
@@ -358,7 +439,46 @@ class Api_services extends CI_Controller {
             );
             return $error;
         }
+    }
+    
+    function call_bill_payment($headers, $fieldParams)
+    {
+        try {
+            $url = 'http://api.sslwireless.com/api/bill-payment';
+            $request = Requests::post($url, $headers, $fieldParams);
+
+            $result = array(
+                "success" => $request->success,
+                "data" => $request->body,
+                "request" => $request
+            );
+            
+            return $result;
+        } catch (Exception $e) {
+            $error = array(
+                "success" => false,
+                "msg" => $e->getMessage()
+            );
+            return $error;
+        }
+    }
+    
+    function hook_fieldparams(&$fieldparams, $service_code)
+    {
         
+        if(method_exists($this,$service_code."_fieldparams")){            
+            $this->{$service_code."_fieldparams"}($fieldparams, $service_code);
+        }
+    }
+    
+    function dpdc_fieldparams(&$fieldparams)
+    {
+        
+    }
+    
+    function desco_fieldparams(&$fieldparams)
+    {
+        $fieldparams['payment_type'] = $fieldparams['payment_mode'];
     }
 }
 
