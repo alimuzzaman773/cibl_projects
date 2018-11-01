@@ -415,7 +415,12 @@ class Api_services extends CI_Controller {
         
         $billInfo = $this->call_bill_info($headers, $fieldParams);
         d($billInfo['body'],false);
+        
+        //onsuccess update transaction table bill info res
+        
         $bilPayment = $this->call_bill_payment($headers, $fieldParams);
+        
+        //onsuccess update transaction table bill payment res
         d($bilPayment);
     }
     
