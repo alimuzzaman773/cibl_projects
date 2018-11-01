@@ -375,7 +375,7 @@ class Api_services extends CI_Controller {
             $fieldParams[$f->field_name] = $this->input->post($f->field_name,true);
         endforeach;
         
-        $apiUrl = 'http://api.sslwireless.com/api/bill-info';//$serviceInfo->api_url;
+        //$apiUrl = 'http://api.sslwireless.com/api/bill-info';//$serviceInfo->api_url;
         
         include_once APPPATH . "libraries/Requests.php";
         Requests::register_autoloader();
@@ -401,9 +401,10 @@ class Api_services extends CI_Controller {
         $fieldParams['payment_mode'] = 3;
         $fieldParams['branch_code'] = '0104';
         $fieldParams['channel_id'] = 3;
-        
+      
         $this->hook_fieldparams($fieldParams, $serviceInfo->machine_name);
-        d($fieldParams['transaction_id'],false);
+        
+       // d($fieldParams['transaction_id'],false);
         //d($headers,false);
         //d($fieldParams);
         
@@ -413,8 +414,57 @@ class Api_services extends CI_Controller {
         #2. $fieldParams['transaction_id'] = tbl_ssl_billpayments.id
         //assign trn id
         
+        $this->load->model("api_service_model");
+        
+        $billData=array(
+            "service_id"=>$params["api_service_id"]
+        );
+        
+        $payment = $this->api_service_model->createPayment($billData);
+        
+        if (!$payment['success']):
+            $data = array(
+                "success" => false,
+                "msg" => "No payment request created"
+            );
+            my_json_output($data);
+        endif;
+        
+       $fieldParams['transaction_id']=$payment["payment_id"];
+       
+        /*
+        Titas Non Metered
+        $fieldParams['bill_type']="NON-METERED";
+        */
+       
+        /*
+        Top up bill
+        $fieldParams['sender_id']="01717698091";
+        $fieldParams['utility_bill_type']="TOP-UP";
+        $fieldParams['priority']=1;
+        $fieldParams['success_url']="";
+        $fieldParams['failure_url']="";
+        $fieldParams['calling_method']="get";
+        */
+       //d($serviceInfo);
+	   $fieldParams['sender_id']="1312312312312";
+        $fieldParams['priority']=1;
+        $fieldParams['success_url']="erererere";
+        $fieldParams['failure_url']="342342342342342";
+        $fieldParams['calling_method']="POST";
+      // d($fieldParams);
+        
         $billInfo = $this->call_bill_info($headers, $fieldParams);
-        d($billInfo['body'],false);
+        d($billInfo);
+        
+        $updateData = array(
+            "bill_response" => json_encode($billInfo),
+        );
+        $this->api_service_model->updatePayment($updateData, $payment["payment_id"]);
+        
+   
+              
+        d($billInfo['data']);
         
         //onsuccess update transaction table bill info res
         
@@ -484,6 +534,21 @@ class Api_services extends CI_Controller {
     function desco_fieldparams(&$fieldparams)
     {
         $fieldparams['payment_type'] = $fieldparams['payment_mode'];
+    }
+    
+    function titas_non_metered_fieldparams(&$fieldparams)
+    {
+           $fieldparams['bill_type']="NON-METERED";
+    }
+	
+	function top_up_fieldparams(&$fieldparams)
+    {
+		
+		$fieldParams['sender_id']="1312312312312";
+        $fieldParams['priority']=1;
+        $fieldParams['success_url']="erererere";
+        $fieldParams['failure_url']="342342342342342";
+        $fieldParams['calling_method']="POST";
     }
 }
 

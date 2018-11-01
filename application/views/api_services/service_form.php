@@ -28,8 +28,8 @@
         
         var $formData = $("#serviceForm_" + app.formid).serialize();
         //app.showModal();
-        
-        alert($formData);
+        console.log($formData);
+      //  alert($formData);
         
         $.ajax({
             type : 'post',
