@@ -18,7 +18,7 @@ class Product_types extends CI_Controller {
         try {
             $crud = new grocery_CRUD();
             $crud->set_theme(TABLE_THEME);
-            $crud->set_subject('Product types');
+            $crud->set_subject('Fund Transfer Setup');
             $crud->set_table(TBL_CBS_PRODUCT);
 
             $crud->required_fields(array('productId', 'name', 'fundTransfer'));
@@ -51,7 +51,7 @@ class Product_types extends CI_Controller {
             $output = $crud->render();
             $output->css = "";
             $output->js = "";
-            $output->pageTitle = "Product types";
+            $output->pageTitle = "Fund Transfer Setup";
             $output->base_url = base_url();
 
             $output->body_template = "crud/index.php";
