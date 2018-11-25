@@ -19,7 +19,7 @@ class Email_service {
         endif;
 
         try {
-             $url = API_URL."services/send_email";
+             $url = base_url()."api/services/send_email";
              
             
             //using for mailgun
