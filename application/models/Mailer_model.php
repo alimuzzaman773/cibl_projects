@@ -1,7 +1,9 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed');
+<?php
 
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+#use PHPMailer\PHPMailer\PHPMailer;
+#use PHPMailer\PHPMailer\Exception;
 
 class Mailer_model extends CI_Model {
 
@@ -10,26 +12,23 @@ class Mailer_model extends CI_Model {
     }
 
     function sendMail($mailData = array()) {
-        //include_once APPPATH.'libraries/phpmailer/5.2.9/PHPMailerAutoload.php';        
+        include_once APPPATH . "libraries/phpmailer/phpmailer.php";
+        $mailer = new PHPMailer(true);
         try {
-            $mailer = new PHPMailer(true);
             $mailer->isHTML(true);
-            $mailer->addAddress($mailData["to"]);
-            $mailer->setFrom($mailData["from"]);
-            $mailer->Subject = $mailData["subject"];
-            $mailer->Body = $mailData["body"];
+
             set_smtp_config($mailer);
 
-            if (!$mailer->send()) {
-                return array(
-                    "success" => false,
-                    "msg" => "unknown error"
-                );
-            }
+            $mailer->addAddress($mailData["to"]);
+            $mailer->From = $mailData["from"];
+            $mailer->Subject = $mailData["subject"];
+            $mailer->Body = $mailData["body"];
+
+            $mailer->Send();
+
             return array(
                 "success" => true
             );
-            
         } catch (phpmailerException $pe) {
             return array(
                 "success" => false,
@@ -42,6 +41,7 @@ class Mailer_model extends CI_Model {
             );
         }
     }
+
 }
 
 /** end of file **/

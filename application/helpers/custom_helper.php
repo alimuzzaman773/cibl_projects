@@ -116,23 +116,24 @@ if (!function_exists('set_smtp_config')) {
 
     function set_smtp_config(&$mailer) {
 
-	$mailer->IsSMTP();                    
+        $mailer->IsSMTP();
         $mailer->CharSet = 'UTF-8';
-        $mailer->SMTPDebug = 2;  
-        $mailer->SMTPAuth = true;  
-        $mailer->SMTPSecure = 'ssl';
-		
+        $mailer->SMTPDebug = 2;
+        //$mailer->SMTPAuth = true;  
+        //$mailer->SMTPSecure = 'ssl';
+        //$mailer->SMTPAutoTLS = FALSE;
+
         $mailer->Host = '192.168.1.128';
         $mailer->Port = 25;
-        $mailer->Username = 'testuser103@premierbankltd.com';
-        $mailer->Password = 'Asdf1234';
-		
-		/*
-		$mailer->Host = 'smtp.mailgun.org';
-        $mailer->Port = 465; 
-        $mailer->Username = "postmaster@travelshoptours.com";
-        $mailer->Password = '8a4a14930f9aeedd885ef8dbfddee654';
-		*/
+        //$mailer->Username = 'testuser103@premierbankltd.com';
+        //$mailer->Password = 'Asdf1234';
+
+        /*
+          $mailer->Host = 'smtp.mailgun.org';
+          $mailer->Port = 465;
+          $mailer->Username = "postmaster@travelshoptours.com";
+          $mailer->Password = '8a4a14930f9aeedd885ef8dbfddee654';
+         */
     }
 
 }
