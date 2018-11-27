@@ -286,7 +286,23 @@
                     </li>    
                 </ul>
             </li>
-           
+           <li class="dropdown yamm-fw">
+                <a href="#" id="dropModules" role="button" data-toggle="dropdown">Banking<b class="caret"></b></a>
+                <ul id="dropModules" class="dropdown-menu" role="menu" aria-labelledby="dropModules">                    
+                    <li class="">
+                        <div class="yamm-content">
+                            <div class="row">                                    
+                                <div class="clearfix mb">
+                                    <ul class="col-md-2 col-xs-12 list-unstyled">
+                                        <li><p><b>Apps Transaction</b></p></li>
+                                        <li><a href="<?= base_url() . 'transaction/#/transaction_list' ?>">Transaction History</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </li>    
+                </ul>
+            </li>
         </ul>
         <ul class="nav navbar-nav pull-right">
             <li class="yamm-fw" style="color: #fff; margin-top: 5px;">User Name : <?php echo $this->my_session->userName?> <br>User Group : <?php echo $this->my_session->group; ?></li>

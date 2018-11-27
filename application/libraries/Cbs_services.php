@@ -109,34 +109,20 @@ class Cbs_services {
         return $this->pushToCbs($requestInfo, $requestData);
     }
 
-    /*
-      public function getTransactionHistory($data) {
+     function reverseTransaction($data) {
+        $requestData = array(
+            "branch_id" => $data["branch_id"],
+            "poriginal_trans_dt" => $data["transaction_date"],
+            "poriginal_batch_no" => $data["batch_no"]
+        );
 
-      $requestInfo = array(
-      "url" => "GetAccountStatementByBranchIdAndAccountNo",
-      "file" => "transaction_history"
-      );
-      return $this->pushToCbs($requestInfo, $data);
-      }
+        $requestInfo = array(
+            "url" => "XLinkTransaction/ReverseTransaction",
+            "file" => "reverse_transaction"
+        );
+        return $this->pushToCbs($requestInfo, $requestData);
+    }
 
-      public function getCustomerInfo($data) {
-
-      $requestInfo = array(
-      "url" => "GetCustomerInfoByAccountNo",
-      "file" => "customer_information"
-      );
-      return $this->pushToCbs($requestInfo, $data);
-      }
-
-      public function getFdrAccountInfo($data) {
-
-      $requestInfo = array(
-      "url" => "GetFDRAccountInfoStatementByBranchIdAndAccountNo",
-      "file" => "fdr_account_info"
-      );
-      return $this->pushToCbs($requestInfo, $data);
-      }
-     */
 
     private function pushToCbs($requestInfo, $data) {
 

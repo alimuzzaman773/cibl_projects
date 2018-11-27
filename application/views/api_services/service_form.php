@@ -1,5 +1,5 @@
 <h2 class="title-underlined"><?=$serviceInfo->name?></h2>
-<div class="col-xs-12 col-sm-offset-3 col-sm-6 col-md-offset-3 col-md-6">
+<div class="col-xs-12 col-sm-offset-3 col-sm-6 col-md-offset-3 col-md-6" id="request_form">
     <form class="form" method="<?=$serviceInfo->method?>" action="<?=base_url().'api_service/execute_service/'.$serviceInfo->api_service_id?>" action-data="<?=$serviceInfo->api_url?>"
           id="serviceForm_<?=$serviceInfo->machine_name?>">
         <?php foreach($serviceFields as $f): ?>
@@ -12,9 +12,11 @@
                 <i class="glyphicon glyphicon-save"></i> Submit                
             </button>
         </div>
-
+        <div class="error_msg text-danger"></div>
     </form>    
 </div>
+
+<div id="utility_info"></div>
 
 <script>
     var app = app || {};
@@ -28,7 +30,7 @@
         
         var $formData = $("#serviceForm_" + app.formid).serialize();
         //app.showModal();
-        console.log($formData);
+        //console.log($formData);
       //  alert($formData);
         
         $.ajax({
@@ -36,8 +38,17 @@
             url : app.baseUrl + 'api_services/execute_service/' + app.serviceInfo.api_service_id,
             data : $formData,
             dataType : 'json',
-            success : function(data){},
-            error : function(data){}
+            success : function(data){
+                if(data.success==false){
+                   $(".error_msg").html(data.msg); 
+                }
+               // $("#request_form").hide();
+               // $("#utility_info").show();
+               // $("#utility_info").html(data);
+            },
+            error : function(data){
+               alert("Some eeror occured to request bill payment");
+            }
         });
         
         return false;
