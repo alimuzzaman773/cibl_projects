@@ -18,9 +18,9 @@ class Welcome extends CI_Controller {
     function mail() {
         $this->load->library("email_service");
         $params = array(
-            'email' => "khalifa.shahin@gmail.com",
+            'email' => $this->input->get("email",true),
             'subject' => "Your OTP for PREMIER Account Activation",
-            'body' => "test"
+            'body' => "test email"
         );
 
         $this->load->model("mailer_model");
