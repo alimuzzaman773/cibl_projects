@@ -14,32 +14,35 @@ class Welcome extends CI_Controller {
         $smsResult = $this->sms_service->smsService($params);
         var_dump($smsResult);
     }
-    
-    function mail(){
-        $this->load->library("email_service");
-         $params = array(
-                'email' => "khalifa.shahin@gmail.com",
-                'subject' => "Your OTP for PREMIER Account Activation",
-                'body' => "test"
-            );
 
-            $res = $this->email_service->emailService($params);
-            var_dump($res);
+    function mail() {
+        $this->load->library("email_service");
+        $params = array(
+            'email' => $this->input->get("email",true),
+            'subject' => "Your OTP for PREMIER Account Activation",
+            'body' => "test email"
+        );
+
+        $this->load->model("mailer_model");
+        $mailData["to"] = $params['email'];
+        $mailData["from"] = "info@pbl.com";
+        $mailData["subject"] = $params['subject'];
+        $mailData["body"] = $params['body'];
+        $emailResult = $this->mailer_model->sendMail($mailData);
+
+        var_dump($emailResult);
     }
 
     function email_test() {
-                
+
         $this->load->model("mailer_model");
-        
+
         $mailData["to"] = "khalifa.shahin@gmail.com";
         $mailData["from"] = "info@pbl.com";
         $mailData["subject"] = "subject";
         $mailData["body"] = "body";
         $emailResult = $this->mailer_model->sendMail($mailData);
         var_dump($emailResult);
-        
-        
-   
     }
 
     public function index() {

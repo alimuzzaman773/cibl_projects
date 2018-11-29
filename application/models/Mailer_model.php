@@ -1,16 +1,14 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed');
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
 
-/*
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
-*/
 class Mailer_model extends CI_Model {
 
     function __construct() {
         parent::__construct();
     }
 
-    function sendMail($mailData = array()) {
+    function sendMail($mailData = array()) 
+    {
         include_once APPPATH.'libraries/phpmailer/5.2.9/PHPMailerAutoload.php';        
         try {
             $mailer = new PHPMailer(true);

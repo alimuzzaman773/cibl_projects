@@ -28,6 +28,7 @@ define("TBL_PERMISSIONS", DB_PREFIX . "permissions");
 define("TBL_ACTION", DB_PREFIX . "action");
 define("TBL_PRODUCT_SETUP", DB_PREFIX . "product_setup");
 define("TBL_PRODUCT_TYPE_SETUP", DB_PREFIX . "product_type_setup");
+define("TBL_CBS_PRODUCT", DB_PREFIX . "cbs_products");
 define("TBL_ZIP_PARTNERS", "zip_partners");
 define("TBL_DISCOUNT_PARTNERS", "discount_partners");
 define("TBL_APPOINTMENT", DB_PREFIX . "appointment");

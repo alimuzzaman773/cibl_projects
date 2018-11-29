@@ -219,6 +219,7 @@
                                                 <li><a href="<?= base_url() . 'bill_type_setup' ?>">Bill Type Setup</a></li>
                                             <?php endif; ?>
                                             <li><a href="<?= base_url() . 'account_type/index' ?>">Account Type Setup</a></li>
+                                            <li><a href="<?= base_url() . 'fund_transfer_setup/index' ?>">Fund Transfer Setup</a></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -305,7 +306,7 @@
             </li>
         </ul>
         <ul class="nav navbar-nav pull-right">
-            <li class="yamm-fw" style="color: #fff; margin-top: 5px;">User Name : <?php echo $this->my_session->userName?> <br>User Group : <?php echo $this->my_session->group; ?></li>
+            <li class="yamm-fw" style="color: #fff; margin-top: 5px;">User Name : <?php echo $this->my_session->userName ?> <br>User Group : <?php echo $this->my_session->group; ?></li>
         </ul>
     </div><!--/.nav-collapse -->
 </div>
