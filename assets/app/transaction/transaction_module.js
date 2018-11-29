@@ -16,11 +16,32 @@ TransactionModuleApp.config(['$routeProvider',
 TransactionModuleApp.controller('TransactionController', ['$scope', '$http', '$routeParams', function ($scope, $http, $routeParams) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
 
-        $scope.transaction_list = [];
+        $scope.bill_list = [];
         $scope.totalCount = 0;
         $scope.per_page = 12;
         $scope.currentPageNumber = 1;
 
+
+        // Date Picker
+        $scope.dateOptions = {
+            changeYear: true,
+            changeMonth: true,
+            yearRange: 'c-10:c+10',
+            dateFormat: "yy-mm-dd"
+        };
+
+        $scope.showDP = function ($id) {
+            $("#" + $id).datepicker($scope.dateOptions);
+            $("#" + $id).datepicker('show');
+        };
+
+        $scope.searchParams = {
+            utility_name: '',
+            utility: '',
+            status: 'Y',
+            from_date: '',
+            to_date: ''
+        };
 
         $scope.pagination = {
             current: 1
@@ -30,6 +51,25 @@ TransactionModuleApp.controller('TransactionController', ['$scope', '$http', '$r
             $scope.getResultsPage(newPage);
         };
 
+        $scope.resetSearch = function () {
+            $scope.searchParams = {
+                utility_name: '',
+                utility: '',
+                status: '',
+                from_date: '',
+                to_date: ''
+            };
+
+            $scope.getResultsPage(1);
+            return false;
+        };
+
+        $scope.selected_item = {
+            label: "",
+            value: "",
+            name: ""
+        };
+
         $scope.getResultsPage = function (pageNumber) {
             var $params = {
                 limit: $scope.per_page,
@@ -37,17 +77,45 @@ TransactionModuleApp.controller('TransactionController', ['$scope', '$http', '$r
                 get_count: true
             };
 
+            if ($scope.searchParams.status != null
+                    && $.trim($scope.searchParams.status) != '') {
+                $params.status = $scope.searchParams.status;
+            }
+
+            if ($scope.searchParams.utility != null
+                    && $.trim($scope.searchParams.utility) != '') {
+                $params.utility = $scope.searchParams.utility;
+            }
+
+            if ($scope.searchParams.utility_name != null
+                    && $.trim($scope.searchParams.utility_name) != '') {
+                $params.search = $scope.searchParams.utility_name;
+            }
+
+            if ($scope.searchParams.from_date != null
+                    && $.trim($scope.searchParams.from_date) != '') {
+                $params.fromdate = $scope.searchParams.from_date;
+            }
+
+            if ($scope.searchParams.to_date != null
+                    && $.trim($scope.searchParams.to_date) != '') {
+                $params.todate = $scope.searchParams.to_date;
+            }
+
             app.showModal();
-            $http({method: 'get', url: app.baseUrl + 'api/transaction/transaction_list', params: $params})
+            $http({method: 'get', url: app.baseUrl + 'api/utility_bill/get_utility_bill_list/', params: $params})
                     .then(function (response) {
                         app.hideModal();
                         var $result = response.data;
-                        $scope.transaction_list = $result.transaction_list;
+                        $scope.bill_list = $result.bill_list;
                         $scope.totalCount = $result.total;
                         $scope.currentPageNumber = pageNumber;
+
                         $scope.pagination.current = $scope.currentPageNumber;
-                    }, function () {
+
+                    }, function (response) {
                         app.hideModal();
+                        console.log(response);
                         alert("There was a problem, please try again later")
                         $scope.loading = false;
                     });

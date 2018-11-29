@@ -15,7 +15,7 @@ class Mailer_model extends CI_Model {
             $mailer = new PHPMailer(true);
             $mailer->isHTML(true);
             $mailer->addAddress($mailData["to"]);
-            $mailer->setFrom($mailData["from"]);
+            $mailer->setFrom($mailData["from"], "Premier Bank Ltd.");
             $mailer->Subject = $mailData["subject"];
             $mailer->Body = $mailData["body"];
             set_smtp_config($mailer);

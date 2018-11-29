@@ -29,7 +29,7 @@ class Services extends CI_Controller {
 
         $this->load->model("mailer_model");
         $mailData["to"] = $params['email'];
-        $mailData["from"] = "info@pbl.com";
+        $mailData["from"] = "nopreply@premierbankltd.com";
         $mailData["subject"] = $params['subject'];
         $mailData["body"] = $params['body'];
         $emailResult = $this->mailer_model->sendMail($mailData);

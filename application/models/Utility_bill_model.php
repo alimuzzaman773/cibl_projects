@@ -1,19 +1,48 @@
 <?php
 
-class Transaction_model extends CI_Model {
+class Utility_bill_model extends CI_Model {
 
-    function getAllTransaction($params = array()) {
+    function getUtilityBillList($params = array()) {
 
-        if (isset($params['get_count']) && $params['get_count'] == true) {
-            $this->db->select("COUNT(at.transferId) as total");
+       if (isset($params['count']) && $params['count'] == true) {
+            $this->db->select("COUNT(p.payment_id) as total");
         } else {
-            $this->db->select('at.*', FALSE);
+            $this->db->select('p.*, bpt.fromAccNo as bpt_from_ac, bpt.amount as bpt_amount, bpt.narration as bpt_narration, bpt.isSuccess as bpt_success,'
+                    . 'vt.fromAccNo as vt_from_ac, vt.amount as vt_amount, st.fromAccNo as st_from_ac, st.amount as st_amount,'
+                    . 'lt.fromAccNo as lt_from_ac, lt.amount as lt_amount, o1t.fromAccNo as o1t_from_ac, o1t.amount as o1t_amount,'
+                    . 'o2t.fromAccNo as o2t_from_ac, o2t.amount as o2t_amount', FALSE);
         }
 
-        $this->db->from("apps_transaction" . " at");
-        
-        if (isset($params['transferId']) && (int) $params['transferId']):
-            $this->db->where("at.transferId", $params['transferId']);
+        $this->db->from("ssl_bill_payment" . " p")
+                ->join("apps_transaction" . " bpt", "bpt.transferId = p.bp_transfer_id", "left")
+                ->join("apps_transaction" . " vt", "vt.transferId = p.vat_transfer_id", "left")
+                ->join("apps_transaction" . " st", "st.transferId = p.stamp_transfer_id", "left")
+                ->join("apps_transaction" . " lt", "lt.transferId = p.lpc_transfer_id", "left")
+                ->join("apps_transaction" . " o1t", "o1t.transferId = p.other1_transfer_id", "left")
+                ->join("apps_transaction" . " o2t", "o2t.transferId = p.other2_transfer_id", "left");
+        //->where("p.isSuccess", "Y");
+
+        if (isset($params['payment_id']) && (int) $params['payment_id']):
+            $this->db->where("p.payment_id", $params['payment_id']);
+        endif;
+
+        if (isset($params['utility']) && trim($params['utility']) != ""):
+            $this->db->where("p.utility_name", $params['utility']);
+        endif;
+
+        if (isset($params['status']) && trim($params['status']) != ""):
+            $this->db->where("p.isSuccess", $params['status']);
+        endif;
+
+        if (isset($params['search']) && trim($params['search']) != ""):
+            $this->db->group_start()
+                    ->or_like("bpt.fromAccNo", $params['search'], 'both')
+                    ->or_like("bpt.amount", $params['search'], 'both')
+                    ->group_end();
+        endif;
+
+        if (isset($params['fromdate']) && isset($params['todate']) && $params['fromdate'] != null && $params['todate'] != null):
+            $this->db->where("(DATE(p.created) between " . $this->db->escape($params['fromdate']) . " AND " . $this->db->escape($params['todate']) . ")");
         endif;
 
         if (isset($params['limit']) && (int) $params['limit'] > 0):
@@ -21,16 +50,19 @@ class Transaction_model extends CI_Model {
             $this->db->limit($params['limit'], $offset);
         endif;
 
-        $result = $this->db->
-                        order_by("at.transferId", "DESC")->get();
+        $result = $this->db->order_by("p.payment_id", "DESC")->get();
 
         if ($result->num_rows() > 0) {
             return $result;
         }
         return false;
     }
+    
+    function cancelBill($data=array()){
+        
+    }
 
-    function reverseTransaction($data = array()) {
+    function reverseBill($data = array()) {
 
         $query = $this->db->select("at.*, ai.accBranchCode")
                 ->from("apps_transaction at")
