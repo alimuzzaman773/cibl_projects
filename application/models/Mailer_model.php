@@ -1,8 +1,9 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
+/*
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-
+*/
 class Mailer_model extends CI_Model {
 
     function __construct() {
@@ -10,7 +11,7 @@ class Mailer_model extends CI_Model {
     }
 
     function sendMail($mailData = array()) {
-        //include_once APPPATH.'libraries/phpmailer/5.2.9/PHPMailerAutoload.php';        
+        include_once APPPATH.'libraries/phpmailer/5.2.9/PHPMailerAutoload.php';        
         try {
             $mailer = new PHPMailer(true);
             $mailer->isHTML(true);
