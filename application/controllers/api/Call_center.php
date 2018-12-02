@@ -138,7 +138,7 @@ class Call_center extends CI_Controller {
             endif;
 
             $params = array(
-                'email' => $userInfo['userEmail'],
+                'email' => $userInfo->userEmail,
                 'subject' => "Your OTP for PREMIER Account Activation",
                 'body' => $this->load->view("call_center/pin_reset.php", $otpData, true)
             );
@@ -386,7 +386,7 @@ class Call_center extends CI_Controller {
                 endif;
 
                 $params = array(
-                    'email' => $userInfo['userEmail'],
+                    'email' => $userInfo->userEmail,
                     'subject' => "Your OTP for PREMIER Account Activation",
                     'body' => $this->load->view("call_center/pin_reset.php", $otpData, true)
                 );
