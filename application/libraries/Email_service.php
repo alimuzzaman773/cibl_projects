@@ -21,7 +21,6 @@ class Email_service {
         try {
              $url = base_url()."api/services/send_email";
              
-            
             //using for mailgun
            // $url = base_url() . "services/send_email";
 

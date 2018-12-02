@@ -33,7 +33,7 @@ class Call_center extends CI_Controller {
             $json['user_list'] = $result->result();
         endif;
 
-        $json['q']=$this->db->last_query();
+        $json['q'] = $this->db->last_query();
         my_json_output($json);
     }
 
@@ -70,16 +70,16 @@ class Call_center extends CI_Controller {
     }
 
     function resend_user_pin() {
-        $userId = (int)$this->input->post("skyId", true);
-        if((int)$userId <= 0):
+        $userId = (int) $this->input->post("skyId", true);
+        if ((int) $userId <= 0):
             $data = array(
                 'success' => false,
                 'msg' => 'no user id provided'
             );
             my_json_output($data);
         endif;
-        
-        $otp_channel =  $this->input->post("otp_channel", true);
+
+        $otp_channel = $this->input->post("otp_channel", true);
         if (!in_array($otp_channel, array('sms', 'email'))):
             $data = array(
                 'success' => false,
@@ -87,12 +87,12 @@ class Call_center extends CI_Controller {
             );
             my_json_output($data);
         endif;
-        
+
         $this->load->model(array('mailer_model', 'call_center_model'));
-        $uInfo = $this->db->where('skyId', (int)$userId)
-                          ->where("isPublished", 1)
-                          ->get('apps_users');        
-        
+        $uInfo = $this->db->where('skyId', (int) $userId)
+                ->where("isPublished", 1)
+                ->get('apps_users');
+
         $getUserInfo = $uInfo->num_rows() > 0 ? $uInfo : false; //$this->call_center_model->getUserInfo((int) $userId);
         if (!$getUserInfo) {
             $json = array(
@@ -121,17 +121,17 @@ class Call_center extends CI_Controller {
         );
 
         $otpRes = false;
-        if($otp_channel == "sms"):
+        if ($otp_channel == "sms"):
             $smsData = array(
                 "mobileNo" => "88" . ltrim($userInfo->userMobNo1, "88"),
                 "message" => "Your one time account activation pin is {$pin}"
             );
 
             $this->load->library("sms_service");
-            $otpRes = $this->sms_service->smsService($smsData);                
+            $otpRes = $this->sms_service->smsService($smsData);
         endif;
 
-        if($otp_channel == "email"):
+        if ($otp_channel == "email"):
             $mailData["to"] = $userInfo->userEmail;
             if (defined('dummy_email')):
                 $mailData["to"] = dummy_email;
@@ -142,10 +142,9 @@ class Call_center extends CI_Controller {
                 'subject' => "Your OTP for PREMIER Account Activation",
                 'body' => $this->load->view("call_center/pin_reset.php", $otpData, true)
             );
-
             $otpRes = $this->email_service->emailService($params);
         endif;
-        
+
         $json = array(
             "success" => true,
             "userInfo" => $userInfo,
@@ -155,7 +154,7 @@ class Call_center extends CI_Controller {
     }
 
     function user_approve($userId) {
-        $this->load->model(array('mailer_model', 'call_center_model'));
+        $this->load->model('call_center_model');
 
         $getUserInfo = $this->call_center_model->getUserInfo((int) $userId);
         if (!$getUserInfo) {
@@ -190,11 +189,14 @@ class Call_center extends CI_Controller {
                 $mailData["to"] = dummy_email;
             endif;
 
-            $mailData["from"] = "mobapp@pbl.com";
-            $mailData["fromName"] = "mobapp@pbl.com";
-            $mailData["subject"] = "Premier Mobile APP - Account Activation PIN";
-            $mailData["body"] = $this->load->view("call_center/pin_mail.php", $otpData, true);
-            $res = $this->mailer_model->sendMail($mailData);
+            $params = array(
+                'email' => $mailData["to"],
+                'subject' => "Premier Mobile APP - Account Activation PIN",
+                'body' => $this->load->view("call_center/pin_mail.php", $otpData, true)
+            );
+
+            $this->load->library("email_service");
+            $res = $this->email_service->emailService($params);
         else:
             $smsData = array(
                 "mobileNo" => "88" . ltrim($userInfo->userMobNo1, "88"),
@@ -267,13 +269,14 @@ class Call_center extends CI_Controller {
             "apps_id" => $userInfo->eblSkyId
         );
 
-        $mailBody = $this->load->view("mail_body/approved_confirmation.php", $mailData, true);
+        $params = array(
+            'email' => $userInfo->userEmail,
+            'subject' => "Premier Mobile APP - OTP Code",
+            'body' => $this->load->view("mail_body/approved_confirmation.php", $mailData, true)
+        );
 
-        $mailData["to"] = $userInfo->userEmail;
-        $mailData["from"] = "info@cibl-bd.com";
-        $mailData["subject"] = "OTP Code";
-        $mailData["body"] = $mailBody;
-        $res = $this->mailer_model->sendMail($mailData);
+        $this->load->library("email_service");
+        $res = $this->email_service->emailService($params);
 
         if (!$res["success"]) {
             $json = array(
@@ -300,7 +303,7 @@ class Call_center extends CI_Controller {
             my_json_output($data);
         endif;
 
-        $otp_channel =  $this->input->post("otp_channel", true);
+        $otp_channel = $this->input->post("otp_channel", true);
         if (!in_array($otp_channel, array('sms', 'email'))):
             $data = array(
                 'success' => false,
@@ -308,7 +311,7 @@ class Call_center extends CI_Controller {
             );
             my_json_output($data);
         endif;
-        
+
         $this->load->model(array('mailer_model', 'call_center_model'));
 
         $getUserInfo = $this->call_center_model->getUserInfoForPasswordReset((int) $userId);
@@ -359,24 +362,24 @@ class Call_center extends CI_Controller {
             );
             $this->db->where("skyId", $userInfo->skyId)
                     ->update("apps_users_mc", $mcData);
-            
+
             $otpData = array(
                 "pin" => $pin,
                 "eblSkyId" => $userInfo->eblSkyId
             );
 
             $otpRes = false;
-            if($otp_channel == "sms"):
+            if ($otp_channel == "sms"):
                 $smsData = array(
                     "mobileNo" => "88" . ltrim($userInfo->userMobNo1, "88"),
                     "message" => "Your one time account activation pin is {$pin}"
                 );
 
                 $this->load->library("sms_service");
-                $otpRes = $this->sms_service->smsService($smsData);                
+                $otpRes = $this->sms_service->smsService($smsData);
             endif;
-            
-            if($otp_channel == "email"):
+
+            if ($otp_channel == "email"):
                 $mailData["to"] = $userInfo->userEmail;
                 if (defined('dummy_email')):
                     $mailData["to"] = dummy_email;
@@ -390,12 +393,12 @@ class Call_center extends CI_Controller {
 
                 $otpRes = $this->email_service->emailService($params);
             endif;
-            
-            
 
-           // if (!$res['success']):
+
+
+            // if (!$res['success']):
             //    throw new Exception("{$res['msg']} " . __CLASS__ . "::" . __FUNCTION__ . "::" . __LINE__);
-           // endif;
+            // endif;
 
             if ($this->db->trans_status() === FALSE) {
                 throw new Exception("could not activate apps user in " . __CLASS__ . "::" . __FUNCTION__ . "::" . __LINE__);
@@ -407,7 +410,7 @@ class Call_center extends CI_Controller {
                 "success" => true,
                 "userInfo" => $userInfo,
                 "mailRes" => $otpRes,
-                //"pin" => $pin
+                    //"pin" => $pin
             );
             my_json_output($json);
         } catch (Exception $ex) {
