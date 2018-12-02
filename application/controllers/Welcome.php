@@ -25,7 +25,7 @@ class Welcome extends CI_Controller {
 
         $this->load->model("mailer_model");
         $mailData["to"] = $params['email'];
-        $mailData["from"] = "info@pbl.com";
+        $mailData["from"] = "nopreply@premierbankltd.com";
         $mailData["subject"] = $params['subject'];
         $mailData["body"] = $params['body'];
         $emailResult = $this->mailer_model->sendMail($mailData);
@@ -38,7 +38,7 @@ class Welcome extends CI_Controller {
         $this->load->model("mailer_model");
 
         $mailData["to"] = "khalifa.shahin@gmail.com";
-        $mailData["from"] = "info@pbl.com";
+        $mailData["from"] = "nopreply@premierbankltd.com";
         $mailData["subject"] = "subject";
         $mailData["body"] = "body";
         $emailResult = $this->mailer_model->sendMail($mailData);

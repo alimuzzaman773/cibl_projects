@@ -1,4 +1,5 @@
 <?php
+
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Mailer_model extends CI_Model {
@@ -9,12 +10,12 @@ class Mailer_model extends CI_Model {
 
     function sendMail($mailData = array()) 
     {
-        include_once APPPATH.'libraries/phpmailer/5.2.9/PHPMailerAutoload.php';        
+        include_once APPPATH.'libraries/phpmailer/phpmailer.php';       
         try {
             $mailer = new PHPMailer(true);
             $mailer->isHTML(true);
             $mailer->addAddress($mailData["to"]);
-            $mailer->setFrom($mailData["from"], "Premier Bank Ltd.");
+            $mailer->setFrom($mailData["from"], "Premier Bank Ltd");
             $mailer->Subject = $mailData["subject"];
             $mailer->Body = $mailData["body"];
             set_smtp_config($mailer);
