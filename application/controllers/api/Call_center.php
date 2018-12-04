@@ -117,7 +117,8 @@ class Call_center extends CI_Controller {
 
         $otpData = array(
             "pin" => $pin,
-            "eblSkyId" => $userInfo->eblSkyId
+            "eblSkyId" => $userInfo->eblSkyId,
+            "username" => $userInfo->userName
         );
 
         $otpRes = false;
@@ -139,7 +140,7 @@ class Call_center extends CI_Controller {
 
             $params = array(
                 'email' => $userInfo->userEmail,
-                'subject' => "Your OTP for PREMIER Account Activation",
+                'subject' => "Premier Bank Internet Banking - Forgot User ID / Password",
                 'body' => $this->load->view("call_center/pin_reset.php", $otpData, true)
             );
             $otpRes = $this->email_service->emailService($params);
@@ -365,7 +366,8 @@ class Call_center extends CI_Controller {
 
             $otpData = array(
                 "pin" => $pin,
-                "eblSkyId" => $userInfo->eblSkyId
+                "eblSkyId" => $userInfo->eblSkyId,
+                "username" => $userInfo->userName
             );
 
             $otpRes = false;
@@ -387,10 +389,11 @@ class Call_center extends CI_Controller {
 
                 $params = array(
                     'email' => $userInfo->userEmail,
-                    'subject' => "Your OTP for PREMIER Account Activation",
+                    'subject' => "Premier Bank Internet Banking - Forgot User ID / Password",
                     'body' => $this->load->view("call_center/pin_reset.php", $otpData, true)
                 );
 
+                $this->load->library("email_service");
                 $otpRes = $this->email_service->emailService($params);
             endif;
 
