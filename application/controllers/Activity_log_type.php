@@ -18,28 +18,28 @@ class Activity_log_type extends CI_Controller {
         try {
             $crud = new grocery_CRUD();
             $crud->set_theme(TABLE_THEME);
-            $crud->set_subject('Activity log type');
+            $crud->set_subject('Activity log type setup');
             $crud->set_table(TBL_APP_USER_ACTIVITY_LOG_TYPE);
             $crud->order_by('activityLogTypeId', 'desc');
 
             $crud->required_fields(array('actionName', 'actionCode'));
-            
-            $crud->columns('actionName', 'actionCode', 'created', 'updated');
+
+            $crud->columns('actionName', 'actionCode', 'className', 'source', 'created', 'updated');
 
             $time = date("Y-m-d H:i:s");
-            
-            $crud->add_fields('actionName', 'actionCode', 'created', 'updated');
-            $crud->edit_fields('actionName', 'actionCode', 'updated');
+
+            $crud->add_fields('actionName', 'actionCode', 'className', 'source', 'created', 'updated');
+            $crud->edit_fields('actionName', 'actionCode', 'className', 'source', 'updated');
 
             $crud->change_field_type('created', 'hidden', $time);
             $crud->change_field_type('updated', 'hidden', $time);
 
             $crud->unset_delete();
-            
+
             $output = $crud->render();
             $output->css = "";
             $output->js = "";
-            $output->pageTitle = "Activity log type";
+            $output->pageTitle = "Activity log type setup";
             $output->base_url = base_url();
 
             $output->body_template = "crud/index.php";
