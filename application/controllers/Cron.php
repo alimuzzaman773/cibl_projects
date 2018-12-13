@@ -12,7 +12,7 @@ class Cron extends MX_Controller
         $this->load->model("push_notification_model");
         
         $p = array(
-            'messageId' => 3,
+            //'messageId' => 3,
             'etFrom' => date("Y-m-d H:i:s") /*,
             'etTo' => date(),
             'completed' => 0*/
@@ -50,7 +50,7 @@ class Cron extends MX_Controller
                 if(count($v['gcmList']) > 0):
                     $message = $v['messageInfo'];
                     $NotifRes = $this->push_notification_model->send_notification($v['gcmList'], $message['headLine'], $message['body'], $message['notifyImage']);                    
-                    
+                    d($NotifRes,false);
                     $this->db->reset_query();
                     $this->db->where("messageId", $mid)
                              ->update_batch("message_log", $v['updateList'], 'messageLogId');

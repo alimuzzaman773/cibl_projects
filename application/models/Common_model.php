@@ -54,17 +54,14 @@ class Common_model extends CI_Model {
     }
 
     public function send_service_mail($maildata) {
-        $this->load->library("phpmailer");
-
+        //$this->load->library("phpmailer");
+        include_once APPPATH.'libraries/phpmailer/phpmailer.php';
+        
         $mail = new PHPMailer(true);
 
         try {
-
-            $mail->isSMTP();
-            $mail->CharSet = "UTF-8";
-            $mail->Host = '192.168.5.247';
-            $mail->Port = 25;
-            $mail->SMTPAuth = false;
+            
+            set_smtp_config($mail);
             $mail->From = 'mail.eblsky@ebl-bd.com';
             $mail->FromName = 'EBL SKYBANKING Admin Panel';
 
@@ -93,28 +90,34 @@ class Common_model extends CI_Model {
 
 
             if (!$mail->send()) {
-                return 0;
+                error_log("could not send mail at ".__CLASS__." ".__METHOD__." ".__FILE__." ".__LINE__);                
+                return array(
+                    'success' => false,
+                    'msg' => 'unknown error'
+                );
             }
 
-            return 1;
+            return array('success' => true);
         } catch (phpmailerException $ex) {
+            error_log($ex->getMessage());
+            return array(
+                'success' => false,
+                'msg' => $ex->getMessage()
+            );
             return 0;
         }
     }
 
     public function send_mail($maildata) {
-        $this->load->library("phpmailer");
-
+        //$this->load->library("phpmailer");
+        include_once APPPATH.'libraries/phpmailer/phpmailer.php';
+        
         $mail = new PHPMailer(true);
 
         try {
-
-            $mail->isSMTP();
-            $mail->CharSet = "UTF-8";
-            $mail->Host = '192.168.5.247';
-            $mail->Port = 25;
-            $mail->SMTPAuth = false;
-            $mail->From = 'mail.eblsky@ebl-bd.com';
+            
+            set_smtp_config($mail);
+            
             $mail->FromName = 'EBL SKYBANKING Admin Panel';
 
             $recepients = explode(";", $maildata['to']);

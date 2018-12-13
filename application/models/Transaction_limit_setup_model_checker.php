@@ -9,7 +9,7 @@ class Transaction_limit_setup_model_checker extends CI_Model {
     public function getUnapprovedPackages() {
         $this->db->order_by("appsGroupId", "desc");
         $this->db->where('apps_users_group_mc.mcStatus =', 0);
-        $this->db->where('apps_users_group_mc.makerActionBy !=', $this->my_session->userId);
+        //$this->db->where('apps_users_group_mc.makerActionBy !=', $this->my_session->userId);
         $this->db->from('apps_users_group_mc');
         $query = $this->db->get();
         return $query->result();

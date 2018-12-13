@@ -1,0 +1,1 @@
+Dear User, your SKYBANKING account has been activated. Your SKYBANKING ID is <?=$eblSkyId?>. You will get your One Time PIN in another message. Helpline 16230.

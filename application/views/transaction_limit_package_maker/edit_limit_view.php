@@ -1,9 +1,13 @@
 <h1 class="title-underlined">Limit Package >> Edit Limit</h1>
 
 <div class="clearfix">
-    <div class="form-group">
+    <div class="form-group col-sm-6 col-xs-12">
         <label>Group Name</label>
-        <input class="textbox" class="form-control" type="text" name="groupName" id="groupName" value="<?= $userGroupName ?>" readonly />       
+        <input class="form-control" class="form-control" type="text" name="groupName" id="groupName" value="<?= $userGroupName ?>" readonly />       
+    </div>
+    <div class="form-group col-sm-6 col-xs-12">
+        <label>Group Descritpion</label>
+        <input class="form-control" class="form-control" type="text" name="groupDescription" id="groupDescription" value="<?= $userGroupDescription ?>" readonly />       
     </div>
 </div>
 
@@ -139,17 +143,19 @@
         var groupId = "";
         var SelectedActionName = "";
         GroupName = groupName.value;
+        GroupDescription = groupDescription.value;
         groupId = appsGroupId.value;
         SelectedActionName = selectedActionName.value;
 
         var dataToSave = {"group_id" : groupId,
                           "group_name" : GroupName,
+                          "groupDescription" : GroupDescription, 
                           "selected_action_name" : SelectedActionName,
                           "own_acc_transfer" : ownAccount,
                           "ebl_acc_transfer" : eblAccount,
                           "other_bank_transfer" : otherBank,
                           "bills_pay" : billsPay};
-
+                      
         var own = true;
         var ebl = true;
         var ob = true;

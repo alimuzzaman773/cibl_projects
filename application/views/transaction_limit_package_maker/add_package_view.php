@@ -7,16 +7,25 @@
     <?php } ?>
 
     <form method="post" style="" id="packageSelection" name="packageSelection" action="<?php echo base_url(); ?>transaction_limit_setup_maker/assignGroup">
-        <div class="container" style="margin-top:50px">
+        <div class="container">
 
             <input hidden class="textbox" type="text" name="selectedActionName" id="selectedActionName" value="<?= $selectedActionName ?>">
 
-            <label>Group Name</label>
-            <input class="textbox" type="text" name="groupName" id="groupName" required><br><br>
-            <input style="margin-right: 15px" type="checkbox" name="packageName[]" value="1"><label> Own Account Transfer</label><br>
-            <input style="margin-right: 15px" type="checkbox" name="packageName[]" value="2"><label> PBL Account Transfer</label><br>
-            <input style="margin-right: 15px" type="checkbox" name="packageName[]" value="3"><label> Other Bank Transfer</label><br>
-            <input style="margin-right: 15px" type="checkbox" name="packageName[]" value="4"><label> Bills Pay</label><br>
+            <div class="form-group col-sm-6 col-xs-12 col-sm-6">
+                <label>Group Name</label><br />
+                <input class="form-control" type="text" name="groupName" id="groupName" required><br><br>
+            </div>
+            
+            <div class="form-group col-sm-6 col-xs-12 col-sm-6">
+                <label>Group Description</label><br />
+                <input class="form-control" type="text" name="groupDescription" id="groupDescription" required><br><br>
+            </div>
+            <div class="form-group col-sm-12 col-xs-12">
+                <input style="margin-right: 15px" type="checkbox" name="packageName[]" value="1"><label> Own Account Transfer</label><br>
+                <input style="margin-right: 15px" type="checkbox" name="packageName[]" value="2"><label> EBL Account Transfer</label><br>
+                <input style="margin-right: 15px" type="checkbox" name="packageName[]" value="3"><label> Other Bank Transfer</label><br>
+                <input style="margin-right: 15px" type="checkbox" name="packageName[]" value="4"><label> Bills Pay</label>                
+            </div>
 
             <br><br>
             <button type="submit" class="btn btn-success">Next</button>

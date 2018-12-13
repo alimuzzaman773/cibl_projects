@@ -32,6 +32,7 @@ class Transaction_limit_setup_maker extends CI_Controller {
         $data['selectedActionName'] = $this->input->post("selectedActionName");
         if (isset($_POST['packageName'])) {
             $data['groupName'] = $_POST['groupName'];
+            $data['groupDescription'] = $_POST['groupDescription'];
             $groupNameCheck = $this->transaction_limit_setup_model_maker->getGroupByName($data['groupName']); // To check if group exists
             if ($groupNameCheck) {
                 $data['message'] = 'The group "' . $data['groupName'] . '" already exists';
@@ -69,6 +70,8 @@ class Transaction_limit_setup_maker extends CI_Controller {
     public function saveGroup() {
         $this->my_session->authorize("canAddLimitPackage");
         $groupName = $_POST['group_name'];
+        $groupDescription = $_POST['groupDescription'];
+        
         $ownAccount = isset($_POST['own_acc_transfer']) ? $_POST['own_acc_transfer'] : array();
         $eblAccount = isset($_POST['ebl_acc_transfer']) ? $_POST['ebl_acc_transfer'] : array();
         $otherBank = isset($_POST['other_bank_transfer']) ? $_POST['other_bank_transfer'] : array();
@@ -79,6 +82,7 @@ class Transaction_limit_setup_maker extends CI_Controller {
         $billsPay = array_slice($billsPay, 2);
 
         $dbData['userGroupName'] = $groupName;
+        $dbData['groupDescription'] = $groupDescription;
 
         $dbData['oatMinTxnLim'] = 0.00;
         $dbData['oatMaxTxnLim'] = 0.00;
@@ -192,6 +196,7 @@ class Transaction_limit_setup_maker extends CI_Controller {
         $data['group'] = json_encode($dbData);
 
         $data['userGroupName'] = $_POST['groupName'];
+        $data['userGroupDescription'] = $_POST['groupDescription'];
         $groupNameCheck = $this->transaction_limit_setup_model_maker->checkIfGroupExist($data); // To check if group exists
         if ($groupNameCheck > 0) {
             $data['message'] = 'The group "' . $data['userGroupName'] . '" already exists';
@@ -226,6 +231,7 @@ class Transaction_limit_setup_maker extends CI_Controller {
         $this->my_session->authorize("canEditLimitPackage");
         $groupId = $_POST['group_id'];
         $groupName = $_POST['group_name'];
+        $groupDescription = $_POST['groupDescription'];
         $ownAccount = isset($_POST['own_acc_transfer']) ? $_POST['own_acc_transfer'] : array();
         $eblAccount = isset($_POST['ebl_acc_transfer']) ? $_POST['ebl_acc_transfer'] : array();
         $otherBank = isset($_POST['other_bank_transfer']) ? $_POST['other_bank_transfer'] : array();
@@ -238,6 +244,7 @@ class Transaction_limit_setup_maker extends CI_Controller {
         $currentDate = date("y-m-d");
 
         $dbData['userGroupName'] = $groupName;
+        $dbData['groupDescription'] = $groupDescription;
 
         $dbData['oatMinTxnLim'] = 0.00;
         $dbData['oatMaxTxnLim'] = 0.00;

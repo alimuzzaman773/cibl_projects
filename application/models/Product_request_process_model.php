@@ -13,14 +13,6 @@ class Product_request_process_model extends CI_Model {
         return $this->db->insert('product_apply_request', $data);
     }
 
-    public function getAllService() {
-        $query = $this->db->select("*")
-                ->from("product_setup")
-                ->get();
-
-        return $query->num_rows() > 0 ? $query : FALSE;
-    }
-
     public function getProductRequestByDate($params = array()) {
 
         if (isset($params['count']) && $params['count'] == true) {
@@ -30,18 +22,6 @@ class Product_request_process_model extends CI_Model {
         }
 
         $this->db->from('product_apply_request');
-
-        if (isset($params['product_id']) && (int) $params['product_id'] > 0) {
-            $this->db->where("productId", $params['product_id']);
-        }
-
-        if (isset($params['customer_name']) && (int) $params['customer_name'] > 0) {
-            $this->db->like("name", $params['customer_name'], "both");
-        }
-
-        if (isset($params['mobile_no']) && (int) $params['mobile_no'] > 0) {
-            $this->db->where("contactNo", $params['mobile_no']);
-        }
 
         if ((isset($params['from_date']) && trim($params['from_date']) != "") && (isset($params['to_date']) && trim($params['to_date']) != "")) {
             $this->db->where('creationDtTm >=', $params["from_date"])
@@ -68,11 +48,11 @@ class Product_request_process_model extends CI_Model {
                 $row = $queryInstruction->row();
                 $previousInstruction = $row->mailBodyInstruction;
             }
-            $data['mailBodyInstruction'] = $previousInstruction . "<br>" . $dateTime . "<br>" . $this->session->userdata('fullName') . "<br>" . $bodyInstruction;
+            $data['mailBodyInstruction'] = $previousInstruction . "<br>" . $dateTime . "<br>" . $this->my_session->userInfo['fullName'] . "<br>" . $bodyInstruction;
         }
 
         $data['status'] = 1;
-        $data['updatedBy'] = $this->session->userdata('adminUserId');
+        $data['updatedBy'] = $this->my_session->userId;
         $data['updateDtTm'] = $dateTime;
         $this->db->where('applyId', $id);
         $this->db->update('product_apply_request', $data);
@@ -127,7 +107,7 @@ class Product_request_process_model extends CI_Model {
                         $mailBccArr = array_diff($mailBccArr, [$result['receivedMail']]);
                     }
                     $updateArr['updatedDtTm'] = date("Y-m-d G:i:s");
-                    $updateArr['updatedBy'] = $this->session->userdata('adminUserId');
+                    $updateArr['updatedBy'] = $this->my_session->userId;
                     $this->db->where('productRequestMailId', $result['productRequestMailId']);
                     $this->db->update('product_request_mail', $updateArr);
                     $mailArr = array_diff($mailArr, [$result['receivedMail']]);
@@ -156,8 +136,8 @@ class Product_request_process_model extends CI_Model {
                         $data['bccCounter'] = 1;
                     }
 
-                    $data['createdBy'] = $this->session->userdata('adminUserId');
-                    $data['updatedBy'] = $this->session->userdata('adminUserId');
+                    $data['createdBy'] = $this->my_session->userId;
+                    $data['updatedBy'] = $this->my_session->userId;
                     $data['createdDtTm'] = $dateTime;
                     $data['updatedDtTm'] = $dateTime;
                     $productReqMailArr[] = $data;
@@ -181,8 +161,8 @@ class Product_request_process_model extends CI_Model {
                 if (in_array($mailArr[$i], $mailBccArr)) {
                     $data['bccCounter'] = 1;
                 }
-                $data['createdBy'] = $this->session->userdata('adminUserId');
-                $data['updatedBy'] = $this->session->userdata('adminUserId');
+                $data['createdBy'] = $this->my_session->userId;
+                $data['updatedBy'] = $this->my_session->userId;
                 $data['createdDtTm'] = $dateTime;
                 $data['updatedDtTm'] = $dateTime;
                 $productReqMailArr[] = $data;

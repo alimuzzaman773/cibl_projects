@@ -23,27 +23,31 @@ class Client_registration extends CI_Controller {
     }
 
     function ajax_get_app_users() {
-        
         $this->my_session->authorize("canViewAppUser");
         $p['get_count'] = (bool) $this->input->get("get_count", true);
         $p['limit'] = $this->input->get('limit', true);
         $p['offset'] = $this->input->get('offset', true);
-        $p['apps_id'] = $this->input->get('appsId', true);
-        $p['cif_id'] = $this->input->get('cifId', true);
-        $p['customer_name'] = $this->input->get('customerName', true);
-        $p['mobile_number'] = $this->input->get('mobileNo', true);
-        $p['lock_status'] = (int)$this->input->get('lockStatus', true);
+        $p['search'] = $this->input->get("search",true);
+        
+        $filter = array(
+            'isLocked', 'isActive'
+        );
+        
+        foreach($filter as $k):
+            if(trim($this->input->get($k, true)) != ''){
+                $p[$k] = $this->input->get($k, true);
+            }
+        endforeach;
 
-        $json = array();    
-        if ($p['get_count']) {
+        $json = array();
+        if ($p['get_count']) {            
             $params = $p;
-            $params['get_count'] = 1;
             unset($params['limit']);
-            unset($params['offset']);
             $result = $this->client_registration_model->getAllAppsUsers($params);
             //echo $this->db->last_query();
             if ($result):
                 $json['total'] = $result->row()->total;
+                $json['q'][] = $this->db->last_query();
             endif;
         }
 
@@ -52,9 +56,100 @@ class Client_registration extends CI_Controller {
         if ($result):
             $json['app_users'] = $result->result();
         endif;
-        
+        $json['q'][] = $this->db->last_query();
 
         my_json_output($json);
+    }
+    
+    function update_limit_package($skyId)
+    {        
+        //$this->my_session->authorize("canEditAppUserLimitPackage");
+        $data = array(
+            "userGroups" => array()
+        );
+        $this->load->model(array("apps_users_model"));
+        $skyRes = $this->apps_users_model->getUserById($skyId);
+        if(empty($skyRes)):
+            show_error("No apps user information found");
+            die();
+        endif;
+        
+        $data['skyInfo'] = (object)$skyRes;
+        $data['requestedGroupInfo'] = array();
+        $data['serviceId'] = (int)$this->input->get("serviceId",true);
+        
+        $userGroup = $this->apps_users_model->getAppsUserGroup(array('isActive' => 1));
+        if(count($userGroup)):
+            $data['userGroups'] = $userGroup;
+            $requestedId = (int)$this->input->get('requestedId', true);
+            foreach($userGroup as $ug):
+                if($requestedId == $ug->appsGroupId):
+                    $data['requestedGroupInfo'] = $ug;
+                endif;
+            endforeach;
+        endif;
+        
+        $data['pageTitle'] = "Apps Users - Limit Package Update";
+        $data['body_template'] = 'client_registration/update_limit_package.php';
+        $this->load->view('site_template.php', $data);
+    }
+    
+    function save_limit_package()
+    {
+        $this->my_session->authorize("canEditAppUserLimitPackage");
+        $skyId = (int)$this->input->post("skyId", true);
+        $appsGroupId = (int)$this->input->post("appsGroupId", true);
+        $serviceId = (int)$this->input->post("serviceId", true);
+        
+        $this->load->library("form_validation");
+        //$this->form_validation = &$this;
+        $this->form_validation->set_data($_POST);
+        $this->form_validation->set_rules("skyId", "SKY ID", "trim|required");
+        $this->form_validation->set_rules("appsGroupId", "Limit Package ID", "trim|required");
+
+        if ($this->form_validation->run() === false):
+            $json = array(
+                "success" => false,
+                "msg" => validation_errors('<p>', '</p>')
+            );
+            my_json_output($json);
+        endif;
+        
+        $loginId = $this->my_session->userId;
+
+        $data['appsGroupId'] = $appsGroupId;        
+        $data['mcStatus'] = 0;
+        $data['makerAction'] = "LimitPackageUpdate";
+        $data['makerActionCode'] = 'update';
+        $data['makerActionDt'] = date("y-m-d");
+        $data['makerActionTm'] = date("G:i:s");
+        $data['makerActionBy'] = $loginId;
+        
+        try {
+            $this->db->reset_query();
+            $this->db->where("skyId", $skyId)
+                     ->update("apps_users_mc", $data);
+
+            $this->db->reset_query();
+            if($serviceId > 0):
+                $this->db->where("serviceId", $serviceId)
+                         ->update("service_request_bank", array('status2' => 1, 'status1' => 1));
+            endif;
+            //update user activity
+            
+            $json = array(
+                'success' => true
+            );
+            my_json_output($json);
+        }
+        catch(Exception $e){
+            $json = array(
+                'success' => false,
+                'msg' => $e->getMessage()
+            );
+            my_json_output($json);
+        }
+        
     }
 
     function viewUser() {
@@ -63,11 +158,20 @@ class Client_registration extends CI_Controller {
             $skyId = $_GET['skyId'];
             $data['userInfo'] = $this->client_registration_model->getAppsUsersById($skyId); // decision needed whether to show from main table or shadow
             $data['deviceInfo'] = json_encode($this->client_registration_model->getDeviceBySkyid($skyId));
-            $data['accountInfo'] = json_encode($this->login_model->checkAccount($data['userInfo']));            
+            
+            $accountInfo = $this->login_model->checkAccount($data['userInfo']);
+            foreach($accountInfo as $k => $a):
+                if(strtolower($a['accType']) == 'pc'):
+                    $accountInfo[$k]['accNo'] = $this->common_model->numberMasking(MASK,$a['accNo']);
+                endif;
+            endforeach;
+            
+            $data['accountInfo'] = json_encode($accountInfo);
+            
             $data['body_template'] = 'client_registration/apps_user_detail_view.php';
             $this->load->view('site_template.php', $data);
         } else {
-            show_error('No user found');
+            show_404();
         }
     }
 
@@ -81,11 +185,11 @@ class Client_registration extends CI_Controller {
             } else {
                 $data['eblSkyId'] = $_GET['eblSkyId'];
             }
-            $data['deviceInfo'] = json_encode($tableData);
+            $data['deviceInfo'] = $tableData;
         } else {
             $data['skyId'] = "";
             $data['eblSkyId'] = "";
-            $data['deviceInfo'] = json_encode($this->client_registration_model->getDeviceBySkyid());
+            $data['deviceInfo'] = $this->client_registration_model->getDeviceBySkyid();
         }
 
         $data['body_template'] = 'client_registration/device_info_view.php';
@@ -93,7 +197,7 @@ class Client_registration extends CI_Controller {
     }
 
     function addDeviceInfo() {
-        //$this->my_session->authorize("canViewAddUserDevice");
+        $this->my_session->authorize("canViewAddUserDevice");
         if (isset($_GET['skyId']) && isset($_GET['eblSkyId'])) {
             $data['skyId'] = $_GET['skyId'];
             $data['eblSkyId'] = $_GET['eblSkyId'];
@@ -258,7 +362,7 @@ class Client_registration extends CI_Controller {
             );
             $updateArray[] = $updateData;
         }
-        $this->db->update_batch('apps_users_mc', $updateArray, 'skyId');
+        //$this->db->update_batch('apps_users_mc', $updateArray, 'skyId');
 
         if (count($updateArray) > 0):
             $this->db->update_batch('apps_users_mc', $updateArray, 'skyId');

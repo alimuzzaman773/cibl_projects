@@ -1,1 +1,1 @@
-Dear user, your PREMIER account has been activated. Your One Time PREMIER PIN: <?=$pin?>
+Your One Time PIN for EBL SKYBANKING is <?php echo $pin; ?>. Helpline 16230.

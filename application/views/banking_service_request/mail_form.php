@@ -50,15 +50,24 @@
             <input hidden type="text" name="serviceId" value="<?= $serviceId ?>">
             <tr>
                 <th align="left" scope="row">To</th>
-                <td><input type="text" class="form-control input-sm" id="toMail" name="to" value="<?= $to ?>"></td>
+                <td>
+                    <input type="text" class="form-control input-sm" id="toMail" name="to" value="<?= $to ?>">
+                    <small>Provide multiple email addresses with semi colon (&semi;). No spaces are allowed</small>
+                </td>
             </tr>
             <tr>
                 <th align="left" scope="row">Cc</th>
-                <td><input type="text" class="form-control input-sm" id="ccMail" name="cc" value=""></td>
+                <td>
+                    <input type="text" class="form-control input-sm" id="ccMail" name="cc" value="">
+                    <small>Provide multiple email addresses with semi colon (&semi;). No spaces are allowed</small>
+                </td>
             </tr>
             <tr>
                 <th align="left" scope="row">Bcc</th>
-                <td><input type="text" class="form-control input-sm" id="bccMail" name="bcc" value=""></td>
+                <td>
+                    <input type="text" class="form-control input-sm" id="bccMail" name="bcc" value="">
+                    <small>Provide multiple email addresses with semi colon (&semi;). No spaces are allowed</small>
+                </td>
             </tr>
             <tr>
                 <th align="left" scope="row">Subject</th>

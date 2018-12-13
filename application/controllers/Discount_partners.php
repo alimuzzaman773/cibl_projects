@@ -18,7 +18,7 @@ class Discount_partners extends CI_Controller {
             $crud = new grocery_CRUD();
 
             $crud->set_theme(TABLE_THEME);
-            $crud->set_subject('Discount Partners');
+            $crud->set_subject('EBL Discount Partners');
             $crud->set_table('discount_partners');
 
             $this->config->set_item('grocery_crud_file_upload_allow_file_types', 'gif|jpeg|jpg|png');
@@ -30,8 +30,8 @@ class Discount_partners extends CI_Controller {
             $time = date("Y-m-d H:i:s");
             $creatorId = $this->my_session->userId;
 
-            $crud->add_fields('category', 'partner_name', 'details', 'address', 'url', 'mobileno', 'DiscountUploadImage', 'creationDtTm', 'updateDtTm');
-            $crud->edit_fields('category', 'partner_name', 'details', 'address', 'url', 'mobileno', 'DiscountUploadImage', 'updateDtTm');
+            $crud->add_fields('category', 'partner_name', 'type', 'offerType', 'fromDate', 'toDate', 'details', 'discountPercentage', 'address', 'url', 'mobileno', 'DiscountUploadImage', 'creationDtTm', 'updateDtTm');
+            $crud->edit_fields('category', 'partner_name', 'type','offerType', 'fromDate', 'toDate','details', 'discountPercentage', 'address', 'url', 'mobileno', 'DiscountUploadImage', 'updateDtTm');
 
             $crud->change_field_type('creationDtTm', 'hidden', $time);
             $crud->change_field_type('updateDtTm', 'hidden', $time);
@@ -54,8 +54,8 @@ class Discount_partners extends CI_Controller {
             $crud->set_relation('category', 'partner_type_setup', 'discountPartners');
             $crud->set_field_upload('DiscountUploadImage', 'assets/uploads/files');
 
-            $crud->callback_after_insert(array($this, 'imageTransfer'));
-            $crud->callback_after_update(array($this, 'imageTransfer'));
+            //$crud->callback_after_insert(array($this, 'imageTransfer'));
+            //$crud->callback_after_update(array($this, 'imageTransfer'));
 
             $crud->unset_delete();
 

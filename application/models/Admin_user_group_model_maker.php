@@ -7,9 +7,9 @@ class Admin_user_group_model_maker extends CI_Model {
     }
 
     public function getAllGroups() {
-        $this->db->where('userGroupId !=', 1);
-        $this->db->where('makerActionBy =', $this->my_session->userId);
-        $this->db->or_where('mcStatus =', 1);
+        //$this->db->where('userGroupId !=', 1);
+        //$this->db->where('makerActionBy =', $this->my_session->userId);
+        $this->db->where_in('mcStatus', array(1,2));
         $query = $this->db->get(TBL_ADMIN_USERS_GROUP_MC);
         return $query->result();
     }
@@ -34,35 +34,6 @@ class Admin_user_group_model_maker extends CI_Model {
 
         $query = $this->db->get();
         return $query->result_array();
-    }
-
-    public function getAllAdminGroup($params = array()) {
-
-        if (isset($params['get_count']) && $params['get_count'] == true) {
-            $this->db->select("COUNT(userGroupId) as total");
-        } else {
-            $this->db->select('*', FALSE);
-        }
-
-        $this->db->from('admin_users_group_mc');
-
-        if (isset($params['group_name']) && trim($params['group_name']) != "") {
-            $this->db->like("userGroupName", $params['group_name'], "both");
-        }
-
-        if (isset($params['lock_status']) && (int) $params['lock_status'] >= 1) {
-            $this->db->where("isLocked", $params['lock_status']);
-        }
-
-        if (isset($params['limit']) && (int) $params['limit'] > 0) {
-            $offset = (isset($params['offset'])) ? $params['offset'] : 0;
-            $this->db->limit($params['limit'], $offset);
-        }
-        $this->db->order_by("userGroupId", "desc");
-
-        $query = $this->db->get();
-
-        return $query->num_rows() > 0 ? $query : false;
     }
 
     public function getModuleIdsByModuleCode($data) {

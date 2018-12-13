@@ -1,8 +1,15 @@
 <h3 class="title-underlined">Add Limit</h3>
 
 <div class="container">
-    <label>Group Name</label>
-    <input class="textbox" type="text" name="groupName" id="groupName" value="<?= $groupName ?>" readonly><br><br>
+    <div class="form-group col-sm-6 col-xs-12">
+        <label>Group Name</label>
+        <input class="textbox" type="text" name="groupName" id="groupName" value="<?= $groupName ?>" readonly>        
+    </div>
+    
+    <div class="form-group col-sm-6 col-xs-12">
+        <label>Group Description</label>
+        <input class="form-control" class="form-control" type="text" name="groupDescription" id="groupDescription" value="<?= $groupDescription ?>" readonly />       
+    </div>
 </div>
 
 <input hidden class="textbox" type="text" name="selectedActionName" id="selectedActionName" value="<?= $selectedActionName ?>">
@@ -93,8 +100,10 @@
         var GroupName = "";
         var SelectedActionName = "";
         GroupName = groupName.value;
+        GroupDescription = groupDescription.value;
         SelectedActionName = selectedActionName.value;
         var dataToSave = {"group_name" : GroupName,
+                          "groupDescription" : GroupDescription,
                           "selected_action_name" : SelectedActionName,
                           "own_acc_transfer" : ownAccount,
                           "ebl_acc_transfer" : eblAccount,

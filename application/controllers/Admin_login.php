@@ -53,72 +53,13 @@ class Admin_login extends CI_Controller {
 
         redirect(base_url());
         die();
-
-
-        if ($input_user && $input_pass) {
-
-            $username = $input_user;
-            $password = $this->bocrypter->Encrypt($input_pass);
-            /* Post Method update for Security 28 aug 16 */
-
-            /*
-              if(isset($_POST['username']) && isset($_POST['password'])){
-
-              $username = $_POST['username'];
-              $password = $this->bocrypter->Encrypt($_POST['password']);
-             */
-
-            $checkLogin = $this->admin_users_model_maker->checkUsernamePassword($username);
-
-            if (!empty($checkLogin)) {
-
-                // check the forgot password flag // 
-                if ($checkLogin['forgotPassword'] == 0) {
-
-                    if ($checkLogin['adminUserName'] == $username && $checkLogin['encryptedPassword'] == $password) {
-                        $moduleActionId = explode(",", $checkLogin['moduleActionId']);
-                        $tableData = $this->admin_users_model_maker->getUserRoles($moduleActionId);
-                        $roleData = $this->createSessionFormatData($tableData);
-                        $userData = array('logged_in' => TRUE,
-                            'adminUserId' => $checkLogin['adminUserId'],
-                            'username' => $username,
-                            'group' => $checkLogin['userGroupName'],
-                            'moduleActionId' => $roleData['moduleActionId'],
-                            'moduleCodes' => $roleData['moduleCode'],
-                            'moduleNames' => $roleData['moduleName'],
-                            'authorizationModules' => $checkLogin['authorizationModules'],
-                            'contentSetupModules' => $checkLogin['contentSetupModules'],
-                            'serviceRequestModules' => $checkLogin['serviceRequestModules'],
-                            'reportTypeModules' => $checkLogin['reportTypeModules'],
-                            'actionCodes' => $roleData['actionCode'],
-                            'actionNames' => $roleData['actionName']);
-                        $this->session->set_userdata($userData);
-
-                        $this->output->set_template('theme2');
-                        $this->load->view('dashboard.php');
-                    } else {
-                        $data['message'] = "Wrong username or password";
-                        $this->load->view('admin_login/login_view.php', $data);
-                    }
-                } else {
-                    $data['message'] = "";
-                    $this->load->view('admin_login/change_password_view.php', $data);
-                }
-            } else {
-
-                $data['message'] = 'The user "' . $username . '" does not exist or may be inactive or your group is inactive';
-                $this->load->view('admin_login/login_view.php', $data);
-            }
-        } else {
-            $data['message'] = "";
-            $this->load->view('admin_login/login_view.php', $data);
-        }
     }
 
-    function dashboard() {
+    function dashboard() 
+    {
         //d($_SESSION);
         $data['pageTitle'] = "Dashboard";
-        $data['body_template'] = "dashboard.php";
+        $data['body_template'] = "dashboard/dashboard.php";
         $this->load->view("site_template.php", $data);
     }
 

@@ -42,6 +42,7 @@ class Biller_setup_maker extends CI_Controller {
         $data['referenceMessage'] = $this->input->post('suggestion');
 
         $data['billTypeCode'] = $this->input->post('billTypeCode');
+        $data['merchantId'] = $this->input->post('merchantId');
         $data['mcStatus'] = 0;
         $data['makerAction'] = $this->input->post('selectedActionName');
         $data['makerActionCode'] = 'add';
@@ -106,6 +107,7 @@ class Biller_setup_maker extends CI_Controller {
         $data['referenceMessage'] = $this->input->post('suggestion');
 
         $data['billTypeCode'] = $this->input->post('billTypeCode');
+        $data['merchantId'] = $this->input->post('merchantId');
         $data['mcStatus'] = 0;
         $data['makerAction'] = $this->input->post('selectedActionName');
         $data['makerActionCode'] = 'edit';

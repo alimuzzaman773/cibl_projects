@@ -10,7 +10,7 @@ class Biller_setup_model_checker extends CI_Model {
     public function getUnapprovedBillers() {
         $this->db->order_by("billerId", "desc");
         $this->db->where('biller_setup_mc.mcStatus =', 0);
-        $this->db->where('biller_setup_mc.makerActionBy !=', $this->my_session->userId);
+        //$this->db->where('biller_setup_mc.makerActionBy !=', $this->my_session->userId);
         $this->db->select('biller_setup_mc.*, bill_type.billTypeName');
         $this->db->from('biller_setup_mc');
         $this->db->join('bill_type', 'biller_setup_mc.billTypeCode = bill_type.billTypeCode');

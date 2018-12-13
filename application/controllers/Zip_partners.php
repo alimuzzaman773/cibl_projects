@@ -20,7 +20,7 @@ class Zip_partners extends CI_Controller {
             $crud = new grocery_CRUD();
 
             $crud->set_theme(TABLE_THEME);
-            $crud->set_subject('Comfort Pay Partners');
+            $crud->set_subject('Zip Partners');
 
             $crud->set_table('zip_partners');
 
@@ -36,8 +36,8 @@ class Zip_partners extends CI_Controller {
             $time = date("Y-m-d H:i:s");
             $creatorId = $this->my_session->userId;
 
-            $crud->add_fields('category', 'mechant_name', 'tenor', 'merchant_web_site', 'mobile', 'uploadImage', 'creationDtTm', 'updateDtTm');
-            $crud->edit_fields('category', 'mechant_name', 'tenor', 'merchant_web_site', 'mobile', 'uploadImage', 'updateDtTm');
+            $crud->add_fields('category', 'mechant_name', 'mobile', 'tenor', 'offerType', 'fromDate', 'toDate', 'remarks', 'merchant_web_site',  'uploadImage', 'banner', 'creationDtTm', 'updateDtTm');
+            $crud->edit_fields('category', 'mechant_name', 'mobile', 'tenor', 'offerType', 'fromDate', 'toDate', 'remarks', 'merchant_web_site', 'uploadImage', 'banner', 'updateDtTm');
 
             $crud->change_field_type('creationDtTm', 'hidden', $time);
             $crud->change_field_type('updateDtTm', 'hidden', $time);
@@ -59,8 +59,8 @@ class Zip_partners extends CI_Controller {
 
             $crud->set_relation('category', 'partner_type_setup', 'zipPartners');
 
-            $crud->callback_after_insert(array($this, 'imageTransfer'));
-            $crud->callback_after_update(array($this, 'imageTransfer'));
+            //$crud->callback_after_insert(array($this, 'imageTransfer'));
+            //$crud->callback_after_update(array($this, 'imageTransfer'));
 
             $crud->unset_delete();
 
@@ -74,7 +74,7 @@ class Zip_partners extends CI_Controller {
             $output = $crud->render();
             $output->css = "";
             $output->js = "";
-            $output->pageTitle = "Comfort Pay Partners";
+            $output->pageTitle = "Zip Partners";
             $output->base_url = base_url();
 
             $output->body_template = "zip_partners/index.php";

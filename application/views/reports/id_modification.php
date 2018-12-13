@@ -23,7 +23,7 @@
             <th>SL No</th>
             <th>Customer ID</th>
             <th>Client ID</th>
-            <th>Apps ID</th>
+            <th>EBL Sky ID</th>
             <th>Customer Name</th>
             <th>Mobile No</th>
             <th>Email ID</th>
@@ -49,8 +49,8 @@
                 <td><?php echo $data->userEmail; ?></td>
                 <td><?php echo show_date($data->makerActionDt); ?></td>
                 <td><?php echo $data->makerAction; ?></td>
-                <td><?php echo admin_name($data->makerActionBy); ?></td>
-                <td><?php echo admin_name($data->checkerActionBy); ?></td>
+                <td><?php echo ($data->makerName); ?></td>
+                <td><?php echo ($data->checkerName); ?></td>
             </tr>
         <?php } ?>
         </tbody>

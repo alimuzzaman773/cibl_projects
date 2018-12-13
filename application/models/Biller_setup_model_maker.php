@@ -9,8 +9,8 @@ class Biller_setup_model_maker extends CI_Model {
 
     public function getAllBillers() {
         $this->db->select('biller_setup_mc.*, bill_type.billTypeName');
-        $this->db->where('makerActionBy =', $this->my_session->userId);
-        $this->db->or_where('mcStatus =', 1);
+        //$this->db->where('makerActionBy =', $this->my_session->userId);
+        $this->db->where_in('mcStatus', array(1,2));
         $this->db->from('biller_setup_mc');
         $this->db->join('bill_type', 'biller_setup_mc.billTypeCode = bill_type.billTypeCode');
         $query = $this->db->get();

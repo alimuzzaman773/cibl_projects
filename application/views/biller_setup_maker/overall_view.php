@@ -19,17 +19,17 @@
             <div class="table-responsive">        
                 <table class="table table-bordered table-condensed table-striped table-hover" >          
                     <thead>
-                        <tr class="bg-primary">
-                            <th class="text-center hidden"><input type="checkbox" id="selectAll" data-ng-model="selectAll" /></th>
+                        <tr class="bg-primary">                            
                             <th>SL#</th>                            
                             <th>Biller Name</th>
                             <th>CIF ID</th>
                             <th>Biller Code</th>
                             <th>Biller Order</th>
                             <th>Bill Type</th>
-                            <th>Active/Inactive</th>
                             <th>Status</th>
-                            <th>Action</th>
+                            <th>Checker Comment</th>
+                            <th>Checker Action</th> 
+                            <th colspan="2">Active/Inactive</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -41,6 +41,8 @@
                             <td>{{i.billerCode}}</td>
                             <td>{{i.billerOrder}}</td>
                             <td>{{i.billTypeName}}</td>
+                            <td>{{i.mcStatus}}</td>
+                            <td>{{i.checkerActionComment}}</td>
                             <td>{{i.checkerAction}}</td>
                             <td>                                
                                 <span data-ng-class="{'text-success': i.isActive == '1', 'text-warning': i.isActive == '0'}">{{i.isActive=='1' ? 'Active' : 'Inactive'}}</span>
@@ -77,7 +79,7 @@
                             </td>
                         </tr>
                         <tr data-ng-show="biller_data.length <= 0">
-                            <td colspan="10">No data found</td>
+                            <td colspan="15">No data found</td>
                         </tr>
                     </tbody>
                 </table>               

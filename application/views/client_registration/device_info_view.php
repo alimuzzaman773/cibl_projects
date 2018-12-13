@@ -1,7 +1,7 @@
 <h1 class="title-underlined">
     Device
     <?php if(ci_check_permission("canAddAppUserDevice")): ?>
-    <a href="<?=base_url()."client_registration/addDeviceInfo?eblSkyId={$eblSkyId}&skyId={$skyId}"?>" class="btn btn-primary pull-right">
+    <a href="<?=base_url()."client_registration/addDeviceInfo?eblSkyId={$eblSkyId}&skyId={$skyId}"?>" class="btn btn-primary pull-right hidden">
         <i class="glyphicon glyphicon-plus"></i> Add Device
     </a>
     <?php endif;?>
@@ -47,35 +47,35 @@
                         </button>
                         <ul class="dropdown-menu">
                             <?php if(ci_check_permission("canEditAppUserDevice")): ?>
-                            <li>
+                            <li class="hidden">
                                 <a href="<?=base_url()?>client_registration/editDevice?eblSkyId={{d.eblSkyId}}&skyId={{d.skyId}}&imeiNo={{d.imeiNo}}&deviceId={{d.deviceId}}">
                                     <i class="glyphicon glyphicon-edit"></i> Edit
                                 </a>
                             </li>
                             <?php endif;?>
                             <?php if(ci_check_permission("canLockAppUserDevice")): ?>
-                            <li data-ng-if="d.isLocked == 0">
+                            <li class="hidden" data-ng-if="d.isLocked == 0">
                                 <a data-ng-click="lock_unlock(d, 'Lock', 'deviceLock');">
                                     <i class="glyphicon glyphicon-lock"></i> Lock
                                 </a>
                             </li> 
                             <?php endif;?>
                             <?php if(ci_check_permission("canUnlockAppUserDevice")): ?>
-                            <li data-ng-if="d.isLocked == 1">
+                            <li class="hidden" data-ng-if="d.isLocked == 1">
                                 <a data-ng-click="lock_unlock(d, 'Unlock', 'deviceUnlock');">
                                     <i class="glyphicon glyphicon-refresh"></i> Unlock
                                 </a>
                             </li> 
                             <?php endif;?>
                             <?php if(ci_check_permission("canActiveAppUserDevice")): ?>
-                            <li data-ng-if="d.isActive == 0">
+                            <li class="hidden" data-ng-if="d.isActive == 0">
                                 <a data-ng-click="activate(d);">
                                     <i class="glyphicon glyphicon-flash"></i> Activate
                                 </a>
                             </li> 
                             <?php endif;?>
                             <?php if(ci_check_permission("canInactiveAppUserDevice")): ?>
-                            <li data-ng-if="d.isActive == 1">
+                            <li class="hidden" data-ng-if="d.isActive == 1">
                                 <a data-ng-click="deactivate(d);">
                                     <i class="glyphicon glyphicon-flash"></i> Deactivate
                                 </a>
@@ -93,6 +93,7 @@
 
 <?php
 ci_add_js(asset_url()."angularjs/directives/dirPagination.js");  
+ci_add_js(asset_url()."app/directives/custom_directives.js");
 ci_add_js(asset_url()."app/app_users.js")  
 ?> 
 
@@ -103,7 +104,7 @@ app.eblSkyId = '<?=$eblSkyId?>';
 </script>
 
 <script type="text/javascript" charset="utf-8">
-    var initialData = app.devices = jQuery.parseJSON('<?= $deviceInfo ?>'); //data for building initial table
+    var initialData = app.devices = <?= json_encode($deviceInfo) ?>; //data for building initial table
     var vm = function () {
         var self = this;
         self.records = ko.observableArray(initialData);

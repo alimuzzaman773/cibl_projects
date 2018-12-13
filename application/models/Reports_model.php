@@ -18,7 +18,7 @@ class Reports_model extends CI_Model {
         } else if ($status == "locked") {
             $value = "isLocked=1 AND isPublished=1";
         }
-        $query = $this->db->query("SELECT * FROM apps_users WHERE " . $value);
+        $query = $this->db->query("SELECT * FROM apps_users_mc WHERE " . $value);
 
         return ($query->num_rows() > 0) ? $query->result() : false;
     }
@@ -163,10 +163,12 @@ class Reports_model extends CI_Model {
 
     //User data modification by admin
     public function get_id_modification($from_date, $to_date) {
-        $query = $this->db->select("*")
-                ->from("apps_users_mc")
-                ->where("makerActionDt >=", $from_date)
-                ->where("makerActionDt <=", $to_date)
+        $query = $this->db->select("am.*, adm.adminUserName as makerName, adm2.adminUserName as checkerName", false)
+                ->from("apps_users_mc am")
+                ->join("admin_users_mc adm", "adm.adminUserId = am.makerActionBy", "left")
+                ->join("admin_users_mc adm2", "adm2.adminUserId = am.checkerActionBy", "left")
+                ->where("am.makerActionDt >=", $from_date)
+                ->where("am.makerActionDt <=", $to_date)
                 ->get();
         return ($query->num_rows() > 0) ? $query->result() : false;
     }
@@ -239,12 +241,166 @@ class Reports_model extends CI_Model {
         return ($query->num_rows() > 0) ? $query->result() : false;
     }
 
-    public function get_priority_mail() {
-        $query = $this->db->select("*")
-                ->from("priority_request_mail")
-                ->order_by("requestApplyId", "ASC")
-                ->get();
+    public function get_priority_mail($from_date = null, $to_date = null) {
+        $this->db->select("prm.*,sr.serviceRequestID, sr.creationDtTm as serviceCreationDtTm", false)
+                ->from("priority_request_mail prm")
+                ->join("service_request sr", "sr.serviceRequestID = prm.requestApplyId", "left")
+                ->order_by("requestApplyId", "ASC");
+        
+        if($from_date != null && $to_date != null):
+            $this->db->where("sr.creationDtTm between {$this->db->escape($from_date)} AND {$this->db->escape($to_date)}", null,false);
+        endif;
+        
+        $query = $this->db->get();
         return ($query->num_rows() > 0) ? $query->result() : false;
     }
 
+    function getCardPayments($p = array())
+    {
+        $this->db->select("abp.*, au.userName",FALSE)
+                ->from("apps_bill_pay abp")
+                ->join("apps_users au","au.skyId = abp.skyId", "left")
+                ->join("biller_setup bs", "bs.billerId = abp.billerId", "left");
+        
+        if(isset($p['fromdate']) && isset($p['todate'])):
+            $this->db->group_start()
+                     ->where("date(abp.creationDtTm) between {$this->db->escape($p['fromdate'])} AND {$this->db->escape($p['todate'])}",null,false)
+                     ->group_end();
+        endif;       
+        
+        if(isset($p['billerId']) && (int)$p['billerId'] > 0):
+            $this->db->where('abp.billerId', $p['billerId']);
+        endif;
+        
+        if(isset($p['isSuccess'])):
+            $this->db->where('abp.isSuccess', $p['isSuccess']);
+        endif;
+        
+        $result = $this->db->order_by("abp.creationDtTm", "DESC")
+                           ->get();
+        return $result->num_rows() > 0 ? $result : false;
+    }
+    
+    function getMobilePaymentByCard($p = array())
+    {
+        $this->db->select("abp.*, au.userName",FALSE)
+                ->from("apps_bill_pay abp")
+                ->join("apps_users au","au.skyId = abp.skyId", "left")
+                ->join("biller_setup bs", "bs.billerId = abp.billerId", "left");
+        
+        if(isset($p['fromdate']) && isset($p['todate'])):
+            $this->db->group_start()
+                     ->where("date(abp.creationDtTm) between {$this->db->escape($p['fromdate'])} AND {$this->db->escape($p['todate'])}",null,false)
+                     ->group_end();
+        endif;       
+        
+        if(isset($p['billerId']) && (int)$p['billerId'] > 0):
+            $this->db->where('abp.billerId', $p['billerId']);
+        endif;
+        
+        if(isset($p['isSuccess'])):
+            $this->db->where('abp.isSuccess', $p['isSuccess']);
+        endif;
+        
+        $result = $this->db->order_by("abp.creationDtTm", "DESC")
+                           ->get();
+        return $result->num_rows() > 0 ? $result : false;
+    }
+    
+    function getCallCenterUserList($p = array())
+    {
+        $dateTime = date("Y-m-d H:i:s");
+        
+        
+        $this->db->select("aum.*, au.skyId as skyIdOriginal, ra.created_on as registrationDate, ra.entityType,"
+                        . " TIMESTAMPDIFF(SECOND, CONCAT(aum.makerActionDt, ' ', aum.makerActionTm), '{$dateTime}') as activationDiff,"
+                        . " TIMESTAMPDIFF(SECOND, aum.passwordResetDtTm, '{$dateTime}') as passwordResetDiff",false);
+        
+        $this->db->from('apps_users_mc aum')
+                ->join('apps_users au', "au.skyId = aum.skyId", "left")
+                ->join('registration_attempts ra', 'ra.skyId = aum.skyId', 'left')
+                ->order_by('aum.skyId', 'desc');
+                
+        if(isset($p['skyIdOriginal']) && $p['skyIdOriginal'] == 0){
+            $this->db->having('(skyIdOriginal IS NULL OR skyIdOriginal <= 0)', null, false);
+            if(isset($p['fromdate']) && isset($p['todate'])){
+                $this->db->where("ra.created_on between {$this->db->escape($p['fromdate'])} AND {$this->db->escape($p['todate'])}", null, false);
+            }
+        }
+        
+        if(isset($p['skyIdOriginal']) && (int)$p['skyIdOriginal'] > 0){
+            $this->db->having('(skyIdOriginal > 0)', null, false);
+            if(isset($p['fromdate']) && isset($p['todate'])){
+                $this->db->where("ra.created_on between {$this->db->escape($p['fromdate'])} AND {$this->db->escape($p['todate'])}", null, false);
+            }
+        }
+        
+        if(isset($p['passwordReset']) && $p['passwordReset'] != NULL)
+        {
+            $this->db->where('aum.passwordReset', $p['passwordReset']);
+        }
+        
+        if(isset($p['activationPending24']) && (int)$p['activationPending24']  > 0){
+            $this->db->having("activationDiff > {$this->db->escape($p['activationPending24'])}", null,false);
+        }
+        
+        if(isset($p['passwordResetPending24']) && (int)$p['passwordResetPending24']  > 0){            
+            $this->db->having("passwordResetDiff > {$this->db->escape($p['passwordResetPending24'])}", null,false);
+        }
+        
+        if(isset($p['search']) && trim($p['search']) != ''):
+            $this->db->group_start()
+                     ->or_like('aum.skyId', $p['search'])
+                     ->or_like('aum.eblSkyId', $p['search'])
+                     ->or_like('aum.userName', $p['search'])
+                     ->or_like('aum.cfId', $p['search'])
+                     ->or_like('aum.clientId', $p['search'])
+                     ->or_like('aum.prepaidId', $p['search'])
+                     ->or_like('aum.userEmail', $p['search'])
+                     ->or_like('aum.userMobNo1', $p['search'])
+                     ->group_end();
+        endif;
+        
+        if (isset($p['limit']) && (int) $p['limit'] > 0) {
+            $offset = (isset($p['offset']) && $p['offset'] != null) ? (int) $p['offset'] : 0;
+            $this->db->limit($p['limit'], $offset);
+        }
+
+        $sql = '';
+        if (isset($p['get_count']) && (int) $p['get_count'] > 0):
+            $sql = $this->db->get_compiled_select();
+            $sql = "select count(*) as total from ({$sql}) as intbl";
+        else:
+            $sql = $this->db->get_compiled_select();
+        endif;
+        
+        $query = $this->db->query($sql);
+        return $query->num_rows() > 0 ? $query : false;
+    }
+    
+    function getCustomerActivity($p = array())
+    {
+        $this->db->select("au.*, ra.created_on as registrationDate, ra.entityType,"                        
+                        . " al.actionName, al.actionCode,al.commDtTm",false);
+        
+        $this->db->from('apps_users au')
+                 ->join('registration_attempts ra', 'ra.skyId = au.skyId', 'left')
+                 ->join('app_user_activity_log al', 'al.skyId = au.skyId', 'left')
+                 ->order_by('au.skyId', 'desc');
+                
+        if(isset($p['eblSkyId']) && trim($p['eblSkyId']) != '')
+        {            
+            $this->db->where("au.eblSkyId", $p['eblSkyId']);
+        }
+        
+        if(isset($p['fromdate']) && isset($p['todate']))
+        {            
+            $this->db->where("date(al.commDtTm) between {$this->db->escape($p['fromdate'])} AND {$this->db->escape($p['todate'])}", $p['eblSkyId']);
+        }
+        
+        $sql = $this->db->get_compiled_select();
+        
+        $query = $this->db->query($sql);
+        return $query->num_rows() > 0 ? $query : false;
+    }
 }

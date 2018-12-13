@@ -87,55 +87,56 @@ class Biller_setup_checker extends CI_Controller {
         $checkerActionDtTm = $this->input->post("checkerActionDtTm");
         $dbData = $this->biller_setup_model_checker->getBillerById($id);
 
-        if ($dbData['makerActionBy'] == $this->my_session->userId) {
-            echo "You can not authorize your own maker action";
-        } else {
-            if ($data['checkerAction'] == "approve") {
-                $chkdata['checkerActionDt'] = date("Y-m-d");
-                $chkdata['checkerActionTm'] = date("G:i:s");
-                $chkdata['isPublished'] = 1;
-                $chkdata['checkerActionBy'] = $this->my_session->userId;
-                $chkdata['checkerAction'] = "Approved";
-                $chkdata['checkerActionComment'] = NULL;
-                $chkdata['mcStatus'] = 1;
+        
+        if ($data['checkerAction'] == "approve")
+        {
+            $chkdata['checkerActionDt'] = date("Y-m-d");
+            $chkdata['checkerActionTm'] = date("G:i:s");
+            $chkdata['isPublished'] = 1;
+            $chkdata['checkerActionBy'] = $this->my_session->userId;
+            $chkdata['checkerAction'] = "Approved";
+            $chkdata['checkerActionComment'] = NULL;
+            $chkdata['mcStatus'] = 1;
 
-                $res = $this->checkUserInteraction($id, $makerActionDtTm, $checkerActionDtTm);
+            $res = $this->checkUserInteraction($id, $makerActionDtTm, $checkerActionDtTm);
 
-                if ($res == 0) {
-                    if ($dbData['isPublished'] == 0) {
-                        // update and insert
-                        $this->biller_setup_model_checker->UpdateInsertCheckerApprove($id, $chkdata);
-                    } else if ($dbData['isPublished'] == 1) {
-                        // update and update
-                        $this->biller_setup_model_checker->UpdateUpdateCheckerApprove($id, $chkdata);
-                    }
-
-                    // activity log starts here >> implemented in model
-                    redirect('biller_setup_checker');
-                } else {
-                    // redirect
-                    echo "interaction";
+            if ($res == 0) {
+                if ($dbData['isPublished'] == 0) {
+                    // update and insert
+                    $this->biller_setup_model_checker->UpdateInsertCheckerApprove($id, $chkdata);
+                } else if ($dbData['isPublished'] == 1) {
+                    // update and update
+                    $this->biller_setup_model_checker->UpdateUpdateCheckerApprove($id, $chkdata);
                 }
-            } else if ($data['checkerAction'] == 'reject') {
-                $data['checkerActionDt'] = date("Y-m-d");
-                $data['checkerActionTm'] = date("G:i:s");
-                $data['checkerActionBy'] = $this->my_session->userId;
-                $data['checkerAction'] = "Rejected";
-                $data['checkerActionComment'] = $this->input->post("newReason");
-                $data['mcStatus'] = 2;
 
-                $res = $this->checkUserInteraction($id, $makerActionDtTm, $checkerActionDtTm);
+                // activity log starts here >> implemented in model
+                redirect('biller_setup_checker');
+            } else {
+                // redirect
+                echo "interaction";
+            }
+        } 
+        else if ($data['checkerAction'] == 'reject')
+        {
+            $data['checkerActionDt'] = date("Y-m-d");
+            $data['checkerActionTm'] = date("G:i:s");
+            $data['checkerActionBy'] = $this->my_session->userId;
+            $data['checkerAction'] = "Rejected";
+            $data['checkerActionComment'] = $this->input->post("newReason");
+            $data['mcStatus'] = 2;
 
-                if ($res == 0) {
-                    // update
-                    $this->biller_setup_model_checker->checkerReject($id, $data);
-                    redirect('biller_setup_checker');
-                } else {
-                    // redirect
-                    echo "interaction";
-                }
+            $res = $this->checkUserInteraction($id, $makerActionDtTm, $checkerActionDtTm);
+
+            if ($res == 0) {
+                // update
+                $this->biller_setup_model_checker->checkerReject($id, $data);
+                redirect('biller_setup_checker');
+            } else {
+                // redirect
+                echo "interaction";
             }
         }
+        
     }
 
     public function checkUserInteraction($id, $makerActionDtTmPost, $checkerActionDtTmPost) {

@@ -1,2 +1,2 @@
-<h2 class="title-underlined">Comfort Pay Partners</h2>
+<h2 class="title-underlined">Zip Partners</h2>
 <?= $output ?>

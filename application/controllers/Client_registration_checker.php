@@ -128,11 +128,13 @@ class Client_registration_checker extends CI_Controller {
             }
 
             $data['appsUser'] = $dbData;
+            //d($db);
             $data['accountInfo'] = json_encode($this->login_model->checkAccount($dbData));
 
             if ($dbData['skyId_c'] != NULL) {
-                $approvedAccounts = $this->client_registration_model_checker->getApprovedAccountsById($id);
-                $data['accountInfo_c'] = json_encode($this->login_model->checkAccount($approvedAccounts));
+                //$approvedAccounts = $this->client_registration_model_checker->getApprovedAccountsById($id);
+                //$data['accountInfo_c'] = json_encode($this->login_model->checkAccount($approvedAccounts));
+                $data['accountInfo_c'] = json_encode($this->login_model->checkAccount(array('skyId' => $id)));
             } else {
                 $data['accountInfo_c'] = json_encode((object) null);
             }
@@ -377,69 +379,77 @@ class Client_registration_checker extends CI_Controller {
             $this->load->view('site_template.php', $data);
     }
 
-    public function getReason() {
-      //  $authorizationModules = $this->session->userdata('authorizationModules');
-       // if (strpos($authorizationModules, apps_users_authorization) > -1) {
-            $data['checkerAction'] = $this->input->post("checkerAction");
-            $id =  $this->input->post("skyId");
-            $makerActionDtTm =  $this->input->post("makerActionDtTm");
-            $checkerActionDtTm =  $this->input->post("checkerActionDtTm");
-            $dbData = $this->client_registration_model_checker->getAppsUserById($id);
+    public function getReason()
+    {
+        $data['checkerAction'] = $this->input->post("checkerAction");
+        $id =  $this->input->post("skyId");
+        $makerActionDtTm =  $this->input->post("makerActionDtTm");
+        $checkerActionDtTm =  $this->input->post("checkerActionDtTm");
+        $dbData = $this->client_registration_model_checker->getAppsUserById($id);
 
-            if ($dbData['makerActionBy'] == $this->my_session->userId) {
-                echo "You can not authorize your own maker action";
-            } else {
-                if ($data['checkerAction'] == "approve") {
-                    $chkdata['checkerActionDt'] = date("Y-m-d");
-                    $chkdata['checkerActionTm'] = date("G:i:s");
-                    $chkdata['isPublished'] = 1;
-                    $chkdata['checkerActionBy'] = $this->my_session->userId;
-                    $chkdata['checkerAction'] = "Approved";
-                    $chkdata['checkerActionComment'] = NULL;
-                    $chkdata['mcStatus'] = 1;
+        /*if ($dbData['makerActionBy'] == $this->my_session->userId) {
+            echo "You can not authorize your own maker action";
+        }*/
 
-                    $res = $this->checkUserInteraction($id, $makerActionDtTm, $checkerActionDtTm);
+        if ($data['checkerAction'] == "approve")
+        {
+            $chkdata['checkerActionDt'] = date("Y-m-d");
+            $chkdata['checkerActionTm'] = date("G:i:s");
+            $chkdata['isPublished'] = 1;
+            $chkdata['checkerActionBy'] = $this->my_session->userId;
+            $chkdata['checkerAction'] = "Approved";
+            $chkdata['checkerActionComment'] = NULL;
+            $chkdata['mcStatus'] = 1;
 
-                    if ($res == 0) {
-                        if ($dbData['isPublished'] == 0) {
-                            // update and insert
-                            $this->client_registration_model_checker->UpdateInsertCheckerApprove($id, $chkdata);
-                        } else if ($dbData['isPublished'] == 1) {
+            $res = $this->checkUserInteraction($id, $makerActionDtTm, $checkerActionDtTm);
 
-                            if ($dbData['appsGroupId'] == $dbData['appsGroupId_c']) {
-                                $descision = 1;
-                                $this->client_registration_model_checker->UpdateUpdateCheckerApprove($id, $chkdata, $descision);
-                            } else {
-                                $descision = 0;
-                                $this->client_registration_model_checker->UpdateUpdateCheckerApprove($id, $chkdata, $descision);
-                            }
-                        }
-                        // activity log goes here
-                        redirect('client_registration_checker');
-                    } else {
-                        // redirect
-                        echo "interaction";
-                    }
-                } else if ($data['checkerAction'] == 'reject') {
-                    $data['checkerActionDt'] = date("Y-m-d");
-                    $data['checkerActionTm'] = date("G:i:s");
-                    $data['checkerActionBy'] = $this->my_session->userId;
-                    $data['checkerAction'] = "Rejected";
-                    $data['checkerActionComment'] =$this->input->post("newReason");
-                    $data['mcStatus'] = 2;
+            if ($res == 0) {
+                if ($dbData['isPublished'] == 0)
+                {
+                    // update and insert
+                    $this->client_registration_model_checker->UpdateInsertCheckerApprove($id, $chkdata);
+                } 
+                else if ($dbData['isPublished'] == 1)
+                {
 
-                    $res = $this->checkUserInteraction($id, $makerActionDtTm, $checkerActionDtTm);
-                    if ($res == 0) {
-                        $this->client_registration_model_checker->checkerReject($id, $data);
-                        redirect('client_registration_checker');
-                    } else {
-                        echo "interaction";
+                    if ($dbData['appsGroupId'] == $dbData['appsGroupId_c']) 
+                    {
+                        $descision = 1;
+                        $this->client_registration_model_checker->UpdateUpdateCheckerApprove($id, $chkdata, $descision);
+                    } 
+                    else
+                    {
+                        $descision = 0;
+                        $this->client_registration_model_checker->UpdateUpdateCheckerApprove($id, $chkdata, $descision);
                     }
                 }
+                // activity log goes here
+                redirect('client_registration_checker');
+            } 
+            else 
+            {
+                // redirect
+                echo "interaction";
             }
-       // } else {
-          //  echo "Authorization module not given";
-      //  }
+        } 
+        else if ($data['checkerAction'] == 'reject')
+        {
+            $data['checkerActionDt'] = date("Y-m-d");
+            $data['checkerActionTm'] = date("G:i:s");
+            $data['checkerActionBy'] = $this->my_session->userId;
+            $data['checkerAction'] = "Rejected";
+            $data['checkerActionComment'] =$this->input->post("newReason");
+            $data['mcStatus'] = 2;
+
+            $res = $this->checkUserInteraction($id, $makerActionDtTm, $checkerActionDtTm);
+            if ($res == 0) {
+                $this->client_registration_model_checker->checkerReject($id, $data);
+                redirect('client_registration_checker');
+            } else {
+                echo "interaction";
+            }
+        }
+            
     }
 
     public function checkUserInteraction($id, $makerActionDtTmPost, $checkerActionDtTmPost) {

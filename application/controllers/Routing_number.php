@@ -14,7 +14,7 @@ class Routing_number extends CI_Controller {
     }
 
     function index($params = null) {
-        $this->my_session->authorize("canViewRoutingNumber");
+        $this->my_session->authorize("canViewRoutingNumberMenu");
         try {
             $crud = new grocery_CRUD();
             $crud->set_theme(TABLE_THEME);
@@ -29,15 +29,25 @@ class Routing_number extends CI_Controller {
                     ->display_as('creationDtTm', 'Creation Date & Time')
                     ->display_as('isActive', 'Is Active');
 
+            $crud->unset_add();
+            $crud->unset_edit();
             $crud->unset_delete();
 
             if (!ci_check_permission("canAddRoutingNumber")):
                 $crud->unset_add();
             endif;
-            
+
             if (!ci_check_permission("canEditRoutingNumber")):
                 $crud->unset_edit();
             endif;
+            
+            //$crud->unset_add_fields('createdBy');
+            
+            $crud->field_type('createdBy', 'hidden', $this->my_session->userId);
+            $crud->field_type('updatedBy', 'hidden', $this->my_session->userId);
+            
+            $crud->field_type('updateDtTm', 'hidden', date("Y-m-d H:i:s"));
+            $crud->field_type('creationDtTm', 'hidden', date("Y-m-d H:i:s"));
 
             $output = $crud->render();
             $output->css = "";
@@ -45,7 +55,7 @@ class Routing_number extends CI_Controller {
             $output->pageTitle = "Routing Number";
             $output->base_url = base_url();
 
-            $output->body_template = "crud/index.php";
+            $output->body_template = "routing_number/routing_list.php";
             $this->load->view("site_template.php", $output);
         } catch (Exception $e) {
             show_error($e->getMessage() . ' --- ' . $e->getTraceAsString());

@@ -3,7 +3,7 @@
 <div class="container" id="BankingModuleApp" data-ng-controller="BankingController">    
     <div style="margin-bottom: 15px">
         <div class="row">
-            <div class="col-xs-3 col-sm-3">
+            <!--<div class="col-xs-3 col-sm-3">
                 <div class="form-group">
                     <label>Service Type</label> 
                     <select class="form-control input-sm" ng-model="parent_code" ng-change="getRequest()">
@@ -13,19 +13,30 @@
                         <?php } ?>
                     </select>
                 </div>
-            </div>
+            </div>-->
+            
             <div class="col-xs-3 col-sm-3">
                 <div class="form-group">
                     <label>Service Type</label> 
                     <select class="form-control input-sm" ng-model="type_code" ng-change="getServiceRequest()">
                         <option value="">All Request</option>
-                        <option data-ng-repeat="i in child_list" value="{{i.serviceTypeCode}}">{{i.serviceName}}</option>
+                        <option data-ng-repeat="i in child_list" value="{{i.serviceTypeCode}}">{{i.parentServiceName}} - {{i.serviceName}}</option>
                     </select>
+                </div>
+            </div>
+            <div class="col-xs-3 col-sm-3">
+                <div class="form-group">
+                    <label style="display:block" class="hidden-xs">&nbsp; &nbsp;</label>
+                    <button class="btn btn-primary btn-sm" data-ng-click="getResultsPage(1)">
+                        <i class="glyphicon glyphicon-search"></i> Search
+                    </button>
                 </div>
             </div>
         </div>
     </div>
-
+    <div class="col-md-12 col-sm-12 text-right" data-ng-show="totalCount > 0">        
+        <span class="label label-primary"> Displaying: {{ ((per_page * currentPageNumber) - (per_page - 1))}} to {{ upper_range()}} of {{ totalCount}}</span>            
+    </div>
     <table class="table table-bordered table-hover table-condensed">
         <thead>
             <tr class="bg-primary">
@@ -37,18 +48,20 @@
                 <th>User Name</th>
                 <th>Contact No.</th>
                 <th>Reason</th>
+                <th>Remarks</th>
                 <th>Request Date</th>
+                <th>Status</th>
                 <th>Action</th>
             </tr>
         </thead>
         <tbody>
             <tr dir-paginate="item in banking_list | itemsPerPage: per_page track by $index"
-                total-items="totalCount" current-page="pagination.current">
+                total-items="totalCount" current-page="pagination.current" data-ng-class="{'bg-success': item.status2 == 1, 'bg-success': item.status1 == 1}">
                 <td>{{(per_page * (currentPageNumber - 1)) + ($index + 1)}}</td>
                 <td>{{ item.serviceName}}</td>
                 <td>{{ item.eblSkyId}}</td>
                 <td data-ng-if="type_code == 'lp'">
-                    {{item.userGroupName}} <button class="btn btn-xs btn-default pull-right" data-ng-click="showPackage(item.serviceId);"><i class="glyphicon glyphicon-eye-open"></i></button><br />
+                    {{item.userGroupName}} <button class="btn btn-xs btn-default pull-right hidden" data-ng-click="showPackage(item.serviceId);"><i class="glyphicon glyphicon-eye-open"></i></button><br />
                     <small style="display:none" id="lp-{{item.serviceId}}">
                         <b>oatMinTxnLim:</b> {{item.oatMinTxnLim}}, <b>oatMaxTxnLim:</b> {{item.oatMaxTxnLim}}, <b>oatDayTxnLim:</b> {{item.oatDayTxnLim}}, <b>oatNoOfTxn:</b> {{item.oatNoOfTxn}} <br />
                         <b>eatMinTxnLim:</b> {{item.eatMinTxnLim}}, <b>eatMaxTxnLim:</b> {{item.eatMaxTxnLim}}, <b>eatDayTxnLim:</b> {{item.eatDayTxnLim}}, <b>eatNoOfTxn:</b> {{item.eatNoOfTxn}} <br />
@@ -60,7 +73,9 @@
                 <td>{{ item.userName}}</td>
                 <td>{{ item.mobileNo}}</td>
                 <td>{{ item.reason}}</td>
+                <td>{{ item.remarks}}</td>
                 <td>{{ item.requestDtTm}}</td>
+                <td>{{ item.status1}}</td>
                 <td>
                     <div class="dropdown pull-right">
                         <button class="btn btn-primary btn-xs dropdown-toggle" type="button" data-toggle="dropdown">
@@ -68,14 +83,19 @@
                         </button>
                         <ul class="dropdown-menu">
                             <?php if (ci_check_permission("canEmailBankingRequest")): ?>
-                            <li>
+                            <li data-ng-if="item.typeCode != 'lp' && item.status1 == 0">
                                 <a href="<?= base_url() . "banking_service_request/processRequestById/" ?>{{item.serviceId}}">
                                     <i class="glyphicon glyphicon-envelope"></i> Email
                                 </a>
                             </li>  
+                            <li data-ng-if="item.typeCode == 'lp' && item.status2 == 0">
+                                <a href="<?=base_url().'client_registration/update_limit_package/'?>{{item.skyId}}?requestedId={{item.requestedAppsGroupId}}&serviceId={{item.serviceId}}">
+                                    <i class="glyphicon glyphicon-alert"></i> Update Limit Package
+                                </a>
+                            </li>
                             <?php endif;?>
                             <?php if (ci_check_permission("canActivateUserLimitPackage")): ?>
-                            <li data-ng-if="type_code == 'lp' && item.status1 == '0'">
+                            <li class="hidden" data-ng-if="type_code == 'lp' && item.status1 == '0'">
                                 <a style="cursor: pointer" data-ng-click="activateLimitPackage(item.serviceId)">
                                     <i class="glyphicon glyphicon-alert"></i> Activate Limit Package
                                 </a>
@@ -103,7 +123,7 @@ ci_add_js(asset_url() . 'app/service_request/banking_module.js');
 
 <script type="text/javascript" charset="utf-8">
     var app = app || {};
-
+    app.filterTypeCode = '<?=$this->input->get('typeCode',true)?>';
 </script>
 
 <?php if(true == false): ?>

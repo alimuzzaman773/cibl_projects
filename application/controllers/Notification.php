@@ -11,21 +11,25 @@ class Notification extends CI_Controller
     
     function index()
     {
-        //$this->my_session->authorize("canViewNotification");
+        $this->my_session->authorize("canViewNotification");
         try
         {
             /* This is only for the autocompletion */
             $crud = new grocery_CRUD();
             $crud->unset_jquery();
+           // $crud->unset_jquery_ui();
+            
             $crud->set_theme(TABLE_THEME);
             $crud->set_table("message");
+            $crud->order_by("executionTime", "DESC");
             
             $crud->set_subject('Notification');
             
-            $crud->required_fields(array('headLine','body', 'executionTime', 'receivers'));
+            $crud->required_fields(array('headLine','preview','body', 'executionTime', 'receivers'));
             
             $crud->set_rules("headLine", "Headline", "trim|xss_clean");
             $crud->set_rules("body", "Body", "trim|xss_clean");
+            $crud->set_rules("preview", "Preview", "trim|xss_clean|required");
                         
             $crud->unset_delete();
             if(!$this->my_session->checkPermission("canAddNotification")):
@@ -35,19 +39,39 @@ class Notification extends CI_Controller
             if(!$this->my_session->checkPermission("canEditNotification")):
                 $crud->unset_edit();
             endif;
+            
+            $crud->callback_add_field('executionTime', function () {
+                $cData['defaultValue'] = "";
+                $cData['defaultValueTime'] = '';
+                return $this->load->view('notification/executionTime.php', $cData, true);
+            });
+            
+            $crud->callback_edit_field('executionTime', function ($value, $primaryKey) {
+                $value = explode(" ", $value);
+                $cData['defaultValue'] = $value[0];
+                $cData['defaultValueTime'] = isset($value[1])? $value[1]: '';
+                
+                return $this->load->view('notification/executionTime.php', $cData, true);
+            });
+            
+            $crud->callback_before_update(array($this, 'set_updata_callback'));
+            $crud->callback_before_insert(array($this, 'set_insert_callback'));
              
             $crud->unset_texteditor("address");
             
-            $crud->columns('headLine','body','notifyImage', 'receivers', 'executionTime','completed');
+            $crud->columns('headLine','preview','body','notifyImage', 'receivers', 'executionTime','completed');
             $crud->display_as('notifyImage','Notification Image')
-                 ->display_as("executionTime", "Execution Time"); 
+                 ->display_as("executionTime", "Execution Time")
+                 ->display_as("preview", "Preview (<small>This will be displayed in mobile top bars</small>)"); 
             
             $time = date("Y-m-d H:i:s");
             
+            $crud->unset_texteditor('preview');
+            
             $crud->set_field_upload('notifyImage','assets/uploads/files');
             
-            $crud->add_fields('headLine','body','notifyImage', 'receivers', 'executionTime', 'isActive', 'updateDtTm', 'creationDtTm');
-            $crud->edit_fields('headLine','body','notifyImage', 'receivers', 'executionTime', 'isActive', 'updateDtTm');
+            $crud->add_fields('headLine','preview','body','notifyImage', 'receivers', 'executionTime', 'isActive', 'updateDtTm', 'creationDtTm');
+            $crud->edit_fields('headLine','preview','body','notifyImage', 'receivers', 'executionTime', 'isActive', 'updateDtTm');
             
             $receiversOptions = array("all", "segmented");
             
@@ -78,6 +102,7 @@ class Notification extends CI_Controller
     
     function users($messageId)
     {
+        $this->my_session->authorize("canAddNotificationUsers");
         if((int)$messageId <= 0):
             show_error("No message id defined");
             die();
@@ -96,6 +121,18 @@ class Notification extends CI_Controller
         $data['base_url'] = base_url();
         $data['body_template'] = "notification/users.php";
         $this->load->view("site_template.php", $data);
+    }
+    
+    function set_insert_callback($post_array) {
+        $post_array['executionTime'] = $post_array['executionTime']." ".$post_array['executionTimeField'];
+        unset($post_array['executionTimeField']);
+        return $post_array;
+    }
+
+    function set_updata_callback($post_array, $primary_key) {
+       $post_array['executionTime'] = $post_array['executionTime']." ".$post_array['executionTimeField'];
+       unset($post_array['executionTimeField']);
+       return $post_array;
     }
     
     function ajax_get_app_users()
@@ -208,7 +245,10 @@ class Notification extends CI_Controller
             //'notification' => $message,
             "registration_ids" => array(
                 'cwrNE0RM-TU:APA91bHkitG59y1DB9u9LLhwPjHCRyN4EbPCwUIvK7i2MQ7Rm56AyEvilhOEe7FMzbMmFesYc20ftD8jw6Y3_P00rtbafdfJjGjwnotuUAL-rrhsSbm8dYCe4LRTWxOby0dmXu05m0oq',
-                'ert3puQEj_4:APA91bFgzDN-HH0zv8k-afG2WICE_SHebKdqACGPvWdVcZxPehIRVFU3v-eDFTiMitq5EclPwPnQEkbqkgkEdJa8aazN5iC0-aSOeZKNR5pJnOl9wifuhCumcz50XHzgu6VVWl_Y2BpC'
+                'dLws6mE8NaM:APA91bHW0Dfl6zZa0JfqSmAL8Db7NcOmlh8DVtZE4CnVEPCFmmRDsU3XlRcaVRRjvEUmYOoE0jdyLU4jGIgdrXtIc9_VMbJ4cWD0qdIOypWtFHF3hxrG0qmciqBAvk9HG7MTEEwx9G_o',
+                'eIqsBMgYhE8:APA91bF0hXavpRVb91gWu-QLrR0rHNoG0RWazLy3JhCYyJbGKY9mDOnCjRyo9MsdX-yK9mxFhxTO4WoPXoFRe04k7BJN8_-4ePRYqFkpG-NuJER2ZMBjvCH658UmUOq5OLKt-5_bmSpO',
+                'c28GeVHa7Qo:APA91bHe2VEFv-bufSVqRjBeW7Qqco4jY0xGe7kue8GS_khBd5ULkU93Pp-8Kl2vyzNI4kAtMb8ZK8lqsL4RuYgHFqYd4SczEGI3TPnxT1f7IFayu8TJA20cNnPvyY3B_RS0nqiIbcqY',
+                'eIqsBMgYhE8:APA91bF0hXavpRVb91gWu-QLrR0rHNoG0RWazLy3JhCYyJbGKY9mDOnCjRyo9MsdX-yK9mxFhxTO4WoPXoFRe04k7BJN8_-4ePRYqFkpG-NuJER2ZMBjvCH658UmUOq5OLKt-5_bmSpO'
             ), //["device_token_1", "device_token_2"],
             'data' => $message
         );

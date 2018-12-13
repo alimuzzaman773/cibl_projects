@@ -22,11 +22,13 @@
                     <th>ID</th>
                     <th style="text-align: center" >Group Name</th>
                     <th style="text-align: center" >Own Account Transfer</th>
-                    <th style="text-align: center" >PBL Account Transfer</th>
+                    <th style="text-align: center" >EBL Account Transfer</th>
                     <th style="text-align: center" >Other Bank Transfer</th>
                     <th style="text-align: center" >Bills Pay</th>
                     <th style="text-align: center" >Active/Inactive</th>
                     <th style="text-align: center" >Status</th>
+                    <th style="text-align: center" >Checker Comment</th>
+                    <th style="text-align: center" >Checker Action</th>
                     <th style="text-align: center" >Action</th>
                 </tr>
             </thead>
@@ -52,13 +54,15 @@
                     <td>
                         <span data-ng-class="{'text-success': text.mcStatus == '1', 'text-danger': text.mcStatus == '0'}">{{text.mcStatus=='1' ? 'Approved' : 'Wait for approve'}}</span>
                     </td>
+                    <td>{{text.checkerActionComment}}</td>
+                    <td>{{text.checkerAction}}</td>
                     <td>
                         <div class="dropdown pull-right">
                             <button class="btn btn-primary btn-xs dropdown-toggle" type="button" data-toggle="dropdown">
                                 Action <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu">
-                                <?php if (ci_check_permission("canEditLimitPackgae")): ?>
+                                <?php if (ci_check_permission("canEditLimitPackage")): ?>
                                     <li>
                                         <a href="<?= base_url() ?>transaction_limit_setup_maker/editTransactionLimitPackage/{{text.appsGroupId}}/Edit">
                                             <i class="glyphicon glyphicon-edit"></i> Edit
@@ -66,14 +70,14 @@
                                     </li>
                                 <?php endif; ?>
 
-                                <?php if (ci_check_permission("canActiveLimitPackgae")): ?>
+                                <?php if (ci_check_permission("canActiveLimitPackage")): ?>
                                     <li data-ng-if="text.isActive == 0">
                                         <a data-ng-click="activate_deactivate(text, 'Active', 'packageActive');">
                                             <i class="glyphicon glyphicon-flash"></i> Active
                                         </a>
                                     </li> 
                                 <?php endif; ?>
-                                <?php if (ci_check_permission("canInactiveLimitPackgae")): ?>
+                                <?php if (ci_check_permission("canInactiveLimitPackage")): ?>
                                     <li data-ng-if="text.isActive == 1">
                                         <a data-ng-click="activate_deactivate(text, 'Inactive', 'packageInactive');">
                                             <i class="glyphicon glyphicon-flash"></i> Inactive

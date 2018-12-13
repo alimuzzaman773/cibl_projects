@@ -33,8 +33,8 @@ class Priority_products extends CI_Controller {
             $time = date("Y-m-d H:i:s");
             $creatorId = $this->my_session->userId;
 
-            $crud->add_fields('pageNumber', 'header', 'creationDtTm', 'updateDtTm');
-            $crud->edit_fields('pageNumber', 'header', 'updateDtTm');
+            $crud->add_fields('pageNumber', 'header', 'body', 'creationDtTm', 'updateDtTm');
+            $crud->edit_fields('pageNumber', 'header', 'body', 'updateDtTm');
 
             $crud->change_field_type('creationDtTm', 'hidden', $time);
             $crud->change_field_type('updateDtTm', 'hidden', $time);

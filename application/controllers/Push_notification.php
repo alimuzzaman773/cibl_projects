@@ -15,7 +15,8 @@ class Push_notification extends CI_Controller {
         $this->load->model('push_notification_model');
     }
 
-    public function index() {
+    public function index()
+    {
         $this->my_session->authorize("canViewNotificationSetup");
 
         $data['sentMessages'] = json_encode($this->push_notification_model->getAllMessages());
@@ -24,19 +25,20 @@ class Push_notification extends CI_Controller {
     }
 
     public function writeMessage() {
-        $moduleCodes = $this->session->userdata('contentSetupModules');
+        /*$moduleCodes = $this->session->userdata('contentSetupModules');
         $moduleCodes = explode("|", $moduleCodes);
         $index = array_search(notification, $moduleCodes);
         if ($index > -1) {
-        
+        */
 
         $data['appsUsers'] = json_encode($this->push_notification_model->getAllAppsUsersFroPush());
-            $this->output->set_template('theme2');
-            $this->load->view('push_notification/write_message.php', $data);
-        } else {
+            //$this->output->set_template('theme2');
+            $data['body_template'] = 'push_notification/write_message.php';
+            $this->load->view('site_template.php', $data);
+        /*} else {
             echo "not allowed";
             die();
-    }
+        }*/
     }
 
     public function sendMessage() {
@@ -62,7 +64,7 @@ class Push_notification extends CI_Controller {
 
         $message_array = array('message' => $data['headLine']);
 
-        $url = 'http://27.147.135.164/pbl_api/send_push_notification/sendPush';
+        $url = 'http://192.168.5.81/eblapi/send_push_notification/sendPush';
 
 
 

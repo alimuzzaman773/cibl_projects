@@ -32,7 +32,7 @@
         <tr>
             <th>SL No</th>
             <th>Customer ID</th>
-            <th>Apps ID</th>
+            <th>EBL Sky ID</th>
             <th>Mobile No</th>
             <th>Email ID</th>
             <th>Transaction Date</th>

@@ -17,8 +17,15 @@
         <td style="width: 120px"><b>Completed?</b></td>
         <td><?=$messageInfo->completed?></td>
     </tr>
+    <tr>
+        <td style="width: 120px"><b>Execution Time</b></td>
+        <td><?=$messageInfo->executionTime?></td>
+        <td style="width: 120px"></td>
+        <td></td>
+    </tr>
 </table>
 
+<?php if($messageInfo->receivers == "segmented"): ?>
 
 <div class="table-responsive" id="AppUserModule" data-ng-controller="AppUsersController as AppUsersController">
 
@@ -71,3 +78,5 @@ ci_add_js(asset_url()."app/notification.js")
 var app = app || {};
 app.messageInfo = <?=json_encode($messageInfo)?>;
 </script>
+
+<?php endif; ?>

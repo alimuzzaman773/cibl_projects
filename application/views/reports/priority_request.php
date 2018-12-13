@@ -22,7 +22,7 @@
             <th>SL No</th>
             <th>Service Name</th>
             <th>Reference No</th>
-            <th>Apps ID</th>
+            <th>Sky ID</th>
             <th>User Email</th>
             <th>Full Name</th>
             <th>Customer ID</th>

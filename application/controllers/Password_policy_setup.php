@@ -27,8 +27,8 @@ class Password_policy_setup extends CI_Controller {
             $crud->edit_fields('validationName', 'vCode', 'rule', 'notification', 'isActive');
             
             $crud->unset_delete();
-            $crud->unset_add();
-            $crud->unset_edit();
+            //$crud->unset_add();
+            //$crud->unset_edit();
 
             $output = $crud->render();
             $output->css = "";

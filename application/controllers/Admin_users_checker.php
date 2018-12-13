@@ -161,7 +161,7 @@ class Admin_users_checker extends CI_Controller {
     }
 
     public function checkUserInteraction($id, $makerActionDtTmPost, $checkerActionDtTmPost) {
-        $this->my_session->authorize("canApproveLimitPackage");
+        //$this->my_session->authorize("canApproveLimitPackage");
         $checkUserInteraction = 1;
         $actualdata = $this->admin_users_model_checker->getUserById($id);
         $makerActionDtTm = $actualdata['makerActionDt'] . " " . $actualdata['makerActionTm'];

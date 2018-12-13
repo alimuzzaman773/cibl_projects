@@ -23,6 +23,7 @@ class Banking_service_request extends CI_Controller {
     function get_child_service() {
         $this->my_session->authorize("canViewBankingRequest");
         $typeId = $this->input->get("type_code", true);
+        
         $result = $this->banking_service_request_model->getChildService($typeId);
         $data["child_list"] = array();
         if ($result) {
@@ -39,7 +40,8 @@ class Banking_service_request extends CI_Controller {
         $params['offset'] = (int) $this->input->get("offset", true);
         $params['get_count'] = (bool) $this->input->get("get_count", true);
         $params['type_code'] = $this->input->get("type_code", true);
-
+        $params['serviceTypeCode'] = $this->input->get("serviceTypeCode", true);
+                
         $data['total'] = array();
         $data['banking_list'] = array();
 
@@ -84,6 +86,8 @@ class Banking_service_request extends CI_Controller {
         $strings['FPenableDisable'] = "userName,accCardNo,foreignPart,pFromDt,pToDt,referenceNo,requestDtTm,eblSkyId,clientId,userMobNo1,userEmail";
         $strings['duplicateStatement'] = "userName,accCardNo,pFromDt,pToDt,collectionMethod,referenceNo,requestDtTm,eblSkyId,clientId,userMobNo1,userEmail";
         $strings['limitConversion'] = "userName,accCardNo,convertMyLimit,convAmnt,referenceNo,requestDtTm,eblSkyId,clientId,userMobNo1,userEmail";
+        
+        $strings['limitPackage'] = "userName,eblSkyId,userMobNo1,userEmail";
 
         $replaceArray = array('skyId' => 'Sky ID',
             'userName' => 'User Name',
@@ -185,13 +189,15 @@ class Banking_service_request extends CI_Controller {
                     $mailData['body'] .= "<p>" . $replaceArray[$key] . ':  ' . $value . "<p>";
                 }
             }
-        } else if ($request['typeCode'] == "0805") { // Card or Pin Replacement
+        } else if ($request['typeCode'] == "0805" 
+                || in_array($request['typeCode'], array('PP01','PP02','PP03'))) { // Card or Pin Replacement
             foreach ($request as $key => $value) {
                 if (strpos($strings['cardPinReplacement'], $key) > - 1) {
                     $mailData['body'] .= "<p>" . $replaceArray[$key] . ':  ' . $value . "<p>";
                 }
             }
-        } else if ($request['typeCode'] == "0807") {
+        } else if ($request['typeCode'] == "0807"
+                || in_array($request['typeCode'], array('PP01','PP02','PP03'))) {
             foreach ($request as $key => $value) {
                 if (strpos($strings['FPenableDisable'], $key) > - 1) {
                     $mailData['body'] .= "<p>" . $replaceArray[$key] . ':  ' . $value . "<p>";
@@ -203,7 +209,8 @@ class Banking_service_request extends CI_Controller {
                     $mailData['body'] .= "<p>" . $replaceArray[$key] . ':  ' . $value . "<p>";
                 }
             }
-        } else if ($request['typeCode'] == "0809") {
+        } else if ($request['typeCode'] == "0809"
+                || in_array($request['typeCode'], array('PP01','PP02','PP03'))) {
             foreach ($request as $key => $value) {
                 if (strpos($strings['limitConversion'], $key) > - 1) {
                     $mailData['body'] .= "<p>" . $replaceArray[$key] . ':  ' . $value . "<p>";
@@ -218,6 +225,30 @@ class Banking_service_request extends CI_Controller {
                     $mailData['body'] .= "<p>" . $replaceArray[$key] . ':  ' . $value . "<p>";
                 }
             }
+        }
+        else if($request['typeCode'] == "lp"){
+            foreach ($request as $key => $value) {
+                if (strpos($strings['limitPackage'], $key) > - 1) {
+                    $mailData['body'] .= "<p>" . $replaceArray[$key] . ':  ' . $value . "<p>";
+                }
+            }
+            
+            $this->db->reset_query();
+            $aR = $this->db //->where("isActive", 1)
+                           ->get('apps_users_group')->result();
+            
+            $ag = array();
+            foreach($aR as $a):
+                $ag[$a->appsGroupId] = $a;
+            endforeach;
+            
+            $mailData['body'] .= '<p>Existing Limit Package: '.$ag[$request['userAppsGroupId']]->userGroupName.'</p>';
+            $mailData['body'] .= '<p>New Limit Package: '.$ag[$request['appsGroupId']]->userGroupName.'</p>';            
+        }
+        else if($request['typeCode'] == "PP01" ||
+                $request['typeCode'] == "PP02" ||
+                $request['typeCode'] == "PP03"){
+            
         }
 
         $mailData['serviceId'] = $id;
@@ -241,10 +272,13 @@ class Banking_service_request extends CI_Controller {
 
         $isSuccess = $this->common_model->send_service_mail($maildata);
 
-        if ($isSuccess) {
+        if ($isSuccess['success']) {
             $this->banking_service_request_model->statusChange($serviceId, $maildata, $bodyInstruction);
             redirect('banking_service_request/getRequests');
         }
+        
+        echo "Could not send email due to :: ".@$isSuccess['msg'];
+        
     }
     
     function activate_limit_package()

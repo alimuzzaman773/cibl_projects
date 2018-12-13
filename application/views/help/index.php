@@ -1,2 +1,2 @@
-<h2 class="title-underlined">App Contents</h2>
+<h2 class="title-underlined">Help</h2>
 <?= $output ?>

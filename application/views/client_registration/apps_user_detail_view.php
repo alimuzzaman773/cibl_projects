@@ -23,7 +23,12 @@
         <th align="left" scope="row">Client ID</th>
         <td><?= $userInfo['clientId'] ?></td>
     </tr>
-
+    
+    <tr>
+        <th align="left" scope="row">Prepaid ID</th>
+        <td><?= $userInfo['prepaidId'] ?></td>
+    </tr>
+    
     <tr>
         <th align="left" scope="row">User Group Name</th>
         <td><?= $userInfo['userGroupName'] ?></td>
@@ -119,7 +124,7 @@
 <div id="showAccounts" data-bind="visible: accounts().length > 0" class="table-responsive">
     <table class="table table-striped table-bordered">
         <thead>
-            <tr>
+            <tr class="bg-primary">
                 <th style="text-align:center">Account Number</th>
                 <th style="text-align:center">Account Type</th>
                 <th style="text-align:center">Product Name</th>
@@ -148,9 +153,9 @@
 <div id="showAccounts" data-bind="visible: devices().length > 0">
     <table class="table table-striped table-bordered">
         <thead>
-            <tr>
+            <tr class="bg-primary">
                 <th style="text-align:center">ESB ID</th>
-                <th style="text-align:center">IMEI No.</th>
+                <th style="text-align:center">Identifier</th>
                 <th style="text-align:center">Is Verified</th>
                 <th style="text-align:center">Verify Date</th>
             </tr>
@@ -158,7 +163,7 @@
         <tbody data-bind="foreach: devices">
             <tr>
                 <td style="text-align:center" data-bind="text:eblSkyId"></td>
-                <td style="text-align:center" data-bind="text:imeiNo"></td>
+                <td style="text-align:center" data-bind="text:identifier"></td>
                 <td style="text-align:center" data-bind="text:isVaryfied, style:{color: verifyColor}"></td>
                 <td style="text-align:center" data-bind="text:varyfiedDtTm"></td>
             </tr>

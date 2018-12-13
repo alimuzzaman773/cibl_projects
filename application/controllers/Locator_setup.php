@@ -19,7 +19,7 @@ class Locator_setup extends CI_Controller {
         try {
             $crud = new grocery_CRUD();
             $crud->set_theme(TABLE_THEME);
-            $crud->set_subject('ATM & Branch Locator');
+            $crud->set_subject('Location');
             $crud->set_table('atms');
             $crud->required_fields('eblNearYou', 'eblDivision', 'ATMName', 'AddressLine1', 'AddressLine2', 'City');
 
@@ -28,8 +28,8 @@ class Locator_setup extends CI_Controller {
             $time = date("Y-m-d H:i:s");
             $creatorId = $this->my_session->userId;
 
-            $crud->add_fields('eblNearYou', 'branchCode', 'ATMName', 'eblDivision', 'AddressLine1', 'AddressLine2', 'ManagerName', 'Email', 'Mobile', 'PriorityManager', 'PriorityEmail', 'PriorityMobile', 'creationDtTm', 'updateDtTm');
-            $crud->edit_fields('eblNearYou', 'branchCode', 'ATMName', 'eblDivision', 'AddressLine1', 'AddressLine2', 'ManagerName', 'Email', 'Mobile', 'PriorityManager', 'PriorityEmail', 'PriorityMobile', 'updateDtTm');
+            $crud->add_fields('eblNearYou', 'branchCode', 'ATMName', 'eblDivision', 'Priority', 'AddressLine1', 'AddressLine2', 'ManagerName', 'Email', 'Mobile', 'PriorityManager', 'PriorityEmail', 'PriorityMobile', 'creationDtTm', 'updateDtTm');
+            $crud->edit_fields('eblNearYou', 'branchCode', 'ATMName', 'eblDivision', 'Priority','AddressLine1', 'AddressLine2', 'ManagerName', 'Email', 'Mobile', 'PriorityManager', 'PriorityEmail', 'PriorityMobile', 'updateDtTm');
 
             $crud->change_field_type('creationDtTm', 'hidden', $time);
             $crud->change_field_type('updateDtTm', 'hidden', $time);
@@ -62,15 +62,23 @@ class Locator_setup extends CI_Controller {
             if (!ci_check_permission("canAddLocatorSetup")):
                 $crud->unset_add();
             endif;
-
             if (!ci_check_permission("canEditLocatorSetup")):
                 $crud->unset_edit();
+            endif;
+            if (!ci_check_permission("canDetailsLocatorSetup")):
+                $crud->unset_read();
+            endif;
+            if (!ci_check_permission("canExportLocatorSetup")):
+                $crud->unset_export();
+            endif;
+            if (!ci_check_permission("canPrintLocatorSetup")):
+                $crud->unset_print();
             endif;
 
             $output = $crud->render();
             $output->css = "";
             $output->js = "";
-            $output->pageTitle = "ATM & Branch Locator";
+            $output->pageTitle = "Locations";
             $output->base_url = base_url();
 
             $output->body_template = 'locator_setup/index.php';

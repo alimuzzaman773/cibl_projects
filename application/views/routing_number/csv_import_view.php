@@ -1,25 +1,50 @@
+<h1 class="title-underlined">
+    Routing Number Import
+    <a href="<?php echo base_url(); ?>routing_number" class="btn btn-success pull-right"><span>Back to List</span></a>
+</h1>
+<form class="form-inline" method="post" action="<?php echo base_url() ?>csv_import/importcsv" enctype="multipart/form-data">
+    <div class="form-group">
+        <input class="form-control" type="file" name="userfile" id="userFile" />
+        <button type="button" class="btn btn-primary" onclick="return app.uploadCsv();">
+            Upload
+        </button>        
+    </div>
+</form>
 
-
-<div class="container" style="margin-top:50px">    
-
-            <h3>Import CSV File</h3>
-
-            <hr>
-                <form method="post" action="<?php echo base_url() ?>csv_import/importcsv" enctype="multipart/form-data">
-                    <input type="file" name="userfile" ><br><br>
-                    <input type="submit" name="submit" value="UPLOAD" class="btn btn-primary">
-                </form>
-
-            <a href="<?php echo base_url(); ?>routing_number" class="btn btn-success"><i class="icon-plus icon-white"></i><span>Back to List</span></a>
-            <hr>
-
- 
-            <?php if (isset($error)): ?>
-                <div class="alert alert-error"><?php echo $error; ?></div>
-            <?php endif; ?>
-            <?php if ($this->session->flashdata('success') == TRUE): ?>
-                <div class="alert alert-success"><?php echo $this->session->flashdata('success'); ?></div>
-            <?php endif; ?>
-
-</div>
-
+<script type="text/javascript">
+    var app = app || {};
+    app.uploadCsv = function(){
+        var file_data = $('#userFile').prop('files')[0];
+        var form_data = new FormData();
+        form_data.append("userfile", file_data);        
+        app.showModal();
+        $.ajax({
+            url: app.baseUrl + 'csv_import/importcsv',
+            dataType: 'json',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: 'post',
+            success: function (data) {    
+                app.hideModal();
+                if(data.success){
+                    var $el = $('#userFile');
+                    $el.wrap('<form>').closest('form').get(0).reset();
+                    $el.unwrap();
+                    
+                    alert(data.msg);
+                    window.location = app.baseUrl + "routing_number"
+                }else {
+                    alert(data.msg)
+                }
+            },
+            error : function(data){
+                app.hideModal();
+                console.log(data);
+                alert("There was a problem, please try again later");
+            }
+        });
+        return false
+    };
+</script>

@@ -53,8 +53,15 @@
                 <th align="left" scope="row">Amount Flag</th>
                 <td><input class="form-control input-sm" type="number" min="0" max="1" name="amountMatch" id="amountMatch" value="<?= $billerData['amountMatch'] ?>" /></td>
             </tr>
+            <tr>
+                <th align="left" scope="row">Merchant ID</th>
+                <td>
+                    <input class="form-control input-sm"  type="text" min="0" max="1" name="merchantId" id="merchantId" value="<?= $billerData['merchantId'] ?>" />
+                    <small>Please provide merchant id as it will be used in card related debit action</small>
+                </td>
+            </tr>
             <tr>                       
-                <th align="left" scope="">Select Bille Type*</th>
+                <th align="left" scope="">Select Biller Type*</th>
                 <td>
                     <select id="billTypeCode" class="form-control input-sm" name="billTypeCode" required>
                         <option value="">Select a bill type</option>                      

@@ -6,61 +6,42 @@ class Admin_users_model_maker extends CI_Model {
         parent::__construct();
     }
 
-    public function getAllAdminUsers($p) {
-
-        $id = $this->my_session->adminUserId;
-
-        if (isset($p['get_count']) && (int) $p['get_count'] > 0):
-            $this->db->select('count(*) as total', false);
-        else:
-            $this->db->select('admin_users_mc.*, admin_users_group.userGroupName');
-        endif;
-
-        $this->db->from('admin_users_mc');
-        
-        $this->db->join('admin_users_group', 'admin_users_mc.adminUserGroup = admin_users_group.userGroupId', "left");
-        
-        $this->db->where('(admin_users_mc.adminUserId != 1 AND admin_users_mc.adminUserId != ' . $id . ') AND 
-                          (admin_users_mc.makerActionBy = ' . $id . ' OR admin_users_mc.mcStatus = 1)');
-
-        if (isset($p['user_name']) && trim($p['user_name']) != "") {
-            $this->db->like("admin_users_mc.adminUserName", $p['user_name'], "both");
-        }
-
-        if (isset($p['group_id']) && (int)$p['group_id'] > 0) {
-            $this->db->where("admin_users_mc.adminUserGroup", $p['group_id']);
-        }
-
-        if (isset($p['email']) && trim($p['email']) != "") {
-            $this->db->where('admin_users_mc.email', $p['email']);
-        }
-        
-        if (isset($p['lock_status']) && (int) $p['lock_status'] <= 1) {
-            $this->db->where("admin_users_mc.isLocked", $p['lock_status']);
-        }
-
-        if (isset($p['limit']) && (int) $p['limit'] > 0) {
-            $offset = (isset($p['offset']) && $p['offset'] != null) ? (int) $p['offset'] : 0;
-            $this->db->limit($p['limit'], $offset);
-        }
-
-        $query = $this->db->get();
-        return $query->num_rows() > 0 ? $query : false;
-    }
-
     public function getAllUsers() {
 
         $id = $this->my_session->adminUserId;
 
         $this->db->select('admin_users_mc.*, admin_users_group.userGroupName');
 
-        $this->db->where('(admin_users_mc.adminUserId != 1 AND admin_users_mc.adminUserId != ' . $id . ') AND 
-                          (admin_users_mc.makerActionBy = ' . $id . ' OR admin_users_mc.mcStatus = 1)');
+        /*$this->db->where('(admin_users_mc.adminUserId != 1 AND admin_users_mc.adminUserId != ' . $id . ') AND 
+                          (admin_users_mc.makerActionBy = ' . $id . ' OR admin_users_mc.mcStatus = 1)');*/
 
         $this->db->from('admin_users_mc');
-        $this->db->join('admin_users_group', 'admin_users_mc.adminUserGroup = admin_users_group.userGroupId');
+        $this->db->join('admin_users_group', 'admin_users_mc.adminUserGroup = admin_users_group.userGroupId', 'left');
+        $this->db->where_in('admin_users_mc.mcStatus', array(1,2));
         $query = $this->db->get();
         return $query->result();
+    }
+    
+    function checkPasswordPolicy($password)
+    {
+        $result = $this->db->get(TBL_VALIDATION)->result();
+        foreach($result as $r):
+            $regEx = $r->rule;
+            if((int)$r->match == 0):
+                $regEx = '/^'.$r->rule.'$/';
+            endif;
+            $match = preg_match($regEx, $password);
+            if(!$match):
+                return array(
+                    'success' => false,
+                    'msg' => $r->notification,
+                    'test' => $regEx
+                );
+            endif;
+        endforeach;
+        return array(
+            'success' => true
+        );
     }
 
     public function getUserByName($data) {
@@ -85,7 +66,7 @@ class Admin_users_model_maker extends CI_Model {
         $query = $this->db->get();
         return $query->row_array();
     }
-
+    
     public function checkUsernamePassword($data) {
         $this->db->select('admin_users.*, admin_users_group.*');
         $this->db->from('admin_users');
@@ -94,7 +75,7 @@ class Admin_users_model_maker extends CI_Model {
         $this->db->where('admin_users.isActive', 1);
         $this->db->where('admin_users_group.isActive', 1);
         $query = $this->db->get();
-        return $query->num_rows() > 0 ? $query : false;
+        return $query->num_rows() > 0 ?$query : false;
     }
 
     public function getUserEmail($username, $email) {
@@ -120,7 +101,7 @@ class Admin_users_model_maker extends CI_Model {
     }
 
     public function getAllGroups() {
-        $this->db->where('userGroupId !=', 1);
+        //$this->db->where('userGroupId !=', 1);
         $this->db->where('isActive =', 1);
         $query = $this->db->get('admin_users_group');
         return $query->result();

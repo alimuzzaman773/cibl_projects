@@ -13,7 +13,7 @@ class Log extends CI_Controller {
         $this->load->library('session');
         $this->load->library('grocery_CRUD');
     }
-    
+
     public function _crud_view($output = null) {
         $this->load->view('default_view.php', $output);
     }

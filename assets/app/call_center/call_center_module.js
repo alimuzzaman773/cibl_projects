@@ -26,11 +26,11 @@ CallCenterModuleApp.controller('CallCenterController', ['$scope', '$http', '$rou
 
         $scope.user_list = [];
         $scope.totalCount = 0;
-        $scope.per_page = 7;
+        $scope.per_page = 20;
         $scope.currentPageNumber = 1;
         $scope.uid = $routeParams.uid;
         $scope.user = {};
-        
+
         $scope.resetSkyId = null;
         $scope.otp_channel_pin = 'sms';
 
@@ -55,6 +55,21 @@ CallCenterModuleApp.controller('CallCenterController', ['$scope', '$http', '$rou
         $scope.pageChanged = function (newPage) {
             $scope.getResultsPage(newPage);
         };
+        
+        $scope.searchParams = {
+            filter_by: "",
+            search : ''
+        };
+        
+        $scope.resetSearch = function () {
+            $scope.searchParams = {
+                filter_by: "",
+                search : ''
+            };
+
+            $scope.getResultsPage(1);
+            return false;
+        };
 
         $scope.getResultsPage = function (pageNumber, childId) {
             var $params = {
@@ -62,7 +77,16 @@ CallCenterModuleApp.controller('CallCenterController', ['$scope', '$http', '$rou
                 offset: $scope.per_page * (pageNumber - 1),
                 get_count: true
             };
+            
+            if($scope.searchParams.filter_by != '')
+            {
+                $params.filter_by = $scope.searchParams.filter_by;
+            }
 
+            if($scope.searchParams.search != '')
+            {
+                $params.search = $scope.searchParams.search;
+            }
             app.showModal();
             $http({method: 'get', url: app.baseUrl + 'api/call_center/user_list', params: $params})
                     .then(function (response) {
@@ -104,40 +128,26 @@ CallCenterModuleApp.controller('CallCenterController', ['$scope', '$http', '$rou
             });
             return false;
         };
-        
-        $scope.approveUserChecker = function (userId) 
-        {
-            console.log("asdasdas");
-           if(!confirm("Do you really want to activate this user for maker action?")){
-                return false;
-            }
-            
-            app.showModal();
-            $http({method: 'post', url: app.baseUrl + 'api/call_center/user_approve_checker/' + userId})
-            .success(function (data) {
-                app.hideModal();
-                if (data.success == false) {
-                    alert(data.msg);
-                    return false;
-                }
-                window.location.href = app.baseUrl + "call_center/#/user_list";
-            })
-            .error(function () {
-                app.hideModal();
-                alert("There was a problem, please try again.")
-            });
-            return false; 
-        };
 
+        $scope.user = {
+            appsGroupId : 0
+        };
         $scope.otp_channel = 'email';
         $scope.approveUser = function (userId) 
         {
+            console.log($scope.user.appsGroupId);
+            if($scope.user.appsGroupId <= 0){
+                //alert("Please select a limit package");
+                //return false;
+            }
+            
             if(!confirm("Do you really want to activate this user?")){
                 return false;
             }
             
             var $pData = {
-                otp_channel : jQuery("#otp_channel").val()
+                otp_channel : jQuery("#otp_channel").val(),
+                appsGroupId : $scope.user.appsGroupId
             };
             
             app.showModal();
@@ -148,7 +158,7 @@ CallCenterModuleApp.controller('CallCenterController', ['$scope', '$http', '$rou
                     alert(data.msg);
                     return false;
                 }
-                window.location.href = app.baseUrl + "call_center/#/user_list";
+                window.location.href = app.baseUrl + "client_registration/update_limit_package/" + $scope.user.skyId;
             })
             .error(function () {
                 app.hideModal();
@@ -214,13 +224,15 @@ CallCenterModuleApp.controller('CallCenterController', ['$scope', '$http', '$rou
             });
             return false;
         };
+        
+        $scope.appsGroupId = 0;
+        $scope.appsGroupList = [];
 
         $scope.init = function () {
+            $scope.appsGroupList = app.appsUserGroups;
+            $scope.getResultsPage(1);
             if ($routeParams.uid !== undefined) {
                 $scope.get_user_info();
-            }
-            else{
-                $scope.getResultsPage(1);                
             }
         };
         $scope.init();

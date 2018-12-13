@@ -35,11 +35,15 @@ class Banking_service_request_model extends CI_Model {
     }
 
     function getChildService($serviceId) {
-        $query = $this->db->select("*")
-                ->from("service_type")
-                ->where("isActive", 1)
-                ->where("pServiceTypeCode", $serviceId)
-                ->get();
+        $this->db->select("st.*, stp.serviceName as parentServiceName",false)
+                 ->from("service_type st")
+                 ->join("service_type stp", "stp.serviceTypeCode = st.pServiceTypeCode", 'left')   
+                 ->where("st.isActive", 1)
+                 //->where("pServiceTypeCode", $serviceId)
+                 ->where("st.pServiceTypeCode <> '0'", NULL,false)
+                 ->order_by("stp.serviceName, st.serviceName");
+        
+        $query = $this->db->get();
         return $query->num_rows() > 0 ? $query : false;
     }
 
@@ -94,7 +98,7 @@ class Banking_service_request_model extends CI_Model {
             $this->db->select("COUNT(sb.serviceId) as total");
         } else {
             $this->db->select('sb.serviceId, sb.skyId,sb.typeCode,sb.referenceNo,sb.mobileNo,
-                           sb.reason,sb.requestDtTm,sb.status1,au.userName,au.eblSkyId,st.serviceName,
+                           sb.reason,sb.requestDtTm,sb.status1,sb.status2,sb.appsGroupId as requestedAppsGroupId,au.userName,au.eblSkyId,st.serviceName,
                            ag.userGroupName, 
                            ag.oatMinTxnLim, ag.oatMaxTxnLim, ag.oatDayTxnLim, ag.oatNoOfTxn, ag.oatEffectiveDate,
                            ag.pbMinTxnLim, ag.pbMaxTxnLim, ag.pbDayTxnLim, ag.pbNoOfTxn, ag.pbEffectiveDate,
@@ -111,6 +115,10 @@ class Banking_service_request_model extends CI_Model {
         if (isset($params['type_code']) && trim($params['type_code']) != "") {            
             $this->db->where("sb.typeCode", $params['type_code']);
         }
+        
+        if(isset($params['serviceTypeCode']) && trim($params['serviceTypeCode']) != ''):
+            $this->db->where("st.serviceTypeCode", $params['serviceTypeCode']);
+        endif;
 
         $this->db->order_by("sb.serviceId", "desc");
 
@@ -129,14 +137,15 @@ class Banking_service_request_model extends CI_Model {
                            apps_users.clientId,
                            apps_users.userMobNo1,
                            apps_users.userEmail,
+                           apps_users.appsGroupId as userAppsGroupId,
                            service_request_bank.*,
                            service_type.serviceName');
 
 
         $this->db->from('service_request_bank');
-        $this->db->join('service_type', 'service_request_bank.typeCode = service_type.serviceTypeCode');
-        $this->db->join('apps_users', 'service_request_bank.skyId = apps_users.skyId');
-        $this->db->where("service_request_bank.serviceId = '$id'");
+        $this->db->join('service_type', 'service_request_bank.typeCode = service_type.serviceTypeCode', 'left');
+        $this->db->join('apps_users', 'service_request_bank.skyId = apps_users.skyId', 'left');
+        $this->db->where("service_request_bank.serviceId",$id);
         $query = $this->db->get();
         return $query->row_array();
     }
@@ -152,13 +161,13 @@ class Banking_service_request_model extends CI_Model {
                 $row = $queryInstruction->row();
                 $previousInstruction = $row->mailBodyInstruction;
             }
-            $data['mailBodyInstruction'] = $previousInstruction . "<br>" . $dateTime . "<br>" . $this->session->userdata('fullName') . "<br>" . $bodyInstruction;
+            $data['mailBodyInstruction'] = $previousInstruction . "<br>" . $dateTime . "<br>" . $this->my_session->userInfo['fullName'] . "<br>" . $bodyInstruction;
         }
 
 
         $data['status1'] = 1;
         $data['updateDtTm'] = $dateTime;
-        $data['updatedBy'] = $this->session->userdata('adminUserId');
+        $data['updatedBy'] = $this->my_session->userId;
         $this->db->where('serviceId', $id);
         $this->db->update('service_request_bank', $data);
 
@@ -213,7 +222,7 @@ class Banking_service_request_model extends CI_Model {
                         $mailBccArr = array_diff($mailBccArr, [$result['receivedMail']]);
                     }
                     $updateArr['updatedDtTm'] = date("Y-m-d G:i:s");
-                    $updateArr['updatedBy'] = $this->session->userdata('adminUserId');
+                    $updateArr['updatedBy'] = $this->my_session->userId;
                     $this->db->where('bankingRequestMailId', $result['bankingRequestMailId']);
                     $this->db->update('banking_request_mail', $updateArr);
                     $mailArr = array_diff($mailArr, [$result['receivedMail']]);
@@ -242,8 +251,8 @@ class Banking_service_request_model extends CI_Model {
                         $data['bccCounter'] = 1;
                     }
 
-                    $data['createdBy'] = $this->session->userdata('adminUserId');
-                    $data['updatedBy'] = $this->session->userdata('adminUserId');
+                    $data['createdBy'] = $this->my_session->userId;
+                    $data['updatedBy'] = $this->my_session->userId;
                     $data['createdDtTm'] = $dateTime;
                     $data['updatedDtTm'] = $dateTime;
                     $bankingReqMailArr[] = $data;
@@ -267,8 +276,8 @@ class Banking_service_request_model extends CI_Model {
                 if (in_array($mailArr[$i], $mailBccArr)) {
                     $data['bccCounter'] = 1;
                 }
-                $data['createdBy'] = $this->session->userdata('adminUserId');
-                $data['updatedBy'] = $this->session->userdata('adminUserId');
+                $data['createdBy'] = $this->my_session->userId;
+                $data['updatedBy'] = $this->my_session->userId;
                 $data['createdDtTm'] = $dateTime;
                 $data['updatedDtTm'] = $dateTime;
                 $bankingReqMailArr[] = $data;

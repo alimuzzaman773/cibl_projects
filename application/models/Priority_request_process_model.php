@@ -39,7 +39,7 @@ class Priority_request_process_model extends CI_Model {
         if (isset($params['count']) && $params['count'] == true) {
             $this->db->select("COUNT(serviceRequestID) as total");
         } else {
-            $this->db->select('service_request.serviceRequestID,
+           $this->db->select('service_request.serviceRequestID,
                            service_request.typeCode,
                            service_request.referenceNo,
                            service_request.name,
@@ -48,41 +48,23 @@ class Priority_request_process_model extends CI_Model {
                            service_request.requestDtTm,
                            service_request.status,
                            service_type.serviceName,
-                           apps_users.eblSkyId', FALSE);
+                           apps_users.eblSkyId',FALSE);
         }
-
+        
         $this->db->from('service_request');
         $this->db->join('service_type', 'service_request.typeCode = service_type.serviceTypeCode', "inner");
-        $this->db->join('apps_users', 'service_request.skyId = apps_users.skyId', "left");
+        $this->db->join('apps_users', 'service_request.skyId = apps_users.skyId',"left");
 
         if (isset($params['type_code']) && trim($params['type_code']) != "") {
             $this->db->where("typeCode", $params['type_code']);
         }
-
-        if (isset($params['apps_id']) &&  trim($params['apps_id']) != "") {
-            $this->db->where("apps_users.eblSkyId", $params['apps_id']);
-        }
-
-        if (isset($params['reference_no']) && trim($params['reference_no']) != "") {
-            $this->db->where("service_request.referenceNo", $params['reference_no']);
-        }
-
-        if (isset($params['customer_name']) && trim($params['customer_name']) != "") {
-            $this->db->like("service_request.name", $params['customer_name'], "both");
-        }
-
-        if (isset($params['mobile_no']) &&  trim($params['mobile_no']) != "") {
-            $this->db->where("service_request.contactNo", $params['mobile_no']);
-        }
+        $this->db->order_by("serviceRequestID", "desc");
 
         if (isset($params['limit']) && (int) $params['limit'] > 0) {
             $offset = (isset($params['offset'])) ? $params['offset'] : 0;
             $this->db->limit($params['limit'], $offset);
         }
-
-        $this->db->order_by("serviceRequestID", "desc");
-
-
+        
         $query = $this->db->get();
         return $query->num_rows() > 0 ? $query : false;
     }
@@ -97,7 +79,7 @@ class Priority_request_process_model extends CI_Model {
                 $row = $queryInstruction->row();
                 $previousInstruction = $row->mailBodyInstruction;
             }
-            $data['mailBodyInstruction'] = $previousInstruction . "<br>" . $dateTime . "<br>" . $this->session->userdata('fullName') . "<br>" . $bodyInstruction;
+            $data['mailBodyInstruction'] = $previousInstruction . "<br>" . $dateTime . "<br>" . $this->my_session->userInfo['fullName'] . "<br>" . $bodyInstruction;
         }
 
 

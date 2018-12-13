@@ -13,7 +13,7 @@ class Validation_setup extends CI_Controller {
     }
 
     function index($params = null) {
-        $this->my_session->authorize("canViewPasswordPolicy");
+        $this->my_session->authorize("canViewPasswordPolicyMenu");
         try {
             $crud = new grocery_CRUD();
             $crud->set_theme(TABLE_THEME);
@@ -32,11 +32,11 @@ class Validation_setup extends CI_Controller {
             $time = date("Y-m-d H:i:s");
             $creatorId = $this->my_session->userId;
 
-            $crud->add_fields('validationGroupName', 'message', 'example', 'wrongAttempts', 'passHistorySize', 'passExpiryPeriod', 'warningPeriod', 'hibernationPeriod', 'pinExpiryPeriod', 'makerAction', 'creationDtTm', 'updateDtTm');
-            $crud->edit_fields('validationGroupName', 'message', 'example', 'wrongAttempts', 'passHistorySize', 'passExpiryPeriod', 'warningPeriod', 'hibernationPeriod', 'pinExpiryPeriod', 'makerAction', 'updateDtTm');
+            $crud->add_fields('validationGroupName', 'message', 'example', 'wrongAttempts', 'passHistorySize', 'passExpiryPeriod', 'warningPeriod', 'hibernationPeriod', 'pinExpiryPeriod', 'vCodes', 'makerAction', 'creationDtTm');
+            $crud->edit_fields('validationGroupName', 'message', 'example', 'wrongAttempts', 'passHistorySize', 'passExpiryPeriod', 'warningPeriod', 'hibernationPeriod', 'pinExpiryPeriod', 'vCodes', 'makerAction');
 
             $crud->change_field_type('creationDtTm', 'hidden', $time);
-            $crud->change_field_type('updateDtTm', 'hidden', $time);
+            //$crud->change_field_type('updateDtTm', 'hidden', $time);
             $crud->change_field_type('createdBy', 'hidden', $creatorId);
             $crud->change_field_type('updatedBy', 'hidden', $creatorId);
             $crud->field_type("isActive", "hidden");

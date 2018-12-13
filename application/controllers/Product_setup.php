@@ -18,7 +18,7 @@ class Product_setup extends CI_Controller {
         try {
             $crud = new grocery_CRUD();
             $crud->set_theme(TABLE_THEME);
-            $crud->set_subject('Product & Services');
+            $crud->set_subject('Product');
             $crud->set_table(TBL_PRODUCT_SETUP);
 
             $crud->required_fields('parentName', 'childName', 'productName');
@@ -30,8 +30,8 @@ class Product_setup extends CI_Controller {
             $time = date("Y-m-d H:i:s");
             $creatorId = $this->my_session->userId;
 
-            $crud->add_fields('parentName', 'childName', 'productName', 'productDetails', 'isActive', 'productOrder', 'creationDtTm', 'updateDtTm');
-            $crud->edit_fields('parentName', 'childName', 'productName', 'productDetails', 'isActive', 'productOrder', 'updateDtTm');
+            $crud->add_fields('parentName', 'childName', 'productName', 'tagline','productDetails', 'isActive', 'productOrder', 'creationDtTm', 'updateDtTm');
+            $crud->edit_fields('parentName', 'childName', 'productName', 'tagline','productDetails', 'isActive', 'productOrder', 'updateDtTm');
 
             $crud->change_field_type('creationDtTm', 'hidden', $time);
             $crud->change_field_type('updateDtTm', 'hidden', $time);
@@ -49,8 +49,6 @@ class Product_setup extends CI_Controller {
             $crud->set_relation('parentName', TBL_PRODUCT_TYPE_SETUP, 'parentName');
             $crud->set_relation('childName', TBL_PRODUCT_TYPE_SETUP, 'childName');
 
-            $crud->unset_delete();
-
             if (!ci_check_permission("canAddProduct")):
                 $crud->unset_add();
             endif;
@@ -59,10 +57,14 @@ class Product_setup extends CI_Controller {
                 $crud->unset_edit();
             endif;
 
+            //if (!ci_check_permission("canDeleteProduct")):
+            $crud->unset_delete();
+            //endif;
+
             $output = $crud->render();
             $output->css = "";
             $output->js = "";
-            $output->pageTitle = "Product & Services";
+            $output->pageTitle = "Product";
             $output->base_url = base_url();
 
             $output->body_template = "product/index.php";

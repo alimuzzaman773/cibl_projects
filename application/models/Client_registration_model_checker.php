@@ -7,13 +7,19 @@ class Client_registration_model_checker extends CI_Model {
     }
 
     public function getUnapprovedAppsUsers() {
-        $this->db->order_by("skyId", "desc");
+        //$this->db->order_by("skyId", "desc");
         $this->db->where('apps_users_mc.mcStatus =', 0);
-        $this->db->where("apps_users_mc.salt2 IS Null");
-        $this->db->where('apps_users_mc.makerActionBy !=', $this->my_session->userId);
+        //$this->db->where("apps_users_mc.salt2 IS Null");
+        //$this->db->where('apps_users_mc.makerActionBy !=', $this->my_session->userId);
         $this->db->select('apps_users_mc.*, apps_users_group.userGroupName');
         $this->db->from('apps_users_mc');
-        $this->db->join('apps_users_group', 'apps_users_mc.appsGroupId = apps_users_group.appsGroupId');
+        $this->db->join('apps_users au', "au.skyId = apps_users_mc.skyId", "inner");
+        $this->db->join('apps_users_group', 'apps_users_mc.appsGroupId = apps_users_group.appsGroupId', "left");
+        
+        $this->db->order_by('apps_users_mc.makerActionDt', 'DESC');
+        $this->db->order_by('apps_users_mc.makerActionTm', 'DESC');
+        //$this->db->order_by('apps_users_mc.skyId', 'desc');
+        
         $query = $this->db->get();
         return $query->result();
     }

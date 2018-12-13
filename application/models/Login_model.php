@@ -196,23 +196,44 @@ class Login_model extends CI_Model {
     }
 
 // **** To return account information of specific users according to requirement *****
+    
+    function getUserAccounts($p = array()) {
+        $this->db->select("a.*, atm.ATMName")
+                 ->from("account_info a")
+                 ->join("atms atm", "atm.branchCode = a.accBranchCode and eblNearYou = 1", "left");
 
-    public function checkAccount($userData, $account = NULL) 
-    {
+        if (isset($p['skyId']) && (int) $p['skyId']) {
+            $this->db->where("a.skyId", $p['skyId']);
+        }
+
+        if (isset($p['accountNo']) && trim($p['accountNo']) != "") {
+            $this->db->where("a.accNo", $p['accountNo']);
+        }
+
+        if (isset($p['typeCode']) && trim($p['typeCode']) != "") {
+            $this->db->where("a.accTypeCode", $p['typeCode']);
+        }
+
+        $result = $this->db->get();
+
+        return $result->num_rows() > 0 ? $result : false;
+    }
+
+    public function checkAccount($userData, $account = NULL) {
+        
         $p['skyId'] = $userData['skyId'];
         if ($account !== NULL):
             $p['accountNo'] = $account;
         endif;
-
+        //d($p);
         $result = $this->getUserAccounts($p);
-
+        //d($this->db->last_query()));
 
         $accountInfo = array();
         if ($result):
             if ($account == NULL) {
                 foreach ($result->result() as $r):
                     $array = array(
-                        'accId' => $r->accountInfoID,
                         'accNo' => $r->accNo,
                         'accType' => $r->accTypeCode,
                         'accTypeCode' => $r->accTypeCode,
@@ -243,33 +264,47 @@ class Login_model extends CI_Model {
             endif;
         endif;
 
-        return false;
-    }
-    
-    function getUserAccounts($p = array()) {
-        $this->db->select("a.*, atm.ATMName")
-                ->from("account_info a")
-                ->join("atms atm", "atm.branchCode = a.accBranchCode", "left");
+        return array();
 
-        if (isset($p['skyId']) && (int) $p['skyId']) {
-            $this->db->where("a.skyId", $p['skyId']);
+        $accNo = explode("|", $userData['accountNo']);
+        $accType = explode("|", $userData['accountType']);
+        $accName = explode("|", $userData['accountName']);
+        $accCurrency = explode("|", $userData['accountCurrency']);
+        $accIsLocked = explode("|", $userData['accountIsLocked']);
+        array_shift($accNo);
+        array_shift($accType);
+        array_shift($accName);
+        array_shift($accCurrency);
+        array_shift($accIsLocked);
+
+        if ($account != NULL) {
+            foreach ($accNo as $index => $value) {
+                if (($accNo[$index] == $account) && ($accType[$index] == "C")) {
+                    $userData['accountNo'] = $accNo[$index];
+                    $userData['accountType'] = $accType[$index];
+                    $userData['accountName'] = $accName[$index];
+                    $userData['accountCurrency'] = $accCurrency[$index];
+                    $userData['accountIsLocked'] = $accIsLocked[$index];
+                    return $userData;
+                }
+            }
+            return FALSE;
+        } else {
+            foreach ($accNo as $index => $value) {
+                $array = array(
+                    'accNo' => $accNo[$index],
+                    'accType' => $accType[$index],
+                    'accName' => $accName[$index],
+                    'accCurrency' => $accCurrency[$index],
+                    'accIsLocked' => $accIsLocked[$index]);
+                $accountInfo[] = $array;
+            }
+            return $accountInfo;
         }
-
-        if (isset($p['accountNo']) && trim($p['accountNo']) != "") {
-            $this->db->where("a.accNo", $p['accountNo']);
-        }
-
-        if (isset($p['typeCode']) && trim($p['typeCode']) != "") {
-            $this->db->where("a.accTypeCode", $p['typeCode']);
-        }
-
-        $result = $this->db->get();
-
-        return $result->num_rows() > 0 ? $result : false;
     }
 
     public function check_session() {
-        if ($this->my_session->logged_in == TRUE) {
+        if ($this->session->userdata('logged_in') == TRUE) {
             return FALSE;
         }
         return TRUE;

@@ -16,9 +16,15 @@
         </div>
 
 
-
-        <label>Group Name</label>
-        <input class="textbox" type="text" name="groupName" id="groupName" value=""><br><br>
+        <div class="form-group col-sm-6 col-xs-12">
+            <label>Group Name</label>
+            <input class="form-control" type="text" name="groupName" id="groupName" value="" />
+        </div>
+            
+        <div class="form-group col-sm-6 col-xs-12">
+            <label>Group Description</label>
+            <input class="form-control" type="text" name="groupDescription" id="groupDescription" value="" />
+        </div>
 
         <input hidden type="text" name="appsGroupId" id="appsGroupId" value="<?= $appsGroupId ?>">
         <input hidden class="textbox" type="text" name="selectedActionName" id="selectedActionName" value="<?= $selectedActionName ?>">
@@ -79,6 +85,7 @@ input {
 
     var initialData = jQuery.parseJSON('<?= $packages ?>');//data for building initial table
     $('#groupName').val(initialData.userGroupName);
+    $('#groupDescription').val(initialData.groupDescription);
     $('#appsGroupId').val(initialData.appsGroupId);
 
     if(initialData.eatMinTxnLim > 0){

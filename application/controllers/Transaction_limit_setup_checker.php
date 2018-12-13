@@ -131,9 +131,11 @@ class Transaction_limit_setup_checker extends CI_Controller {
 
         $dbData = $this->transaction_limit_setup_model_checker->getUnapprovedPackageById($id);
 
-        if ($dbData['makerActionBy'] == $this->my_session->userId) {
+        /*if ($dbData['makerActionBy'] == $this->my_session->userId) {
             echo "You can not authorize your own maker action";
-        } else {
+        } 
+        else
+        {*/
             if ($data['checkerAction'] == "approve") {
                 $chkdata['checkerActionDt'] = date("Y-m-d");
                 $chkdata['checkerActionTm'] = date("G:i:s");
@@ -172,7 +174,7 @@ class Transaction_limit_setup_checker extends CI_Controller {
                     echo "interaction";
                 }
             }
-        }
+        //}
     }
 
     public function checkUserInteraction($id, $makerActionDtTmPost, $checkerActionDtTmPost) {

@@ -9,11 +9,8 @@ PriorityModuleApp.controller("PriorityController", ["$scope", "$http", function 
         $scope.currentPageNumber = 1;
 
         $scope.searchParams = {
-            typeCode: "",
-            appsId: "",
-            referenceNo: "",
-            customerName: "",
-            mobileNo: ""
+            from_date: "",
+            to_date: ""
         };
 
         $scope.pagination = {
@@ -26,12 +23,10 @@ PriorityModuleApp.controller("PriorityController", ["$scope", "$http", function 
 
         $scope.resetSearch = function () {
             $scope.searchParams = {
-                typeCode: "",
-                appsId: "",
-                referenceNo: "",
-                customerName: "",
-                mobileNo: ""
+                from_date: "",
+                to_date: ""
             };
+
             $scope.getResultsPage(1);
             return false;
         };
@@ -45,27 +40,7 @@ PriorityModuleApp.controller("PriorityController", ["$scope", "$http", function 
 
             if ($scope.searchParams.type_code !== null
                     && $.trim($scope.searchParams.type_code) !== "") {
-                $params.typeCode = $scope.searchParams.type_code;
-            }
-
-            if ($scope.searchParams.apps_id !== null
-                    && $.trim($scope.searchParams.apps_id) !== "") {
-                $params.appsId = $scope.searchParams.apps_id;
-            }
-
-            if ($scope.searchParams.reference_no !== null
-                    && $.trim($scope.searchParams.reference_no) !== "") {
-                $params.referenceNo = $scope.searchParams.reference_no;
-            }
-
-            if ($scope.searchParams.customer_name !== null
-                    && $.trim($scope.searchParams.customer_name) !== "") {
-                $params.customerName = $scope.searchParams.customer_name;
-            }
-
-            if ($scope.searchParams.mobile_no !== null
-                    && $.trim($scope.searchParams.mobile_no) !== "") {
-                $params.mobileNo = $scope.searchParams.mobile_no;
+                $params.type_code = $scope.searchParams.type_code;
             }
 
             app.showModal();
@@ -94,6 +69,11 @@ PriorityModuleApp.controller("PriorityController", ["$scope", "$http", function 
                 return $scope.totalCount;
             }
             return range;
+        };
+
+        $scope.getTypeRequest = function () {
+            $scope.searchParams.type_code = $scope.type_code;
+            $scope.getResultsPage(1);
         };
 
         $scope.init = function () {

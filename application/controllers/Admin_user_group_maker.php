@@ -20,18 +20,14 @@ class Admin_user_group_maker extends CI_Controller {
             $crud->set_theme(TABLE_THEME);
             $crud->set_subject('Admin User Group');
             $crud->set_table(TBL_ADMIN_USERS_GROUP_MC);
-            $crud->where('mcStatus', 1);
+            $crud->where('mcStatus in (1,2)', null,false);
             $crud->order_by('userGroupId', 'desc');
 
             $crud->required_fields('userGroupName');
             $crud->columns('userGroupName', 'isLocked', 'isActive', 'mcStatus');
-
-            if ((int) $this->uri->segment(4) > 0):
-                $crud->set_rules("userGroupName", "User Group Name", "trim|required");
-            else:
-                $crud->set_rules("userGroupName", "User Group Name", "trim|required|is_unique[" . TBL_ADMIN_USERS_GROUP_MC . ".userGroupName]");
-            endif;
-
+            
+            $crud->set_rules("userGroupName", "User Group Name", "trim|required|callback__checkUserGroupName");
+            
             $time = date("Y-m-d H:i:s");
 
             $crud->add_fields('userGroupName', 'machine_name', 'isLocked', 'isActive', 'mcStatus', 'makerAction', 'makerActionCode', 'creationDtTm', 'updateDtTm');
@@ -83,38 +79,28 @@ class Admin_user_group_maker extends CI_Controller {
         }
     }
     
-    function ajax_get_admin_group() {
-
-        $this->my_session->authorize("canViewAdminUserGroup");
-        $p['get_count'] = (bool) $this->input->get("get_count", true);
-        $p['limit'] = $this->input->get('limit', true);
-        $p['offset'] = $this->input->get('offset', true);
+    function _checkUserGroupName($groupName)
+    {
+        if(trim($this->input->post("userGroupName",true)) == ""){
+            $this->form_validation->set_message("_checkUserGroupName","User group name is required");            
+            return false;
+        }       
         
-        $p['group_name'] = $this->input->get('group_name', true);
-        $p['lock_status'] = (int) $this->input->get('lock_status', true);
-        
-        $json = array();
-        if ($p['get_count']) {
-            $params = $p;
-            $params['get_count'] = 1;
-            unset($params['limit']);
-            unset($params['offset']);
-            $result = $this->admin_user_group_model_maker->getAllAdminGroup($params);
-            //echo $this->db->last_query();
-            if ($result):
-                $json['total'] = $result->row()->total;
-            endif;
-        }
-
-        unset($p['get_count']);
-        $result = $this->admin_user_group_model_maker->getAllAdminGroup($p);
-        if ($result):
-            $json['group_list'] = $result->result();
+        $ugId = (int)$this->uri->segment(4);
+        $this->db->select("*")
+                 ->from("admin_users_group_mc")
+                 ->where("userGroupName",$groupName);
+        if($ugId > 0):
+            $this->db->where_not_in("userGroupId",array($ugId));
         endif;
-
-        my_json_output($json);
+        $result = $this->db->get();
+        if($result->num_rows() > 0):
+            $this->form_validation->set_message("_checkUserGroupName","Please select a different User group name.");            
+            return false;
+        endif;
+        
+        return true;
     }
-
 
     function set_insert_callback($post_array) {
         $post_array['mcStatus'] = 0;
@@ -269,6 +255,13 @@ class Admin_user_group_maker extends CI_Controller {
             $data['updatedBy'] = $loginId;
             $data['isActive'] = 1;
 
+            //check duplicate 
+            $result = $this->db->where('userGroupName', $data['userGroupName'])
+                               ->get('admin_users_group_mc');
+            if($result->num_rows() > 0):
+                die("Duplicate user group name provided");
+            endif;
+            
             $this->admin_user_group_model_maker->insertAdminUserGroup($data);
             redirect('admin_user_group_maker');
         }

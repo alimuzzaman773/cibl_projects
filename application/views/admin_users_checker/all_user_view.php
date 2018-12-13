@@ -15,7 +15,8 @@
                 <table class="table table-bordered table-condensed table-striped table-hover" >          
                     <thead>
                         <tr class="bg-primary">
-                            <th>SL#</th>                            
+                            <th>SL#</th>
+                            <th>Name</th>
                             <th>Admin User Name</th>
                             <th>Admin User Group</th>
                             <th>Maker Action</th>
@@ -26,6 +27,7 @@
                     <tbody>
                         <tr data-ng-repeat="i in data track by $index">
                             <td>{{($index + 1)}}</td>
+                            <td>{{i.fullName}}</td>
                             <td>{{i.adminUserName}}</td>
                             <td>{{i.userGroupName}}</td>
                             <td>{{i.makerAction}}</td>
@@ -39,18 +41,18 @@
                                     </button>
                                     <ul class="dropdown-menu">
                                         <?php if (ci_check_permission("canApproveAdminUser")): ?>
-                                        <li>
-                                            <a href="<?= base_url() ?>admin_users_checker/getUserForApproval/{{i.adminUserId}}">
-                                                <i class="glyphicon glyphicon-pencil"></i> Approval
-                                            </a>
-                                        </li>
-                                        <?php endif;?>
+                                            <li>
+                                                <a href="<?= base_url() ?>admin_users_checker/getUserForApproval/{{i.adminUserId}}">
+                                                    <i class="glyphicon glyphicon-pencil"></i> Approval
+                                                </a>
+                                            </li>
+                                        <?php endif; ?>
                                     </ul>
                                 </div>
                             </td>
                         </tr>
                         <tr data-ng-show="data.length <= 0">
-                            <td colspan="6">No data found</td>
+                            <td colspan="7">No data found</td>
                         </tr>
                     </tbody>
                 </table>               

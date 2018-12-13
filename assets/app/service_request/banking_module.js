@@ -5,7 +5,7 @@ BankingModuleApp.controller("BankingController", ["$scope", "$http", function ($
 
         $scope.banking_list = [];
         $scope.totalCount = 0;
-        $scope.per_page = 10;
+        $scope.per_page = 20;
         $scope.currentPageNumber = 1;
 
         $scope.searchParams = {
@@ -24,6 +24,8 @@ BankingModuleApp.controller("BankingController", ["$scope", "$http", function ($
             $scope.searchParams = {
                 type_code: ""
             };
+            
+            $scope.filterTypeCode = '';
 
             $scope.getResultsPage(1);
             return false;
@@ -40,7 +42,7 @@ BankingModuleApp.controller("BankingController", ["$scope", "$http", function ($
                     && $.trim($scope.searchParams.type_code) !== "") {
                 $params.type_code = $scope.searchParams.type_code;
             }
-
+            
             app.showModal();
             $http({
                 method: "get",
@@ -128,9 +130,18 @@ BankingModuleApp.controller("BankingController", ["$scope", "$http", function ($
             return false;
         };
 
+        $scope.filterTypeCode = '';
         $scope.init = function () {
             console.log('init banking request module');
-            //$scope.getResultsPage(1);
+            $scope.filterTypeCode = app.filterTypeCode;
+            
+            $scope.getRequest();
+            
+            if($scope.filterTypeCode != ''){
+                $scope.searchParams.type_code = $scope.filterTypeCode;
+                $scope.type_code = $scope.filterTypeCode;
+                $scope.getResultsPage(1);                
+            }
         };
 
         $scope.init();

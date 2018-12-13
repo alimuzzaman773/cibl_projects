@@ -3,7 +3,7 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
-class Reports extends CI_Controller {
+class Reports extends MX_Controller {
 
     function __construct() {
         parent::__construct();
@@ -22,13 +22,13 @@ class Reports extends CI_Controller {
         print_r($query->result());
     }
 
-    //Active User Report Form Pick
+//Active User Report Form Pick
     public function user_status() {
         //$this->my_session->authorize("canViewUserStatusReport");
         
         $status = $this->input->get('status', true);
         $data['rows'] = array();
-        if ($status):
+        if (trim($status) != ''):
             $r = $this->reports_model->get_user_status($status);
             if ($r):
                 $data['rows'] = $r;
@@ -52,7 +52,7 @@ class Reports extends CI_Controller {
         $data['rows'] = array();
         $value = range_validation($from, $to);
         if ($value == "ok") {
-            if ($type && $from && $to):
+            if (trim($type) != '' && trim($from) != '' && trim($to) != ''):
                 $r = $this->reports_model->get_fund_transfer($type, $from, $to);
                 if ($r):
                     $data['rows'] = $r;
@@ -147,11 +147,11 @@ class Reports extends CI_Controller {
 
         $from = $this->input->get('from', true);
         $to = $this->input->get('to', true);
-
+        
         $data['rows'] = array();
         $value = range_validation($from, $to);
         if ($value == "ok") {
-            if ($from && $to):
+            if (trim($from) != '' && trim($to) != ''):
                 $r = $this->reports_model->get_login_info($from, $to);
                 if ($r):
                     $data['rows'] = $r;
@@ -232,10 +232,12 @@ class Reports extends CI_Controller {
                 }
             }
         }
-        $views['msg'] = $value;
-        $views['pageTitle'] = "Priority Request Report";
-        $views['body_template'] = 'reports/priority_request.php';
-        $this->load->view('site_template.php', $views);
+        
+        $data['rows'] = $views['rows'];
+        $data['msg'] = $value;
+        $data['pageTitle'] = "Priority Request Report";
+        $data['body_template'] = 'reports/priority_request.php';
+        $this->load->view('site_template.php', $data);
     }
 
 //Priority Request Form Adding
@@ -280,10 +282,11 @@ class Reports extends CI_Controller {
                 }
             }
         }
-        $views['msg'] = $value;
-        $views['pageTitle'] = "Product Requests Report";
-        $views['body_template'] = 'reports/product_request.php';
-        $this->load->view('site_template.php', $views);
+        $data['rows'] = $views['rows'];
+        $data['msg'] = $value;
+        $data['pageTitle'] = "Product Requests Report";
+        $data['body_template'] = 'reports/product_request.php';
+        $this->load->view('site_template.php', $data);
     }
 
 
@@ -337,48 +340,75 @@ class Reports extends CI_Controller {
         $this->load->view('site_template.php', $views);
     }
     
-    function app_user_activity_log() 
-    {   
-        //$this->my_session->authorize("canViewPermission");
-        try {
-            $crud = new grocery_CRUD();
-
-            $crud->set_theme(TABLE_THEME);
-            $crud->set_subject('Apps User Activity Log');
-
-            $crud->set_table(TBL_APP_USER_ACTIVITY_LOG);
-            
-            $crud->set_relation('skyId', TBL_APP_USERS, 'eblSkyId');
-            $crud->set_relation('deviceId', TBL_DEVICE_INFO, 'imeiNo');
-
-            $crud->display_as("deviceId", "Device Info")
-                    ->display_as("skyId", "User Name");
-            
-            $crud->columns('skyId', 'deviceId', 'commDtTm', 'actionName', 'actionCode');
-
-//            $time = date("Y-m-d H:i:s");
-//
-//            $crud->add_fields('skyId', 'deviceId', 'category', 'commDtTm', 'actionName', 'actionCode');
-//            $crud->edit_fields('skyId', 'deviceId', 'category', 'commDtTm', 'actionName', 'actionCode');
-//
-//            $crud->change_field_type('creationDtTm', 'hidden', $time);
-//            $crud->change_field_type('updateDtTm', 'hidden', $time);
-
-            $crud->unset_delete();
-            $crud->unset_add();
-            $crud->unset_edit();
-
-            $output = $crud->render();
-            $output->css = "";
-            $output->js = "";
-            $output->pageTitle = "Apps User Activity Log";
-            $output->base_url = base_url();
-
-            $output->body_template = "crud/index.php";
-            $this->load->view("site_template.php", $output);
-        } catch (Exception $e) {
-            show_error($e->getMessage() . ' --- ' . $e->getTraceAsString());
-        }
+    function card_payment_report()
+    {
+        /** initialization **/        
+        $data['css'] = "";
+                
+        $data['js'] = "";        
+        
+        $data['pageTitle'] = "Card Payment Report";
+        $data['base_url'] = base_url();
+        
+        $data['css_files'] = array();
+        $data['js_files'] = array();
+        
+        $data['billerList'] = $this->db->get("biller_setup")->result();
+        
+        $data['body_template'] = "reports/card_payment_report.php";
+        $this->load->view('site_template.php',$data); 
     }
 
+    function mobile_topup_card_report()
+    {
+        /** initialization **/        
+        $data['css'] = "";
+                
+        $data['js'] = "";        
+        
+        $data['pageTitle'] = "Mobil Top Up From Card Report";
+        $data['base_url'] = base_url();
+        
+        $data['css_files'] = array();
+        $data['js_files'] = array();
+        
+        $data['billerList'] = $this->db->get("biller_setup")->result();
+        
+        $data['body_template'] = "reports/mobile_topup_card_report.php";
+        $this->load->view('site_template.php',$data); 
+    }
+    
+    function call_center_report()
+    {
+        /** initialization **/        
+        $data['css'] = "";
+                
+        $data['js'] = "";        
+        
+        $data['pageTitle'] = "Call Center User List Report";
+        $data['base_url'] = base_url();
+        
+        $data['css_files'] = array();
+        $data['js_files'] = array();
+        
+        $data['body_template'] = "reports/call_center_report.php";
+        $this->load->view('site_template.php',$data); 
+    }
+    
+    function customer_activity_report()
+    {
+        /** initialization **/        
+        $data['css'] = "";
+                
+        $data['js'] = "";        
+        
+        $data['pageTitle'] = "Apps User activity Report";
+        $data['base_url'] = base_url();
+        
+        $data['css_files'] = array();
+        $data['js_files'] = array();
+        
+        $data['body_template'] = "reports/customer_activity_report.php";
+        $this->load->view('site_template.php',$data); 
+    }
 }

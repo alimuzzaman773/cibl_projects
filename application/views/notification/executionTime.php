@@ -1,0 +1,2 @@
+<input type="text" readonly class="form-control" name="executionTime" value="<?=$defaultValue?>" id="field-executionTime" />
+<input type="text" readonly class="form-control" name="executionTimeField" value="<?=$defaultValueTime?>" id="field-executionTimeField" />

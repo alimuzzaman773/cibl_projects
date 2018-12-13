@@ -1,17 +1,1 @@
-<p>Dear Sir/Madam,<br /></p>
-<p>Your PREMIER account activation process is completed.</p>
-<p>Your PREMIER ID is: <b><?=$eblSkyId?></b></p>
-<p>Please activate your device using the provided pin: <b><?php echo $pin; ?></b> to access PREMIER APP</p>
-<br />
-<p>
-    <u>
-        <b>
-           Please ignore this email, if you have already activated your device.        
-        </b>    
-    </u>
-</p>
-<p>
-    Thanks & Regards, 
-    <br/>
-    PREMIER BANK
-</p>
+Your One Time PIN for EBL SKYBANKING ID is <?php echo $pin; ?>. Helpline 16230.

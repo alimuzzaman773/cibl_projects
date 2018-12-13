@@ -1,2 +1,2 @@
-<h2 class="title-underlined">Discount Partners Setup</h2>
+<h2 class="title-underlined">Benefits Setup</h2>
 <?= $output ?>
