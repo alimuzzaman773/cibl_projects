@@ -220,6 +220,7 @@
                                             <?php endif; ?>
                                             <li><a href="<?= base_url() . 'account_type/index' ?>">Account Type Setup</a></li>
                                             <li><a href="<?= base_url() . 'fund_transfer_setup/index' ?>">Fund Transfer Setup</a></li>
+                                            <li><a href="<?= base_url() . 'activity_log_type/index' ?>">Activity Log Type Setup</a></li>
                                         </ul>
                                     </div>
                                 </div>
