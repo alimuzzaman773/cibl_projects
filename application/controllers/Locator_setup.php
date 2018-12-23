@@ -38,7 +38,7 @@ class Locator_setup extends CI_Controller {
 
             $crud->display_as('ATMName', 'ATM/Branch Name')
                     ->display_as('eblDivision', 'Division')
-                    ->display_as('eblNearYou', 'EBL Near You')
+                    ->display_as('eblNearYou', 'PBL Near You')
                     ->display_as('branchCode', 'Branch Code')
                     ->display_as('Priority', 'Priority Centers')
                     ->display_as('AddressLine1', 'Address Line 1')

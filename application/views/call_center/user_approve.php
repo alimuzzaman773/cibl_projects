@@ -15,7 +15,7 @@
                 </tr>
             </thead>    
             <tr>
-                <th style="width:200px;">ESB ID</th>
+                <th style="width:200px;">PBL ID</th>
                 <td>{{user.eblSkyId}}</td>
             </tr>
 

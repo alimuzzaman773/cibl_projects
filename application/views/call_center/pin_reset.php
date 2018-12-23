@@ -1,1 +1,1 @@
-Your One Time PIN for EBL SKYBANKING is <?php echo $pin; ?>. Helpline 16230.
+Your One Time PIN for PBL Mobile Banking is <?php echo $pin; ?>. Helpline 16230.

@@ -54,7 +54,7 @@
 
         <thead>
             <tr>
-                <th style="text-align: center" valign="middle">ESB ID</th>
+                <th style="text-align: center" valign="middle">PBL ID</th>
                 <th style="text-align: center" valign="middle">Pin Number</th>
                 <th style="text-align: center" valign="middle">Destroyed/Active</th>
                 <th style="text-align: center" valign="middle">Used/Unused</th>

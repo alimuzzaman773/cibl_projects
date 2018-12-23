@@ -23,7 +23,7 @@
                     <thead>
                         <tr class="bg-primary">
                             <th>SI#</th>
-                            <th>ESB ID</th>
+                            <th>PBL ID</th>
                             <th>Destroyed/Active</th>
                             <th>Used/Unused</th>
                             <th>Printed/Not</th>

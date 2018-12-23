@@ -6,9 +6,9 @@
     </head>
     <body>
         <p>Dear Sir/Madam,</p>
-        <p>Your EBL SKYBANKING account registration process is completed.</p>
-        <p>Please activate your device using provided EBL SKYBANKING OTP (<b><?php echo $otp;?></b>) to access the Banking / Bills Pay / Fund Transfer section.</p>
+        <p>Your PBL Mobile Banking registration process is completed.</p>
+        <p>Please activate your device using provided PBL Mobile OTP (<b><?php echo $otp;?></b>) to access the Banking / Bills Pay / Fund Transfer section.</p>
         <p>Please ignore this email, if you have already activated your device.</p>
-        <p>Thanks & Regards, <br/>EBL SKYBANKING AdminPanel</p>
+        <p>Thanks & Regards, <br/>Premier Bank AdminPanel</p>
     </body>
 </html>
