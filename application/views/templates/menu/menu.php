@@ -234,7 +234,7 @@
                     </ul>
                 </li>
             <?php endif; ?>
-
+            <!--
             <li class="dropdown yamm-fw">
                 <a href="#" id="dropModules" role="button" data-toggle="dropdown">Reports<b class="caret"></b></a>
                 <ul id="dropModules" class="dropdown-menu" role="menu" aria-labelledby="dropModules">                    
@@ -249,7 +249,7 @@
                                         <li><a href="<?= base_url() . 'reports/user_login_info' ?>">User Last Login Information</a></li>
                                         <li><a href="<?= base_url() . 'reports/fund_transfer' ?>">Fund Transfer</a></li>
                                         <li><a href="<?= base_url() . 'reports/other_fund_transfer' ?>">Other Fund Transfer</a></li>
-                                        <li><a href="<?= base_url() . 'reports/app_user_activity_log' ?>">Apps User Activity Log</a></li>
+                                        <li><a href="<?= base_url() . 'reports/customer_activity_report' ?>">Apps User Activity Log</a></li>
                                     </ul>
                                     <ul class="col-md-2 col-xs-12 list-unstyled">
                                         <li><p><b>Admin Reports</b></p></li>
@@ -270,7 +270,7 @@
                                         <li><a href="<?= base_url() . 'reports/product_request' ?>">Product Request</a></li>
                                         <li><a href="<?= base_url() . 'reports/banking_request' ?>">Banking Request</a></li>
                                     </ul>
-                                    <!--
+                                   
                                     <ul class="col-md-2 col-xs-12 list-unstyled">
                                         <li><p><b>Card Payment</b></p></li>
                                         <li><a href="<?= base_url() . 'reports/card_payment_report' ?>">Card Payment Report</a></li>
@@ -280,13 +280,14 @@
                                         <li><p><b>Call Center</b></p></li>
                                         <li><a href="<?= base_url() . 'reports/call_center_report' ?>">Call Center User Report</a></li>                                        
                                     </ul>
-                                    -->
+                          
                                 </div>
                             </div>
                         </div>
                     </li>    
                 </ul>
             </li>
+           -->
             <li class="dropdown yamm-fw">
                 <a href="#" id="dropModules" role="button" data-toggle="dropdown">Call Center<b class="caret"></b></a>
                 <ul id="dropModules" class="dropdown-menu" role="menu" aria-labelledby="dropModules">                    

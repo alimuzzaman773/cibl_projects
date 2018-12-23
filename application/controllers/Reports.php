@@ -25,7 +25,7 @@ class Reports extends MX_Controller {
 //Active User Report Form Pick
     public function user_status() {
         //$this->my_session->authorize("canViewUserStatusReport");
-        
+
         $status = $this->input->get('status', true);
         $data['rows'] = array();
         if (trim($status) != ''):
@@ -34,7 +34,7 @@ class Reports extends MX_Controller {
                 $data['rows'] = $r;
             endif;
         endif;
-        
+
         $data['pageTitle'] = "User Status Report";
         $data['body_template'] = 'reports/user_status.php';
         $this->load->view('site_template.php', $data);
@@ -83,7 +83,7 @@ class Reports extends MX_Controller {
                 endif;
             endif;
         }
-        
+
         $data['msg'] = $value;
         $data['pageTitle'] = "Other Bank Transfer Report";
         $data['body_template'] = 'reports/other_fund_transfer.php';
@@ -94,7 +94,7 @@ class Reports extends MX_Controller {
     public function bill_pay() {
 
         //$this->my_session->authorize("canViewBillPayReport");
-        
+
         $type = $this->input->get('type', true);
         $from = $this->input->get('from', true);
         $to = $this->input->get('to', true);
@@ -118,7 +118,7 @@ class Reports extends MX_Controller {
 
 //All customer information
     public function customer_info() {
-        
+
         //$this->my_session->authorize("canViewCustomerInfoReport");
 
         $from = $this->input->get('from', true);
@@ -134,7 +134,7 @@ class Reports extends MX_Controller {
                 endif;
             endif;
         }
-        
+
         $data['msg'] = $value;
         $data['pageTitle'] = "Customer Information Report";
         $data['body_template'] = 'reports/customer_info.php';
@@ -147,7 +147,7 @@ class Reports extends MX_Controller {
 
         $from = $this->input->get('from', true);
         $to = $this->input->get('to', true);
-        
+
         $data['rows'] = array();
         $value = range_validation($from, $to);
         if ($value == "ok") {
@@ -158,7 +158,7 @@ class Reports extends MX_Controller {
                 endif;
             endif;
         }
-        
+
         $data['msg'] = $value;
         $data['pageTitle'] = "User Login Information Report";
         $data['body_template'] = 'reports/user_login_info.php';
@@ -167,7 +167,7 @@ class Reports extends MX_Controller {
 
 //User ID modification from BO
     public function id_modification() {
-        
+
         //$this->my_session->authorize("canViewIdModificationReport");
 
         $from = $this->input->get('from', true);
@@ -183,7 +183,7 @@ class Reports extends MX_Controller {
                 endif;
             endif;
         }
-        
+
         $data['msg'] = $value;
         $data['pageTitle'] = "ID Modification Report";
         $data['body_template'] = 'reports/id_modification.php';
@@ -232,7 +232,7 @@ class Reports extends MX_Controller {
                 }
             }
         }
-        
+
         $data['rows'] = $views['rows'];
         $data['msg'] = $value;
         $data['pageTitle'] = "Priority Request Report";
@@ -242,7 +242,7 @@ class Reports extends MX_Controller {
 
 //Priority Request Form Adding
     public function product_request() {
-        
+
         //$this->my_session->authorize("canViewProductRequestReport");
 
         $from = $this->input->get('from', true);
@@ -289,17 +289,16 @@ class Reports extends MX_Controller {
         $this->load->view('site_template.php', $data);
     }
 
-
     public function banking_request() {
 
         //$this->my_session->authorize("canViewBankingRequestReport");
-        
+
         $from = $this->input->get('from', true);
         $to = $this->input->get('to', true);
 
         $value = range_validation($from, $to);
         $views["rows"] = array();
-        
+
         if ($value == "ok") {
             if ($from && $to) {
                 $r = $this->reports_model->get_banking_request($from, $to);
@@ -333,82 +332,79 @@ class Reports extends MX_Controller {
                 }
             }
         }
-        
+
         $views['msg'] = $value;
         $views['pageTitle'] = "Banking Requests Report";
         $views['body_template'] = 'reports/banking_request.php';
         $this->load->view('site_template.php', $views);
     }
-    
-    function card_payment_report()
-    {
-        /** initialization **/        
+
+    function card_payment_report() {
+        /** initialization * */
         $data['css'] = "";
-                
-        $data['js'] = "";        
-        
+
+        $data['js'] = "";
+
         $data['pageTitle'] = "Card Payment Report";
         $data['base_url'] = base_url();
-        
+
         $data['css_files'] = array();
         $data['js_files'] = array();
-        
+
         $data['billerList'] = $this->db->get("biller_setup")->result();
-        
+
         $data['body_template'] = "reports/card_payment_report.php";
-        $this->load->view('site_template.php',$data); 
+        $this->load->view('site_template.php', $data);
     }
 
-    function mobile_topup_card_report()
-    {
-        /** initialization **/        
+    function mobile_topup_card_report() {
+        /** initialization * */
         $data['css'] = "";
-                
-        $data['js'] = "";        
-        
+
+        $data['js'] = "";
+
         $data['pageTitle'] = "Mobil Top Up From Card Report";
         $data['base_url'] = base_url();
-        
+
         $data['css_files'] = array();
         $data['js_files'] = array();
-        
+
         $data['billerList'] = $this->db->get("biller_setup")->result();
-        
+
         $data['body_template'] = "reports/mobile_topup_card_report.php";
-        $this->load->view('site_template.php',$data); 
+        $this->load->view('site_template.php', $data);
     }
-    
-    function call_center_report()
-    {
-        /** initialization **/        
+
+    function call_center_report() {
+        /** initialization * */
         $data['css'] = "";
-                
-        $data['js'] = "";        
-        
+
+        $data['js'] = "";
+
         $data['pageTitle'] = "Call Center User List Report";
         $data['base_url'] = base_url();
-        
+
         $data['css_files'] = array();
         $data['js_files'] = array();
-        
+
         $data['body_template'] = "reports/call_center_report.php";
-        $this->load->view('site_template.php',$data); 
+        $this->load->view('site_template.php', $data);
     }
-    
-    function customer_activity_report()
-    {
-        /** initialization **/        
+
+    function customer_activity_report() {
+        /** initialization * */
         $data['css'] = "";
-                
-        $data['js'] = "";        
-        
+
+        $data['js'] = "";
+
         $data['pageTitle'] = "Apps User activity Report";
         $data['base_url'] = base_url();
-        
+
         $data['css_files'] = array();
         $data['js_files'] = array();
-        
+
         $data['body_template'] = "reports/customer_activity_report.php";
-        $this->load->view('site_template.php',$data); 
+        $this->load->view('site_template.php', $data);
     }
+
 }

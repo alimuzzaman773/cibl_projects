@@ -18,7 +18,7 @@ class Discount_partners extends CI_Controller {
             $crud = new grocery_CRUD();
 
             $crud->set_theme(TABLE_THEME);
-            $crud->set_subject('EBL Discount Partners');
+            $crud->set_subject('PBL Discount Partners');
             $crud->set_table('discount_partners');
 
             $this->config->set_item('grocery_crud_file_upload_allow_file_types', 'gif|jpeg|jpg|png');

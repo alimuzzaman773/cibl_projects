@@ -19,18 +19,23 @@ class Help_setup extends CI_Controller {
         try {
             $crud = new grocery_CRUD();
             $crud->set_theme(TABLE_THEME);
-            $crud->set_subject('Help');
+            $crud->set_subject('App Content');
             $crud->set_table('help_center');
 
-            $crud->columns('helpText');
+            $crud->columns('machineName', 'title', 'helpText');
 
-            $crud->display_as('helpText', 'Help');
+            $crud->unique_fields('machineName');
+
+            $crud->display_as('machineName', 'Machine Name');
+            $crud->display_as('title', 'Title');
+            $crud->display_as('helpText', 'Content');
+
 
             $time = date("Y-m-d H:i:s");
             $creatorId = $this->my_session->userId;
 
-            $crud->add_fields('helpText', 'creationDtTm', 'updateDtTm');
-            $crud->edit_fields('helpText', 'updateDtTm');
+            $crud->add_fields('machineName', 'title', 'helpText', 'creationDtTm', 'updateDtTm');
+            $crud->edit_fields('machineName', 'title', 'helpText', 'updateDtTm');
 
             $crud->change_field_type('creationDtTm', 'hidden', $time);
             $crud->change_field_type('updateDtTm', 'hidden', $time);
@@ -58,7 +63,7 @@ class Help_setup extends CI_Controller {
             $output = $crud->render();
             $output->css = "";
             $output->js = "";
-            $output->pageTitle = "Help";
+            $output->pageTitle = "Settings";
             $output->base_url = base_url();
 
             $output->body_template = "help/index.php";
@@ -73,17 +78,23 @@ class Help_setup extends CI_Controller {
             $crud = new grocery_CRUD();
             $crud->set_theme(TABLE_THEME);
             $crud->set_subject('Complaint Info');
-            $crud->set_table('complaint_info');
+            $crud->set_table(TBL_COMPLAINT_INFO);
 
-            $crud->required_fields('parentName', 'childName', 'productName');
+            $crud->required_fields('empName', 'email');
 
-            $crud->columns('empName', 'designation', 'contactNo', 'email', 'contactDetails', 'isActive');
+            if ((int) $this->uri->segment(4) > 0):
+                $crud->set_rules("email", "Email", "trim|xss_clean|required|valid_email");
+            else:
+                $crud->set_rules("email", "Email", "trim|xss_clean|required|valid_email|is_unique[" . TBL_COMPLAINT_INFO . ".email]");
+            endif;
+
+            $crud->columns('empName', 'designation', 'contactNo', 'contactDetails', 'email', 'isActive');
 
             $time = date("Y-m-d H:i:s");
             $creatorId = $this->my_session->userId;
 
-            $crud->add_fields('empName', 'designation', 'contactNo','email', 'contactDetails', 'isActive', 'creationDtTm', 'updateDtTm');
-            $crud->edit_fields('empName', 'designation', 'contactNo', 'email', 'contactDetails', 'isActive', 'updateDtTm');
+            $crud->add_fields('empName', 'designation', 'contactNo', 'contactDetails', 'email', 'isActive', 'creationDtTm', 'updateDtTm');
+            $crud->edit_fields('empName', 'designation', 'contactNo', 'contactDetails', 'email', 'isActive', 'updateDtTm');
 
             $crud->change_field_type('creationDtTm', 'hidden', $time);
             $crud->change_field_type('updateDtTm', 'hidden', $time);
@@ -97,10 +108,11 @@ class Help_setup extends CI_Controller {
                     ->display_as('contactDetails', 'Contact Details');
 
             $crud->unset_delete();
+            $crud->unset_add();
 
-            if (!ci_check_permission("canAddHelpSetup")):
-                $crud->unset_add();
-            endif;
+//            if (!ci_check_permission("canAddHelpSetup")):
+//                $crud->unset_add();
+//            endif;
             if (!ci_check_permission("canEditHelpSetup")):
                 $crud->unset_edit();
             endif;
