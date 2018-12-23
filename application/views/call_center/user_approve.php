@@ -3,9 +3,11 @@
         <h2 class="title-underlined ng-scope">User Approve</h2>
     </div>
 </div>
-<div class="col-md-12 col-xs-12 col-sm-12" data-ng-if="user.skyId <= 0">
+
+<div class="col-md-12 col-xs-12 col-sm-12" data-ng-if="user.skyId == undefined">
     User is already approved
 </div>
+
 <div class="row" data-ng-if="user.skyId != undefined">
     <div class="col-xs-12 col-sm-12 col-md-12">
         <table class="table table-striped table-bordered">
@@ -15,7 +17,7 @@
                 </tr>
             </thead>    
             <tr>
-                <th style="width:200px;">PBL ID</th>
+                <th style="width:200px;">ESB ID</th>
                 <td>{{user.eblSkyId}}</td>
             </tr>
 
@@ -124,35 +126,26 @@
             </tr>
         </table>
     </div>
-    <div class="col-xs-12 col-sm-12">
-        <div class="btn-group row">
-            <div class="form-group col-sm-12 col-xs-12 hidden">
-                <label>Limit Package</label>
-                <select class="form-control input-sm" id="appsGroupId" ng-model="user.appsGroupId" data-ng-change="showAppsGroupInfo()">
-                    <option value="">Select Limit Package</option>
-                    <option ng-repeat="i in appsGroupList" data-ng-if="i.isActive == 1" value="{{i.appsGroupId}}">{{i.userGroupName}} - {{i.groupDescription}}</option>
-                </select>
-                <div class="alert alert-danger" data-ng-show="user.appsGroupId > 0">
-                    Kindly Change/Adjust the Internet Banking Package Before updating this request 
-                </div>
-            </div>
-            <div class="form-group col-sm-12 col-xs-12">
+    <div class="col-xs-12 col-sm-3 col-md-3">
+        <form name="testform">
+            <div class="form-group" ng-if="user.makerActionBy <= 0 && user.checkerActionBy > 0">
                 <label>PIN Sending Channel</label>
                 <select class="form-control input-sm" id="otp_channel" ng-model="otp_channel">
                     <option value="email">email</option>
                     <option value="sms">sms</option>
                 </select>
-            </div> 
-            <div class="col-sm-12 col-xs-12">
-                <button class="btn btn-lg btn-primary" data-ng-click="approveUser(user.skyId)">
-                    <i class="glyphicon glyphicon-check"></i> Approve and Update Limit Package
-                </button>
+            </div>    
+            <div class="btn-group">
+                <button class="btn btn-md btn-primary" id="test" ng-show="user.makerActionBy <= 0 && user.checkerActionBy > 0" data-ng-click="approveUser(user.skyId)">
+                    <i class="glyphicon glyphicon-check"></i> Maker Approve
+                </button>         
             </div>
-        </div>
+             <div class="btn-group">
+                <a class="btn btn-md btn-primary" id="test2" ng-show="(user.checkerActionBy <= 0 && user.makerActionBy <= 0)" ng-click="approveUserChecker(user.skyId)">
+                    <i class="glyphicon glyphicon-check"></i> Checker Approve
+                </a>         
+            </div> 
+            
+        </form>
     </div>
 </div>
-
-<script type="text/javascript">
-    var app = app || {};
-    app.appsUserGroups = <?=json_encode($appUserGroupInfo)?>;
-</script>

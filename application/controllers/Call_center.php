@@ -15,7 +15,7 @@ class Call_center extends CI_Controller {
         $data['css'] = "";
         $data['js'] = "";
 
-        $data['pageTitle'] = "Call Center Module";
+        $data['pageTitle'] = "Products";
         $data['base_url'] = base_url();
 
         $data['css_files'] = array();
@@ -30,10 +30,7 @@ class Call_center extends CI_Controller {
     }
 
     function user_approve() {
-        $this->load->model("apps_users_model");
-        $data = array();
-        $data['appUserGroupInfo'] = $this->apps_users_model->getAppsUserGroup();
-        $this->load->view('call_center/user_approve.php', $data);
+        $this->load->view('call_center/user_approve.php', array());
     }
 
     function confirmation() {

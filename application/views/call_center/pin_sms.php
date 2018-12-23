@@ -1,1 +1,1 @@
-Your One Time PIN for PBL Mobile Banking is <?php echo $pin; ?>. Helpline 16230.
+Dear user, your PREMIER account has been activated. Your One Time PREMIER PIN: <?=$pin?>
