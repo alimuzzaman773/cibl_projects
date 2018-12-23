@@ -183,7 +183,7 @@
 
 
         for(var i = 2; i < eblAccount.length; i++){
-          type = "EBL Account Transfer";
+          type = "PBL Account Transfer";
           var eblCheck = dataValidate(eblAccount[i], type, i);
           if(eblCheck){
             alert(eblCheck);

@@ -25,8 +25,8 @@
         <tr>
             <th>SL No</th>
             <th>Customer ID</th>
-            <th>EBL Sky ID</th>
-            <th>Reciver Name</th>
+            <th>Apps ID</th>
+            <th>Reciever Name</th>
             <th>Bank Name</th>
             <th>Reciver Branch</th>
             <th>Routing No</th>

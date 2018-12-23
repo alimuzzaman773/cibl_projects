@@ -6,7 +6,7 @@
             </tr>
         </thead>
         <tr>
-            <td style="width: 260px"><b>Total SKB ID:</b></td>
+            <td style="width: 260px"><b>Total PBL ID:</b></td>
             <td><?=$totalId?></td>
         </tr>
         <tr>

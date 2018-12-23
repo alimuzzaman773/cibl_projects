@@ -1,6 +1,6 @@
 <form class="form" id="loginform" action="<?= $base_url . "admin_login/checkUserDetails" ?>" method="post"> 
     <div class="center-block text-center">
-        <img src="<?= asset_url() . "images/logo.png" ?>" />
+        <img src="<?= asset_url() . "images/logo.png" ?>" width="200" />
     </div>
     <div class="row" style="margin:0 auto;width:400px">
         <div class="col-md-12 col-xs-12">

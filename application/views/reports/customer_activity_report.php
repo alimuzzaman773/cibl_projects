@@ -23,7 +23,7 @@
         </td>
     </tr>
     <tr>
-        <td><b>ESBID</b></td>
+        <td><b>Apps ID</b></td>
         <td>
             <div class="col-sm-3 col-xs-12">
                 <input type="text" class="form-control input-sm" required value="" name="eblSkyId" id="eblSkyId" />

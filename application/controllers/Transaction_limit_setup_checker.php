@@ -82,7 +82,7 @@ class Transaction_limit_setup_checker extends CI_Controller {
         }
         if ($dbData['eatMinTxnLim'] != 0.00) {
             $changedDataArray[] = array('packageId' => 2,
-                'packageName' => "EBL Account Transfer");
+                'packageName' => "PBL Account Transfer");
         }
         if ($dbData['obtMinTxnLim'] != 0.00) {
             $changedDataArray[] = array('packageId' => 3,
@@ -101,7 +101,7 @@ class Transaction_limit_setup_checker extends CI_Controller {
         }
         if ($dbData['eatMinTxnLim_c'] > 0.00) {
             $PublisherDataArray[] = array('packageId_c' => 2,
-                'packageName_c' => "EBL Account Transfer");
+                'packageName_c' => "PBL Account Transfer");
         }
         if ($dbData['obtMinTxnLim_c'] > 0.00) {
             $PublisherDataArray[] = array('packageId_c' => 3,

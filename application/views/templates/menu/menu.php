@@ -142,9 +142,11 @@
                                             <?php if (ci_check_permission("canViewPinCreateMenu")): ?>
                                                 <li><a class="hidden" href="<?= base_url() . 'pin_generation/viewPinByAction' ?>">Pin</a></li>
                                             <?php endif; ?>
+                                                <!--
                                             <?php if (ci_check_permission("canViewBillerSetupMenu")): ?>
                                                 <li><a href="<?= base_url() . 'biller_setup_maker' ?>">Biller Setup</a></li>
                                             <?php endif; ?>
+                                                -->
                                             <?php if (ci_check_permission("canViewLimitPackgaeMenu")): ?>
                                                 <li><a href="<?= base_url() . 'transaction_limit_setup_maker' ?>">Transaction Package Limit</a></li>
                                             <?php endif; ?>
@@ -172,10 +174,11 @@
                                             <?php if (ci_check_permission("canViewDeviceAuthorizationMenu")): ?>
                                                 <li><a class="hidden" href="<?= base_url() . 'device_info_checker' ?>">Device Authorization</a></li>
                                             <?php endif; ?>
+                                            <!--
                                             <?php if (ci_check_permission("canViewBillerSetupAuthorizationMenu")): ?>
                                                 <li><a href="<?= base_url() . 'biller_setup_checker' ?>">Biller Setup Authorization</a></li>
                                             <?php endif; ?>
-
+                                            -->
                                             <?php if (ci_check_permission("canViewPinResetAuthorizationMenu")): ?>
                                                 <li><a class="hidden" href="<?= base_url() . 'pin_generation_checker' ?>">Pin Reset Authorization</a></li>
                                             <?php endif; ?>
@@ -215,9 +218,11 @@
                                             <?php if (ci_check_permission("canViewRoutingNumberMenu")): ?>
                                                 <li><a href="<?= base_url() . 'routing_number' ?>">Routing Number Setup</a></li>
                                             <?php endif; ?>
+                                            <!--
                                             <?php if (ci_check_permission("canViewBillerSetupMenu")): ?>
                                                 <li><a href="<?= base_url() . 'bill_type_setup' ?>">Bill Type Setup</a></li>
                                             <?php endif; ?>
+                                            -->
                                             <li><a href="<?= base_url() . 'account_type/index' ?>">Account Type Setup</a></li>
                                             <li><a href="<?= base_url() . 'fund_transfer_setup/index' ?>">Fund Transfer Setup</a></li>
                                             <li><a href="<?= base_url() . 'activity_log_type/index' ?>">Activity Log Type Setup</a></li>
@@ -265,6 +270,17 @@
                                         <li><a href="<?= base_url() . 'reports/product_request' ?>">Product Request</a></li>
                                         <li><a href="<?= base_url() . 'reports/banking_request' ?>">Banking Request</a></li>
                                     </ul>
+                                    <!--
+                                    <ul class="col-md-2 col-xs-12 list-unstyled">
+                                        <li><p><b>Card Payment</b></p></li>
+                                        <li><a href="<?= base_url() . 'reports/card_payment_report' ?>">Card Payment Report</a></li>
+                                        <li><a href="<?= base_url() . 'reports/mobile_topup_card_report' ?>">Bill Payment Report</a></li>   
+                                    </ul>
+                                    <ul class="col-md-2 col-xs-12 list-unstyled">
+                                        <li><p><b>Call Center</b></p></li>
+                                        <li><a href="<?= base_url() . 'reports/call_center_report' ?>">Call Center User Report</a></li>                                        
+                                    </ul>
+                                    -->
                                 </div>
                             </div>
                         </div>

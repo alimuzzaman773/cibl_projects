@@ -6,7 +6,7 @@
             </tr>
         </thead>
         <tr>
-            <td style="width: 260px"><b>Total SKB ID:</b></td>
+            <td style="width: 260px"><b>Total PBL ID:</b></td>
             <td><?=$totalId?></td>
         </tr>
         <?php foreach($registrationType as $k=> $r): ?>
@@ -34,7 +34,7 @@
             </tr>
         </thead>
         <tr>
-            <td style="width: 350px"><b>SKB ID Waiting Activation:</b></td>
+            <td style="width: 350px"><b>PBL ID Waiting Activation:</b></td>
             <td><?=$activationRequest?></td>
         </tr>
         <tr>

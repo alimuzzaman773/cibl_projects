@@ -213,7 +213,7 @@
         <footer>
             <div class="container">
                 <hr />
-                <p class="text-center">Copyright &copy; Eastern Bank Ltd</p>
+                <p class="text-center">Copyright &copy; Premier Bank Ltd</p>
             </div>
         </footer>
     </body>

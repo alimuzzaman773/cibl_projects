@@ -31,7 +31,7 @@
 
 
         <input style="margin-right: 15px" type="checkbox" id="own" name="packageName[]" value="1"><label> Own Account Transfer</label><br>
-        <input style="margin-right: 15px" type="checkbox" id="ebl" name="packageName[]" value="2"><label> EBL Account Transfer</label><br>
+        <input style="margin-right: 15px" type="checkbox" id="ebl" name="packageName[]" value="2"><label> PBL Account Transfer</label><br>
         <input style="margin-right: 15px" type="checkbox" id="other" name="packageName[]" value="3"><label> Other Bank Transfer</label><br>
         <input style="margin-right: 15px" type="checkbox" id="bill" name="packageName[]" value="4"><label> Bills Pay</label><br>
 

@@ -22,7 +22,7 @@
                     <th>ID</th>
                     <th style="text-align: center" >Group Name</th>
                     <th style="text-align: center" >Own Account Transfer</th>
-                    <th style="text-align: center" >EBL Account Transfer</th>
+                    <th style="text-align: center" >PBL Account Transfer</th>
                     <th style="text-align: center" >Other Bank Transfer</th>
                     <th style="text-align: center" >Bills Pay</th>
                     <th style="text-align: center" >Active/Inactive</th>

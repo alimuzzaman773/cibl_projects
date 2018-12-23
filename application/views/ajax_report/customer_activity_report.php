@@ -6,8 +6,8 @@
         <thead>
             <tr class="bg-primary">
                 <th>SL</th>
-                <th>SKY ID</th>                
-                <th>SKYBANKING ID</th>
+                <th>Apps ID</th>                
+                <th>Apps User ID</th>
                 <th>Customer ID</th>
                 <th>Client ID</th>
                 <th>Prepaid ID</th>

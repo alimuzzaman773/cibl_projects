@@ -46,7 +46,7 @@ class Transaction_limit_setup_maker extends CI_Controller {
                     }
                     if ($value == 2) {
                         $array[] = array('packageId' => $value,
-                            'packageName' => "EBL Account Transfer");
+                            'packageName' => "PBL Account Transfer");
                     }
                     if ($value == 3) {
                         $array[] = array('packageId' => $value,
@@ -211,7 +211,7 @@ class Transaction_limit_setup_maker extends CI_Controller {
             }
             if ($value == 2) {
                 $array[] = array('packageId' => $value,
-                    'packageName' => "EBL Account Transfer");
+                    'packageName' => "PBL Account Transfer");
             }
             if ($value == 3) {
                 $array[] = array('packageId' => $value,
