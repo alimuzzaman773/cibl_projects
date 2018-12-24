@@ -151,6 +151,7 @@ class Call_center_model extends CI_Model {
 
             $gResult = $this->db->get();
             if ($gResult->num_rows() <= 0):
+                d($gResult);
                 return array(
                     "success" => false,
                     "msg" => "No Default transaction limit found, please set a default transaction limit."
@@ -159,6 +160,8 @@ class Call_center_model extends CI_Model {
 
             $gInfo = $result->row();
             $appsGroupId = (int) $gInfo->appsGroupId;
+            
+            d($appsGroupId);
             
             /*End Default Transaction*/
 
