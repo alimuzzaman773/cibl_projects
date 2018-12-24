@@ -17,7 +17,7 @@ class Call_center_model extends CI_Model {
         $this->db->from('apps_users_mc aum')
                 ->group_start()
                 //->where('aum.isLocked', 0)
-                ->or_where("(isPublished = 0 AND isActive = 0 AND appsGroupId = 0)", null,false)
+                ->or_where("(isPublished = 0 AND isActive = 0 AND appsGroupId = 0)", null, false)
                 //->where("isActive", 0)
                 //->where("appsGroupId", 0)
                 //->where('callCenterApprove', 'unapproved')
@@ -144,7 +144,26 @@ class Call_center_model extends CI_Model {
 
             $userInfo = $result->row_array();
 
+            // Get Default Transaction Limit ID
+            $this->db->select("augm.appsGroupId")
+                    ->from("apps_users_group_mc augm")
+                    ->where('augm.userGroupName', "Default");
+
+            $gResult = $this->db->get();
+            if ($gResult->num_rows() <= 0):
+                return array(
+                    "success" => false,
+                    "msg" => "No Default transaction limit found, please set a default transaction limit."
+                );
+            endif;
+
+            $gInfo = $result->row();
+            $appsGroupId = (int) $gInfo->appsGroupId;
+            
+            /*End Default Transaction*/
+
             $userInfoMerge = array(
+                "appsGroupId" => $appsGroupId,
                 "makerAction" => 'Account Activation',
                 "makerActionDt" => date("Y-m-d"),
                 "makerActionTm" => date("H:i:s"),
@@ -174,14 +193,14 @@ class Call_center_model extends CI_Model {
 
 
             $this->db->trans_begin();
-            
+
             $this->db->reset_query();
             $this->db->where("skyId", $skyId)
-                     ->update("apps_users_mc", $userInfoMerge);
-            
+                    ->update("apps_users_mc", $userInfoMerge);
+
             $this->db->reset_query();
             $this->db->insert("apps_users", $userInfo);
-            
+
             $this->db->reset_query();
             $this->db->where("skyId", $skyId)
                     ->update("device_info", array("isVaryfied" => 1));
