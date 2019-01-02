@@ -462,8 +462,7 @@ fieldset[disabled] .btn-primary.active {
 }
 .doc_header {
     border-bottom: 1px solid #ddd;
-    color: #00748c;
-    margin-bottom: 16px;
+    margin-bottom: 15px;
 }
 .doc_header h4 {
     margin: 0;
@@ -609,8 +608,6 @@ fieldset[disabled] .btn-primary.active {
 .doc-list li:hover {
     background-color: #f4f4f4;
 }
-
-
 .bold {
     font-weight: bold;
 }

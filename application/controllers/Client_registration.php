@@ -27,20 +27,20 @@ class Client_registration extends CI_Controller {
         $p['get_count'] = (bool) $this->input->get("get_count", true);
         $p['limit'] = $this->input->get('limit', true);
         $p['offset'] = $this->input->get('offset', true);
-        $p['search'] = $this->input->get("search",true);
-        
+        $p['search'] = $this->input->get("search", true);
+
         $filter = array(
             'isLocked', 'isActive'
         );
-        
-        foreach($filter as $k):
-            if(trim($this->input->get($k, true)) != ''){
+
+        foreach ($filter as $k):
+            if (trim($this->input->get($k, true)) != '') {
                 $p[$k] = $this->input->get($k, true);
             }
         endforeach;
 
         $json = array();
-        if ($p['get_count']) {            
+        if ($p['get_count']) {
             $params = $p;
             unset($params['limit']);
             $result = $this->client_registration_model->getAllAppsUsers($params);
@@ -60,47 +60,58 @@ class Client_registration extends CI_Controller {
 
         my_json_output($json);
     }
-    
-    function update_limit_package($skyId)
-    {        
+
+    // Edit App User: Shahid
+    function edit() {
+        $this->my_session->authorize("canEditAppUser");
+        $data['pageTitle'] = "Edit apps user";
+        $data['base_url'] = base_url();
+        $data['body_template'] = 'client_registration/client_registration_edit_index.php';
+        $this->load->view('site_template.php', $data);
+    }
+
+    function edit_form() {
+        $this->load->view('client_registration/client_registration_edit.php', array());
+    }
+
+    function update_limit_package($skyId) {
         //$this->my_session->authorize("canEditAppUserLimitPackage");
         $data = array(
             "userGroups" => array()
         );
         $this->load->model(array("apps_users_model"));
         $skyRes = $this->apps_users_model->getUserById($skyId);
-        if(empty($skyRes)):
+        if (empty($skyRes)):
             show_error("No apps user information found");
             die();
         endif;
-        
-        $data['skyInfo'] = (object)$skyRes;
+
+        $data['skyInfo'] = (object) $skyRes;
         $data['requestedGroupInfo'] = array();
-        $data['serviceId'] = (int)$this->input->get("serviceId",true);
-        
+        $data['serviceId'] = (int) $this->input->get("serviceId", true);
+
         $userGroup = $this->apps_users_model->getAppsUserGroup(array('isActive' => 1));
-        if(count($userGroup)):
+        if (count($userGroup)):
             $data['userGroups'] = $userGroup;
-            $requestedId = (int)$this->input->get('requestedId', true);
-            foreach($userGroup as $ug):
-                if($requestedId == $ug->appsGroupId):
+            $requestedId = (int) $this->input->get('requestedId', true);
+            foreach ($userGroup as $ug):
+                if ($requestedId == $ug->appsGroupId):
                     $data['requestedGroupInfo'] = $ug;
                 endif;
             endforeach;
         endif;
-        
+
         $data['pageTitle'] = "Apps Users - Limit Package Update";
         $data['body_template'] = 'client_registration/update_limit_package.php';
         $this->load->view('site_template.php', $data);
     }
-    
-    function save_limit_package()
-    {
+
+    function save_limit_package() {
         $this->my_session->authorize("canEditAppUserLimitPackage");
-        $skyId = (int)$this->input->post("skyId", true);
-        $appsGroupId = (int)$this->input->post("appsGroupId", true);
-        $serviceId = (int)$this->input->post("serviceId", true);
-        
+        $skyId = (int) $this->input->post("skyId", true);
+        $appsGroupId = (int) $this->input->post("appsGroupId", true);
+        $serviceId = (int) $this->input->post("serviceId", true);
+
         $this->load->library("form_validation");
         //$this->form_validation = &$this;
         $this->form_validation->set_data($_POST);
@@ -114,60 +125,58 @@ class Client_registration extends CI_Controller {
             );
             my_json_output($json);
         endif;
-        
+
         $loginId = $this->my_session->userId;
 
-        $data['appsGroupId'] = $appsGroupId;        
+        $data['appsGroupId'] = $appsGroupId;
         $data['mcStatus'] = 0;
         $data['makerAction'] = "LimitPackageUpdate";
         $data['makerActionCode'] = 'update';
         $data['makerActionDt'] = date("y-m-d");
         $data['makerActionTm'] = date("G:i:s");
         $data['makerActionBy'] = $loginId;
-        
+
         try {
             $this->db->reset_query();
             $this->db->where("skyId", $skyId)
-                     ->update("apps_users_mc", $data);
+                    ->update("apps_users_mc", $data);
 
             $this->db->reset_query();
-            if($serviceId > 0):
+            if ($serviceId > 0):
                 $this->db->where("serviceId", $serviceId)
-                         ->update("service_request_bank", array('status2' => 1, 'status1' => 1));
+                        ->update("service_request_bank", array('status2' => 1, 'status1' => 1));
             endif;
             //update user activity
-            
+
             $json = array(
                 'success' => true
             );
             my_json_output($json);
-        }
-        catch(Exception $e){
+        } catch (Exception $e) {
             $json = array(
                 'success' => false,
                 'msg' => $e->getMessage()
             );
             my_json_output($json);
         }
-        
     }
 
     function viewUser() {
         $this->my_session->authorize("canViewAppUser");
         if (isset($_GET['skyId'])) {
             $skyId = $_GET['skyId'];
-            $data['userInfo'] = $this->client_registration_model->getAppsUsersById($skyId); // decision needed whether to show from main table or shadow
+            $data['userInfo'] = $this->client_registration_model->getAppsUsersById($skyId); // decision needed whether to show from main table or shadow            
             $data['deviceInfo'] = json_encode($this->client_registration_model->getDeviceBySkyid($skyId));
-            
+
             $accountInfo = $this->login_model->checkAccount($data['userInfo']);
-            foreach($accountInfo as $k => $a):
-                if(strtolower($a['accType']) == 'pc'):
-                    $accountInfo[$k]['accNo'] = $this->common_model->numberMasking(MASK,$a['accNo']);
+            foreach ($accountInfo as $k => $a):
+                if (strtolower($a['accType']) == 'pc'):
+                    $accountInfo[$k]['accNo'] = $this->common_model->numberMasking(MASK, $a['accNo']);
                 endif;
             endforeach;
-            
+
             $data['accountInfo'] = json_encode($accountInfo);
-            
+
             $data['body_template'] = 'client_registration/apps_user_detail_view.php';
             $this->load->view('site_template.php', $data);
         } else {

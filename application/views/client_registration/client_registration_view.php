@@ -100,10 +100,13 @@
                             <?php endif;?>
                             <?php if(ci_check_permission("canEditAppUser")): ?>
                             <li>
-                                <a href="<?=base_url()?>apps_users/editAppsUser?eblSkyId={{a.eblSkyId}}&cfId={{a.cfId}}&clientId={{a.clientId}}&skyId={{a.skyId}}&selectedActionName=Edit">
-                                    <i class="glyphicon glyphicon-edit"></i> Edit
-                                </a>
-                            </li>
+                                    <a href="<?= base_url() . "client_registration/edit/#/form/" ?>{{a.skyId}}">
+                                        <i class="glyphicon glyphicon-edit"></i> Edit
+                                    </a>
+<!--                                    <a href="<?= base_url() ?>apps_users/editAppsUser?eblSkyId={{a.eblSkyId}}&cfId={{a.cfId}}&clientId={{a.clientId}}&skyId={{a.skyId}}&selectedActionName=Edit">
+                                        <i class="glyphicon glyphicon-edit"></i> Edit
+                                    </a>-->
+                                </li>
                             <?php endif;?>
                             <?php if(ci_check_permission("canViewAppUserDevice")): ?>
                             <li>
