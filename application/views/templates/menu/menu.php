@@ -188,7 +188,7 @@
                                             <?php endif; ?>
 
                                             <?php if (ci_check_permission("canViewPasswordPolicyAuthorizationMenu")): ?>
-                                                <li><a href="<?= base_url() . 'password_policy_checker' ?>">Password Policy Authorization</a></li>
+                                                <li class="hidden"><a href="<?= base_url() . 'password_policy_checker' ?>">Password Policy Authorization</a></li>
                                             <?php endif; ?>
 
                                             <?php if (ci_check_permission("canViewAppsUserDeleteAuthorizationMenu")): ?>
