@@ -248,6 +248,7 @@ class Transaction_limit_setup_maker extends CI_Controller {
 
         $dbData['userGroupName'] = $groupName;
         $dbData['groupDescription'] = $groupDescription;
+        $dbData['globalLimit'] = $_POST['globalLimit'];
 
         $dbData['oatMinTxnLim'] = 0.00;
         $dbData['oatMaxTxnLim'] = 0.00;
