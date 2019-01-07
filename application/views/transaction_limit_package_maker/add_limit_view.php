@@ -76,13 +76,6 @@
 
 
 <script type="text/javascript" charset="utf-8">
-//    $(document).ready(function () {
-//        var gLimit = $('#globalLimit').val();
-//        if (gLimit == "") {
-//            alert("Please fill out Global Limit field!");
-//            return false;
-//        }
-//    });
     var initialData = jQuery.parseJSON('<?= $packages ?>');//data for building initial table
 
     var vm = function () {
@@ -120,7 +113,13 @@
                 var SelectedActionName = "";
                 GroupName = groupName.value;
                 GroupDescription = groupDescription.value;
+                
                 var GlobalLimit = globalLimit.value;
+                if (GlobalLimit == "") {
+                    alert("Global limit can't be empty. Please fill out this field!");
+                    return false;
+                }
+                
                 SelectedActionName = selectedActionName.value;
                 var dataToSave = {"group_name": GroupName,
                     "groupDescription": GroupDescription,
