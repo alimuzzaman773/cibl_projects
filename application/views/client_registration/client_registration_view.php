@@ -1,13 +1,12 @@
 <h1 class="title-underlined">
     Apps User
-    <?php if(ci_check_permission("canAddAppUser")): ?>
-    <a href="<?php echo base_url(). 'apps_users/addAppsUser/Add'; ?>" class="btn btn-primary pull-right hidden">
-        <i class="glyphicon glyphicon-plus"></i> Add User
-    </a>
-    <?php endif;?>
+    <?php if (ci_check_permission("canAddAppUser")): ?>
+        <a href="<?php echo base_url() . 'apps_users/addAppsUser/Add'; ?>" class="btn btn-primary pull-right hidden">
+            <i class="glyphicon glyphicon-plus"></i> Add User
+        </a>
+    <?php endif; ?>
 </h1>
 <div class="table-responsive" id="AppUserModule" data-ng-controller="AppUsersController as AppUsersController">
-
     <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="row">
             <div class="form-group col-sm-4 col-xs-6">
@@ -42,7 +41,6 @@
             </div>
         </div>
     </div>
-
     <div class="col-md-12 col-sm-12 text-right" data-ng-show="totalCount > 0">        
         <span class="label label-primary"> Displaying: {{ ((per_page * currentPageNumber) - (per_page - 1))}} to {{ upper_range()}} of {{ totalCount}}</span>            
     </div>
@@ -91,72 +89,79 @@
                             Action <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu">
-                            <?php if(ci_check_permission("canEditAppUserLimitPackage")): ?>
-                            <li class="hidden">
-                                <a href="<?=base_url()?>client_registration/update_limit_package/{{a.skyId}}">
-                                    <i class="glyphicon glyphicon-refresh"></i> Update Limit Package
-                                </a>
-                            </li>
-                            <?php endif;?>
-                            <?php if(ci_check_permission("canEditAppUser")): ?>
-                            <li>
+                            <?php if (ci_check_permission("canEditAppUserLimitPackage")): ?>
+                                <li class="hidden">
+                                    <a href="<?= base_url() ?>client_registration/update_limit_package/{{a.skyId}}">
+                                        <i class="glyphicon glyphicon-refresh"></i> Update Limit Package
+                                    </a>
+                                </li>
+                            <?php endif; ?>
+                            <?php if (ci_check_permission("canEditAppUser")): ?>
+                                <li>
                                     <a href="<?= base_url() . "client_registration/edit/#/form/" ?>{{a.skyId}}">
                                         <i class="glyphicon glyphicon-edit"></i> Edit
                                     </a>
-<!--                                    <a href="<?= base_url() ?>apps_users/editAppsUser?eblSkyId={{a.eblSkyId}}&cfId={{a.cfId}}&clientId={{a.clientId}}&skyId={{a.skyId}}&selectedActionName=Edit">
+    <!--                                    <a href="<?= base_url() ?>apps_users/editAppsUser?eblSkyId={{a.eblSkyId}}&cfId={{a.cfId}}&clientId={{a.clientId}}&skyId={{a.skyId}}&selectedActionName=Edit">
                                         <i class="glyphicon glyphicon-edit"></i> Edit
                                     </a>-->
                                 </li>
-                            <?php endif;?>
-                            <?php if(ci_check_permission("canViewAppUserDevice")): ?>
-                            <li>
-                                <a href="<?=base_url()?>client_registration/deviceInfo?skyId={{a.skyId}}&eblSkyId={{a.eblSkyId}}">
-                                    <i class="glyphicon glyphicon-dashboard"></i> View Devices
-                                </a>
-                            </li>
-                            <?php endif;?>
-                            <?php if(ci_check_permission("canViewAppUser")): ?>
-                            <li>
-                                <a href="<?=base_url()?>client_registration/viewUser?skyId={{a.skyId}}">
-                                    <i class="glyphicon glyphicon-list-alt"></i> Detail View
-                                </a>
-                            </li>
-                            <?php endif;?>
-                            <?php if(ci_check_permission("canLockAppUser")): ?>
-                            <li data-ng-if="a.isLocked == 0">
-                                <a data-ng-click="lock_unlock(a, 'Lock', 'userLock');">
-                                    <i class="glyphicon glyphicon-lock"></i> Lock
-                                </a>
-                            </li> 
-                            <?php endif;?>
-                            <?php if(ci_check_permission("canUnlockAppUser")): ?>
-                            <li data-ng-if="a.isLocked == 1">
-                                <a data-ng-click="lock_unlock(a, 'Unlock', 'userUnlock');">
-                                    <i class="glyphicon glyphicon-refresh"></i> Unlock
-                                </a>
-                            </li> 
-                            <?php endif;?>
-                            <?php if(ci_check_permission("canActiveAppUser")): ?>
-                            <li data-ng-if="a.isActive == 0">
-                                <a data-ng-click="activate_deactivate(a, 'Active', 'userActive');">
-                                    <i class="glyphicon glyphicon-flash"></i> Active
-                                </a>
-                            </li> 
-                            <?php endif;?>
-                            <?php if(ci_check_permission("canInactiveAppUser")): ?>
-                            <li data-ng-if="a.isActive == 1">
-                                <a data-ng-click="activate_deactivate(a, 'Inactive', 'userInactive');">
-                                    <i class="glyphicon glyphicon-flash"></i> Inactive
-                                </a>
-                            </li> 
-                            <?php endif;?>
-                            <?php if(ci_check_permission("canDeleteAppUser")): ?>
-                            <li class="hidden">
-                                <a data-ng-click="deleteUser(a)">
-                                    <i class="glyphicon glyphicon-trash"></i> Delete
-                                </a>
-                            </li> 
-                            <?php endif;?>
+                            <?php endif; ?>
+                            <?php if (ci_check_permission("canDeleteAppUser")): ?>
+                                <li>
+                                    <a href="<?= base_url() . "client_registration/edit/#/remove/" ?>{{a.skyId}}">
+                                        <i class="glyphicon glyphicon-trash"></i> Remove
+                                    </a>
+                                </li>
+                            <?php endif; ?>
+                            <?php if (ci_check_permission("canViewAppUserDevice")): ?>
+                                <li>
+                                    <a href="<?= base_url() ?>client_registration/deviceInfo?skyId={{a.skyId}}&eblSkyId={{a.eblSkyId}}">
+                                        <i class="glyphicon glyphicon-dashboard"></i> View Devices
+                                    </a>
+                                </li>
+                            <?php endif; ?>
+                            <?php if (ci_check_permission("canViewAppUser")): ?>
+                                <li>
+                                    <a href="<?= base_url() ?>client_registration/viewUser?skyId={{a.skyId}}">
+                                        <i class="glyphicon glyphicon-list-alt"></i> Detail View
+                                    </a>
+                                </li>
+                            <?php endif; ?>
+                            <?php if (ci_check_permission("canLockAppUser")): ?>
+                                <li data-ng-if="a.isLocked == 0">
+                                    <a data-ng-click="lock_unlock(a, 'Lock', 'userLock');">
+                                        <i class="glyphicon glyphicon-lock"></i> Lock
+                                    </a>
+                                </li> 
+                            <?php endif; ?>
+                            <?php if (ci_check_permission("canUnlockAppUser")): ?>
+                                <li data-ng-if="a.isLocked == 1">
+                                    <a data-ng-click="lock_unlock(a, 'Unlock', 'userUnlock');">
+                                        <i class="glyphicon glyphicon-refresh"></i> Unlock
+                                    </a>
+                                </li> 
+                            <?php endif; ?>
+                            <?php if (ci_check_permission("canActiveAppUser")): ?>
+                                <li data-ng-if="a.isActive == 0">
+                                    <a data-ng-click="activate_deactivate(a, 'Active', 'userActive');">
+                                        <i class="glyphicon glyphicon-flash"></i> Active
+                                    </a>
+                                </li> 
+                            <?php endif; ?>
+                            <?php if (ci_check_permission("canInactiveAppUser")): ?>
+                                <li data-ng-if="a.isActive == 1">
+                                    <a data-ng-click="activate_deactivate(a, 'Inactive', 'userInactive');">
+                                        <i class="glyphicon glyphicon-flash"></i> Inactive
+                                    </a>
+                                </li> 
+                            <?php endif; ?>
+                            <?php if (ci_check_permission("canDeleteAppUser")): ?>
+                                <li class="hidden">
+                                    <a data-ng-click="deleteUser(a)">
+                                        <i class="glyphicon glyphicon-trash"></i> Delete
+                                    </a>
+                                </li> 
+                            <?php endif; ?>
                         </ul>
                     </div>
                 </td>
@@ -164,8 +169,7 @@
         </tbody>
     </table>
     <div class="box-footer clearfix text-center">
-        <dir-pagination-controls on-page-change="pageChanged(newPageNumber)"
-                                 template-url="<?= base_url() ?>assets/angularjs/directives/dirPagination.tpl.html"></dir-pagination-controls>
+        <dir-pagination-controls on-page-change="pageChanged(newPageNumber)" template-url="<?= base_url() ?>assets/angularjs/directives/dirPagination.tpl.html"></dir-pagination-controls>
     </div>  
 </div>
 
@@ -535,7 +539,3 @@ ci_add_js(asset_url()."app/app_users.js")
 
 
 </script>
-
-
-
-

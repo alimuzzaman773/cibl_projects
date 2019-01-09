@@ -15,7 +15,7 @@
         <form name="form_data" id="form_data" ng-submit="saveItems()">
             <div class="col-md-12 col-xs-12 col-sm-12 col-lg-12">
                 <div class="doc_layout">
-                    <div class="doc_header"><h4>Apps User Details (<b>{{eblSkyId}}</b>)</h4></div>
+                    <div class="doc_header bg-primary"><h4>Apps User Details (<b>{{eblSkyId}}</b>)</h4></div>
                     <div class="well doc_right_panel">
                         <div class="row">
                             <div class="col-md-4 col-lg-4 col-xs-12 col-sm-12">

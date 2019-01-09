@@ -74,6 +74,10 @@ class Client_registration extends CI_Controller {
         $this->load->view('client_registration/client_registration_edit.php', array());
     }
 
+    function remove_user() {
+        $this->load->view('client_registration/remove_user.php', array());
+    }
+
     function update_limit_package($skyId) {
         //$this->my_session->authorize("canEditAppUserLimitPackage");
         $data = array(
