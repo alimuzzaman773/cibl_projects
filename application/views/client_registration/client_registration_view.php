@@ -47,11 +47,13 @@
     <table class="table table-striped table-bordered" id="referenceTable">
         <thead>
             <tr class="bg-primary">
+                <th>SI#</th>
                 <th>SKY ID</th>
                 <th>Apps ID</th>
                 <th>CIF ID</th>
                 <th>Client ID</th>
-                <th>Prepaid ID</th>
+                <th>Father's name</th>
+                <th>Mother's name</th>
                 <th>Lock/Unlock</th>
                 <th>Active/Inactive</th>
                 <th>Status</th>
@@ -66,13 +68,14 @@
             </tr>
         </thead>
         <tbody>
-            <tr dir-paginate="a in app_users | itemsPerPage: per_page track by $index"
-                total-items="totalCount" current-page="pagination.current">
+            <tr dir-paginate="a in app_users | itemsPerPage: per_page track by $index" total-items="totalCount" current-page="pagination.current">
+                <td>{{$index + 1}}</td>
                 <td>{{a.skyId}}</td>
                 <td>{{a.eblSkyId}}</td>
                 <td>{{a.cfId}}</td>
                 <td>{{a.clientId}}</td>
-                <td>{{a.prepaidId}}</td>
+                <td>{{a.fatherName}}</td>
+                <td>{{a.motherName}}</td>
                 <td data-ng-class="{'test' : setStatus($index), 'bg-success' : a.isLocked == 0, 'bg-danger' : a.isLocked == 1}">{{a.isLocked == 1 ? 'Locked' : 'Unlocked'}}</td>
                 <td data-ng-class="{'bg-success' : a.isActive == 1, 'bg-danger' : a.isActive == 0}">{{a.isActive == 1 ? 'Active' : 'Inactive'}}</td>
                 <td class="{{a.statusColor}}">{{a.status}}</td>                
@@ -166,6 +169,9 @@
                     </div>
                 </td>
             </tr>
+            <tr data-ng-show="app_users.length <= 0">
+                <td colspan="18">No data found</td>
+            </tr>
         </tbody>
     </table>
     <div class="box-footer clearfix text-center">
@@ -174,366 +180,324 @@
 </div>
 
 <?php
-ci_add_js(asset_url()."angularjs/directives/dirPagination.js");  
-ci_add_js(asset_url()."app/directives/custom_directives.js");
-ci_add_js(asset_url()."app/app_users.js")  
+ci_add_js(asset_url() . "angularjs/directives/dirPagination.js");
+ci_add_js(asset_url() . "app/directives/custom_directives.js");
+ci_add_js(asset_url() . "app/app_users.js")
 ?>    
 
 <script type="text/javascript" charset="utf-8">
-    var initialData = <?= '[]'?>; //data for building initial table
-    
+    var initialData = <?= '[]' ?>; //data for building initial table
+
     var vm = function () {
-        var self = this;
-        self.records = ko.observableArray(initialData);
+    var self = this;
+    self.records = ko.observableArray(initialData);
+    $.each(self.records(), function (i, record) {   //build the checkboxes as observable
 
-        $.each(self.records(), function (i, record) {   //build the checkboxes as observable
+    record.isProcessed = ko.observable(false);
+    record.device = ko.observable(false);
+    record.edit = ko.observable(false);
+    record.check = ko.observable(false);
+    record.detailView = ko.observable(false);
+    record.deleted = ko.observable(false);
+    if (record.isActive == 1) {
+    record.active = "Active";
+    record.activeColor = ko.observable("green");
+    }
+    else if (record.isActive == 0) {
+    record.active = "Inactive";
+    record.activeColor = ko.observable("red");
+    }
 
-            record.isProcessed = ko.observable(false);
-            record.device = ko.observable(false);
-            record.edit = ko.observable(false);
-            record.check = ko.observable(false);
-            record.detailView = ko.observable(false);
-            record.deleted = ko.observable(false);
-	    
+    if (record.isLocked == 1) {
+    record.lock = "Locked";
+    record.lockColor = ko.observable("red");
+    }
+    else if (record.isLocked == 0) {
+    record.lock = "Unlocked";
+    record.lockColor = ko.observable("green");
+    }
 
-            if (record.isActive == 1) {
-                record.active = "Active";
-                record.activeColor = ko.observable("green");
+    if (record.mcStatus === "1") {
+    record.status = "Approved";
+    record.statusColor = ko.observable("green");
+    } else if (record.mcStatus === "0") {
+    record.status = "Wait for approve";
+    record.statusColor = ko.observable("red");
+    } else if (record.mcStatus === "2") {
+    record.status = "Rejected";
+    record.statusColor = ko.observable("red");
+    }
+
+
+    });
+    self.selectAll = function () {
+    document.getElementById("selectAll").style.display = "none";
+    document.getElementById("deselectAll").style.display = "block";
+    $.each(self.records(), function (i, record) {
+    record.isProcessed(true);
+    })
+    };
+    self.deselectAll = function () {
+    document.getElementById("selectAll").style.display = "block";
+    document.getElementById("deselectAll").style.display = "none";
+    $.each(self.records(), function (i, record) {
+    record.isProcessed(false);
+    })
+    };
+    self.actionFunction = function () {
+
+    var action = document.getElementById("actionSelect").value;
+    if (action === "add") {
+    document.getElementById("addUser").style.display = "block";
+    document.getElementById("active").style.display = "none";
+    document.getElementById("inactive").style.display = "none";
+    document.getElementById("lock").style.display = "none";
+    document.getElementById("unlock").style.display = "none";
+    }
+
+    $.each(self.records(), function (i, record) {
+    action = document.getElementById("actionSelect").value;
+    switch (action) {
+
+    case "detailView":
+            record.detailView(true);
+    document.getElementById("addUser").style.display = "none";
+    document.getElementById("active").style.display = "none";
+    document.getElementById("inactive").style.display = "none";
+    document.getElementById("lock").style.display = "none";
+    document.getElementById("unlock").style.display = "none";
+    break;
+    case "addDevice":
+            record.device(true);
+    document.getElementById("addUser").style.display = "none";
+    document.getElementById("active").style.display = "none";
+    document.getElementById("inactive").style.display = "none";
+    document.getElementById("lock").style.display = "none";
+    document.getElementById("unlock").style.display = "none";
+    break;
+    case "edit":
+            record.edit(true);
+    document.getElementById("addUser").style.display = "none";
+    document.getElementById("active").style.display = "none";
+    document.getElementById("inactive").style.display = "none";
+    document.getElementById("lock").style.display = "none";
+    document.getElementById("unlock").style.display = "none";
+    break;
+    case "delete":
+            record.deleted(true);
+    document.getElementById("addUser").style.display = "none";
+    document.getElementById("active").style.display = "none";
+    document.getElementById("inactive").style.display = "none";
+    document.getElementById("lock").style.display = "none";
+    document.getElementById("unlock").style.display = "none";
+    break;
+    case "active":
+            record.check(true);
+    document.getElementById("addUser").style.display = "none";
+    document.getElementById("active").style.display = "block";
+    document.getElementById("inactive").style.display = "none";
+    document.getElementById("lock").style.display = "none";
+    document.getElementById("unlock").style.display = "none";
+    break;
+    case "inactive":
+            record.check(true);
+    document.getElementById("addUser").style.display = "none";
+    document.getElementById("active").style.display = "none";
+    document.getElementById("inactive").style.display = "block";
+    document.getElementById("lock").style.display = "none";
+    document.getElementById("unlock").style.display = "none";
+    break;
+    case "lock":
+            record.check(true);
+    document.getElementById("addUser").style.display = "none";
+    document.getElementById("active").style.display = "none";
+    document.getElementById("inactive").style.display = "none";
+    document.getElementById("lock").style.display = "block";
+    document.getElementById("unlock").style.display = "none";
+    break;
+    case "unlock":
+            record.check(true);
+    document.getElementById("addUser").style.display = "none";
+    document.getElementById("active").style.display = "none";
+    document.getElementById("inactive").style.display = "none";
+    document.getElementById("lock").style.display = "none";
+    document.getElementById("unlock").style.display = "block";
+    break;
+    }
+    })
+    };
+    self.active = function () {
+
+    var esb_id = "";
+    var sky_id = "";
+    var selected_action_name = $("#actionSelect option:selected").text();
+    $.each(self.records(), function (i, record) {
+    if (record.isProcessed() == true) {
+    esb_id = esb_id + "|" + record.eblSkyId;
+    sky_id = sky_id + "|" + record.skyId;
+    }
+    });
+    if (esb_id == "") {
+    alert("Error: No user Is Selected");
+    return false;
+    }
+
+    esb_id = esb_id.substring(1);
+    sky_id = sky_id.substring(1);
+    var dataToSave = {"eblSkyId": esb_id, "skyId": sky_id, "selectedActionName": selected_action_name};
+    $.ajax({
+    type: "POST",
+            data: dataToSave,
+            url: "<?= base_url() ?>client_registration/userActive",
+            success: function (data) {
+            if (data == 1) {
+            alert("Selected users are active");
+            window.location = "<?= base_url() ?>client_registration";
             }
-            else if (record.isActive == 0) {
-                record.active = "Inactive";
-                record.activeColor = ko.observable("red");
+            },
+            error: function (error) {
+            alert(error.status + "<--and--> " + error.statusText);
             }
+    });
+    };
+    self.inactive = function () {
 
-            if (record.isLocked == 1) {
-                record.lock = "Locked";
-                record.lockColor = ko.observable("red");
+    var esb_id = "";
+    var sky_id = "";
+    var selected_action_name = $("#actionSelect option:selected").text();
+    $.each(self.records(), function (i, record) {
+    if (record.isProcessed() == true) {
+    esb_id = esb_id + "|" + record.eblSkyId;
+    sky_id = sky_id + "|" + record.skyId;
+    }
+    });
+    if (esb_id == "") {
+    alert("Error: No user Is Selected");
+    return false;
+    }
+
+    esb_id = esb_id.substring(1);
+    sky_id = sky_id.substring(1);
+    var dataToSave = {"eblSkyId": esb_id, "skyId": sky_id, "selectedActionName": selected_action_name};
+    $.ajax({
+    type: "POST",
+            data: dataToSave,
+            url: "<?= base_url() ?>client_registration/userInactive",
+            success: function (data) {
+            if (data == 1) {
+            alert("Selected Users are inactive");
+            window.location = "<?= base_url() ?>client_registration";
             }
-            else if (record.isLocked == 0) {
-                record.lock = "Unlocked";
-                record.lockColor = ko.observable("green");
+            },
+            error: function (error) {
+            alert(error.status + "<--and--> " + error.statusText);
             }
+    });
+    };
+    self.lock = function () {
 
-            if (record.mcStatus === "1") {
-                record.status = "Approved";
-                record.statusColor = ko.observable("green");
-            } else if (record.mcStatus === "0") {
-                record.status = "Wait for approve";
-                record.statusColor = ko.observable("red");
-            } else if (record.mcStatus === "2") {
-                record.status = "Rejected";
-                record.statusColor = ko.observable("red");
+    var esb_id = "";
+    var sky_id = "";
+    var selected_action_name = $("#actionSelect option:selected").text();
+    $.each(self.records(), function (i, record) {
+    if (record.isProcessed() == true) {
+    esb_id = esb_id + "|" + record.eblSkyId;
+    sky_id = sky_id + "|" + record.skyId;
+    }
+    });
+    if (esb_id == "") {
+    alert("Error: No user Is Selected");
+    return false;
+    }
+
+    esb_id = esb_id.substring(1);
+    sky_id = sky_id.substring(1);
+    var dataToSave = {"eblSkyId": esb_id, "skyId": sky_id, "selectedActionName": selected_action_name};
+    $.ajax({
+    type: "POST",
+            data: dataToSave,
+            url: "<?= base_url() ?>client_registration/userLock",
+            success: function (data) {
+            if (data == 1) {
+            alert("Selected Users are Locked");
+            window.location = "<?= base_url() ?>client_registration";
             }
-            
-
-        });
-
-
-        self.selectAll = function () {
-            document.getElementById("selectAll").style.display = "none";
-            document.getElementById("deselectAll").style.display = "block";
-            $.each(self.records(), function (i, record) {
-                record.isProcessed(true);
-            })
-        };
-
-
-        self.deselectAll = function () {
-            document.getElementById("selectAll").style.display = "block";
-            document.getElementById("deselectAll").style.display = "none";
-            $.each(self.records(), function (i, record) {
-                record.isProcessed(false);
-            })
-        };
-
-
-        self.actionFunction = function () {
-
-            var action = document.getElementById("actionSelect").value;
-            if (action === "add") {
-                document.getElementById("addUser").style.display = "block";
-                document.getElementById("active").style.display = "none";
-                document.getElementById("inactive").style.display = "none";
-                document.getElementById("lock").style.display = "none";
-                document.getElementById("unlock").style.display = "none";
+            },
+            error: function (error) {
+            alert(error.status + "<--and--> " + error.statusText);
             }
+    });
+    };
+    self.unlock = function () {
 
-            $.each(self.records(), function (i, record) {
-                action = document.getElementById("actionSelect").value;
+    var esb_id = "";
+    var sky_id = "";
+    var selected_action_name = $("#actionSelect option:selected").text();
+    $.each(self.records(), function (i, record) {
+    if (record.isProcessed() == true) {
+    esb_id = esb_id + "|" + record.eblSkyId;
+    sky_id = sky_id + "|" + record.skyId;
+    }
+    });
+    if (esb_id == "") {
+    alert("Error: No user Is Selected");
+    return false;
+    }
 
-                switch (action) {
-
-                    case "detailView":
-                        record.detailView(true);
-                        document.getElementById("addUser").style.display = "none";
-                        document.getElementById("active").style.display = "none";
-                        document.getElementById("inactive").style.display = "none";
-                        document.getElementById("lock").style.display = "none";
-                        document.getElementById("unlock").style.display = "none";
-                        break;
-
-
-                    case "addDevice":
-                        record.device(true);
-                        document.getElementById("addUser").style.display = "none";
-                        document.getElementById("active").style.display = "none";
-                        document.getElementById("inactive").style.display = "none";
-                        document.getElementById("lock").style.display = "none";
-                        document.getElementById("unlock").style.display = "none";
-                        break;
-
-                    case "edit":
-                        record.edit(true);
-                        document.getElementById("addUser").style.display = "none";
-                        document.getElementById("active").style.display = "none";
-                        document.getElementById("inactive").style.display = "none";
-                        document.getElementById("lock").style.display = "none";
-                        document.getElementById("unlock").style.display = "none";
-                        break;
-
-                    case "delete":
-                        record.deleted(true);
-                        document.getElementById("addUser").style.display = "none";
-                        document.getElementById("active").style.display = "none";
-                        document.getElementById("inactive").style.display = "none";
-                        document.getElementById("lock").style.display = "none";
-                        document.getElementById("unlock").style.display = "none";
-                        break;
-
-                    case "active":
-                        record.check(true);
-                        document.getElementById("addUser").style.display = "none";
-                        document.getElementById("active").style.display = "block";
-                        document.getElementById("inactive").style.display = "none";
-                        document.getElementById("lock").style.display = "none";
-                        document.getElementById("unlock").style.display = "none";
-                        break;
-
-                    case "inactive":
-                        record.check(true);
-                        document.getElementById("addUser").style.display = "none";
-                        document.getElementById("active").style.display = "none";
-                        document.getElementById("inactive").style.display = "block";
-                        document.getElementById("lock").style.display = "none";
-                        document.getElementById("unlock").style.display = "none";
-                        break;
-
-                    case "lock":
-                        record.check(true);
-                        document.getElementById("addUser").style.display = "none";
-                        document.getElementById("active").style.display = "none";
-                        document.getElementById("inactive").style.display = "none";
-                        document.getElementById("lock").style.display = "block";
-                        document.getElementById("unlock").style.display = "none";
-                        break;
-
-                    case "unlock":
-                        record.check(true);
-                        document.getElementById("addUser").style.display = "none";
-                        document.getElementById("active").style.display = "none";
-                        document.getElementById("inactive").style.display = "none";
-                        document.getElementById("lock").style.display = "none";
-                        document.getElementById("unlock").style.display = "block";
-                        break;
-
-                }
-            })
-        };
-
-
-        self.active = function () {
-
-            var esb_id = "";
-            var sky_id = "";
-            var selected_action_name = $("#actionSelect option:selected").text();
-            $.each(self.records(), function (i, record) {
-                if (record.isProcessed() == true) {
-                    esb_id = esb_id + "|" + record.eblSkyId;
-                    sky_id = sky_id + "|" + record.skyId;
-                }
-            });
-
-            if (esb_id == "") {
-                alert("Error: No user Is Selected");
-                return false;
+    esb_id = esb_id.substring(1);
+    sky_id = sky_id.substring(1);
+    var dataToSave = {"eblSkyId": esb_id, "skyId": sky_id, "selectedActionName": selected_action_name};
+    $.ajax({
+    type: "POST",
+            data: dataToSave,
+            url: "<?= base_url() ?>client_registration/userUnlock",
+            success: function (data) {
+            if (data == 1) {
+            alert("Selected Users are Unlocked");
+            window.location = "<?= base_url() ?>client_registration";
             }
-
-            esb_id = esb_id.substring(1);
-            sky_id = sky_id.substring(1);
-            var dataToSave = {"eblSkyId": esb_id, "skyId": sky_id, "selectedActionName": selected_action_name};
-            $.ajax({
-                type: "POST",
-                data: dataToSave,
-                url: "<?= base_url() ?>client_registration/userActive",
-                success: function (data) {
-                    if (data == 1) {
-                        alert("Selected users are active");
-                        window.location = "<?= base_url() ?>client_registration";
-                    }
-                },
-                error: function (error) {
-                    alert(error.status + "<--and--> " + error.statusText);
-                }
-            });
-        };
-
-        self.inactive = function () {
-
-            var esb_id = "";
-            var sky_id = "";
-            var selected_action_name = $("#actionSelect option:selected").text();
-            $.each(self.records(), function (i, record) {
-                if (record.isProcessed() == true) {
-                    esb_id = esb_id + "|" + record.eblSkyId;
-                    sky_id = sky_id + "|" + record.skyId;
-                }
-            });
-
-            if (esb_id == "") {
-                alert("Error: No user Is Selected");
-                return false;
+            },
+            error: function (error) {
+            alert(error.status + "<--and--> " + error.statusText);
             }
+    });
+    };
+    self.viewUser = function (item) {
+    window.location = "<?php echo base_url(); ?>client_registration/viewUser?skyId=" + item.skyId;
+    };
+    self.addUser = function (item) {
+    window.location = "<?php echo base_url(); ?>apps_users/addAppsUser/" + $("#actionSelect option:selected").text();
+    };
+    self.editUser = function (item) {
+    window.location = "<?php echo base_url(); ?>apps_users/editAppsUser?eblSkyId=" + item.eblSkyId + "&cfId=" + item.cfId + "&clientId=" + item.clientId + "&skyId=" + item.skyId + "&selectedActionName=" + $("#actionSelect option:selected").text();
+    };
+    self.addDevice = function (item) {
+    window.location = "<?php echo base_url(); ?>client_registration/deviceInfo?skyId=" + item.skyId + "&eblSkyId=" + item.eblSkyId;
+    };
+    self.deletedUser = function (item) {
 
-            esb_id = esb_id.substring(1);
-            sky_id = sky_id.substring(1);
-            var dataToSave = {"eblSkyId": esb_id, "skyId": sky_id, "selectedActionName": selected_action_name};
-            $.ajax({
-                type: "POST",
-                data: dataToSave,
-                url: "<?= base_url() ?>client_registration/userInactive",
-                success: function (data) {
-                    if (data == 1) {
-                        alert("Selected Users are inactive");
-                        window.location = "<?= base_url() ?>client_registration";
-                    }
-                },
-                error: function (error) {
-                    alert(error.status + "<--and--> " + error.statusText);
-                }
-            });
-        };
+    var r = confirm("Are you sure to delete this user?");
+    if (r == true) {
+    $.ajax({
+    type: "POST",
+            data: {"skyId": item.skyId},
+            url: "<?= base_url() ?>client_registration/userDelete",
+            success: function (res) {
 
-
-        self.lock = function () {
-
-            var esb_id = "";
-            var sky_id = "";
-            var selected_action_name = $("#actionSelect option:selected").text();
-            $.each(self.records(), function (i, record) {
-                if (record.isProcessed() == true) {
-                    esb_id = esb_id + "|" + record.eblSkyId;
-                    sky_id = sky_id + "|" + record.skyId;
-                }
-            });
-
-            if (esb_id == "") {
-                alert("Error: No user Is Selected");
-                return false;
-            }
-
-            esb_id = esb_id.substring(1);
-            sky_id = sky_id.substring(1);
-            var dataToSave = {"eblSkyId": esb_id, "skyId": sky_id, "selectedActionName": selected_action_name};
-            $.ajax({
-                type: "POST",
-                data: dataToSave,
-                url: "<?= base_url() ?>client_registration/userLock",
-                success: function (data) {
-                    if (data == 1) {
-                        alert("Selected Users are Locked");
-                        window.location = "<?= base_url() ?>client_registration";
-                    }
-                },
-                error: function (error) {
-                    alert(error.status + "<--and--> " + error.statusText);
-                }
-            });
-
-        };
-
-
-        self.unlock = function () {
-
-            var esb_id = "";
-            var sky_id = "";
-            var selected_action_name = $("#actionSelect option:selected").text();
-            $.each(self.records(), function (i, record) {
-                if (record.isProcessed() == true) {
-                    esb_id = esb_id + "|" + record.eblSkyId;
-                    sky_id = sky_id + "|" + record.skyId;
-                }
-            });
-
-            if (esb_id == "") {
-                alert("Error: No user Is Selected");
-                return false;
-            }
-
-            esb_id = esb_id.substring(1);
-            sky_id = sky_id.substring(1);
-            var dataToSave = {"eblSkyId": esb_id, "skyId": sky_id, "selectedActionName": selected_action_name};
-            $.ajax({
-                type: "POST",
-                data: dataToSave,
-                url: "<?= base_url() ?>client_registration/userUnlock",
-                success: function (data) {
-                    if (data == 1) {
-                        alert("Selected Users are Unlocked");
-                        window.location = "<?= base_url() ?>client_registration";
-                    }
-                },
-                error: function (error) {
-                    alert(error.status + "<--and--> " + error.statusText);
-                }
-            });
-        };
-
-
-        self.viewUser = function (item) {
-            window.location = "<?php echo base_url(); ?>client_registration/viewUser?skyId=" + item.skyId;
-        };
-
-
-        self.addUser = function (item) {
-            window.location = "<?php echo base_url(); ?>apps_users/addAppsUser/" + $("#actionSelect option:selected").text();
-        };
-
-
-        self.editUser = function (item) {
-            window.location = "<?php echo base_url(); ?>apps_users/editAppsUser?eblSkyId=" + item.eblSkyId + "&cfId=" + item.cfId + "&clientId=" + item.clientId + "&skyId=" + item.skyId + "&selectedActionName=" + $("#actionSelect option:selected").text();
-        };
-
-        self.addDevice = function (item) {
-            window.location = "<?php echo base_url(); ?>client_registration/deviceInfo?skyId=" + item.skyId + "&eblSkyId=" + item.eblSkyId;
-        };
-
-        self.deletedUser = function (item) {
-	
-           var r = confirm("Are you sure to delete this user?");
-            if (r == true) {
-                $.ajax({
-                    type: "POST",
-                    data: {"skyId": item.skyId},
-                    url: "<?= base_url() ?>client_registration/userDelete",
-                    success: function (res) {
-
-                        if (res == 1) {
-                            alert("User can't delete because of user device already verified.");
-                           
-                            
-                        } else {
-                            window.location = "<?= base_url() ?>client_registration";
-                        }
-                    },
-                    error: function (error) {
-                        alert(error.status + "<--and--> " + error.statusText);
-                    }
-                });
+            if (res == 1) {
+            alert("User can't delete because of user device already verified.");
             } else {
-                return false;
+            window.location = "<?= base_url() ?>client_registration";
             }
-        };
-
+            },
+            error: function (error) {
+            alert(error.status + "<--and--> " + error.statusText);
+            }
+    });
+    } else {
+    return false;
+    }
+    };
     };
     //ko.applyBindings(new vm());
 
