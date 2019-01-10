@@ -21,6 +21,7 @@ define('ASSETS_FOLDER', 'assets/');
 */
 define("DB_PREFIX", "");
 
+define("TBL_ADMIN_SETTINGS", DB_PREFIX . "admin_settings");
 define("TBL_ADMIN_USERS", DB_PREFIX . "admin_users");
 define("TBL_ADMIN_USERS_GROUP", DB_PREFIX . "admin_users_group");
 define("TBL_ADMIN_USERS_GROUP_MC", DB_PREFIX . "admin_users_group_mc");

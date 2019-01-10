@@ -125,7 +125,7 @@
                             <div class="yamm-content">
                                 <div class="row">                                    
                                     <div class="clearfix mb">
-                                        <ul class="col-md-3 col-xs-12 list-unstyled">
+                                        <ul class="col-md-2 col-lg-2 col-xs-12 list-unstyled">
                                             <li><p><b>Maker</b></p></li>
                                             <?php if (ci_check_permission("canViewAdminUserCreateMenu")): ?>
                                                 <li><a href="<?= base_url() . 'admin_users_maker' ?>">Admin Users</a></li>
@@ -157,7 +157,7 @@
                                                 <li class="hide"><a href="<?= base_url() ?>permission">Permission</a></li>
                                             <?php endif; ?>
                                         </ul>
-                                        <ul class="col-md-3 col-xs-12 list-unstyled">
+                                        <ul class="col-md-2 col-lg-2 col-xs-12 list-unstyled">
                                             <li><p><b>Checker</b></p></li>
                                             <?php if (ci_check_permission("canViewAdminUserGroupAuthorizationMenu")): ?>
                                                 <li><a href="<?= base_url() . 'admin_user_group_checker' ?>">Admin User Group Authorization</a></li>
@@ -195,7 +195,7 @@
                                                 <li><a class="hidden" href="<?= base_url() . 'apps_user_delete_checker' ?>">Apps User Delete Authorization</a></li>
                                             <?php endif; ?>
                                         </ul>
-                                        <ul class="col-md-3 col-xs-12 list-unstyled">
+                                        <ul class="col-md-2 col-lg-2 col-xs-12 list-unstyled">
                                             <li><p><b>Request Process</b></p></li>
 
                                             <?php if (ci_check_permission("canViewProductRequestMenu")): ?>
@@ -210,7 +210,7 @@
                                                 <li><a href="<?= base_url() . 'banking_service_request/getRequests' ?>">Banking</a></li>
                                             <?php endif; ?>
                                         </ul>
-                                        <ul class="col-md-3 col-xs-12 list-unstyled">
+                                        <ul class="col-md-2 col-xs-12 list-unstyled">
                                             <li><p><b>Configuration</b></p></li>
                                             <?php if (ci_check_permission("canViewPasswordPolicyMenu")): ?>
                                                 <li><a href="<?= base_url() . 'password_policy_setup' ?>">Password Policy Setup</a></li>
@@ -226,6 +226,12 @@
                                             <li><a href="<?= base_url() . 'account_type/index' ?>">Account Type Setup</a></li>
                                             <li><a href="<?= base_url() . 'fund_transfer_setup/index' ?>">Fund Transfer Setup</a></li>
                                             <li><a href="<?= base_url() . 'activity_log_type/index' ?>">Activity Log Type Setup</a></li>
+                                        </ul>
+                                        <ul class="col-md-2 col-lg-2 col-xs-12 list-unstyled">
+                                            <li><p><b>Application settings</b></p></li>
+                                            <?php //if (ci_check_permission("canViewApplicationSettingsMenu")): ?>
+                                            <li><a href="<?= base_url() . 'settings' ?>"> Application settings</a></li>
+                                            <?php  //endif; ?>
                                         </ul>
                                     </div>
                                 </div>
