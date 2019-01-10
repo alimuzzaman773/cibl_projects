@@ -25,17 +25,31 @@
         </thead>
         <tbody>
             <tr>
-                <td><b>Minimum Amount</b></td>
+                <td><b>Minimum Prepaid Amount</b></td>
                 <td>
                     <input type="number" min="0" class="form-control input-sm" name="top_up[topup_min]" value="<?= $this->settings_model->getItem('topup_min', $settings['top_up']) ?>">
-                    <small class=''>Minimum amount per day for top-up</small>
+                    <small class=''>Minimum amount per day for prepaid top-up payment</small>
                 </td>
             </tr>
             <tr>
-                <td><b>Maximum Amount</b></td>
+                <td><b>Maximum Prepaid Amount</b></td>
                 <td>
                     <input type="number" min="0" class="form-control input-sm" name="top_up[topup_max]" value="<?= $this->settings_model->getItem('topup_max', $settings['top_up']) ?>">
-                    <small class=''>Minimum amount per day for top-up</small>
+                    <small class=''>Maximum amount per day for Prepaid top-up payment</small>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Minimum Postpaid Amount</b></td>
+                <td>
+                    <input type="number" min="0" class="form-control input-sm" name="top_up[topup_postpaid_min]" value="<?= $this->settings_model->getItem('topup_postpaid_min', $settings['top_up']) ?>">
+                    <small class=''>Minimum amount per day for postpaid top-up payment</small>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Maximum Postpaid Amount</b></td>
+                <td>
+                    <input type="number" min="0" class="form-control input-sm" name="top_up[topup_postpaid_max]" value="<?= $this->settings_model->getItem('topup_postpaid_max', $settings['top_up']) ?>">
+                    <small class=''>Maximum amount per day for postpaid top-up payment</small>
                 </td>
             </tr>
             <tr>
