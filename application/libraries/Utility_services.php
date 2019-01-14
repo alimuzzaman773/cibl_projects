@@ -430,7 +430,7 @@ class Utility_services {
 
         try {
             $url = UTILITY_URL . $requestInfo["url"];
-            $request = Requests::post($url, $header, $requestData);
+            $request = Requests::post($url, $header, $requestData, array("timeout" => 200));
 
             return array(
                 "success" => $request->success,
