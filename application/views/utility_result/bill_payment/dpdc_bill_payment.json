@@ -1,0 +1,12 @@
+{
+    "status": "payment_success",
+    "status_code": "111",
+    "status_title": "Payment is successful",
+    "data": {
+        "status": "000",
+        "message": "SUCCESS",
+        "bill_no": "63154207314",
+        "trxid": "BC564564564"
+    },
+    "lid": "PBDP153958570911170"
+}

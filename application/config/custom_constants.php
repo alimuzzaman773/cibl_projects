@@ -122,3 +122,5 @@ if(!defined('cbs_data_from_dummy')):
 endif;
 define('API_URL', "http://172.20.163.19/pbl_api/");
 define('CBS_URL', "http://192.168.0.128:86/api/");
+define('UTILITY_URL', "http://api.sslwireless.com/api/");
+

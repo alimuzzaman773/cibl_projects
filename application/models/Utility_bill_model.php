@@ -4,7 +4,7 @@ class Utility_bill_model extends CI_Model {
 
     function getUtilityBillList($params = array()) {
 
-       if (isset($params['count']) && $params['count'] == true) {
+        if (isset($params['count']) && $params['count'] == true) {
             $this->db->select("COUNT(p.payment_id) as total");
         } else {
             $this->db->select('p.*, bpt.fromAccNo as bpt_from_ac, bpt.amount as bpt_amount, bpt.narration as bpt_narration, bpt.isSuccess as bpt_success,'
@@ -20,7 +20,7 @@ class Utility_bill_model extends CI_Model {
                 ->join("apps_transaction" . " lt", "lt.transferId = p.lpc_transfer_id", "left")
                 ->join("apps_transaction" . " o1t", "o1t.transferId = p.other1_transfer_id", "left")
                 ->join("apps_transaction" . " o2t", "o2t.transferId = p.other2_transfer_id", "left");
-        //->where("p.isSuccess", "Y");
+//->where("p.isSuccess", "Y");
 
         if (isset($params['payment_id']) && (int) $params['payment_id']):
             $this->db->where("p.payment_id", $params['payment_id']);
@@ -57,32 +57,105 @@ class Utility_bill_model extends CI_Model {
         }
         return false;
     }
-    
-    function cancelBill($data=array()){
-        
-    }
 
-    function reverseBill($data = array()) {
+    function reverseUtility($data = array()) {
 
-        $query = $this->db->select("at.*, ai.accBranchCode")
-                ->from("apps_transaction at")
-                ->join("account_info ai", "at.fromAccNo=ai.accNo", "inner")
-                ->where("transferId", $data["transaction_id"])
+        $query = $this->db->select("sp.*")
+                ->from("ssl_bill_payment sp")
+                ->where("payment_id", $data["payment_id"])
                 ->get();
 
         if ($query->num_rows() <= 0) {
             return array(
                 "success" => false,
-                "msg" => "There are no transaction found."
+                "msg" => "There are no bill payment found."
             );
         }
 
-        $trnData = $query->row();
+        $paymentInfo = $query->row();
+
+        if ($paymentInfo->utility_name == "top_up" || $paymentInfo->utility_name == "buft" || $paymentInfo->utility_name == "ois") {
+            return array(
+                "success" => false,
+                "msg" => "Reverse not possible this type of bill payment."
+            );
+        }
+
+        $tranId = array(
+            "bill_id" => $paymentInfo->bp_transfer_id,
+            "vat_id" => $paymentInfo->vat_transfer_id,
+            "stamp_id" => $paymentInfo->stamp_transfer_id,
+            "lpc_id" => $paymentInfo->lpc_transfer_id,
+            "wasa_other_" => $paymentInfo->other1_transfer_id,
+            "wasa_other_2" => $paymentInfo->other2_transfer_id
+        );
+
+        foreach ($tranId as $pid) {
+            if ((int) $pid > 0) {
+                $this->reverseTransaction($pid);
+            }
+        }
+
+        $rBillData = array(
+            "transaction_id" => $paymentInfo->transaction_id,
+            "type" => $paymentInfo->utility_name
+        );
+
+        $this->load->library("utility_services");
+
+        $res = $this->utility_services->billCancel($rBillData);
+        if (!$res["success"]) {
+            $json = array(
+                "success" => false,
+                "msg" => $res["msg"]
+            );
+            my_json_output($json);
+        }
+
+        $sslRes = $res["data"];
+
+        if ($sslRes["status"] == "error") {
+            $json = array(
+                "success" => false,
+                "msg" => $sslRes["message"]
+            );
+            my_json_output($json);
+        }
+
+        if ($sslRes["status"] == "payment_canceled") {
+            $json = array(
+                "success" => true
+            );
+            my_json_output($json);
+        }
+
+        $json = array(
+            "success" => false,
+            "msg" => "SSL Reverse processing error."
+        );
+        my_json_output($json);
+    }
+
+    function reverseTransaction($trnId) {
+
+        $query = $this->db->select("at.*")
+                ->from("apps_transaction at")
+                ->where("at.transferId", $trnId)
+                ->get();
+
+        if ($query->num_rows() <= 0) {
+            return array(
+                "success" => false,
+                "msg" => "Please provide valid transaction id"
+            );
+        }
+
+        $trnInfo = $query->row();
 
         $reverseData = array(
-            "branch_id" => $trnData->accBranchCode,
-            "transaction_date" => $trnData->creationDtTm,
-            "batch_no" => $trnData->crossRefNo
+            "branch_id" => getBranchId($trnInfo->fromAccNo),
+            "transaction_date" => $trnInfo->creationDtTm,
+            "batch_no" => $trnInfo->crossRefNo
         );
 
         $this->load->library("cbs_services");
@@ -96,7 +169,7 @@ class Utility_bill_model extends CI_Model {
                 "status1" => 0,
                 "data" => json_encode($cbsRes)
             );
-            $this->updateTransaction($trnErrorData, $data["transaction_id"]);
+            $this->updateTransaction($trnErrorData, $trnId);
             return array(
                 "success" => false,
                 "msg" => "Transaction reversed failed."
@@ -114,7 +187,7 @@ class Utility_bill_model extends CI_Model {
                 "status1" => 0,
                 "data" => json_encode($cbsResObject)
             );
-            $this->updateTransaction($trnErrorData, $data["transaction_id"]);
+            $this->updateTransaction($trnErrorData, $trnId);
             return array(
                 "success" => false,
                 "msg" => $trnErrorData['warning']
@@ -128,11 +201,11 @@ class Utility_bill_model extends CI_Model {
             "isReverse" => 1,
             "data" => json_encode($cbsResObject)
         );
-        $this->updateTransaction($successData, $data["transaction_id"]);
+        $this->updateTransaction($successData, $trnId);
 
         return array(
             "success" => true,
-            "transaction_id" => $data["transaction_id"],
+            "transaction_id" => $trnId,
             "batch_no" => $cbsResObject["BATCH_NO"]
         );
     }

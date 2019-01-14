@@ -1,0 +1,21 @@
+{   
+    "status": "api_success", 
+    "status_code": "000", 
+    "status_title": "API response sucess from Uttlity.", 
+    "data": { 
+        "bill_number": "2015063010129000006", 
+        "customer_name": "MONOARA BEGUM                    ", 
+        "exchange_code": "1012", 
+        "phone_number": "9000006", 
+        "bill_month": "05", 
+        "bill_year": "2015", 
+        "last_pay_date": "2015-06-30", 
+        "bill_amount": "160", 
+        "vat_amount": "24", 
+        "total_amount": 184, 
+        "bill_account": "4002000000450", 
+        "vat_account": "4002000000451" 
+    },    
+    "lid": "69319095", 
+    "transaction_id": "AB0504044227674" 
+}

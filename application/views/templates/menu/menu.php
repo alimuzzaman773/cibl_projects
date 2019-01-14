@@ -314,7 +314,7 @@
                                 <div class="clearfix mb">
                                     <ul class="col-md-2 col-xs-12 list-unstyled">
                                         <li><p><b>Bill Payment</b></p></li>
-                                        <li><a href="<?= base_url() . 'transaction/#/transaction_list' ?>">Bill Payment</a></li>
+                                        <li><a href="<?= base_url() . 'utility_bill/#/utility_list' ?>">Bill Payment</a></li>
                                     </ul>
                                 </div>
                             </div>

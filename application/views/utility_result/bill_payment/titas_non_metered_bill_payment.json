@@ -1,0 +1,17 @@
+{
+  "status": "payment_success",
+  "status_code": "111",
+  "status_title": "Payment Success",
+  "data": {
+    "id": 3637055,
+    "bank": "PREMIER BANK LTD.",
+    "batchNo": "2011112018005",
+    "amount": 800,
+    "surcharge": 100,
+    "total": 900,
+    "voucherDate": "11/11/2018",
+    "particulars": "0518",
+    "bankTransactionId": "PB1111112312332947"
+  },
+  "lid": "PB1111112312332947"
+}

@@ -1,0 +1,19 @@
+{
+    "status": "api_success",
+    "status_code": "000",
+    "status_title": "API response is successful from Biller",
+    "lid": "PBDP153958570911170",
+    "transaction_id": "BC564564564",
+    "data": {
+        "account_number": "13620378",
+        "bill_number": "63154207314",
+        "zone_code": "D1",
+        "due_date": "25-NOV-15",
+        "bill_amount": "116026.2",
+        "vat_amount": "5446.8",
+        "stamp_amount": "10",
+        "total_amount": "121483",
+        "bill_account": "4002000000450",
+        "vat_account": "4002000000451"
+    }
+}

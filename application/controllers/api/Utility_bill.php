@@ -55,14 +55,14 @@ class Utility_bill extends CI_Controller {
         my_json_output($data);
         }
 
-    function reverse_transaction() {
+    function reverse_utility() {
 
-        $params["transaction_id"] = (int) $this->input->post("transaction_id", true);
+        $params["payment_id"] = (int) $this->input->post("payment_id", true);
 
         $this->load->library('form_validation');
         $this->form_validation->set_data($params);
 
-        $this->form_validation->set_rules('transaction_id', 'Transaction ID', 'trim|required|numeric|greater_than[0]');
+        $this->form_validation->set_rules('payment_id', 'Payment ID', 'trim|required|numeric|greater_than[0]');
 
         if ($this->form_validation->run() == FALSE):
             $json = array(
@@ -72,8 +72,8 @@ class Utility_bill extends CI_Controller {
             my_json_output($json);
         endif;
 
-        $this->load->model("transaction_model");
-        $result = $this->transaction_model->reverseTransaction($params);
+        $this->load->model("utility_bill_model");
+        $result = $this->utility_bill_model->reverseUtility($params);
 
         if (!$result["success"]) {
 

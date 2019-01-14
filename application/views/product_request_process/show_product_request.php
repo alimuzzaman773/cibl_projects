@@ -27,7 +27,6 @@
             </div>
         </div>       
     </div>
-
     <table class="table table-bordered table-hover table-condensed">
         <thead>
             <tr class="bg-primary">
@@ -61,13 +60,13 @@
                             Action <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu">
-                            <?php if (ci_check_permission("canEmailProductRequest")): ?>
-                            <li data-ng-if="item.status1 == 0">
+                            <?php  if (ci_check_permission("canEmailProductRequest")): ?>
+                            <li data-ng-if="item.status == 0 || item.status==null">
                                 <a href="<?= base_url() . "product_request_process/processRequestById/" ?>{{item.applyId}}">
                                     <i class="glyphicon glyphicon-envelope"></i> Email
                                 </a>
                             </li>  
-                            <?php endif;?>
+                            <?php  endif;?>
                         </ul>
                     </div>
                 </td>

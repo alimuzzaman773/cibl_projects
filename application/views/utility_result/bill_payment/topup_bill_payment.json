@@ -1,0 +1,11 @@
+{ 
+    "status": "payment_success", 
+    "status_code": "111", 
+    "status_title": "Payment Success", 
+    "data": { 
+        "vr_guid": "VRSSLW-AB-1125066946", 
+        "recharge_status": 200, 
+        "message": "Recharge request has been initiated for processing." 
+    }, 
+    "lid": "UCVR152035639719164" 
+}

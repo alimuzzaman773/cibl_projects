@@ -4,6 +4,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Welcome extends CI_Controller {
 
+    function dpdc_cancel() {
+        $this->load->library("utility_services");
+        $info = array(
+            "transaction_id" => "PBLAPP20190114651",
+            
+        );
+        $result = $this->utility_services->billCancel($info);
+        d($result);
+    }
+
     function sms_test() {
         $this->load->library("sms_service");
 
@@ -18,7 +28,7 @@ class Welcome extends CI_Controller {
     function mail() {
         $this->load->library("email_service");
         $params = array(
-            'email' => $this->input->get("email",true),
+            'email' => $this->input->get("email", true),
             'subject' => "Your OTP for PREMIER Account Activation",
             'body' => "test email"
         );

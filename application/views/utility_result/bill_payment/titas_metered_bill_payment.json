@@ -1,0 +1,36 @@
+{
+  "status": "payment_success",
+  "status_code": "111",
+  "status_title": "Payment Success",
+  "data": {
+    "status": 200,
+    "message": "Payment is added",
+    "data": {
+      "paymentId": 202690,
+      "customerCode": "80600053600039",
+      "transactionDate": "20181111",
+      "transactionStatus": 0,
+      "invoiceNo": "903238813",
+      "invoiceAmount": 255725,
+      "paidAmount": 178989,
+      "sourceTaxAmount": 76726,
+      "revenueStamp": 10,
+      "bankCode": "PM",
+      "branchCode": "",
+      "branchRoutingNo": "235671183",
+      "zone": "ZMO-Fatulla",
+      "operator": "1",
+      "refNo": "PB1111121123456540",
+      "reason": "",
+      "cancelOperator": "",
+      "chalanDate": "20181111",
+      "chalanBank": "SonaliBankLtd",
+      "chalanBranch": "NarayangonjCorporate",
+      "chalanNo": "62",
+      "creator": "mGXavDMBUoacJbtasdfghjkfqdCEam5R",
+      "creationTime": 1541916694097,
+      "postingTime": null
+    }
+  },
+  "lid": "PB1111121123456540"
+}
