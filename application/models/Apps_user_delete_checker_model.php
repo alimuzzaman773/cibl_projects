@@ -7,7 +7,7 @@ class Apps_user_delete_checker_model extends CI_Model {
 
     public function __construct() {
         parent::__construct();
-      $this->load->library("my_session");
+        $this->load->library("my_session");
     }
 
     public function getUnapprovedDeleteUser() {
@@ -28,7 +28,7 @@ class Apps_user_delete_checker_model extends CI_Model {
         $this->db->update('apps_users_mc', $data);
     }
 
-    public function deleteCheckerApproval($skyId, $eblSkyId) {
+    public function deleteCheckerApproval($skyId, $params = array()) {
         $documentId = rrn_no();
 
         $userMakerQry = $this->db->select("*")
@@ -80,7 +80,7 @@ class Apps_user_delete_checker_model extends CI_Model {
         $deleteLog["actionCode"] = "delete";
         $deleteLog["moduleCode"] = "01";
         $deleteLog["documentId"] = $documentId;
-
+        $deleteLog["reason"] = $params['reason'];
 
         try {
             $this->db->trans_begin();
@@ -110,8 +110,10 @@ class Apps_user_delete_checker_model extends CI_Model {
 
             $this->db->insert('bo_activity_log', $activityLog);
 
-            $this->db->where("eblSkyId", $eblSkyId)
-                    ->update("generate_eblskyid", $publishedData);
+            if (isset($params['eblSkyId']) && trim($params['eblSkyId']) != ''):
+                $this->db->where("eblSkyId", $params['eblSkyId'])
+                        ->update("generate_eblskyid", $publishedData);
+            endif;
 
             $this->db->where("skyId", $skyId)
                     ->delete("apps_users_mc");
@@ -126,8 +128,17 @@ class Apps_user_delete_checker_model extends CI_Model {
                     ->delete("device_info");
 
             $this->db->trans_commit();
-        } catch (Exception $ex) {
+
+            return array(
+                "success" => true,
+            );
+        } catch (Exception $e) {
             $this->db->trans_rollback();
+
+            return array(
+                "success" => false,
+                "msg" => $e->getMessage()
+            );
         }
         return false;
     }

@@ -71,6 +71,7 @@ class Transaction_limit_setup_maker extends CI_Controller {
         $this->my_session->authorize("canAddLimitPackage");
         $groupName = $_POST['group_name'];
         $groupDescription = $_POST['groupDescription'];
+        $globalLimit = $_POST['globalLimit'];
         
         $ownAccount = isset($_POST['own_acc_transfer']) ? $_POST['own_acc_transfer'] : array();
         $eblAccount = isset($_POST['ebl_acc_transfer']) ? $_POST['ebl_acc_transfer'] : array();
@@ -83,6 +84,7 @@ class Transaction_limit_setup_maker extends CI_Controller {
 
         $dbData['userGroupName'] = $groupName;
         $dbData['groupDescription'] = $groupDescription;
+        $dbData['globalLimit'] = $globalLimit;
 
         $dbData['oatMinTxnLim'] = 0.00;
         $dbData['oatMaxTxnLim'] = 0.00;
@@ -194,6 +196,7 @@ class Transaction_limit_setup_maker extends CI_Controller {
 
         $dbData = $this->transaction_limit_setup_model_maker->getGroupById($data['appsGroupId']);
         $data['group'] = json_encode($dbData);
+        $data['globalLimit'] = $dbData['globalLimit'];
 
         $data['userGroupName'] = $_POST['groupName'];
         $data['userGroupDescription'] = $_POST['groupDescription'];
@@ -245,6 +248,7 @@ class Transaction_limit_setup_maker extends CI_Controller {
 
         $dbData['userGroupName'] = $groupName;
         $dbData['groupDescription'] = $groupDescription;
+        $dbData['globalLimit'] = $_POST['globalLimit'];
 
         $dbData['oatMinTxnLim'] = 0.00;
         $dbData['oatMaxTxnLim'] = 0.00;

@@ -411,7 +411,10 @@ class Apps_user_delete_checker extends CI_Controller {
                 $res = $this->checkUserInteraction($id, $makerActionDtTm, $checkerActionDtTm);
 
                 if ($res == 0) {
-                    $this->apps_user_delete_checker_model->deleteCheckerApproval($id, $dbData["eblSkyId"]);
+                    $params = array(
+                        "eblSkyId" => $dbData["eblSkyId"]
+                    );
+                    $this->apps_user_delete_checker_model->deleteCheckerApproval($id, $params);
                     // activity log goes here
                     redirect('apps_user_delete_checker');
                 } else {

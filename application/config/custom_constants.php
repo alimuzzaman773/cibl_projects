@@ -21,6 +21,7 @@ define('ASSETS_FOLDER', 'assets/');
 */
 define("DB_PREFIX", "");
 
+define("TBL_ADMIN_SETTINGS", DB_PREFIX . "admin_settings");
 define("TBL_ADMIN_USERS", DB_PREFIX . "admin_users");
 define("TBL_ADMIN_USERS_GROUP", DB_PREFIX . "admin_users_group");
 define("TBL_ADMIN_USERS_GROUP_MC", DB_PREFIX . "admin_users_group_mc");
@@ -40,6 +41,8 @@ define("TBL_APP_USER_ACTIVITY_LOG", DB_PREFIX . "app_user_activity_log");
 define("TBL_DEVICE_INFO", DB_PREFIX . "device_info");
 define("TBL_COMPLAINT_INFO", DB_PREFIX . "complaint_info");
 define("TBL_APP_USER_ACTIVITY_LOG_TYPE", DB_PREFIX . "app_user_activity_log_type");
+define("TBL_APP_USERS_MC", DB_PREFIX . "apps_users_mc");
+define("TBL_APP_USERS_GROUP", DB_PREFIX . "apps_users_group");
 
 // All Constant Variables:
 define ("PRODUCT_REQUEST_REPORTING_MAIL", serialize(array( 'mail1'=>"abc@gmail.com", 'mail2'=> "abc@yahoo.com")));
