@@ -74,6 +74,13 @@ class Utility_bill_model extends CI_Model {
 
         $paymentInfo = $query->row();
 
+        if ($paymentInfo->isReverse == "Y") {
+            return array(
+                "success" => false,
+                "msg" => "This bill already reversed."
+            );
+        }
+
         if ($paymentInfo->utility_name == "top_up" || $paymentInfo->utility_name == "buft" || $paymentInfo->utility_name == "ois") {
             return array(
                 "success" => false,
@@ -123,6 +130,15 @@ class Utility_bill_model extends CI_Model {
         }
 
         if ($sslRes["status"] == "payment_canceled") {
+
+            $updateData = array(
+                "isReverse" => "Y",
+                "revreseData" => json_encode($sslRes)
+            );
+
+            $this->db->where("payment_id", $paymentInfo->payment_id)
+                    ->update("ssl_bill_payment", $updateData);
+
             $json = array(
                 "success" => true
             );
