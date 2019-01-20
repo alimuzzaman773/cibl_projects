@@ -234,7 +234,7 @@
                                             <?php //endif; ?>
                                         </ul>
                                         <ul class="col-md-2 col-lg-2 col-xs-12 list-unstyled">
-                                            <li><p><b>Log</b></p></li>
+                                            <li><p><b>Logs</b></p></li>
                                             <li><a href="<?= base_url() . 'log/bo_log' ?>"> BO Activity log</a></li>
                                         </ul>
                                     </div>
