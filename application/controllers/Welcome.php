@@ -7,13 +7,14 @@ class Welcome extends CI_Controller {
     function dpdc_cancel() {
         $this->load->library("utility_services");
         $info = array(
+            "type"=>"dpdc",
             "transaction_id" => "PBLAPP20190114651",
             
         );
         $result = $this->utility_services->billCancel($info);
         d($result);
     }
-
+    
     function sms_test() {
         $this->load->library("sms_service");
 

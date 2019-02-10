@@ -426,4 +426,205 @@ class Call_center extends CI_Controller {
         }
     }
 
+    function request_account_list() {
+        $p['get_count'] = (bool) $this->input->get("get_count", true);
+        $p['limit'] = $this->input->get('limit', true);
+        $p['offset'] = $this->input->get('offset', true);
+        $this->load->model("call_center_model");
+
+        $json['total'] = 0;
+        $json['account_list'] = array();
+
+        if ($p['get_count']) {
+            $params['get_count'] = 1;
+            $result = $this->call_center_model->getAllRequestAccount($params);
+            if ($result):
+                $json['total'] = $result->row()->total;
+            endif;
+        }
+
+        unset($p['get_count']);
+        $result = $this->call_center_model->getAllRequestAccount($p);
+        if ($result):
+            $json['account_list'] = $result->result();
+        endif;
+
+        my_json_output($json);
+    }
+
+    function get_request_account_info($userId) {
+
+        $userData = array();
+        $this->load->model('call_center_model');
+
+        $user = $this->call_center_model->getAllRequestAccount(array("skyId" => (int) $userId));
+
+        if (!$user) {
+            $json = array(
+                "success" => false,
+                "msg" => "There are no user found"
+            );
+            my_json_output($json);
+        }
+
+        $userInfo = $user->row();
+        $accountInfo = array();
+        $cardInfo = array();
+
+        $accountSearchResponse = array();
+        switch ($userInfo->type) {
+            case "account":
+                $account = $this->call_center_model->getRequestAccountInfo($userInfo->entityNumber);
+                if ($account["success"]) {
+                    $accountInfo = $account["data"];
+                }
+                $accountSearchResponse = $account;
+                break;
+
+            case "card":
+                $card = $this->call_center_model->getRequestCardInfo($userInfo->entityNumber);
+                if ($card["success"]) {
+                    $cardInfo = $card["data"];
+                }
+                $accountSearchResponse = $card;
+                break;
+        }
+
+        $json = array(
+            "success" => true,
+            "user_info" => $userInfo,
+            "user_accounts" => $accountInfo,
+            "user_cards" => $cardInfo,
+            "response" => $accountSearchResponse
+        );
+        my_json_output($json);
+    }
+
+    function account_approve($userId) {
+
+        $this->load->model(array('mailer_model', 'call_center_model'));
+        $user = $this->call_center_model->getAllRequestAccount(array("skyId" => (int) $userId));
+        if (!$user) {
+            $json = array(
+                "success" => false,
+                "msg" => "There are no user found"
+            );
+            my_json_output($json);
+        }
+
+        $userInfo = $user->row();
+
+        switch ($userInfo->type) {
+            case "account":
+                $account = $this->call_center_model->approveAccount($userInfo->entityNumber, $userId);
+                if (!$account["success"]) {
+                    $accRes = array(
+                        "success" => false,
+                        "msg" => $account["msg"]
+                    );
+                    my_json_output($accRes);
+                }
+                break;
+
+            case "card":
+                $card = $this->call_center_model->approveCard($userInfo->entityNumber, $userId);
+                if (!$card["success"]) {
+                    $cardRes = array(
+                        "success" => false,
+                        "msg" => $card["msg"]
+                    );
+                    my_json_output($cardRes);
+                }
+                break;
+        }
+    }
+    
+    function reject_user() 
+    {
+        $skyId = $this->input->post("skyId",true);
+        $remarks = $this->input->post("remarks",true);
+        
+        $this->load->model(array('mailer_model', 'call_center_model'));
+
+        $getUserInfo = $this->call_center_model->getUserInfo((int) $skyId);
+        if (!$getUserInfo) {
+            $json = array(
+                "success" => false,
+                "msg" => "User information not found"
+            );
+            my_json_output($json);
+        }
+
+        $userInfo = $getUserInfo->row();
+
+        $uData = array(
+            "isRejected" => 1,
+            "remarks" => $remarks,
+            'checkerAction' => 'rejected',
+            'checkerActionComment' => $remarks,
+            'checkerActionDt' => date("Y-m-d"),
+            'checkerActionTm' => date("H:i:s"),
+            'checkerActionBy' => $this->my_session->userId
+        );
+
+        try {
+            $this->db->where("skyId", $userInfo->skyId)
+                    ->where("isPublished", 0)
+                    ->update("apps_users_mc", $uData);
+
+            $this->db->reset_query();
+
+            $this->db->where("skyId", $userInfo->skyId)
+                    ->where("isPublished", 0)
+                    ->update("apps_users", $uData);
+
+
+            $json = array(
+                "success" => true
+            );
+            my_json_output($json);    
+        }
+        catch(Exception $e)
+        {
+            $json = array(
+                'success' => false,
+                'msg' => $e->getMessage()
+            );
+            my_json_output($json);
+        }
+    }
+
+    function remove_user() {
+        if (empty($this->my_session->userId) && $this->my_session->userId <= 0):
+            $json = array(
+                'success' => false,
+                'msg' => 'You are not logged in'
+            );
+            my_json_output($json);
+        endif;
+
+        $params['skyId'] = (int) $this->input->post('skyId', TRUE);
+        $params['reason'] = $this->input->post('reason', TRUE);
+        $params['eblSkyId'] = $this->input->post('eblSkyId', TRUE);
+
+        $this->load->model('call_center_model');
+        $this->load->library('form_validation');
+
+        $this->form_validation->set_rules('skyId', 'skyId', 'xss_clean|integer|required');
+        $this->form_validation->set_rules('reason', 'reason', 'xss_clean|required');
+
+        if ($this->form_validation->run() == FALSE):
+            $json = array(
+                "success" => false,
+                "msg" => validation_errors('<p>', '</p>')
+            );
+
+            echo json_encode($json);
+            die();
+        endif;
+
+        $result = $this->call_center_model->removeUser($params['skyId'], $params);
+
+        my_json_output($result);
+    }
 }

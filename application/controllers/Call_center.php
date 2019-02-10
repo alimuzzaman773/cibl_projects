@@ -37,4 +37,16 @@ class Call_center extends CI_Controller {
         $this->load->view('call_center/confirmation.php', array());
     }
 
+    function request_account() {
+        $this->load->view('call_center/request_account_list.php', array());
+    }
+
+    function account_details() {
+        $this->load->view('call_center/request_account_details.php', array());
+    }
+
+    function remove_user() {
+        $this->load->view('call_center/remove_user.php', array());
+    }
+
 }

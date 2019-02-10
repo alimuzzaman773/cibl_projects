@@ -301,10 +301,18 @@
                         <div class="yamm-content">
                             <div class="row">                                    
                                 <div class="clearfix mb">
+                                    <?php // if(ci_check_permission("canViewCallCenterAppsUser")): ?>
                                     <ul class="col-md-2 col-xs-12 list-unstyled">
                                         <li><p><b>Apps User</b></p></li>
                                         <li><a href="<?= base_url() . 'call_center/#/user_list' ?>">User Authorization</a></li>
                                     </ul>
+                                     <?php // endif; ?>
+                                    <?php // if(ci_check_permission("canViewCallCenterAccount")): ?>
+                                    <ul class="col-md-2 col-xs-12 list-unstyled">
+                                        <li><p><b>Account/Card</b></p></li>
+                                        <li><a href="<?= base_url() . 'call_center/#/request_account' ?>">Account / Card Authorized</a></li>
+                                    </ul>
+                                    <?php // endif; ?>
                                 </div>
                             </div>
                         </div>

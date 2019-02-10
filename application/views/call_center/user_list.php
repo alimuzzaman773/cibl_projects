@@ -5,26 +5,26 @@
 </div>
 
 <div class="modal fade bs-example-modal-sm" tabindex="-1" id="resetModal" role="dialog" aria-labelledby="resetModal">
-  <div class="modal-dialog modal-sm" role="document">
-      <div class="modal-content">
-      <div class="modal-header bg-primary">
-          Please select the PIN Sending Channel
-      </div>
-          <div class="modal-body">
-              <select class="form-control" data-ng-model="otp_channel_pin">
-                  <option value="sms">SMS</option>
-                  <option value="email">EMAIL</option>
-              </select>
-              
-          </div>
-          
-      <div class="modal-footer">
-          <button class="btn btn-primary" data-ng-click="sendPasswordResetPin(resetSkyId);">
-              Confirm and send PIN
-          </button>
-      </div>
-      </div>
-  </div>
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                Please select the PIN Sending Channel
+            </div>
+            <div class="modal-body">
+                <select class="form-control" data-ng-model="otp_channel_pin">
+                    <option value="sms">SMS</option>
+                    <option value="email">EMAIL</option>
+                </select>
+
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-primary" data-ng-click="sendPasswordResetPin(resetSkyId);">
+                    Confirm and send PIN
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="col-md-12 col-sm-12 text-right" data-ng-show="totalCount > 0">        
@@ -81,10 +81,15 @@
                                             <i class="glyphicon glyphicon-send"></i> Send Password Reset Pin
                                         </a>
                                     </li>
-                                    
+
                                     <li>
                                         <a style="cursor: pointer" ng-click="showResetModal(i.skyId, 'pin_resend');">
                                             <i class="glyphicon glyphicon-send"></i> Resend PIN
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a ng-if="i.skyIdOriginal <= 0" href="<?= base_url() . "call_center/#/remove/" ?>{{i.skyId}}">
+                                            <i class="glyphicon glyphicon-trash"></i> Remove
                                         </a>
                                     </li>
                                 </ul>
