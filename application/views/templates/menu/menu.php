@@ -142,11 +142,11 @@
                                             <?php if (ci_check_permission("canViewPinCreateMenu")): ?>
                                                 <li><a class="hidden" href="<?= base_url() . 'pin_generation/viewPinByAction' ?>">Pin</a></li>
                                             <?php endif; ?>
-                                                <!--
+                                            <!--
                                             <?php if (ci_check_permission("canViewBillerSetupMenu")): ?>
                                                 <li><a href="<?= base_url() . 'biller_setup_maker' ?>">Biller Setup</a></li>
                                             <?php endif; ?>
-                                                -->
+                                            -->
                                             <?php if (ci_check_permission("canViewLimitPackgaeMenu")): ?>
                                                 <li><a href="<?= base_url() . 'transaction_limit_setup_maker' ?>">Transaction Package Limit</a></li>
                                             <?php endif; ?>
@@ -176,7 +176,7 @@
                                             <?php endif; ?>
                                             <!--
                                             <?php if (ci_check_permission("canViewBillerSetupAuthorizationMenu")): ?>
-                                                <li><a href="<?= base_url() . 'biller_setup_checker' ?>">Biller Setup Authorization</a></li>
+                                                    <li><a href="<?= base_url() . 'biller_setup_checker' ?>">Biller Setup Authorization</a></li>
                                             <?php endif; ?>
                                             -->
                                             <?php if (ci_check_permission("canViewPinResetAuthorizationMenu")): ?>
@@ -220,7 +220,7 @@
                                             <?php endif; ?>
                                             <!--
                                             <?php if (ci_check_permission("canViewBillerSetupMenu")): ?>
-                                                <li><a href="<?= base_url() . 'bill_type_setup' ?>">Bill Type Setup</a></li>
+                                                    <li><a href="<?= base_url() . 'bill_type_setup' ?>">Bill Type Setup</a></li>
                                             <?php endif; ?>
                                             -->
                                             <li><a href="<?= base_url() . 'account_type/index' ?>">Account Type Setup</a></li>
@@ -231,7 +231,11 @@
                                             <li><p><b>Application settings</b></p></li>
                                             <?php //if (ci_check_permission("canViewApplicationSettingsMenu")): ?>
                                             <li><a href="<?= base_url() . 'settings' ?>"> Application settings</a></li>
-                                            <?php  //endif; ?>
+                                            <?php //endif; ?>
+                                        </ul>
+                                        <ul class="col-md-2 col-lg-2 col-xs-12 list-unstyled">
+                                            <li><p><b>Logs</b></p></li>
+                                            <li><a href="<?= base_url() . 'log/bo_log' ?>"> BO Activity log</a></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -293,7 +297,7 @@
                     </li>    
                 </ul>
             </li>
-           -->
+            -->
             <li class="dropdown yamm-fw">
                 <a href="#" id="dropModules" role="button" data-toggle="dropdown">Call Center<b class="caret"></b></a>
                 <ul id="dropModules" class="dropdown-menu" role="menu" aria-labelledby="dropModules">                    
@@ -319,7 +323,7 @@
                     </li>    
                 </ul>
             </li>
-           <li class="dropdown yamm-fw">
+            <li class="dropdown yamm-fw">
                 <a href="#" id="dropModules" role="button" data-toggle="dropdown">Transaction<b class="caret"></b></a>
                 <ul id="dropModules" class="dropdown-menu" role="menu" aria-labelledby="dropModules">                    
                     <li class="">

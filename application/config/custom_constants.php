@@ -1,4 +1,5 @@
 <?php
+
 date_default_timezone_set('Asia/Dhaka');
 
 define('FILE_READ_MODE', 0644);
@@ -17,8 +18,8 @@ define('TEMPLATES_FOLDER', 'templates/');
 define('CUSTOMER_TEMPLATES_FOLDER', 'customer_templates/');
 define('ASSETS_FOLDER', 'assets/');
 /*
-** Define Tables 
-*/
+ * * Define Tables 
+ */
 define("DB_PREFIX", "");
 
 define("TBL_ADMIN_SETTINGS", DB_PREFIX . "admin_settings");
@@ -43,35 +44,36 @@ define("TBL_COMPLAINT_INFO", DB_PREFIX . "complaint_info");
 define("TBL_APP_USER_ACTIVITY_LOG_TYPE", DB_PREFIX . "app_user_activity_log_type");
 define("TBL_APP_USERS_MC", DB_PREFIX . "apps_users_mc");
 define("TBL_APP_USERS_GROUP", DB_PREFIX . "apps_users_group");
+define("TBL_BO_ACTIVITY_LOG", DB_PREFIX . "bo_activity_log");
 
 // All Constant Variables:
-define ("PRODUCT_REQUEST_REPORTING_MAIL", serialize(array( 'mail1'=>"abc@gmail.com", 'mail2'=> "abc@yahoo.com")));
-define ("IDLE_TIME", "300");
+define("PRODUCT_REQUEST_REPORTING_MAIL", serialize(array('mail1' => "abc@gmail.com", 'mail2' => "abc@yahoo.com")));
+define("IDLE_TIME", "300");
 
 // **** All Modules ***
 
-define ("apps_user_module", "01");
-define ("device_module", "02");
-define ("pin_module", "03");
-define ("admin_user_module", "04");
-define ("admin_user_group_module", "05");
-define ("limit_package_module", "06");
-define ("routing_number_module", "07");
-define ("biller_setup_module", "08");
-define ("bill_type_setup_module", "09");
+define("apps_user_module", "01");
+define("device_module", "02");
+define("pin_module", "03");
+define("admin_user_module", "04");
+define("admin_user_group_module", "05");
+define("limit_package_module", "06");
+define("routing_number_module", "07");
+define("biller_setup_module", "08");
+define("bill_type_setup_module", "09");
 define("password_policy_module", "10");
 
 // ****** Authorization Modules ****
-define ("apps_users_authorization", "01");
-define ("device_authorization", "02");
-define ("pin_reset_authorization", "03");
-define ("admin_user_authorization", "04");
-define ("admin_user_group_authorization", "05");
-define ("limit_package_authorization", "06");
-define ("biller_setup_authorization", "07");
-define ("pin_create_authorization", "08");
-define ("password_policy_authorization", "09");
-define ("apps_user_delete_authorization", "10");
+define("apps_users_authorization", "01");
+define("device_authorization", "02");
+define("pin_reset_authorization", "03");
+define("admin_user_authorization", "04");
+define("admin_user_group_authorization", "05");
+define("limit_package_authorization", "06");
+define("biller_setup_authorization", "07");
+define("pin_create_authorization", "08");
+define("password_policy_authorization", "09");
+define("apps_user_delete_authorization", "10");
 
 
 // ***** Content Setup Modules ****
@@ -92,21 +94,19 @@ define('product_sr', "02");
 define('banking_sr', "03");
 //** Added by Sanjit 21-06-2016****
 
-define("BANK_NAME","PBL");
+define("BANK_NAME", "PBL");
 // **** Report Type Modules *****
 define('user_status', "01");
 define('customer_info', "02");
 define('user_login_info', "03");
 define('fund_transfer', "04");
 define('other_fund_transfer', "05");
-define('user_id_modification', "06"); 
+define('user_id_modification', "06");
 define('billing_info', "07");
 define('priority_request', "08");
 define('product_request', "09");
 define('banking_request', "10");
 //**Ended*****
-
-
 // *** ENCRYPTION KEY **** //
 define('TRANSMISSION_PRIVATE_KEY', 'EblCibl123456789');
 define('BO_PRIVATE_KEY', 'EblCibl123456789');
@@ -120,8 +120,8 @@ define('MASK', '6');
 define('ROOT_DIR', dirname(dirname(dirname(__FILE__))));
 define('DS', DIRECTORY_SEPARATOR);
 
-if(!defined('cbs_data_from_dummy')):
-    define('cbs_data_from_dummy', false);    
+if (!defined('cbs_data_from_dummy')):
+    define('cbs_data_from_dummy', false);
 endif;
 define('API_URL', "http://172.20.163.19/pbl_api/");
 define('CBS_URL', "http://192.168.0.128:86/api/");

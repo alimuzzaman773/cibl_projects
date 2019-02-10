@@ -8,10 +8,38 @@ class Log extends CI_Controller {
     public function __construct() {
         parent::__construct();
 
-        $this->load->database();
-        $this->load->helper('url');
-        $this->load->library('session');
+        $this->load->library("my_session");
+        $this->my_session->checkSession();
         $this->load->library('grocery_CRUD');
+    }
+
+    function bo_log() {
+        try {
+            $crud = new grocery_CRUD();
+            $crud->set_theme(TABLE_THEME);
+            $crud->set_subject('BO Activity log');
+            $crud->set_table(TBL_BO_ACTIVITY_LOG);
+            $crud->order_by('activityLogId', 'desc');
+
+            $crud->columns('actionName', 'actionCode', 'moduleName', 'adminUserName', 'creationDtTm');
+
+            $crud->display_as('adminUserName', 'User Name');
+
+            $crud->unset_delete();
+            $crud->unset_add();
+            $crud->unset_edit();
+
+            $output = $crud->render();
+            $output->css = "";
+            $output->js = "";
+            $output->pageTitle = "BO Activity log";
+            $output->base_url = base_url();
+
+            $output->body_template = "crud/index.php";
+            $this->load->view("site_template.php", $output);
+        } catch (Exception $e) {
+            show_error($e->getMessage() . ' --- ' . $e->getTraceAsString());
+        }
     }
 
     public function _crud_view($output = null) {

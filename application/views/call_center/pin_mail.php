@@ -1,17 +1,11 @@
-<p>Dear Sir/Madam,<br /></p>
-<p>Your PREMIER account activation process is completed.</p>
-<p>Your PREMIER ID is: <b><?=$eblSkyId?></b></p>
-<p>Please activate your device using the provided pin: <b><?php echo $pin; ?></b> to access PREMIER APP</p>
-<br />
-<p>
-    <u>
-        <b>
-           Please ignore this email, if you have already activated your device.        
-        </b>    
-    </u>
-</p>
-<p>
-    Thanks & Regards, 
-    <br/>
-    PREMIER BANK
-</p>
+Dear <?= ((!isset($userName) || trim($userName) != "") ? "Customer" : $userName) ?>,
+<br /><br />
+Your Premier Plus user ID has been created. Your user ID is <b><?= $eblSkyId ?></b> and Temporary Password is <b><?= $pin; ?></b>.<br />
+Note: You can change your User ID to your choice and this change can be done only once. 
+<br /><br />
+If this was not initiated by you, please contact 16411(Mobile) or +88 096120 16411(Overseas & Land Phone) immediately.
+<br /><br />
+Sincerely, 
+<br /><br />
+Digital Banking Division
+The Premier Bank Limited 
