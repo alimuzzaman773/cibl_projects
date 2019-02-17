@@ -343,14 +343,10 @@ class Call_center_model extends CI_Model {
 
         $this->load->library("card_services");
         $cardRequestData = array(
-            "pan" => $cardNo,
-            "mbr" => 0,
-            "required_data" => ""
+            "card_no" => $cardNo
         );
 
-        $this->card_services->requestTaskChaining();
-        $cardHolderInfo = $this->card_services->getCardInfoDynamic($cardRequestData);
-
+        $cardHolderInfo = $this->card_services->getCardDetails($cardRequestData);
         if (!$cardHolderInfo["success"]):
             $json = json_encode(array(
                 "success" => false,
@@ -360,17 +356,7 @@ class Call_center_model extends CI_Model {
             my_json_output($json);
         endif;
 
-        if (count($cardHolderInfo['data']) <= 0 || !isset($cardHolderInfo['data'][0]['accNo'])):
-            $json = json_encode(array(
-                "success" => false,
-                "msg" => "no account information found",
-                'log' => $cardHolderInfo
-            ));
-            my_json_output($json);
-        endif;
-
-        $cardAccountInfo = $cardHolderInfo['data'][0];
-
+        $cardAccountInfo = $cardHolderInfo['data'];
         return array(
             "success" => true,
             "data" => $cardAccountInfo
@@ -509,7 +495,6 @@ class Call_center_model extends CI_Model {
 
         $card = $cardInfo["data"];
 
-        $this->load->library("crypt_global");
         $this->load->model("common_model");
 
         $userAccountInfo = array(
@@ -610,10 +595,17 @@ class Call_center_model extends CI_Model {
                 ->get();
         $deviceChecker = ($deviceCheckerQry->num_rows() > 0) ? $deviceCheckerQry->result() : false;
 
+        $regAttemptQry = $this->db->select("*")
+                ->from("registration_attempts")
+                ->where("skyId", $skyId)
+                ->get();
+        $regAttempt = ($regAttemptQry->num_rows() > 0) ? $regAttemptQry->result() : false;
+
         $jsonData["apps_users_mc"] = $userMaker;
         $jsonData["apps_users"] = $userChecker;
         $jsonData["device_info_mc"] = $deviceMaker;
         $jsonData["device_info"] = $deviceChecker;
+        $jsonData["registration_attempt"] = $regAttempt;
 
         $activityLog = array(
             'activityJson' => json_encode($jsonData),
@@ -669,6 +661,13 @@ class Call_center_model extends CI_Model {
                 $this->db->insert('delete_activity_log', $deleteLog);
             }
 
+            if ($regAttempt) {
+                $this->db->reset_query();
+                $deleteLog["tableName"] = "registration_attempts";
+                $deleteLog["activityJson"] = json_encode($regAttempt);
+                $this->db->insert('delete_activity_log', $deleteLog);
+            }
+            
             $this->db->insert('bo_activity_log', $activityLog);
 
             if (isset($params['eblSkyId']) && trim($params['eblSkyId']) != ''):

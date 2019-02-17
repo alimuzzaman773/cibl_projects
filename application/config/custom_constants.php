@@ -126,4 +126,4 @@ endif;
 define('API_URL', "http://172.20.163.19/pbl_api/");
 define('CBS_URL', "http://192.168.0.128:86/api/");
 define('UTILITY_URL', "http://api.sslwireless.com/api/");
-
+define('CARD_URL', "https://192.168.0.39/PRIME4API/Issuer/PrimeIssuerServices.asmx?WSDL");

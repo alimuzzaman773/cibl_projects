@@ -65,7 +65,7 @@
             </tr>
             <tr>
                 <th align="left" scope="row">Current Address</th>
-                <td>{{user.currentAddress}}</td>
+                <td>{{user.currAddress}}</td>
             </tr>
             <tr>
                 <th align="left" scope="row">Permanent Address</th>
@@ -109,26 +109,32 @@
         <table class="table table-striped table-bordered">
             <thead>
                 <tr class="bg-primary">
-                    <td colspan="7">Request Card Information</td>
+                    <td colspan="10">Request Card Information</td>
                 </tr>
             </thead>    
             <tr>
-                <th>Client ID</th>
+                <th>Card No</th>
                 <th>Account No</th>
-                <th>Currency</th>
-                <th>Card Holder Name</th>
+                <th>Card Holder Name</th>                
+                <th>Product Name</th>
+                <th>Product Code</th>
                 <th>Expiry Date</th>
                 <th>Email</th>
                 <th>Mobile</th>
+                <th>Address</th>
+                <th>Currency</th>
             </tr>
             <tr>
-                <td>{{user_cards.clientId}}</td>
-                <td>{{user_cards.accNo}}</td>
-                <td>{{user_cards.currency}}</td>
+                <td>{{user_cards.card_no}}</td>
+                <td>{{user_cards.account_no}}</td>
                 <td>{{user_cards.name}}</td>
-                <td>{{user_cards.expiry}}</td>
+                <td>{{user_cards.product_name}}</td>
+                <td>{{user_cards.product_code}}</td>
+                <td>{{user_cards.expiry_date}}</td>
                 <td>{{user_cards.email}}</td>
                 <td>{{user_cards.mobile_no}}</td>
+                <td>{{user_cards.address}}</td>
+                <td>{{user_cards.currency}}</td>
             </tr>
         </table>
     </div>

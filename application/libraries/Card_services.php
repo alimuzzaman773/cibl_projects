@@ -5,551 +5,416 @@ if (!defined('BASEPATH'))
 
 class Card_services {
 
-    var $sessionId = NULL;
+    public function getCardDetails($data) {
 
-    function getCardHolderDetails($data) {
-        $requestData = array_merge($data, array("session" => $this->sessionId));
-        $result = $this->pushToCms("card_holder_details", $requestData);
+        $session = $this->ticketGenerate();
+        if (!$session["success"]) {
+            return $session;
+        }
 
+        $session = $session["data"];
+        $requestData = array(
+            "card_no" => $data["card_no"],
+            "message_id" => $session["message_id"],
+            "ticket_id" => $session["ticket_id"]
+        );
+
+        $requestInfo = array(
+            "file" => "card_details"
+        );
+
+        $result = $this->pushToCms($requestInfo, $requestData);
         if (!$result["success"]) {
             return $result;
         }
-        //return $result['data'];
-        $xml = simplexml_load_string($result["data"]);
 
-        $soapResponse = $xml->children('env', true)
-                ->Body->children('m1', true)
-                ->UserDefinedRp->Response
-                ->children('m0', true)
-                ->Result
-                ->children('m2', true);
+        $res = $result["data"]["EntityInquiryResponse"]["EntityInquiryResult"];
+        if (isset($res["Result"]["Code"]) && $res["Result"]["Code"] != '0') {
+            return array(
+                "success" => false,
+                "msg" => $res["Result"]["Description"]
+            );
+        }
 
-        $email = NULL;
-        $mobile = NULL;
-        if (isset($soapResponse->ABONENT)):
-            for ($i = 0; $i < count($soapResponse->ABONENT); $i++) {
-                if (filter_var($soapResponse->ABONENT[$i]->attributes()["ADDRESS"], FILTER_VALIDATE_EMAIL)) {
-                    if ($email === NULL):
-                        $email = (string) $soapResponse->ABONENT[$i]->attributes()["ADDRESS"];
-                    endif;
-                }
-                else {
-                    $checkMb = (string) $soapResponse->ABONENT[$i]->attributes()["ADDRESS"];
-                    $checkMb = ltrim($checkMb, "+");
-                    if ($mobile == NULL && is_numeric($checkMb)):
-                        $mobile = (string) $soapResponse->ABONENT[$i]->attributes()["ADDRESS"];
-                    endif;
-                }
-            }
-        endif;
+        if (!isset($res["Customer"])) {
+            return array(
+                "success" => false,
+                "msg" => "Customer information not found"
+            );
+        }
+        $customer = $res["Customer"];
+
+
+        if (!isset($customer["Account"])) {
+            return array(
+                "success" => false,
+                "msg" => "Account information not found"
+            );
+        }
+        $account = $customer["Account"];
+
+
+        if (!isset($account["Card"])) {
+            return array(
+                "success" => false,
+                "msg" => "Card information not found"
+            );
+        }
+        $cardInfo = $account["Card"];
+
+
+        if (!isset($cardInfo["Data"])) {
+            return array(
+                "success" => false,
+                "msg" => "Data information not found"
+            );
+        }
+        $card = $cardInfo["Data"];
+
+
+        if (!isset($cardInfo["People"]["PersonEntity"])) {
+            return array(
+                "success" => false,
+                "msg" => "People information not found"
+            );
+        }
+        $info = $cardInfo["People"]["PersonEntity"];
+
+
+        if (!isset($info["Addresses"]["AdditionalAddressDetails"])) {
+            return array(
+                "success" => false,
+                "msg" => "Address information not found"
+            );
+        }
+        $address = $info["Addresses"]["AdditionalAddressDetails"];
 
         $details = array(
-            "clientId" => (string) $soapResponse->PERSONID,
-            "cardHolderName" => (string) $soapResponse->NAMEONCARD,
-            "mobileNo" => $mobile,
-            "emailId" => $email,
-            "cardNo" => (string) $soapResponse->PAN
+            "card_no" => $cardInfo["Number"],
+            "account_no" => $account["Number"],
+            "product_name" => $card["ProductName"],
+            "expiry_date" => $card["ExpDate"],
+            "activated" => $card["Activated"],
+            "card_type" => $card["CardType"],
+            "product_code" => $card["ProductShortCode"],
+            "created_date" => $card["CreateDate"],
+            "name" => $info["Title"] . " " . $info["LastName"],
+            "gender" => $info["Gender"],
+            "marital_status" => $info["MaritalStatus"],
+            "address" => $address["Address1"],
+            "city" => $address["City"],
+            "currency" => $address["Country"],
+            "mobile_no" => isset($address["Mobile"]) ? $address["Mobile"] : "",
+            "email" => isset($address["Email"]) ? $address["Email"] : ""
         );
 
         return array(
             "success" => true,
-            "data" => $details,
-            'source' => $result['data']
+            "data" => $details
         );
     }
 
-    function getCardInfo($data) {
-        $requestData = array_merge($data, array("session" => $this->sessionId));
-        $result = $this->pushToCms("card_info", $requestData);
+    public function getCardBalance($data) {
 
+        $session = $this->ticketGenerate();
+        if (!$session["success"]) {
+            return $session;
+        }
+
+        $session = $session["data"];
+        $requestData = array(
+            "account_no" => $data["account_no"],
+            "message_id" => $session["message_id"],
+            "ticket_id" => $session["ticket_id"]
+        );
+
+        $requestInfo = array(
+            "file" => "card_balance"
+        );
+
+        $result = $this->pushToCms($requestInfo, $requestData);
         if (!$result["success"]) {
             return $result;
         }
 
-        $xml = simplexml_load_string($result["data"]);
-
-        $soapResponse = $xml->children('env', true)
-                        ->Body->children('m1', true)
-                        ->GetCardInfoRp->Response
-                        ->children('m0', true)
-                ->Accounts;
-
-        $response = array();
-
-        foreach ($soapResponse->Row as $post) {
-            $item = array(
-                "accNo" => (string) $post->AcctNo,
-                "status" => (string) $post->Status,
-                "ledgerBalance" => (string) $post->LedgerBalance,
-                "currency" => (string) $post->Currency
-            );
-            /* $infoArr = array(
-              "pan" => (string) $post->PAN,
-              "personName" => (string) $post->PersonFIO,
-              "clientId" => (string) $post->PersonID,
-              "expirationDate" => (string) $post->ExpirationDate
-              ); */
-            $response[] = $item;
-        }
-        return array(
-            "success" => true,
-            "data" => $response,
-            'source' => $result['data']
-        );
-    }
-
-    public function posDebit($data) {
-
-        $requestData = array_merge($data, array("session" => $this->sessionId));
-        $result = $this->pushToCms("pos_debit", $requestData);
-
-        if (!$result["success"]) {
-            return $result;
-        }
-
-        $xml = simplexml_load_string($result["data"]);
-
-        $soapResponse = $xml->children('env', true)
-                ->Body->children('m1', true)
-                ->POSRequestRp->Response
-                ->children('m0', true);
-
-
-        $debitArr = array(
-            "approvalCode" => (string) $soapResponse->ApprovalCode,
-            "authRespCode" => (string) $soapResponse->AuthRespCode,
-            "availableBalance" => (string) $soapResponse->AvailBalance,
-            "balanceCurrency" => (string) $soapResponse->BalanceCurrency,
-            "bonusDebt" => (string) $soapResponse->BonusDebt,
-            "cVxOK" => (string) $soapResponse->CVxOK,
-            "currency" => (string) $soapResponse->Currency,
-            "fee" => (string) $soapResponse->Fee,
-            "fromAccount" => (string) $soapResponse->FromAcct,
-            "ledgerBalance" => (string) $soapResponse->LedgerBalance,
-            "transactionId" => (string) $soapResponse->ThisTranId,
-        );
-
-        return array(
-            "success" => true,
-            "data" => $debitArr
-        );
-    }
-
-    public function posCredit($data) {
-
-        $requestData = array_merge($data, array("session" => $this->sessionId));
-        $result = $this->pushToCms("pos_credit", $requestData);
-
-        if (!$result["success"]) {
-            return $result;
-        }
-
-        $xml = simplexml_load_string($result["data"]);
-
-        $soapResponse = $xml->children('env', true)
-                ->Body->children('m1', true)
-                ->POSRequestRp->Response
-                ->children('m0', true);
-
-        $creditArr = array(
-            "approvalCode" => (string) $soapResponse->ApprovalCode,
-            "authRespCode" => (string) $soapResponse->AuthRespCode,
-            "availableBalance" => (string) $soapResponse->AvailBalance,
-            "balanceCurrency" => (string) $soapResponse->BalanceCurrency,
-            "bonusDebt" => (string) $soapResponse->BonusDebt,
-            "cVxOK" => (string) $soapResponse->CVxOK,
-            "currency" => (string) $soapResponse->Currency,
-            "fee" => (string) $soapResponse->Fee,
-            "ledgerBalance" => (string) $soapResponse->LedgerBalance,
-            "maskBalances" => (string) $soapResponse->MaskBalances,
-            "transactionId" => (string) $soapResponse->ThisTranId,
-            "toAccount" => (string) $soapResponse->ToAcct,
-            "transactionId" => (string) $soapResponse->ThisTranId,
-        );
-
-        return array(
-            "success" => true,
-            "data" => $creditArr
-        );
-    }
-
-    public function balanceInquiry($data) {
-
-        $requestData = array_merge($data, array("session" => $this->sessionId));
-        $result = $this->pushToCms("balance_inquiry", $requestData);
-
-        if (!$result["success"]) {
-            return $result;
-        }
-
-        //return $result['data'];
-
-        $xml = simplexml_load_string($result["data"]);
-        $soapResponse = $xml->children('env', true)
-                ->Body->children('m1', true)
-                ->BalanceInquiryRp->Response
-                ->children('m0', true);
-
-        $inquiryArr = array(
-            "availableBalance" => (string) $soapResponse->Avail,
-            "currency" => (string) $soapResponse->Currency,
-            "ledger" => (string) $soapResponse->Ledger,
-            "overdraft" => (string) $soapResponse->OverdraftOn
-        );
-
-        return array(
-            "success" => true,
-            "data" => $inquiryArr
-        );
-    }
-
-    function getCardStatement($data) {
-        $requestData = array_merge($data, array("session" => $this->sessionId));
-        $result = $this->pushToCms("get_card_statement", $requestData);
-
-        if (!$result["success"]) {
-            return $result;
-        }
-
-        $xml = simplexml_load_string($result["data"]);
-
-        $soapResponse = $xml->children('env', true)
-                        ->Body->children('m1', true)
-                        ->GetCardStatementRp->Response
-                        ->children('m0', true)
-                ->Statement;
-        $response = array();
-
-        foreach ($soapResponse->Row as $p) {
-            $transactionTime = "";
-            $trDt = new DateTime((string) $p->TranTime);
-            if ($trDt):
-                $transactionTime = $trDt->format("Y-m-d H:ia");
-            endif;
-            $item = array(
-                "Amount" => (string) $p->Amount,
-                "TranTime" => $transactionTime, //(string)$p->TranTime,
-                "Currency" => (string) $p->Currency,
-                "TermName" => (string) $p->TermName,
-                "TermLocation" => (string) $p->TermLocation,
-                "PAN" => (string) $p->PAN,
-            );
-            $response[] = $item;
-        }
-        return array(
-            "success" => true,
-            "data" => $response
-        );
-    }
-    
-    function getCardInfoDynamic($data, $sessionId = null) {
-        if ($sessionId != NULL):
-            $this->sessionId = $sessionId;
-        endif;
-        $requestData = array_merge($data, array("session" => $this->sessionId));
-        $result = $this->pushToCms("card_info_dynamic", $requestData);
-
-        if (!$result["success"]) {
-            return $result;
-        }
-        //d($result   );
-        //return $result['data'];
-        $xml = simplexml_load_string($result["data"]);
-
-        $soapResponse = $xml->children('env', true)
-                ->Body->children('m1', true)
-                ->GetCardInfoRp->Response
-                ->children('m0', true);
-
-        $accountList = $soapResponse->Accounts;
-
-        $email = NULL;
-        $mobile = NULL;
-        if (isset($soapResponse->AlternativeMessaging->Row)):
-            foreach ($soapResponse->AlternativeMessaging->Row as $am):
-                $address = (string) $am->Address;
-                if (filter_var($address, FILTER_VALIDATE_EMAIL)) {
-                    if ($email === NULL):
-                        $email = (string) $address;
-                    endif;
-                }
-                else {
-                    $checkMb = ltrim($address, "+");
-                    if ($mobile === NULL && is_numeric($checkMb)):
-                        $mobile = (string) $checkMb;
-                    endif;
-                }
-            endforeach;
-        endif;
-
-        $response = array();
-
-        foreach ($accountList->Row as $post) {
-            $item = array(
-                "accNo" => (string) $post->AcctNo,
-                "status" => (string) $post->Status,
-                "ledgerBalance" => (string) $post->LedgerBalance,
-                "currency" => (string) $post->Currency,
-                "clientId" => (string) $soapResponse->PersonId,
-                "expiry" => (string) $soapResponse->ExpDate,
-                "name" => (string) $soapResponse->NameOnCard,
-                "mobile_no" => $mobile,
-                "email" => $email
-            );
-            $response[] = $item;
-        }
-        return array(
-            "success" => true,
-            "data" => $response,
-            "source" => $result["data"]
-        );
-    }
-
-    function getCardLimit($data) {
-        $requestData = array_merge($data, array("session" => $this->sessionId));
-        $result = $this->pushToCms("card_limit", $requestData);
-
-        if (!$result["success"]) {
-            return $result;
-        }
-
-        $xml = simplexml_load_string($result["data"]);
-
-        $soapResponse = $xml->children('env', true)
-                ->Body->children('m1', true)
-                ->GetCardLimitsRp->Response
-                ->children('m0', true);
-
-        $limitList = $soapResponse->Limits;
-
-        $response = array();
-        foreach ($limitList->Row as $post) {
-            $item = array(
-                "limit_id" => (string) $post->LimitId,
-                "current_limit" => (string) $post->Current,
-                "max_limit" => (string) $post->MaxPresentedOnCard
-            );
-            $response[] = $item;
-        }
-        $limitId = array_column($response, 'limit_id');
-
-        $ci = & get_instance();
-        $query = $ci->db->select("*")
-                ->from("itcl_card_limit")
-                ->where_in("limit_id", $limitId)
-                ->get();
-
-        $mergedArray = [];
-        foreach ($query->result_array() as $key => $value) {
-            if ($value["limit_id"] == $response[$key]["limit_id"]) {
-                $it = array(
-                    "limitId" => $response[$key]["limit_id"],
-                    "limitName" => $value["limit_name"],
-                    "currentLimit" => $response[$key]["current_limit"],
-                    "maxLimit" => $response[$key]["max_limit"]
-                );
-                $mergedArray[] = $it;
-            }
-        }
-        return array(
-            "success" => true,
-            "data" => $mergedArray,
-            "source" => $result["data"]
-        );
-    }
-
-    public function createSession() 
-    {
-        $method = "create_session";
-        $result = $this->pushToCms($method, array());
-        
-        if (!$result["success"]) {
-            //d(__FUNCTION__, false);
-            //d($result);
-            error_log(json_encode($result));
-            return $result;
-        }
-
-        $xml = simplexml_load_string($result["data"]);
-
-        $soapResponse = $xml->children('env', true)
-                        ->Body->children('m1', true)
-                        ->InitSessionRp->Response
-                        ->children('m0', true)
-                        ->Id;
-        return (string) $soapResponse;
-    }
-    
-    public function createSessionNew() 
-    {
-        //check in db
-        $ci =& get_instance();
-        $ci->load->database();
-        //d($ci);
-        $sessionRes = $ci->db->get('fimi_sessions');
-        if($sessionRes->num_rows() > 0):
-            $sessionInfo = $sessionRes->row();
-            return $sessionInfo;
-        endif;
-        
-        $method = "create_session";
-        $result = $this->pushToCms($method, array());
-        
-        if (!$result["success"]) {
-            d(__FUNCTION__, false);
-            d($result);
-            error_log(json_encode($result));
-            return $result;
-        }
-
-        $xml = simplexml_load_string($result["data"]);
-        $soapResponse = $xml->children('s', true)
-                        ->Body->children('m1', true)
-                        ->InitSessionRp->Response
-                        ->children('m0', true)
-                        ->Id;
-        $date = date("Y-m-d H:i:s");
-        $d = array(
-            'sessionId' => (int)$soapResponse,
-            'sessionResponse' => $result['data'],
-            'loginResponse' => '',
-            'created' => $date,
-            'updated' => $date
-        );
-        
-        $ci->db->reset_query();
-        $ci->db->insert('fimi_sessions', $d);
-        
-        $login = array("session" => (int)$soapResponse);
-        $loginData = $this->loginNew($login);
-        
-        return (object) $d;
-    }
-    
-    public function loginNew($data) 
-    {
-        $method = "login";
-        $result = $this->pushToCms($method, $data);
-
-        if (!$result["success"]) {
-            //d($data, false);
-            //d(__FUNCTION__, false);
-            //d($result);
-            error_log(json_encode($result));
-            return $result;
-        }
-        
-        $xml = simplexml_load_string($result["data"]);
-
-        $soapResponse = $xml->children('env', true)
-                        ->Body->children('m1', true)
-                        ->LogonRp->Response
-                        ->children('m0', true)
-                ->Operations;
-
-        $response = array();
-
-        foreach ($soapResponse->Row as $post) {
-            $response[] = $post;
-        }
-        return array(
-            'response' => $response,
-            'data' => $result['data']
-        );
-    }
-
-    public function login($data) 
-    {
-        $method = "login";
-        $result = $this->pushToCms($method, $data);
-
-        if (!$result["success"]) {
-            //d($data, false);
-            //d(__FUNCTION__, false);
-            //d($result);
-            error_log(json_encode($result));
-            return $result;
-        }
-
-        $xml = simplexml_load_string($result["data"]);
-
-        $soapResponse = $xml->children('env', true)
-                        ->Body->children('m1', true)
-                        ->LogonRp->Response
-                        ->children('m0', true)
-                ->Operations;
-
-        $response = array();
-
-        foreach ($soapResponse->Row as $post) {
-            $response[] = $post;
-        }
-        return $response;
-    }
-
-    function requestTask() {
-
-        $sessionId = $this->createSession();
-        $this->login(array("session" => $sessionId));
-        return $sessionId;
-    }
-
-    public function requestTaskChaining() 
-    {
-        $sessionId = $this->createSession();
-        $this->sessionId = $sessionId;
-        $this->login(array("session" => $sessionId));
-        return $this;
-    }
-    
-    public function getSession() 
-    {
-        $sessionInfo = $this->createSessionNew();        
-        $this->sessionId = $sessionInfo->sessionId;
-        $this->loginNew(array("session" => $sessionInfo->sessionId));
-        return $this;
-    }
-
-    private function pushToCms($method, $data) {
-
-        $ci = & get_instance();
-
-        if (defined('cbs_data_from_dummy') && cbs_data_from_dummy):
-            $xml = $ci->load->view('xml/cards_result/' . $method, array(), true);
+        $res = $result["data"]["EntityInquiryResponse"]["EntityInquiryResult"];
+        if (isset($res["Result"]["Code"]) && $res["Result"]["Code"] != '0') {
             return array(
-                "success" => true,
-                "data" => $xml
+                "success" => false,
+                "msg" => $res["Result"]["Description"]
             );
-        endif;
+        }
 
-        $credential = array(
-            "version" => "3.1",
-            "address" => "180.210.151.230",
-            "password" => "nrbc123456",
-            "clerk" => "NRBCSOAP"
+        if (!isset($res["Customer"])) {
+            return array(
+                "success" => false,
+                "msg" => "Customer information not found"
+            );
+        }
+        $customer = $res["Customer"];
+
+        if (!isset($customer["Account"])) {
+            return array(
+                "success" => false,
+                "msg" => "Account information not found"
+            );
+        }
+        $account = $customer["Account"];
+
+
+        if (!isset($account["Card"])) {
+            return array(
+                "success" => false,
+                "msg" => "Card information not found"
+            );
+        }
+        $cardInfo = $account["Card"];
+
+
+        if (!isset($account["Data"])) {
+            return array(
+                "success" => false,
+                "msg" => "Card data not found"
+            );
+        }
+        $card = $account["Data"];
+
+        if (!isset($account["Statement"])) {
+            return array(
+                "success" => false,
+                "msg" => "Statement information not found"
+            );
+        }
+        $statement = $account["Statement"];
+
+        if (!isset($cardInfo["People"]["PersonEntity"])) {
+            return array(
+                "success" => false,
+                "msg" => "People information not found"
+            );
+        }
+        $info = $cardInfo["People"]["PersonEntity"];
+
+
+        if (!isset($info["Addresses"]["AdditionalAddressDetails"])) {
+            return array(
+                "success" => false,
+                "msg" => "Address information not found"
+            );
+        }
+        $address = $info["Addresses"]["AdditionalAddressDetails"];
+
+        $details = array(
+            "card_no" => $cardInfo["Number"],
+            "account_no" => $account["Number"],
+            "product_name" => $card["ProductName"],
+            "credit_limit" => $card["CreditLimit"],
+            "out_balance" => $card["Balance"],
+            "balance" => $card["Balance"] + $card["CreditLimit"],
+            "last_transaction" => $card["LastTrxnDate"],
+            "next_statment_date" => $card["NextStatementDate"],
+            "expiry_date" => $cardInfo["Data"]["ExpDate"],
+            "activated" => $cardInfo["Data"]["Activated"],
+            "card_type" => $cardInfo["Data"]["CardType"],
+            "product_code" => $card["ProductShortCode"],
+            "created_date" => $card["CreateDate"],
+            "min_due" => $statement["MinDue"],
+            "due_date" => $statement["DueDate"],
+            "mr_point" => $statement["ClosingRewardPoints"],
+            "name" => $info["Title"] . " " . $info["LastName"],
+            "gender" => $info["Gender"],
+            "marital_status" => $info["MaritalStatus"],
+            "address" => $address["Address1"],
+            "city" => $address["City"],
+            "currency" => $card["Currency"],
+            "mobile_no" => isset($address["Mobile"]) ? $address["Mobile"] : "",
+            "email" => isset($address["Email"]) ? $address["Email"] : "",
         );
-        $resquestData = array_merge($credential, $data);
 
-        $xml = $ci->load->view('xml/cards/' . $method, $resquestData, true);
+        return array(
+            "success" => true,
+            "data" => $details
+        );
+    }
 
-        include_once APPPATH . "libraries/Requests.php";
-        Requests::register_autoloader();
+    public function getCardStatement($data) {
+
+        $session = $this->ticketGenerate();
+        if (!$session["success"]) {
+            return $session;
+        }
+
+        $session = $session["data"];
+        $requestData = array(
+            "card_no" => $data["card_no"],
+            "from_date" => $data["from_date"],
+            "to_date" => $data["to_date"],
+            "message_id" => $session["message_id"],
+            "ticket_id" => $session["ticket_id"]
+        );
+
+        $requestInfo = array(
+            "file" => "card_statement"
+        );
+
+        $result = $this->pushToCms($requestInfo, $requestData);
+        if (!$result["success"]) {
+            return $result;
+        }
+
+        $res = $result["data"]["StatementInquiryResponse"]["StatementInquiryResult"];
+        if (isset($res["Result"]["Code"]) && $res["Result"]["Code"] != '0') {
+            return array(
+                "success" => false,
+                "msg" => $res["Result"]["Description"]
+            );
+        }
+
+        if (!isset($res["Transaction"])) {
+            return array(
+                "success" => false,
+                "msg" => "There are no transaction found"
+            );
+        }
+        $transaction = $res["Transaction"];
+
+        if (count($transaction) <= 0) {
+            return array(
+                "success" => false,
+                "msg" => "There are no data found"
+            );
+        }
+
+        $trnData = array();
+        foreach ($transaction as $row) {
+            $items = $row["Details"];
+            $trn = array(
+                "transaction_id" => $items["TrxnSerno"],
+                "transaction_date" => $items["TrxnDate"],
+                "amount" => $items["TrxnAmount"],
+                "currency" => $items["TransactionCurrency"],
+                "narration" => $items["TransactionDescription"],
+            );
+            $trnData[] = $trn;
+        }
+
+        return array(
+            "success" => true,
+            "data" => $trnData
+        );
+    }
+
+    public function creditTransaction($data) {
+
+        $session = $this->ticketGenerate();
+        if (!$session["success"]) {
+            return $session;
+        }
+
+        $session = $session["data"];
+        $requestData = array(
+            "card_no" => $data["card_no"],
+            "amount" => $data["amount"],
+            "message_id" => $session["message_id"],
+            "ticket_id" => $session["ticket_id"]
+        );
+
+        $requestInfo = array(
+            "file" => "credit_transaction"
+        );
+
+        $result = $this->pushToCms($requestInfo, $requestData);
+        if (!$result["success"]) {
+            return $result;
+        }
+
+        $transaction = $result["data"]["PostTransactionResponse"]["PostTransactionResult"];
+        if ($transaction["Result"]["Code"] != '0' || $transaction["TrxnStatus"] != 'POST') {
+            return array(
+                "success" => false,
+                "msg" => $transaction["Result"]["Description"]
+            );
+        }
+
+        return array(
+            "success" => true,
+            "data" => "Your transaction successfully completed"
+        );
+    }
+
+    public function ticketGenerate() {
+
+        $requestInfo = array(
+            "file" => "ticket_generate"
+        );
+
+        $result = $this->pushToCms($requestInfo, array());
+        if (!$result["success"]) {
+            return $result;
+        }
+
+        $res = $result["data"]["AcquireTicketResponse"]["AcquireTicketResult"];
+        return array(
+            "success" => true,
+            "data" => array(
+                "message_id" => $res["Header"]["MessageID"],
+                "ticket_id" => $res["Ticket"]
+            )
+        );
+    }
+
+    function pushToCms($requestInfo, $requestData) {
+
+        $ci = & get_instance();
+        if (defined('cbs_data_from_dummy') && cbs_data_from_dummy):
+            $xml = file_get_contents(APPPATH . "/views/card_result/" . $requestInfo["file"] . ".php");
+            return $this->renderCmsResponse($xml);
+        endif;
 
         try {
-            $url = "http://172.16.16.8:5959";
-            $request = Requests::post($url, array('Content-type' => 'text/xml'), $xml);
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, CARD_URL);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_NTLM);
+            curl_setopt($ch, CURLOPT_USERPWD, "PBL\\testuser2:Xyz12345");
+            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: text/xml'));
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $ci->load->view("card_request/" . $requestInfo["file"] . ".php", $requestData, true));
 
-            return array(
-                "success" => $request->success,
-                "data" => $request->body,
-                "request" => $xml
-            );
+            $output = curl_exec($ch);
+            if ($output == NULL) {
+                return array(
+                    "success" => false,
+                    "msg" => "Http request proccessing failed"
+                );
+            }
+            curl_close($ch);
+            return $this->renderCmsResponse($output);
         } catch (Exception $e) {
             return array(
                 "success" => false,
                 "msg" => $e->getMessage()
             );
         }
+    }
+
+    private function renderCmsResponse($xml) {
+        $getXml = preg_replace("/(<\/?)(\w+):([^>]*>)/", "$1$2$3", $xml);
+        $xmlElement = new SimpleXMLElement($getXml);
+        $xmlBody = $xmlElement->xpath('//soapBody');
+        $xmlArray = json_decode(json_encode((array) $xmlBody), TRUE);
+        if (isset($xmlArray[0]["soapFault"]["soapReason"]["soapText"])) {
+            return array(
+                "success" => false,
+                "msg" => $xmlArray[0]["soapFault"]["soapReason"]["soapText"]
+            );
+        }
+        return array(
+            "success" => true,
+            "data" => $xmlArray[0]
+        );
     }
 
 }
