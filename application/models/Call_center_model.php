@@ -307,35 +307,33 @@ class Call_center_model extends CI_Model {
     function getRequestAccountInfo($accountNumber) {
 
         $cbsData = array(
-            "paccount_no" => $accountNumber,
-            "Cust_id" => "" //$accountData['cust_id']
+            "account_no" => getAccountNo($accountNumber),
+            "branch_id" => getBranchId($accountNumber),
         );
 
         $this->load->library("cbs_services");
-        $customerInfo = $this->cbs_services->getAccountSummary($cbsData);
+        $customerInfo = $this->cbs_services->getCustomerInfo($cbsData);
 
         if (!$customerInfo["success"]) {
-            $json = json_encode(array(
+            return array(
                 "success" => false,
-                "msg" => "Wrong Account information.",
-            ));
-            my_json_output($json);
+                "msg" => "Wrong account information"
+            );
         }
 
-        $customerInfoResponse = json_decode($customerInfo['data'], true);
-        $customerInfoResponse = $customerInfoResponse[0];
+        $customerInfo = json_decode($customerInfo['data'], true);
+        $customerInfo = $customerInfo[0];
 
-        if (isset($customerInfoResponse["ERROR_CODE"])) {
-            $json = json_encode(array(
+        if (isset($customerInfo['ERROR_CODE']) || isset($customerInfo['ERROR_MESSAGE'])) {
+            return array(
                 "success" => false,
-                "msg" => "wrong account information",
-                "data" => $customerInfo
-            ));
-            my_json_output($json);
+                "msg" => "wrong account information"
+            );
         }
+
         return array(
             "success" => true,
-            "data" => $customerInfoResponse
+            "data" => $customerInfo
         );
     }
 
@@ -667,7 +665,7 @@ class Call_center_model extends CI_Model {
                 $deleteLog["activityJson"] = json_encode($regAttempt);
                 $this->db->insert('delete_activity_log', $deleteLog);
             }
-            
+
             $this->db->insert('bo_activity_log', $activityLog);
 
             if (isset($params['eblSkyId']) && trim($params['eblSkyId']) != ''):
