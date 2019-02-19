@@ -503,6 +503,7 @@ class Call_center_model extends CI_Model {
             'accTypeCode' => "CC",
             'accClientId' => $card["clientId"],
             'accBranchCode' => NULL,
+            'cardAccNo' => $card['account_no'],
             "type" => "credit_card",
             "accountData" => json_encode(array(
                 "EMAIL" => $card['email'],
@@ -515,7 +516,7 @@ class Call_center_model extends CI_Model {
 
             $this->db->reset_query();
             $this->db->insert("account_info", $userAccountInfo);
-            
+
             $this->db->reset_query();
             $this->db->where("skyId", $skyId)
                     ->update("account_add_requests", array('status' => 'completed'));
