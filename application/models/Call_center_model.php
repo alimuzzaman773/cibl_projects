@@ -516,7 +516,17 @@ class Call_center_model extends CI_Model {
 
             $this->db->reset_query();
             $this->db->insert("account_info", $userAccountInfo);
+            
+            $clientId= get_client_id();
+            
+            $this->db->reset_query();
+            $this->db->where('skyId',$skyId)
+                    ->update("apps_users", array('clientId', $clientId));
 
+            $this->db->reset_query();
+            $this->db->where('skyId',$skyId)
+                    ->update("apps_users_mc", array('clientId', $clientId));
+            
             $this->db->reset_query();
             $this->db->where("skyId", $skyId)
                     ->update("account_add_requests", array('status' => 'completed'));

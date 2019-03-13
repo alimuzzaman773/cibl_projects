@@ -137,3 +137,10 @@ if (!function_exists('set_smtp_config')) {
     }
 
 }
+
+if (!function_exists("get_client_id")) {
+
+    function get_client_id() {
+        return rand(1111111111,time());
+    }
+}
