@@ -370,57 +370,51 @@ class Call_center_model extends CI_Model {
         $account = $accountInfo["data"];
 
         $cbsData = array(
-            "paccount_no" => "",
-            "Cust_id" => $account["CUSTOMER_ID"]
+            "customer_id" => $account["CUSTOMER_ID"]
         );
 
         $this->load->library("cbs_services");
-        $accSummary = $this->cbs_services->getAccountSummary($cbsData);
-
-        if (!$accSummary["success"]) {
-            $json = json_encode(array(
+        $summaryInfo = $this->cbs_services->getAccountSummary($cbsData);
+        if (!$summaryInfo["success"]) {
+            $json = array(
                 "success" => false,
-                "msg" => "Wrong Account information.",
-            ));
-            my_json_output($json);
-        }
-
-        $accSummary = json_decode($accSummary['data'], true);
-
-        $accountList = $accSummary;
-        $accSummary = $accSummary[0];
-
-        if (isset($accSummary["ERROR_CODE"])) {
-            $json = json_encode(array(
-                "success" => false,
-                "msg" => "wrong account information"
-            ));
-            my_json_output($json);
-        }
-
-        $userAccountList = array();
-
-        foreach ($accountList as $item) {
-            $accArray = array(
-                'skyId' => $skyId,
-                'accCurrency' => $item["CURRENCY_NM"],
-                'accName' => $item["PRODUCT_NM"],
-                'accNo' => $item['ACCOUNT_NUMBER'],
-                'accTypeCode' => $item["ACCOUNT_TYPE"],
-                'accClientId' => NULL,
-                'accBranchCode' => @$item['BRANCH_CODE'],
-                "type" => "account_number",
-                'accountData' => json_encode(array(
-                    'EMAIL' => $item['EMAIL'],
-                    "MOBILE" => $item['MOBILE']
-                ))
+                "msg" => "wrong account information",
             );
-            $userAccountList[] = $accArray;
+            my_json_output($json);
         }
 
+        $accountList = array();
+        $accountList = json_decode($summaryInfo['data'], true);
+        $accountList = $accountList[0];
+
+        if (!isset($accountList['issuccess']) && (bool) $accountList['issuccess'] != True) {
+            $json = array(
+                "success" => false,
+                "msg" => "There are no account list",
+            );
+            my_json_output($json);
+        }
+
+        foreach ($accountList["getAccountSummary"] as $item) {
+
+            $xmlToArray[] = array(
+                'skyId' => $skyId,
+                'accCurrency' => $item["currencY_NM"],
+                'accName' => $item["appL_NAME"],
+                'accNo' => $item["accounT_NUMBER"],
+                'accTypeCode' => $item["appL_TYPE"],
+                'accClientId' => NULL,
+                "type" => "account_number",
+                'accBranchCode' => $item['brancH_ID'],
+                'accountData' => json_encode($item),
+                'productId' => (int) $item['producT_ID'],
+                'service_type' => $item['service_type_id']
+            );
+        }
+        
         $query = $this->db->select("*")
                 ->from("apps_users_mc amc")
-                ->where("amc.cfId", $accSummary['CUSTOMER_ID'])
+                ->where("amc.cfId", $account['CUSTOMER_ID'])
                 ->get();
 
         if ($query->num_rows() > 0) {
@@ -438,7 +432,7 @@ class Call_center_model extends CI_Model {
             );
 
             $this->db->reset_query();
-            $this->db->insert_batch("account_info", $userAccountList);
+            $this->db->insert_batch("account_info", $xmlToArray);
 
             $this->db->reset_query();
             $this->db->where("skyId", $skyId)
@@ -516,17 +510,17 @@ class Call_center_model extends CI_Model {
 
             $this->db->reset_query();
             $this->db->insert("account_info", $userAccountInfo);
-            
-            $clientId= get_client_id();
-            
+
+            $clientId = get_client_id();
+
             $this->db->reset_query();
-            $this->db->where('skyId',$skyId)
+            $this->db->where('skyId', $skyId)
                     ->update("apps_users", array('clientId', $clientId));
 
             $this->db->reset_query();
-            $this->db->where('skyId',$skyId)
+            $this->db->where('skyId', $skyId)
                     ->update("apps_users_mc", array('clientId', $clientId));
-            
+
             $this->db->reset_query();
             $this->db->where("skyId", $skyId)
                     ->update("account_add_requests", array('status' => 'completed'));
