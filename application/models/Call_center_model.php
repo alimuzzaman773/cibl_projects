@@ -400,7 +400,7 @@ class Call_center_model extends CI_Model {
             $xmlToArray[] = array(
                 'skyId' => $skyId,
                 'accCurrency' => $item["currencY_NM"],
-                'accName' => $item["appL_NAME"],
+                'accName' => $item["producT_NM"],
                 'accNo' => $item["accounT_NUMBER"],
                 'accTypeCode' => $item["appL_TYPE"],
                 'accClientId' => NULL,
