@@ -50,6 +50,13 @@
                                                 <li><a href="<?= base_url() . 'product_setup/index/add' ?>">Add Product & Services</a></li>
                                             </ul>
                                         <?php endif; ?>
+                                        <?php if (ci_check_permission("canViewProductsSetupMenu")): ?>
+                                            <ul class="col-md-2 col-xs-12 list-unstyled">
+                                                <li><p><b>Products Category Setup</b></p></li>
+                                                <li><a href="<?= base_url() . 'product_setup/categories' ?>">Category Setup</a></li>
+                                                <li><a href="<?= base_url() . 'product_setup/categories/add' ?>">Add Category</a></li>
+                                            </ul>
+                                        <?php endif; ?>
                                         <?php if (ci_check_permission("canViewLocationSetupMenu")): ?>
                                             <ul class="col-md-2 col-xs-12 list-unstyled">
                                                 <li><p><b>ATM & Branch Locator Setup</b></p></li>
@@ -59,9 +66,9 @@
                                         <?php endif; ?>
                                         <?php if (ci_check_permission("canViewZipPartnersSetupMenu")): ?>
                                             <ul class="col-md-2 col-xs-12 list-unstyled">
-                                                <li><p><b>Comfort Pay Partners</b></p></li>
-                                                <li><a href="<?= base_url() . 'zip_partners/index' ?>">Comfort Pay Partners</a></li>
-                                                <li><a href="<?= base_url() . 'zip_partners/index/add' ?>">Add Comfort Pay Partners</a></li>
+                                                <li><p><b>EMI Partners</b></p></li>
+                                                <li><a href="<?= base_url() . 'zip_partners/index' ?>">EMI Partners</a></li>
+                                                <li><a href="<?= base_url() . 'zip_partners/index/add' ?>">Add EMI Partners</a></li>
                                             </ul>
                                         <?php endif; ?>
                                         <?php if (ci_check_permission("canViewPrioritySetupMenu")): ?>
