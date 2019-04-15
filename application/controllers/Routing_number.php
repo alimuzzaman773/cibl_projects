@@ -29,8 +29,8 @@ class Routing_number extends CI_Controller {
                     ->display_as('creationDtTm', 'Creation Date & Time')
                     ->display_as('isActive', 'Is Active');
 
-            $crud->unset_add();
-            $crud->unset_edit();
+            //$crud->unset_add();
+            //$crud->unset_edit();
             $crud->unset_delete();
 
             if (!ci_check_permission("canAddRoutingNumber")):

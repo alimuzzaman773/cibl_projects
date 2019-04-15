@@ -421,6 +421,34 @@ if (!function_exists("ssl_transaction_id")) {
 
 }
 
+if (!function_exists('json_display_html')) {
+
+    function json_display_html($data) {
+        if (!empty($data)):
+            $arr = json_decode($data, true);
+        $res = "";
+            foreach ($arr as $key => $value) {
+                if (isset($value) && is_array($value)):
+                    foreach ($value as $key => $val2) {
+                        if (isset($val2) && is_array($val2)):
+                            foreach ($val2 as $key => $val3):
+                                $res .= "<b>".$key . "</b> : " . $val3 . "<br />";
+                            endforeach;
+                        else:
+                            $res .= "<b>".$key . "</b> : " . $val2 . "<br />";
+                        endif;
+                    }
+
+                else:
+                    $res .= "<b>".$key . "</b> : " . $value . "<br />";
+                endif;
+            }
+            return $res;
+        endif;
+    }
+
+}
+
 // ------------------------------------------------------------------------
 /* End of file my_utility_functions_helper.php */
 /* Location: ./application/helpers/my_utility_functions_helper.php */

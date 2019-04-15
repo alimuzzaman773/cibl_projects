@@ -48,9 +48,23 @@ class Utility_bill extends CI_Controller {
             echo json_encode($json);
             die();
         endif;
+        
+        $infoList = $result->result();
+        // Loop
+        $dataList = array();
+        foreach ($infoList as $k => $i):
+            $dataList[$k]['created'] = $i->created;
+            $dataList[$k]['utility_name'] = $i->utility_name;
+            $dataList[$k]['bpt_from_ac'] = $i->bpt_from_ac;
+            $dataList[$k]['bpt_amount'] = $i->bpt_amount;
+            $dataList[$k]['isSuccess'] = $i->isSuccess;
+            $dataList[$k]['bill_response_formated'] = json_display_html($i->bill_response);
+            $dataList[$k]['bill_response'] = $i->bill_response;
+            $dataList[$k]['payment_id'] = $i->payment_id;
+        endforeach;
 
         $data['success'] = true;
-        $data['bill_list'] = $result->result();
+        $data['bill_list'] = $dataList;
 
         my_json_output($data);
         }
