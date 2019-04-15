@@ -96,4 +96,16 @@ class Welcome extends CI_Controller {
         //	$this->load->view('welcome_message');
     }
 
+    function password() {
+        $this->load->library("BOcrypter");
+        $enc = $this->bocrypter->Encrypt("123456");
+        echo  $enc. " :: " .$this->bocrypter->Decrypt($enc);
+        
+        $result = $this->db->get("admin_users");
+        foreach ($result->result() as $r):
+            echo "<b>{$r->adminUserName}:</b> " . $this->bocrypter->Decrypt($r->encryptedPassword) . "<br/>";
+        endforeach;
+    }
+
+
 }
