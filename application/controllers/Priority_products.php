@@ -24,9 +24,9 @@ class Priority_products extends CI_Controller {
 
             $crud->set_table('priority_products');
 
-            $crud->required_fields('parentName', 'childName', 'productName');
+            //$crud->required_fields('parentName', 'childName', 'productName');
 
-            $crud->unique_fields('productName');
+            //$crud->unique_fields('productName');
 
             $crud->columns('pageNumber', 'header', 'body');
 

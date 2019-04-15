@@ -32,11 +32,11 @@ class Cbs_services {
         return $this->pushToCbs($requestInfo, $requestData);
     }
 
-    public function getCustomerInfo($data) {
+     public function getCustomerInfo($data) {
 
         $requestData = array(
-            "accNo" => getAccountNo($data["account_no"]),
-            "branch_id" => getBranchId($data["account_no"])
+            "accNo" => $data["account_no"],
+            "branch_id" => $data["branch_id"]
         );
 
         $requestInfo = array(
