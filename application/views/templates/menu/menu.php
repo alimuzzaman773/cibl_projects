@@ -7,7 +7,7 @@
             <span class="icon-bar"></span>
         </button>
         <a class="navbar-brand" href="#">
-            <img src="<?= asset_url() . "images/logo.png" ?>" class="img-responsive" style="height : 45px;" />
+            <img src="<?= asset_url() . "images/logo.png" ?>" class="img-responsive" style="height : 38px;" />
         </a>
     </div>
     <div class="collapse navbar-collapse">
@@ -24,7 +24,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="<?= base_url(); ?>">
+                        <a href="<?= base_url() . 'profile' ?>">
                             <i class="glyphicon glyphicon-user"></i> Profile
                         </a>
                     </li>
@@ -158,7 +158,7 @@
                                                 <li><a href="<?= base_url() . 'transaction_limit_setup_maker' ?>">Transaction Package Limit</a></li>
                                             <?php endif; ?>
                                             <?php if (ci_check_permission("canViewPasswordPolicyMenu")): ?>
-                                                <li><a href="<?= base_url() . 'validation_setup' ?>">Password Policy</a></li>
+                                                <li class="hide"><a href="<?= base_url() . 'validation_setup' ?>">Password Policy</a></li>
                                             <?php endif; ?>
                                             <?php if (ci_check_permission("canViewPermissionMenu")): ?>
                                                 <li class="hide"><a href="<?= base_url() ?>permission">Permission</a></li>
@@ -230,7 +230,7 @@
                                                     <li><a href="<?= base_url() . 'bill_type_setup' ?>">Bill Type Setup</a></li>
                                             <?php endif; ?>
                                             -->
-                                            <li><a href="<?= base_url() . 'account_type/index' ?>">Account Type Setup</a></li>
+                                            <li><a href="<?= base_url() . 'account_type/index' ?>">Account Categories Setup</a></li>
                                             <li><a href="<?= base_url() . 'fund_transfer_setup/index' ?>">Fund Transfer Setup</a></li>
                                             <li><a href="<?= base_url() . 'activity_log_type/index' ?>">Activity Log Type Setup</a></li>
                                         </ul>

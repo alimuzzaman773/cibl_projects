@@ -23,13 +23,13 @@ class Locator_setup extends CI_Controller {
             $crud->set_table('atms');
             $crud->required_fields('eblNearYou', 'eblDivision', 'ATMName', 'AddressLine1', 'AddressLine2', 'City');
 
-            $crud->columns('eblNearYou', 'branchCode', 'ATMName', 'eblDivision', 'AddressLine1', 'AddressLine2', 'ManagerName', 'Email', 'Mobile', 'PriorityManager', 'PriorityEmail', 'PriorityMobile');
+            $crud->columns('eblNearYou', 'branchCode', 'ATMName', 'eblDivision', 'AddressLine1', 'AddressLine2', 'ManagerName', 'Email', 'Mobile', 'PriorityManager', 'PriorityEmail', 'PriorityMobile', 'Latitude', 'Longitude');
 
             $time = date("Y-m-d H:i:s");
             $creatorId = $this->my_session->userId;
 
-            $crud->add_fields('eblNearYou', 'branchCode', 'ATMName', 'eblDivision', 'Priority', 'AddressLine1', 'AddressLine2', 'ManagerName', 'Email', 'Mobile', 'PriorityManager', 'PriorityEmail', 'PriorityMobile', 'creationDtTm', 'updateDtTm');
-            $crud->edit_fields('eblNearYou', 'branchCode', 'ATMName', 'eblDivision', 'Priority','AddressLine1', 'AddressLine2', 'ManagerName', 'Email', 'Mobile', 'PriorityManager', 'PriorityEmail', 'PriorityMobile', 'updateDtTm');
+            $crud->add_fields('eblNearYou', 'branchCode', 'ATMName', 'eblDivision', 'Priority', 'AddressLine1', 'AddressLine2', 'ManagerName', 'Email', 'Mobile', 'PriorityManager', 'PriorityEmail', 'PriorityMobile', 'Latitude', 'Longitude', 'creationDtTm', 'updateDtTm');
+            $crud->edit_fields('eblNearYou', 'branchCode', 'ATMName', 'eblDivision', 'Priority', 'AddressLine1', 'AddressLine2', 'ManagerName', 'Email', 'Mobile', 'PriorityManager', 'PriorityEmail', 'PriorityMobile', 'Latitude', 'Longitude', 'updateDtTm');
 
             $crud->change_field_type('creationDtTm', 'hidden', $time);
             $crud->change_field_type('updateDtTm', 'hidden', $time);
@@ -57,8 +57,9 @@ class Locator_setup extends CI_Controller {
             $crud->set_relation('eblNearYou', 'ebl_location', 'eblNearYou');
             $crud->set_rules('branchCode', 'Branch', 'callback_branch');
 
-            $crud->unset_delete();
-
+            if (!ci_check_permission("canDeleteLocatorSetup")):
+                $crud->unset_delete();
+            endif;
             if (!ci_check_permission("canAddLocatorSetup")):
                 $crud->unset_add();
             endif;

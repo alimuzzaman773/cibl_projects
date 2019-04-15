@@ -1,5 +1,5 @@
 <div class="border">
-   <h3 class="title-underlined">Utility Bill Payment List</h3>
+    <h3 class="title-underlined">Utility Bill Payment List</h3>
     <div class="row">
         <div class="col-2 col-sm-2 col-md-2">
             <div class="form-group">
@@ -67,6 +67,7 @@
                     <th>From Account</th>
                     <th>Amount</th>
                     <th>Status</th>
+                    <th>Response Details</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -78,6 +79,8 @@
                     <td>{{i.bpt_from_ac}}</td>
                     <td>{{i.bpt_amount}}</td>
                     <td>{{i.isSuccess=='Y' ? 'Success' : 'Failed'}}</td>
+                    <td ng-bind-html="i.bill_response_formated">
+                    </td>
                     <td>
                         <div class="dropdown pull-right" ng-if="i.utility_name !=='top_up'">
                             <a class="btn btn-success dropdown-toggle btn-xs color_white" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

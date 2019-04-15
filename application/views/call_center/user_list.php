@@ -39,9 +39,9 @@
                         <th>SI#</th>
                         <th>Apps ID</th>
                         <th>CIF ID</th>
-                        <th>Client ID</th>
                         <th>User Name</th>
                         <th>Father Name</th>
+                        <th>Mother Name</th>
                         <th>User Email</th>
                         <th>User Mobile</th>
                         <th>Current Address</th>
@@ -56,9 +56,9 @@
                         <td>{{(per_page * (currentPageNumber - 1)) + ($index + 1)}}</td>
                         <td>{{i.eblSkyId}}</td>
                         <td>{{i.cfId}}</td>
-                        <td>{{i.clientId}}</td>
                         <td>{{i.userName}}</td>
                         <td>{{i.fatherName}}</td>
+                        <td>{{i.motherName}}</td>
                         <td>{{i.userEmail}}</td>
                         <td>{{i.userMobNo1}}</td>
                         <td>{{i.currAddress}}</td>

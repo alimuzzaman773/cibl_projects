@@ -24,7 +24,7 @@ BankingModuleApp.controller("BankingController", ["$scope", "$http", function ($
             $scope.searchParams = {
                 type_code: ""
             };
-            
+
             $scope.filterTypeCode = '';
 
             $scope.getResultsPage(1);
@@ -42,7 +42,7 @@ BankingModuleApp.controller("BankingController", ["$scope", "$http", function ($
                     && $.trim($scope.searchParams.type_code) !== "") {
                 $params.type_code = $scope.searchParams.type_code;
             }
-            
+
             app.showModal();
             $http({
                 method: "get",
@@ -94,12 +94,12 @@ BankingModuleApp.controller("BankingController", ["$scope", "$http", function ($
             $scope.searchParams.type_code = $scope.type_code;
             $scope.getResultsPage(1);
         };
-        
-        $scope.activateLimitPackage = function($serviceId) {
-            if(!confirm('Do you really want to activate this package of the user? Before Activating please make sure: you have fixed the limit in the internet banking for this user')){
+
+        $scope.activateLimitPackage = function ($serviceId) {
+            if (!confirm('Do you really want to activate this package of the user? Before Activating please make sure: you have fixed the limit in the internet banking for this user')) {
                 return fasle;
             }
-            
+
             app.showModal();
             var $params = {
                 service_id: $serviceId
@@ -112,11 +112,11 @@ BankingModuleApp.controller("BankingController", ["$scope", "$http", function ($
                 app.hideModal();
                 var $result = response.data;
                 //$scope.child_list = $result.child_list;
-                if($result.success == false){
+                if ($result.success == false) {
                     alert($result.msg);
                     return false;
                 }
-                
+
                 alert("Limit package successfully activated for this user");
             }, function (response) {
                 app.hideModal();
@@ -125,8 +125,8 @@ BankingModuleApp.controller("BankingController", ["$scope", "$http", function ($
             return false;
         }
 
-        $scope.showPackage = function($serviceId){
-            $("#lp-"+$serviceId).slideToggle();
+        $scope.showPackage = function ($serviceId) {
+            $("#lp-" + $serviceId).slideToggle();
             return false;
         };
 
@@ -134,14 +134,15 @@ BankingModuleApp.controller("BankingController", ["$scope", "$http", function ($
         $scope.init = function () {
             console.log('init banking request module');
             $scope.filterTypeCode = app.filterTypeCode;
-            
+
             $scope.getRequest();
-            
-            if($scope.filterTypeCode != ''){
+
+            if ($scope.filterTypeCode != '') {
                 $scope.searchParams.type_code = $scope.filterTypeCode;
                 $scope.type_code = $scope.filterTypeCode;
-                $scope.getResultsPage(1);                
+                //$scope.getResultsPage(1);                
             }
+            $scope.getResultsPage(1);
         };
 
         $scope.init();
