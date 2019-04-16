@@ -15,7 +15,7 @@
                 <th>GL / A/C number (auto credit entry)</th>
                 <th>Transaction date and time</th>
                 <th>Transaction code</th>
-                <th>Auth code</th>
+                <!-- <th>Auth code</th> -->
                 <th>Successful reason code</th>
                 <th>Successful reason code - explanation</th>
             </tr>
@@ -46,7 +46,7 @@
                 <td>N/A</td>
                 <td><?=$r->creationDtTm?></td>
                 <td><?=$r->trnReference?></td>
-                <td><?=$r->authCode?></td>
+                <!-- <td><?=$r->authCode?></td> -->
                 <td><?=$r->isSuccess?></td>
                 <td><?=$r->warning?></td>                
             </tr>
