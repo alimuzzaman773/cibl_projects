@@ -18,7 +18,7 @@ class Reports_model extends CI_Model {
         } else if ($status == "locked") {
             $value = "isLocked=1 AND isPublished=1";
         }
-        $query = $this->db->query("SELECT * FROM apps_users_mc WHERE " . $value);
+        $query = $this->db->query("SELECT * FROM apps_users WHERE " . $value);
 
         return ($query->num_rows() > 0) ? $query->result() : false;
     }
@@ -99,14 +99,14 @@ class Reports_model extends CI_Model {
     public function get_customer_info($from_date, $to_date) {
         $from_date = $from_date . " 00:00:00";
         $to_date = $to_date . " 23:59:59";
-        $query = $this->db->select('apps_users_mc.*, admin_users.adminUserName, atms.ATMName')
-                ->where('apps_users_mc.createdDtTm >=', $from_date)
-                ->where('apps_users_mc.createdDtTm <=', $to_date)
-                ->where('apps_users_mc.isPublished', 1)
-                ->select('apps_users_mc.*, admin_users.adminUserName, admin_users.fullName')
-                ->from('apps_users_mc')
-                ->join('admin_users', 'apps_users_mc.createdBy = admin_users.adminUserId', 'left')
-                ->join('atms', 'apps_users_mc.homeBranchCode = atms.branchCode', 'left')
+        $query = $this->db->select('apps_users.*, admin_users.adminUserName, atms.ATMName')
+                ->where('apps_users.makerActionDt >=', $from_date)
+                ->where('apps_users.makerActionDt <=', $to_date)
+                ->where('apps_users.isPublished', 1)
+                ->select('apps_users.*, admin_users.adminUserName, admin_users.fullName')
+                ->from('apps_users')
+                ->join('admin_users', 'apps_users.createdBy = admin_users.adminUserId', 'left')
+                ->join('atms', 'apps_users.homeBranchCode = atms.branchCode', 'left')
                 ->get();
         return ($query->num_rows() > 0) ? $query->result() : false;
     }
@@ -120,15 +120,15 @@ class Reports_model extends CI_Model {
             $this->db->from('login_appsuser');
             $this->db->where('login_appsuser.loginDtTm >=', $from_date);
             $this->db->where('login_appsuser.loginDtTm <=', $to_date);
-            $this->db->join('apps_users_mc', 'apps_users_mc.skyId=login_appsuser.skyId');
-            $this->db->join('device_info_mc', 'device_info_mc.deviceId = login_appsuser.deviceId');
+            $this->db->join('apps_users', 'apps_users.skyId=login_appsuser.skyId');
+            $this->db->join('device_info', 'device_info.deviceId = login_appsuser.deviceId');
             $query = $this->db->get();
             return ($query->num_rows() > 0) ? $query->result() : false;
         } else {
             $this->db->select('*');
             $this->db->from('login_appsuser');
-            $this->db->join('apps_users_mc', 'apps_users_mc.skyId=login_appsuser.skyId');
-            $this->db->join('device_info_mc', 'device_info_mc.deviceId = login_appsuser.deviceId');
+            $this->db->join('apps_users', 'apps_users.skyId=login_appsuser.skyId');
+            $this->db->join('device_info', 'device_info.deviceId = login_appsuser.deviceId');
             $query = $this->db->get();
             return ($query->num_rows() > 0) ? $query->result() : false;
         }
@@ -164,9 +164,9 @@ class Reports_model extends CI_Model {
     //User data modification by admin
     public function get_id_modification($from_date, $to_date) {
         $query = $this->db->select("am.*, adm.adminUserName as makerName, adm2.adminUserName as checkerName", false)
-                ->from("apps_users_mc am")
-                ->join("admin_users_mc adm", "adm.adminUserId = am.makerActionBy", "left")
-                ->join("admin_users_mc adm2", "adm2.adminUserId = am.checkerActionBy", "left")
+                ->from("apps_users am")
+                ->join("admin_users adm", "adm.adminUserId = am.makerActionBy", "left")
+                ->join("admin_users adm2", "adm2.adminUserId = am.checkerActionBy", "left")
                 ->where("am.makerActionDt >=", $from_date)
                 ->where("am.makerActionDt <=", $to_date)
                 ->get();
@@ -316,7 +316,7 @@ class Reports_model extends CI_Model {
                         . " TIMESTAMPDIFF(SECOND, CONCAT(aum.makerActionDt, ' ', aum.makerActionTm), '{$dateTime}') as activationDiff,"
                         . " TIMESTAMPDIFF(SECOND, aum.passwordResetDtTm, '{$dateTime}') as passwordResetDiff",false);
         
-        $this->db->from('apps_users_mc aum')
+        $this->db->from('apps_users aum')
                 ->join('apps_users au', "au.skyId = aum.skyId", "left")
                 ->join('registration_attempts ra', 'ra.skyId = aum.skyId', 'left')
                 ->order_by('aum.skyId', 'desc');
