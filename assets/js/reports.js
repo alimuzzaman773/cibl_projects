@@ -45,8 +45,18 @@ $(document).ready(function () {
     }
 
     //Date picker function
-    $("#datepicker1").datepicker({dateFormat: 'yy-mm-dd'});
-    $("#datepicker2").datepicker({dateFormat: 'yy-mm-dd'});
+    $("#datepicker1").datepicker({dateFormat: 'yy-mm-dd'}).on('focusin', function () {
+            $(this).prop("readonly", true);
+        }).on('focusout', function () {
+            $(this).prop("readonly", false);
+        });
+;
+    $("#datepicker2").datepicker({dateFormat: 'yy-mm-dd'}).on('focusin', function () {
+            $(this).prop("readonly", true);
+        }).on('focusout', function () {
+            $(this).prop("readonly", false);
+        });
+;
 
 });
 

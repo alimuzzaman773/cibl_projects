@@ -7,7 +7,7 @@
             <tr class="bg-primary">
                 <th>SL</th>
                 <th>Source Acc No</th>
-                <th>Auth</th>
+                <!-- <th>Auth</th> -->
                 <th>Type</th>
                 <th>RRN</th>
                 <th>Transaction Currency</th>
@@ -31,7 +31,7 @@
             <tr>
                 <td><?=($sl++)?></td>
                 <td><?=$r->sourceAccNo?></td>
-                <td><?=$r->authCode?></td>
+                <!-- <td><?=$r->authCode?></td> -->
                 <td><?=$type?></td>
                 <td>N/A</td>
                 <td>BDT</td>                

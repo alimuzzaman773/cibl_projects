@@ -19,7 +19,7 @@
 .report-form table tr td span{ font-weight: bold; color: #666; font-size: 13px}
 .report-form input[type='date'], .report-form select{ border: 1px solid #ddd; border-radius:2px}
 .report-form input[type='date']{width: 180px !important; height: 26px;}
-.report-form select{width: 180px; height: 25px}
+.report-form select{width: 180px; height: 30px}
 .report-form input[type='submit']{width: 100px; height: 25px}
 
 #show-report{ border: 1px solid #ddd; margin:0 7px; padding: 5px; padding-top: 15px}
