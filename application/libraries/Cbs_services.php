@@ -5,7 +5,8 @@ if (!defined('BASEPATH'))
 
 class Cbs_services {
 
-    public function getAccountInfo($data) {
+    // Old Api
+    public function getAccountInfoOld($data) {
         $requestData = array(
             "account_no" => $data["account_no"],
             "branch_id" => $data["branch_id"]
@@ -14,6 +15,49 @@ class Cbs_services {
         $requestInfo = array(
             "url" => "XLinkGet/GetAccountInfoByBranchIdAndAccountNo",
             "file" => "account_information"
+        );
+        return $this->pushToCbs($requestInfo, $requestData);
+    }
+    
+    // new for 
+    function getAccountInfo($data) {
+        $requestData = array(
+            "key" => "7mWnKmQopXVBQEV",
+            "paccno" => $data["account_no"],
+            "pbranch_id" => $data["branch_id"]
+        );
+
+        $requestInfo = array(
+            "ip" => true,
+            "url" => "http://192.168.0.128:50912/api/UltimusInHouseAPIControllerStatment/GetAccountDetails",
+            "file" => "account_summary"
+        );
+        return $this->pushToCbs($requestInfo, $requestData);
+    }
+
+    public function getAccountBalance($data) {
+        $requestData = array(
+            "account_no" => $data["account_no"],
+            "branch_id" => $data["branch_id"]
+        );
+
+        $requestInfo = array(
+            "url" => "XLinkGet/GetAccountBalanceInfoByBranchIdAndAccountNo",
+            "file" => "account_balance"
+        );
+        return $this->pushToCbs($requestInfo, $requestData);
+    }
+
+    public function getCustomerInfo($data) {
+
+        $requestData = array(
+            "accNo" => $data["account_no"],
+            "branch_id" => $data["branch_id"]
+        );
+
+        $requestInfo = array(
+            "url" => "XLinkGet/GetCustomerInfoByAccountNo",
+            "file" => "customer_information"
         );
         return $this->pushToCbs($requestInfo, $requestData);
     }
@@ -28,20 +72,6 @@ class Cbs_services {
             "ip" => true,
             "url" => "http://192.168.0.128:50912/api/UltimusInHouseAPI/GetAccSummaryByCustID",
             "file" => "account_summary"
-        );
-        return $this->pushToCbs($requestInfo, $requestData);
-    }
-
-     public function getCustomerInfo($data) {
-
-        $requestData = array(
-            "accNo" => $data["account_no"],
-            "branch_id" => $data["branch_id"]
-        );
-
-        $requestInfo = array(
-            "url" => "XLinkGet/GetCustomerInfoByAccountNo",
-            "file" => "customer_information"
         );
         return $this->pushToCbs($requestInfo, $requestData);
     }
@@ -62,6 +92,25 @@ class Cbs_services {
         return $this->pushToCbs($requestInfo, $requestData);
     }
 
+    // This is new api for transaction history
+    public function getTransactionList($data) {
+        $requestData = array(
+            "key" => "7mWnKmQopXVBQEV",
+            "pbranch_id" => $data["branch_id"],
+            "paccno" => $data["account_no"],
+            "pdate_from" => $data["from_date"],
+            "pdate_to" => $data["to_date"]
+        );
+
+        $requestInfo = array(
+            "ip" => true,
+            "url" => "http://192.168.0.128:50912/api/UltimusInHouseAPIControllerStatment/GetAccountStatementHistoryID",
+            "file" => "transaction_list"
+        );
+        return $this->pushToCbs($requestInfo, $requestData);
+    }
+
+    // This is old api for transaction history
     public function getTransactionHistory($data) {
 
         $requestData = array(
@@ -109,7 +158,7 @@ class Cbs_services {
         return $this->pushToCbs($requestInfo, $requestData);
     }
 
-     function reverseTransaction($data) {
+    function reverseTransaction($data) {
         $requestData = array(
             "branch_id" => $data["branch_id"],
             "poriginal_trans_dt" => $data["transaction_date"],
@@ -122,7 +171,6 @@ class Cbs_services {
         );
         return $this->pushToCbs($requestInfo, $requestData);
     }
-
 
     private function pushToCbs($requestInfo, $data) {
 
@@ -153,7 +201,7 @@ class Cbs_services {
                 $cbsUrl = CBS_URL;
             }
             $url = $cbsUrl . $requestInfo["url"] . "?" . http_build_query($data);
-            $request = Requests::get($url, $header);
+            $request = Requests::get($url, $header, array("timeout" => 200));
 
             return array(
                 "success" => $request->success,

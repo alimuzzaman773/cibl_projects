@@ -91,6 +91,7 @@ class Card_services {
 
         $details = array(
             "card_no" => $cardInfo["Number"],
+            "clientId" => get_client_id(),
             "account_no" => $account["Number"],
             "product_name" => $card["ProductName"],
             "expiry_date" => $card["ExpDate"],
@@ -137,6 +138,14 @@ class Card_services {
             return $result;
         }
 
+        if (empty($result["data"]["EntityInquiryResponse"]["EntityInquiryResult"]["Customer"])):
+            return array(
+                "success" => false,
+                "log" => $result,
+                "msg" => "There are no card found"
+            );
+        endif;
+
         $res = $result["data"]["EntityInquiryResponse"]["EntityInquiryResult"];
         if (isset($res["Result"]["Code"]) && $res["Result"]["Code"] != '0') {
             return array(
@@ -161,7 +170,6 @@ class Card_services {
         }
         $account = $customer["Account"];
 
-
         if (!isset($account["Card"])) {
             return array(
                 "success" => false,
@@ -170,6 +178,9 @@ class Card_services {
         }
         $cardInfo = $account["Card"];
 
+        if (isset($account["Card"][0])) {
+            $cardInfo = $account["Card"][0];
+        }
 
         if (!isset($account["Data"])) {
             return array(
@@ -209,23 +220,23 @@ class Card_services {
             "account_no" => $account["Number"],
             "product_name" => $card["ProductName"],
             "credit_limit" => $card["CreditLimit"],
-            "out_balance" => $card["Balance"],
+            "out_balance" => $card["Balance"] >= 0 ? $card["Balance"] . " (CR)" : $card["Balance"] . " (DR)",
             "balance" => $card["Balance"] + $card["CreditLimit"],
-            "last_transaction" => $card["LastTrxnDate"],
-            "next_statment_date" => $card["NextStatementDate"],
+            "last_transaction" => isset($card["LastTrxnDate"]) ? $card["LastTrxnDate"] : "",
+            "next_statment_date" => isset($card["NextStatementDate"]) ? $card["NextStatementDate"] : "",
             "expiry_date" => $cardInfo["Data"]["ExpDate"],
             "activated" => $cardInfo["Data"]["Activated"],
             "card_type" => $cardInfo["Data"]["CardType"],
             "product_code" => $card["ProductShortCode"],
             "created_date" => $card["CreateDate"],
             "min_due" => $statement["MinDue"],
-            "due_date" => $statement["DueDate"],
+            "due_date" => isset($statement["DueDate"]) ? $statement["DueDate"] : "",
             "mr_point" => $statement["ClosingRewardPoints"],
             "name" => $info["Title"] . " " . $info["LastName"],
             "gender" => $info["Gender"],
             "marital_status" => $info["MaritalStatus"],
-            "address" => $address["Address1"],
-            "city" => $address["City"],
+            "address" => isset($address["Address1"]) ? $address["Address1"] : "",
+            "city" => isset($address["City"]) ? $address["City"] : "",
             "currency" => $card["Currency"],
             "mobile_no" => isset($address["Mobile"]) ? $address["Mobile"] : "",
             "email" => isset($address["Email"]) ? $address["Email"] : "",
