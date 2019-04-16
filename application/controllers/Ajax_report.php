@@ -215,7 +215,7 @@ class Ajax_report extends MX_Controller {
             $data['params']['reportParams'] = array("From" => $p['fromdate'], "To" => $p['todate']);
             
             if(trim($p['eblSkyId']) != ''):
-                $data['params']['reportParams']["ESB ID"] = $p['eblSkyId'];
+                $data['params']['reportParams']["APPS ID"] = $p['eblSkyId'];
             endif;            
         endif;
 

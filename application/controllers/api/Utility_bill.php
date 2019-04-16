@@ -48,11 +48,15 @@ class Utility_bill extends CI_Controller {
             echo json_encode($json);
             die();
         endif;
-        
+
         $infoList = $result->result();
+       
         // Loop
         $dataList = array();
         foreach ($infoList as $k => $i):
+            $dataList[$k]['skyId'] = $i->skyId;
+            $dataList[$k]['eblSkyId'] = $i->eblSkyId;
+            $dataList[$k]['userName'] = $i->userName;
             $dataList[$k]['created'] = $i->created;
             $dataList[$k]['utility_name'] = $i->utility_name;
             $dataList[$k]['bpt_from_ac'] = $i->bpt_from_ac;
@@ -67,7 +71,7 @@ class Utility_bill extends CI_Controller {
         $data['bill_list'] = $dataList;
 
         my_json_output($data);
-        }
+    }
 
     function reverse_utility() {
 

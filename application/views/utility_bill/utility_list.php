@@ -62,6 +62,8 @@
             <thead>
                 <tr class="bg-primary">
                     <th>SI</th>
+                    <th>Apps ID</th>
+                    <th>Username</th>
                     <th>Date</th>
                     <th>Utility Name</th>
                     <th>From Account</th>
@@ -74,6 +76,8 @@
             <tbody>
                 <tr dir-paginate="i in bill_list | itemsPerPage: per_page track by $index" total-items="totalCount" current-page="pagination.current">
                     <td>{{(per_page * (currentPageNumber - 1)) + ($index + 1)}}</td>
+                    <td>{{i.eblSkyId}}</td>
+                    <td>{{i.userName}}</td>
                     <td>{{i.created}}</td>
                     <td>{{i.utility_name}}</td>
                     <td>{{i.bpt_from_ac}}</td>

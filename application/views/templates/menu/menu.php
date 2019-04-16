@@ -276,22 +276,25 @@
                                         <li><a href="<?= base_url() . 'reports/fund_transfer' ?>">Fund Transfer</a></li>
                                         <li><a href="<?= base_url() . 'reports/other_fund_transfer' ?>">Other Fund Transfer</a></li>
                                     </ul>
+                                    <!--
                                     <ul class="col-md-2 col-xs-12 list-unstyled">
                                         <li><p><b>Billing Report</b></p></li>
                                         <li><a href="<?= base_url() . 'reports/bill_pay' ?>">Billing Information</a></li>
                                     </ul>
+                                    -->
                                     <ul class="col-md-2 col-xs-12 list-unstyled">
                                         <li><p><b>Request Report</b></p></li>
                                         <li><a href="<?= base_url() . 'reports/priority_request' ?>">Priority Request</a></li>
                                         <li><a href="<?= base_url() . 'reports/product_request' ?>">Product Request</a></li>
                                         <li><a href="<?= base_url() . 'reports/banking_request' ?>">Banking Request</a></li>
                                     </ul>
-                                   
+                                   <!--
                                     <ul class="col-md-2 col-xs-12 list-unstyled">
                                         <li><p><b>Card Payment</b></p></li>
                                         <li><a href="<?= base_url() . 'reports/card_payment_report' ?>">Card Payment Report</a></li>
                                         <li><a href="<?= base_url() . 'reports/mobile_topup_card_report' ?>">Bill Payment Report</a></li>   
                                     </ul>
+                                    -->
                                     <ul class="col-md-2 col-xs-12 list-unstyled">
                                         <li><p><b>Call Center</b></p></li>
                                         <li><a href="<?= base_url() . 'reports/call_center_report' ?>">Call Center User Report</a></li>                                        

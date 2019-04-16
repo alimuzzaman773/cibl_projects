@@ -7,13 +7,14 @@ class Utility_bill_model extends CI_Model {
         if (isset($params['count']) && $params['count'] == true) {
             $this->db->select("COUNT(p.payment_id) as total");
         } else {
-            $this->db->select('p.*, bpt.fromAccNo as bpt_from_ac, bpt.amount as bpt_amount, bpt.narration as bpt_narration, bpt.isSuccess as bpt_success,'
+            $this->db->select('p.*, au.eblSkyId, au.userName, bpt.fromAccNo as bpt_from_ac, bpt.amount as bpt_amount, bpt.narration as bpt_narration, bpt.isSuccess as bpt_success,'
                     . 'vt.fromAccNo as vt_from_ac, vt.amount as vt_amount, st.fromAccNo as st_from_ac, st.amount as st_amount,'
                     . 'lt.fromAccNo as lt_from_ac, lt.amount as lt_amount, o1t.fromAccNo as o1t_from_ac, o1t.amount as o1t_amount,'
                     . 'o2t.fromAccNo as o2t_from_ac, o2t.amount as o2t_amount', FALSE);
         }
 
         $this->db->from("ssl_bill_payment" . " p")
+                ->join("apps_users" . " au", "au.skyId = p.skyId", "inner")
                 ->join("apps_transaction" . " bpt", "bpt.transferId = p.bp_transfer_id", "left")
                 ->join("apps_transaction" . " vt", "vt.transferId = p.vat_transfer_id", "left")
                 ->join("apps_transaction" . " st", "st.transferId = p.stamp_transfer_id", "left")
