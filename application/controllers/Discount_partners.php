@@ -21,26 +21,30 @@ class Discount_partners extends CI_Controller {
             $crud->set_subject('PBL Discount Partners');
             $crud->set_table('discount_partners');
 
+            $crud->required_fields('type', 'parentName', 'childName', 'partner_name');
+            
             $this->config->set_item('grocery_crud_file_upload_allow_file_types', 'gif|jpeg|jpg|png');
 
-            $crud->columns('category', 'partner_name', 'details', 'address', 'url', 'mobileno', 'DiscountUploadImage');
+            $crud->columns('partner_name', 'details', 'address', 'url', 'mobileno', 'DiscountUploadImage');
 
             $crud->field_type('offerType', 'dropdown', array('0' => 'Unlimited', '1' => 'Limited'));
 
             $time = date("Y-m-d H:i:s");
             $creatorId = $this->my_session->userId;
 
-            $crud->add_fields('category', 'partner_name', 'type', 'offerType', 'fromDate', 'toDate', 'details', 'discountPercentage', 'address', 'url', 'mobileno', 'DiscountUploadImage', 'creationDtTm', 'updateDtTm');
-            $crud->edit_fields('category', 'partner_name', 'type','offerType', 'fromDate', 'toDate','details', 'discountPercentage', 'address', 'url', 'mobileno', 'DiscountUploadImage', 'updateDtTm');
+            $crud->add_fields('pc_id', 'type', 'parentName', 'childName', 'partner_name', 'offerType', 'fromDate', 'toDate', 'details', 'discountPercentage', 'address', 'url', 'mobileno', 'DiscountUploadImage', 'creationDtTm', 'updateDtTm');
+            $crud->edit_fields('pc_id', 'type', 'parentName', 'childName', 'partner_name', 'offerType', 'fromDate', 'toDate', 'details', 'discountPercentage', 'address', 'url', 'mobileno', 'DiscountUploadImage', 'updateDtTm');
 
             $crud->change_field_type('creationDtTm', 'hidden', $time);
             $crud->change_field_type('updateDtTm', 'hidden', $time);
             $crud->change_field_type('createdBy', 'hidden', $creatorId);
             $crud->change_field_type('updatedBy', 'hidden', $creatorId);
+            $crud->change_field_type('pc_id', 'hidden', '-1');
 
-            $crud->display_as('category', 'Category')
+            $crud->display_as('type', 'Type')
+                    ->display_as('parentName', 'Category')
+                    ->display_as('childName', 'Sub-Category')
                     ->display_as('partner_name', 'Partner Name')
-                    ->display_as('type', 'Type')
                     ->display_as('details', 'Discount/Offer Detail')
                     ->display_as('offerType', 'Offer Type (Date range must be given in case of limited offer)')
                     ->display_as('fromDate', 'From Date')
@@ -54,8 +58,21 @@ class Discount_partners extends CI_Controller {
             $crud->set_relation('category', 'partner_type_setup', 'discountPartners');
             $crud->set_field_upload('DiscountUploadImage', 'assets/uploads/files');
 
-            //$crud->callback_after_insert(array($this, 'imageTransfer'));
-            //$crud->callback_after_update(array($this, 'imageTransfer'));
+            $categoryList = array(
+                NULL => ''
+            );
+
+            $typeList = array('product' => 'Products', 'partner' => 'EMI Partners', 'benefit' => 'Benefit Partners');
+            $crud->change_field_type('type', 'dropdown', $typeList);
+            $crud->change_field_type('parentName', 'dropdown', $categoryList);
+            $crud->change_field_type('childName', 'dropdown', $categoryList);
+
+            $this->db->select("*")
+                    ->from(TBL_PRODUCT_CATEGORIES);
+            $cRes = $this->db->get();
+            foreach ($cRes->result() as $r):
+                $categoryList[] = $r;
+            endforeach;
 
             $crud->unset_delete();
 
@@ -66,7 +83,20 @@ class Discount_partners extends CI_Controller {
                 $crud->unset_edit();
             endif;
 
+            $discountId = (int) $this->uri->segment(4);
+            $resP = $this->getDiscountInfo($discountId);
+
             $output = $crud->render();
+
+            $output->categories = $categoryList;
+
+            $output->discountInfo = array();
+            if ($resP) {
+                $output->discountInfo = $resP->row();
+            }
+            $output->crudState = $crud->getState();
+
+
             $output->css = "";
             $output->js = "";
             $output->pageTitle = "Discount Partners";
@@ -78,7 +108,7 @@ class Discount_partners extends CI_Controller {
             show_error($e->getMessage() . ' --- ' . $e->getTraceAsString());
         }
     }
-    
+
     function discount_callback_after_upload($uploader_response, $field_info, $files_to_upload) {
 
         $this->load->library('image_moo');
@@ -106,6 +136,20 @@ class Discount_partners extends CI_Controller {
 
             return true;
         }
+    }
+
+    function getDiscountInfo($did) {
+
+        $this->db->select("*")
+                ->from(TBL_DISCOUNT_PARTNERS)
+                ->where("discountID", $did);
+
+        $result = $this->db->get();
+
+        if ($result->num_rows() > 0) {
+            return $result;
+        }
+        return false;
     }
 
 }

@@ -24,9 +24,9 @@ class Zip_partners extends CI_Controller {
 
             $crud->set_table('zip_partners');
 
-            $crud->columns('category', 'mechant_name', 'tenor', 'merchant_web_site', 'mobile', 'uploadImage');
+            $crud->columns('mechant_name', 'tenor', 'merchant_web_site', 'mobile', 'uploadImage');
 
-            $crud->required_fields('category', 'mechant_name', 'offerType');
+            $crud->required_fields('type', 'parentName', 'childName', 'category', 'mechant_name', 'offerType');
             $this->load->config('grocery_crud');
             $this->config->set_item('grocery_crud_file_upload_allow_file_types', 'gif|jpeg|jpg|png');
 
@@ -36,15 +36,18 @@ class Zip_partners extends CI_Controller {
             $time = date("Y-m-d H:i:s");
             $creatorId = $this->my_session->userId;
 
-            $crud->add_fields('category', 'mechant_name', 'mobile', 'tenor', 'offerType', 'fromDate', 'toDate', 'remarks', 'merchant_web_site',  'uploadImage', 'banner', 'creationDtTm', 'updateDtTm');
-            $crud->edit_fields('category', 'mechant_name', 'mobile', 'tenor', 'offerType', 'fromDate', 'toDate', 'remarks', 'merchant_web_site', 'uploadImage', 'banner', 'updateDtTm');
+            $crud->add_fields('pc_id', 'type', 'parentName', 'childName', 'mechant_name', 'mobile', 'tenor', 'offerType', 'fromDate', 'toDate', 'remarks', 'merchant_web_site', 'uploadImage', 'banner', 'creationDtTm', 'updateDtTm');
+            $crud->edit_fields('pc_id', 'type', 'parentName', 'childName', 'mechant_name', 'mobile', 'tenor', 'offerType', 'fromDate', 'toDate', 'remarks', 'merchant_web_site', 'uploadImage', 'banner', 'updateDtTm');
 
             $crud->change_field_type('creationDtTm', 'hidden', $time);
             $crud->change_field_type('updateDtTm', 'hidden', $time);
             $crud->change_field_type('createdBy', 'hidden', $creatorId);
             $crud->change_field_type('updatedBy', 'hidden', $creatorId);
+            $crud->change_field_type('pc_id', 'hidden', '-1');
 
-            $crud->display_as('category', 'Category')
+            $crud->display_as('type', 'Type')
+                    ->display_as('parentName', 'Category')
+                    ->display_as('childName', 'Sub-Category')
                     ->display_as('mechant_name', 'Mechant Name')
                     ->display_as('tenor', 'Tenor')
                     ->display_as('offerType', 'Offer Type (Date range must be given in case of limited offer)')
@@ -57,10 +60,21 @@ class Zip_partners extends CI_Controller {
             $crud->set_field_upload('uploadImage', 'assets/uploads/files');
             $crud->callback_after_upload(array($this, 'zip_callback_after_upload'));
 
-            $crud->set_relation('category', 'partner_type_setup', 'zipPartners');
+            $categoryList = array(
+                NULL => ''
+            );
 
-            //$crud->callback_after_insert(array($this, 'imageTransfer'));
-            //$crud->callback_after_update(array($this, 'imageTransfer'));
+            $typeList = array('product' => 'Products', 'partner' => 'EMI Partners', 'benefit' => 'Benefit Partners');
+            $crud->change_field_type('type', 'dropdown', $typeList);
+            $crud->change_field_type('parentName', 'dropdown', $categoryList);
+            $crud->change_field_type('childName', 'dropdown', $categoryList);
+
+            $this->db->select("*")
+                    ->from(TBL_PRODUCT_CATEGORIES);
+            $cRes = $this->db->get();
+            foreach ($cRes->result() as $r):
+                $categoryList[] = $r;
+            endforeach;
 
             $crud->unset_delete();
 
@@ -71,11 +85,23 @@ class Zip_partners extends CI_Controller {
                 $crud->unset_edit();
             endif;
 
+            $zipId = (int) $this->uri->segment(4);
+            $resP = $this->getZipInfo($zipId);
+
             $output = $crud->render();
             $output->css = "";
             $output->js = "";
             $output->pageTitle = "Zip Partners";
             $output->base_url = base_url();
+
+            $output->categories = $categoryList;
+
+            $output->productInfo = array();
+            if ($resP) {
+                $output->zipInfo = $resP->row();
+            }
+
+            $output->crudState = $crud->getState();
 
             $output->body_template = "zip_partners/index.php";
             $this->load->view("site_template.php", $output);
@@ -115,21 +141,18 @@ class Zip_partners extends CI_Controller {
         }
     }
 
-//
-//    function add_data($post_array) {
-//        $post_array['createdBy'] = $this->session->userdata('adminUserId');
-//        ;
-//        $post_array['updatedBy'] = $this->session->userdata('adminUserId');
-//        ;
-//        $post_array['creationDtTm'] = input_date();
-//        $post_array['updateDtTm'] = input_date();
-//        return $post_array;
-//    }
-//
-//    function update_data($post_array) {
-//        $post_array['updatedBy'] = $this->session->userdata('adminUserId');
-//        ;
-//        $post_array['updateDtTm'] = input_date();
-//        return $post_array;
-//    }
+    function getZipInfo($zid) {
+
+        $this->db->select("*")
+                ->from(TBL_ZIP_PARTNERS)
+                ->where("zipId", $zid);
+
+        $result = $this->db->get();
+
+        if ($result->num_rows() > 0) {
+            return $result;
+        }
+        return false;
+    }
+
 }
