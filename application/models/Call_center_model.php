@@ -411,7 +411,7 @@ class Call_center_model extends CI_Model {
                 'service_type' => $item['service_type_id']
             );
         }
-        
+
         $query = $this->db->select("*")
                 ->from("apps_users_mc amc")
                 ->where("amc.cfId", $account['CUSTOMER_ID'])
@@ -515,11 +515,11 @@ class Call_center_model extends CI_Model {
 
             $this->db->reset_query();
             $this->db->where('skyId', $skyId)
-                    ->update("apps_users", array('clientId', $clientId));
+                    ->update("apps_users", array('clientId' => $clientId));
 
             $this->db->reset_query();
             $this->db->where('skyId', $skyId)
-                    ->update("apps_users_mc", array('clientId', $clientId));
+                    ->update("apps_users_mc", array('clientId' => $clientId));
 
             $this->db->reset_query();
             $this->db->where("skyId", $skyId)

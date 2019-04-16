@@ -1,4 +1,4 @@
-<h2 class="title-underlined">Discount Partner</h2>
+<h2 class="title-underlined">Discount Partners</h2>
 <?= $output ?>
 
 <script>

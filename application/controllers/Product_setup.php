@@ -55,7 +55,7 @@ class Product_setup extends CI_Controller {
                 NULL => ''
             );
 
-            $typeList = array('product' => 'Products', 'partner' => 'EMI Partners', 'benefit' => 'Benefit Partners');
+            $typeList = array('product' => 'Products', 'partner' => 'EMI Partners', 'benefit' => 'Discount Partners');
             $crud->change_field_type('type', 'dropdown', $typeList);
             $crud->change_field_type('parentName', 'dropdown', $categoryList);
             $crud->change_field_type('childName', 'dropdown', $categoryList);
