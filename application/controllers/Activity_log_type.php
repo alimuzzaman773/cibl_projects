@@ -35,7 +35,7 @@ class Activity_log_type extends CI_Controller {
             $crud->change_field_type('updated', 'hidden', $time);
 
             $crud->unset_delete();
-
+            $crud->unset_print();
             $output = $crud->render();
             $output->css = "";
             $output->js = "";

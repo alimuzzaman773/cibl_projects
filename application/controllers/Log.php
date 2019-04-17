@@ -28,6 +28,7 @@ class Log extends CI_Controller {
             $crud->unset_delete();
             $crud->unset_add();
             $crud->unset_edit();
+            $crud->unset_print();
 
             $output = $crud->render();
             $output->css = "";
@@ -56,6 +57,7 @@ class Log extends CI_Controller {
         $crud->unset_add();
         $crud->unset_delete();
         $crud->unset_edit();
+        $crud->unset_print();
 
         $output = $crud->render();
         $this->_crud_view($output);
@@ -71,6 +73,7 @@ class Log extends CI_Controller {
         $crud->unset_add();
         $crud->unset_delete();
         $crud->unset_edit();
+        $crud->unset_print();
 
         $output = $crud->render();
         $this->_crud_view($output);
@@ -85,6 +88,7 @@ class Log extends CI_Controller {
         $crud->unset_add();
         $crud->unset_delete();
         $crud->unset_edit();
+        $crud->unset_print();
 
         $output = $crud->render();
         $this->_crud_view($output);
@@ -99,6 +103,7 @@ class Log extends CI_Controller {
         $crud->unset_add();
         $crud->unset_delete();
         $crud->unset_edit();
+        $crud->unset_print();
 
         $output = $crud->render();
         $this->_crud_view($output);
@@ -113,6 +118,7 @@ class Log extends CI_Controller {
         $crud->unset_add();
         $crud->unset_delete();
         $crud->unset_edit();
+        $crud->unset_print();
 
         $output = $crud->render();
         $this->_crud_view($output);

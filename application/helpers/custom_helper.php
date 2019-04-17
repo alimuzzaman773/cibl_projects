@@ -138,6 +138,29 @@ if (!function_exists('set_smtp_config')) {
 
 }
 
+if (!function_exists("get_trn_type")) {
+    function get_trn_type($trnType){
+        switch ($trnType) {
+            case '05':
+                return 'Account To Card Fund Transfer';
+                break;
+            case '06':
+                return 'Own Account Fund Transfer';
+                break;
+            case '07':
+                return 'Within Bank Fund Transfer';
+                break;
+            case '08':
+                return 'Other Bank Fund Transfer';
+                break;
+            default:
+                return 'not found';
+                break;
+        }
+    }
+}
+
+
 if (!function_exists("get_client_id")) {
 
     function get_client_id() {

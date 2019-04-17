@@ -403,4 +403,36 @@ class Reports_model extends CI_Model {
         $query = $this->db->query($sql);
         return $query->num_rows() > 0 ? $query : false;
     }
+
+    function getFundTransferDetails($params = array()){
+        $trn_type = array('05','06','07','08');
+        if (isset($params['count']) && $params['count'] == true) {
+            $this->db->select("COUNT(t.transferId) as total");
+        } else {
+            $this->db->select('t.*, au.userName, au.userEmail', FALSE);
+        }
+
+        $this->db->from("apps_transaction" . " t")
+                ->join("apps_users" . " au", "au.skyId = t.skyId", "left")
+                ->where_in("t.trnType", $trn_type);
+
+        if (isset($params['status']) && trim($params['status']) != ""):
+            $this->db->where("t.isSuccess", $params['status']);
+        endif;
+
+        if (isset($params['fromdate']) && isset($params['todate']) && $params['fromdate'] != null && $params['todate'] != null):
+            $this->db->where("(DATE(t.creationDtTm) between " . $this->db->escape($params['fromdate']) . " AND " . $this->db->escape($params['todate']) . ")");
+        endif;
+
+        if (isset($params['limit']) && (int) $params['limit'] > 0):
+            $offset = (isset($params['offset'])) ? $params['offset'] : 0;
+            $this->db->limit($params['limit'], $offset);
+        endif;
+
+        $result = $this->db->order_by("t.transferId", "DESC")->get();
+        if ($result->num_rows() > 0) {
+            return $result;
+        }
+        return false;
+    }
 }

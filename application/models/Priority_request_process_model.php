@@ -58,6 +58,13 @@ class Priority_request_process_model extends CI_Model {
         if (isset($params['type_code']) && trim($params['type_code']) != "") {
             $this->db->where("typeCode", $params['type_code']);
         }
+
+        if(isset($params['search']) && trim($params['search']) != "") {
+            $this->db->group_start()
+                    ->or_like("service_request.referenceNo", $params['search'], 'both')
+                    ->or_like("service_request.email", $params['search'], 'both')
+                    ->group_end();
+        }
         $this->db->order_by("serviceRequestID", "desc");
 
         if (isset($params['limit']) && (int) $params['limit'] > 0) {

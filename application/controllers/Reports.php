@@ -407,4 +407,20 @@ class Reports extends MX_Controller {
         $this->load->view('site_template.php', $data);
     }
 
+    function fund_transfer_details() {
+        /** initialization * */
+        $data['css'] = "";
+
+        $data['js'] = "";
+
+        $data['pageTitle'] = "Fund Transfer Report";
+        $data['base_url'] = base_url();
+
+        $data['css_files'] = array();
+        $data['js_files'] = array();
+
+        $data['body_template'] = "reports/fund_transfer_details.php";
+        $this->load->view('site_template.php', $data);
+    }
+
 }

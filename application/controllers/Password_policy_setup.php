@@ -29,6 +29,7 @@ class Password_policy_setup extends CI_Controller {
             $crud->unset_delete();
             //$crud->unset_add();
             //$crud->unset_edit();
+            $crud->unset_print();
 
             $output = $crud->render();
             $output->css = "";

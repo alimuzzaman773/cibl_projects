@@ -84,6 +84,7 @@ class Zip_partners extends CI_Controller {
             if (!ci_check_permission("canEditZipPartner")):
                 $crud->unset_edit();
             endif;
+            $crud->unset_print();
 
             $zipId = (int) $this->uri->segment(4);
             $resP = $this->getZipInfo($zipId);

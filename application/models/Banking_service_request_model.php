@@ -120,6 +120,13 @@ class Banking_service_request_model extends CI_Model {
             $this->db->where("st.serviceTypeCode", $params['serviceTypeCode']);
         endif;
 
+        if(isset($params['search']) && trim($params['search']) != "") {
+            $this->db->group_start()
+                    ->or_like("sb.referenceNo", $params['search'], 'both')
+                    ->or_like("sb.mobileNo", $params['search'], 'both')
+                    ->group_end();
+        }
+
         $this->db->order_by("sb.serviceId", "desc");
 
         if (isset($params['limit']) && (int) $params['limit'] > 0) {

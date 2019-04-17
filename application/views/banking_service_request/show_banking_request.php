@@ -25,10 +25,19 @@
                 </div>
             </div>
             <div class="col-xs-3 col-sm-3">
+                <div class="row">
+                    <label>Search</label>
+                    <input class="form-control input-sm" type="text" ng-model="searchParams.search" placeholder="Search by Reference No., Email">
+                </div>
+            </div>
+            <div class="col-xs-3 col-sm-3">
                 <div class="form-group">
-                    <label style="display:block" class="hidden-xs">&nbsp; &nbsp;</label>
+                    <label style="display:block" class="hidden-xs">&nbsp;&nbsp;</label>
                     <button class="btn btn-primary btn-sm" data-ng-click="getResultsPage(1)">
-                        <i class="glyphicon glyphicon-search"></i> Search
+                        <i class="glyphicon glyphicon-search"></i>
+                    </button>
+                    <button class="btn btn-primary btn-sm" data-ng-click="resetSearch();">
+                        <i class="glyphicon glyphicon-refresh"></i> Reset
                     </button>
                 </div>
             </div>

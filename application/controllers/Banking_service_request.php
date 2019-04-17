@@ -40,6 +40,7 @@ class Banking_service_request extends CI_Controller {
         $params['offset'] = (int) $this->input->get("offset", true);
         $params['get_count'] = (bool) $this->input->get("get_count", true);
         $params['type_code'] = $this->input->get("type_code", true);
+        $params['search'] = $this->input->get("search", true);
         $params['serviceTypeCode'] = $this->input->get("serviceTypeCode", true);
                 
         $data['total'] = array();
