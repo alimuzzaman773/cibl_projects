@@ -274,6 +274,7 @@
                                     <ul class="col-md-2 col-xs-12 list-unstyled">
                                         <li><p><b>Transaction Reports</b></p></li>
                                         <li><a href="<?= base_url() . 'reports/fund_transfer_details' ?>">Fund Transfer</a></li>
+                                        <li><a href="<?= base_url() . 'reports/utility_bill_report' ?>">Utility Bill Details Report</a></li>
                                         <!-- <li><a href="<?= base_url() . 'reports/fund_transfer' ?>">Fund Transfer</a></li>
                                         <li><a href="<?= base_url() . 'reports/other_fund_transfer' ?>">Other Fund Transfer</a></li> -->
                                     </ul>
