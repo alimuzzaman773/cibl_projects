@@ -75,6 +75,7 @@ class Discount_partners extends CI_Controller {
             endforeach;
 
             $crud->unset_delete();
+            $crud->unset_print();
 
             if (!ci_check_permission("canAddDiscountPartner")):
                 $crud->unset_add();

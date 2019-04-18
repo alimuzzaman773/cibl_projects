@@ -9,7 +9,8 @@ BankingModuleApp.controller("BankingController", ["$scope", "$http", function ($
         $scope.currentPageNumber = 1;
 
         $scope.searchParams = {
-            type_code: ""
+            type_code: "",
+            search: ""
         };
 
         $scope.pagination = {
@@ -22,7 +23,8 @@ BankingModuleApp.controller("BankingController", ["$scope", "$http", function ($
 
         $scope.resetSearch = function () {
             $scope.searchParams = {
-                type_code: ""
+                type_code: "",
+                search: ""
             };
 
             $scope.filterTypeCode = '';
@@ -41,6 +43,10 @@ BankingModuleApp.controller("BankingController", ["$scope", "$http", function ($
             if ($scope.searchParams.type_code !== null
                     && $.trim($scope.searchParams.type_code) !== "") {
                 $params.type_code = $scope.searchParams.type_code;
+            }
+
+            if($scope.searchParams.search !== null && $.trim($scope.searchParams.search) !== "") {
+                $params.search = $scope.searchParams.search;
             }
 
             app.showModal();

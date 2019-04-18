@@ -59,6 +59,7 @@ class Help_setup extends CI_Controller {
             if (!ci_check_permission("canEditHelpSetup")):
                 $crud->unset_edit();
             endif;
+            $crud->unset_print();
 
             $output = $crud->render();
             $output->css = "";
@@ -122,10 +123,8 @@ class Help_setup extends CI_Controller {
             if (!ci_check_permission("canExportHelpSetup")):
                 $crud->unset_export();
             endif;
-            if (!ci_check_permission("canPrintHelpSetup")):
-                $crud->unset_print();
-            endif;
-
+            $crud->unset_print();
+            
             $output = $crud->render();
             $output->css = "";
             $output->js = "";

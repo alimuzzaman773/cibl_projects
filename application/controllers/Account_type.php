@@ -53,6 +53,7 @@ class Account_type extends CI_Controller {
                 $crud->unset_delete();
             }
             $crud->unset_delete();
+            $crud->unset_print();
                         
             $output = $crud->render();
             

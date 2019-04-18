@@ -50,6 +50,7 @@ class Advertisement extends CI_Controller {
             $crud->callback_after_update(array($this, 'imageTransfer'));
 
             $crud->unset_delete();
+            $crud->unset_print();
 
             if (!ci_check_permission("canAddAdvertisement")):
                 $crud->unset_add();

@@ -44,6 +44,7 @@ class Fund_transfer_setup extends CI_Controller {
                     ->display_as('credit', 'IsCredit');
 
             $crud->unset_delete();
+            $crud->unset_print();
 
             //if (!ci_check_permission("canAddProduct")):
                 //$crud->unset_add();

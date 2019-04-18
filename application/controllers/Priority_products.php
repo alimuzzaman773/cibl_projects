@@ -53,6 +53,7 @@ class Priority_products extends CI_Controller {
             if (!ci_check_permission("canEditPriorityProduct")):
                 $crud->unset_edit();
             endif;
+            $crud->unset_print();
 
             $output = $crud->render();
             $output->css = "";

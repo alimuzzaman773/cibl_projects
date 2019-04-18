@@ -15,6 +15,12 @@
                 <input type="text" name="toDate" id="toDate"  class="form-control input-sm" ng-model="searchParams.to_date" placeholder="Search by To Date"/>
             </div>
         </div>
+        <div class="col-xs-4 col-sm-3">
+                <div class="row">
+                    <label>Search</label>
+                    <input class="form-control input-sm" type="text" ng-model="searchParams.search" placeholder="Search by Contact No., Email, Product Name">
+                </div>
+            </div>
         <div class="col-xs-4 col-sm-2">
             <div class="form-group">
                 <label style="display:block" class="hidden-xs">&nbsp;&nbsp;</label>

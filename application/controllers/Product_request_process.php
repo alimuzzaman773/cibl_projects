@@ -26,6 +26,7 @@ class Product_request_process extends CI_Controller {
         $params['get_count'] = (bool) $this->input->get("get_count", true);
         $params['from_date'] = $this->input->get("from_date", true);
         $params['to_date'] = $this->input->get("to_date", true);
+        $params['search'] = $this->input->get("search", true);
 
         $data['total'] = array();
         $data['product_list'] = array();

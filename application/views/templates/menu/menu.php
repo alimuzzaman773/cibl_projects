@@ -263,8 +263,8 @@
                                         <li><a href="<?= base_url() . 'reports/user_status' ?>">Apps Users' Status</a></li>
                                         <li><a href="<?= base_url() . 'reports/customer_info' ?>">Customer Information</a></li>
                                         <li><a href="<?= base_url() . 'reports/user_login_info' ?>">User Last Login Information</a></li>
-                                        <li><a href="<?= base_url() . 'reports/fund_transfer' ?>">Fund Transfer</a></li>
-                                        <li><a href="<?= base_url() . 'reports/other_fund_transfer' ?>">Other Fund Transfer</a></li>
+<!--                                         <li><a href="<?= base_url() . 'reports/fund_transfer' ?>">Fund Transfer</a></li>
+                                        <li><a href="<?= base_url() . 'reports/other_fund_transfer' ?>">Other Fund Transfer</a></li> -->
                                         <li><a href="<?= base_url() . 'reports/customer_activity_report' ?>">Apps User Activity Log</a></li>
                                     </ul>
                                     <ul class="col-md-2 col-xs-12 list-unstyled">
@@ -273,8 +273,10 @@
                                     </ul>
                                     <ul class="col-md-2 col-xs-12 list-unstyled">
                                         <li><p><b>Transaction Reports</b></p></li>
-                                        <li><a href="<?= base_url() . 'reports/fund_transfer' ?>">Fund Transfer</a></li>
-                                        <li><a href="<?= base_url() . 'reports/other_fund_transfer' ?>">Other Fund Transfer</a></li>
+                                        <li><a href="<?= base_url() . 'reports/fund_transfer_details' ?>">Fund Transfer</a></li>
+                                        <li><a href="<?= base_url() . 'reports/utility_bill_report' ?>">Utility Bill Details Report</a></li>
+                                        <!-- <li><a href="<?= base_url() . 'reports/fund_transfer' ?>">Fund Transfer</a></li>
+                                        <li><a href="<?= base_url() . 'reports/other_fund_transfer' ?>">Other Fund Transfer</a></li> -->
                                     </ul>
                                     <!--
                                     <ul class="col-md-2 col-xs-12 list-unstyled">

@@ -9,8 +9,7 @@ PriorityModuleApp.controller("PriorityController", ["$scope", "$http", function 
         $scope.currentPageNumber = 1;
 
         $scope.searchParams = {
-            from_date: "",
-            to_date: ""
+            search: ""
         };
 
         $scope.pagination = {
@@ -24,7 +23,8 @@ PriorityModuleApp.controller("PriorityController", ["$scope", "$http", function 
         $scope.resetSearch = function () {
             $scope.searchParams = {
                 from_date: "",
-                to_date: ""
+                to_date: "",
+                search: ""
             };
 
             $scope.getResultsPage(1);
@@ -41,6 +41,10 @@ PriorityModuleApp.controller("PriorityController", ["$scope", "$http", function 
             if ($scope.searchParams.type_code !== null
                     && $.trim($scope.searchParams.type_code) !== "") {
                 $params.type_code = $scope.searchParams.type_code;
+            }
+
+            if($scope.searchParams.search !== null && $.trim($scope.searchParams.search) !== ""){
+                $params.search = $scope.searchParams.search;
             }
 
             app.showModal();

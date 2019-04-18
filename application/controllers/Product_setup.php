@@ -80,6 +80,8 @@ class Product_setup extends CI_Controller {
                 $crud->unset_delete();
             endif;
 
+            $crud->unset_print();
+
             $productId = (int) $this->uri->segment(4);
             $resP = $this->getProductInfo($productId);
 
@@ -231,9 +233,7 @@ class Product_setup extends CI_Controller {
             if (!ci_check_permission("canExportProduct")):
                 $crud->unset_export();
             endif;
-            if (!ci_check_permission("canPrintProduct")):
-                $crud->unset_print();
-            endif;
+            $crud->unset_print();
 
             $output = $crud->render();
             $output->css = "";

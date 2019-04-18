@@ -236,6 +236,98 @@ class Ajax_report extends MX_Controller {
         echo json_encode($json);
         die();
     }
+
+    function fund_transfer_details(){
+        $p['fromdate'] = $this->input->get_post("fromdate",true);
+        $p['todate'] = $this->input->get_post("todate",true);
+        $p['status'] = $this->input->get_post("status",true);
+
+        $this->load->model("reports_model");
+        
+        $data['result'] = array();
+        
+        
+        $result = $this->reports_model->getFundTransferDetails($p);
+        if($result):
+            $data['result'] = $result->result();
+        endif;
+        //d($data['result']);
+        $data['params'] = array("reportHeader" => 'Fund Transfer Report');
+        if ($result):
+            $result1 = $result->row();
+            $data['params']['reportParams'] = array("From" => $p['fromdate'], "To" => $p['todate']);
+            
+            if(trim($p['status']) != ''):
+                $data['params']['reportParams']["Status"] = $p['status'];
+            endif;            
+        endif;
+
+        $data['base_url'] = base_url();
+        //var_dump($result->result());
+        $report = $this->load->view("ajax_report/fund_transfer_details.php", $data, true);
+
+        if((int)$this->input->get_post("report_download_flag",true) == 1)
+        {   
+            $this->__download($report, $this->input->get_post("report_download_format", true), $this->input->get_post("__layout__", true));            
+            exit();
+        }
+        
+        $json['success'] = true;
+        $json['msg'] = $report;
+        $json['query'] = $this->db->last_query();
+        $json['p'] = $p;
+        echo json_encode($json);
+        die();
+    }
+
+
+    function utility_bills_report(){
+        $p['fromdate'] = $this->input->get_post("fromdate",true);
+        $p['todate'] = $this->input->get_post("todate",true);
+        $p['status'] = $this->input->get_post("status",true);
+        $p['utility'] = $this->input->get_post("utility", true);
+
+        $this->load->model("reports_model");
+        
+        $data['result'] = array();
+        
+        
+        $result = $this->reports_model->getUtilityBillList($p);
+        if($result):
+            $data['result'] = $result->result();
+        endif;
+        //d($data['result']);
+        $data['params'] = array("reportHeader" => 'Utility Bill Report');
+        if ($result):
+            $result1 = $result->row();
+            $data['params']['reportParams'] = array("From" => $p['fromdate'], "To" => $p['todate']);
+            
+            if(trim($p['status']) != ''):
+                $data['params']['reportParams']["Status"] = $p['status'];
+            endif;
+
+            if(trim($p['utility'] != '')):
+                $data['params']['reportParams']['Utility Name'] = $p['utility'];
+            endif;
+        endif;
+
+        $data['base_url'] = base_url();
+        //var_dump($result->result());
+        $report = $this->load->view("ajax_report/utility_bill_report.php", $data, true);
+
+        if((int)$this->input->get_post("report_download_flag",true) == 1)
+        {   
+            $this->__download($report, $this->input->get_post("report_download_format", true), $this->input->get_post("__layout__", true));            
+            exit();
+        }
+        
+        $json['success'] = true;
+        $json['msg'] = $report;
+        $json['query'] = $this->db->last_query();
+        $json['p'] = $p;
+        echo json_encode($json);
+        die();
+    }
 }
 
 /* end of file */

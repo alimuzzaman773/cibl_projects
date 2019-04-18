@@ -40,7 +40,7 @@ class Routing_number extends CI_Controller {
             if (!ci_check_permission("canEditRoutingNumber")):
                 $crud->unset_edit();
             endif;
-            
+            $crud->unset_print();
             //$crud->unset_add_fields('createdBy');
             
             $crud->field_type('createdBy', 'hidden', $this->my_session->userId);

@@ -10,7 +10,8 @@ ProductModuleApp.controller("ProductController", ["$scope", "$http", function ($
 
         $scope.searchParams = {
             from_date: "",
-            to_date: ""
+            to_date: "",
+            search: ""
         };
 
         $scope.pagination = {
@@ -24,7 +25,8 @@ ProductModuleApp.controller("ProductController", ["$scope", "$http", function ($
         $scope.resetSearch = function () {
             $scope.searchParams = {
                 from_date: "",
-                to_date: ""
+                to_date: "",
+                search: ""
             };
 
             $scope.getResultsPage(1);
@@ -44,6 +46,10 @@ ProductModuleApp.controller("ProductController", ["$scope", "$http", function ($
                             && $.trim($scope.searchParams.to_date) !== "")) {
                 $params.from_date = $scope.searchParams.from_date;
                 $params.to_date = $scope.searchParams.to_date;
+            }
+
+            if($scope.searchParams.search !== null && $.trim($scope.searchParams.search) !== ""){
+                $params.search = $scope.searchParams.search;
             }
 
             app.showModal();
