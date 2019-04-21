@@ -21,7 +21,7 @@ class Log extends CI_Controller {
             $crud->set_table(TBL_BO_ACTIVITY_LOG);
             $crud->order_by('activityLogId', 'desc');
 
-            $crud->columns('actionName', 'actionCode', 'moduleName', 'adminUserName', 'creationDtTm');
+            $crud->columns('actionName', 'moduleName', 'adminUserName', 'creationDtTm');
 
             $crud->display_as('adminUserName', 'User Name');
 
