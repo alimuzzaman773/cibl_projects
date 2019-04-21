@@ -4,106 +4,137 @@ class Cron extends MX_Controller
 {
     function __construct() {
         parent::__construct();
-        $this->load->library("my_session");
+        //$this->load->library("my_session");
     }
     
-    function send_notification()
+    function send_notification($messageId = NULL, $completed = NULL)
     {
+        if(!is_cli()):
+            die("Not allowed from browser");
+        endif;
+        
         $this->load->model("push_notification_model");
         
+        //1. get message limit = 1, completed = 0, 
+        //2. if segmented - get users from message log with sent = 0
+        //3. if all - get all the devices from the system
+        //4. start sending batch notifications
+        
         $p = array(
-            //'messageId' => 3,
-            'etFrom' => date("Y-m-d H:i:s") /*,
-            'etTo' => date(),
-            'completed' => 0*/
+            //'messageId' => 6,
+            'etFrom' => date("Y-m-d H:i:s"),
+            /*'etTo' => date(),*/
+            'completed' => 0,
+            'limit' => 1,
+            'isActive' => 1
         );
         
-        $res = $this->push_notification_model->getMessageListAndUsers($p);
-        if(!$res):
+        if((int)$messageId > 0):
+            $p['messageId'] = $messageId;
+        endif;
+        
+        if($completed !== NULL && is_numeric($completed)):
+            $p['completed'] = $completed;
+        endif;
+        
+        $messageInfoResponse = $this->push_notification_model->getMessageInfo($p);
+        if(!$messageInfoResponse):
             die("no data found");
         endif;
         
-        $updateItems = array();
-        $gcms = array();
-        foreach($res->result() as $r):
-            //$gcms[] = $r->gcmRegId;
-            if(!isset($updateItems[$r->messageId])):
-                $updateItems[$r->messageId]['messageInfo'] = array(
-                    'headLine' => $r->headLine,
-                    'body' => $r->body,
-                    'notifyImage' => $r->notifyImage
-                );                
-                $updateItems[$r->messageId]['gcmList'] = array();
-                $updateItems[$r->messageId]['updateList'] = array();
+        $receipients = array();
+        $messageInfo = $messageInfoResponse->row();
+        if($messageInfo->receivers == 'all'):
+            //get all system users from the devices table
+            $res = $this->push_notification_model->getAllDevices();
+            if($res):
+                $receipients = $res->result();
+            endif;
+        else:
+            //get all users where sent = 0
+            $mp = array(
+                'messageId' => $messageInfo->messageId,
+                'sent' => 0
+            );
+            $res = $this->push_notification_model->getMessageListAndUsers($mp);
+            if($res):
+                $receipients = $res->result();
+            endif;         
+        endif;
+        
+        $receipientThreshold = 50;
+        $gcms = array(
+            'ios' => array(),
+            'android' => array()
+        );
+        $i = 0;
+        $counter = 0;
+        foreach($receipients as $r):
+            $osCode = (int)$r->osCode;
+            if(!in_array($osCode, array(1,2))):
+                continue;
+            endif;
+        
+            $osCode = ((int)$r->osCode == 2) ? 'ios' : 'android';
+        
+            if(!isset($gcms[$osCode][$i])):
+                $gcms[$osCode][$i] = array();
+            endif;
+            if(is_null($r->gcmRegId) || strlen($r->gcmRegId) < 100):
+                continue;
             endif;
             
-            $updateItems[$r->messageId]['gcmList'][] = $r->gcmRegId;
+            $gcms[$osCode][$i][] = $r->gcmRegId;
             
-            $updateItems[$r->messageId]['updateList'][] = array(
-                'messageLogId' => $r->messageLogId,
-                'sent' => 1
-            );
+            $counter++;
+            if($counter == $receipientThreshold):
+                $counter = 0;
+                $i++;
+            endif;
         endforeach;
         
+        /*$gcmList = array(
+            'f7PnN8--X6Y:APA91bGvuK2-CRB79jW6HYGDzsMciUI4STO2_7_evMeTJm1vyyYNYUqXol5iCsvmv5t8GqIElFTZUr_IRBde8HT7PIdZcMMCeEiSSg9jHNj7fBB38RR94K2vYnTbAWhiZ1tVuxmprHB-',
+            "c8L3VyzfQtg:APA91bGyrwsmOqhQRi9YLIvm4CD87JsQBy3cLesYJIMnq8SDcMhTo6jdI8TSdrQff2EUBESU4SPUwRU96MpKRwZ0L_pXvpX0xz198byseaRmL-jNJM5cMtLvppvr5d_0wayc0l5WTdID"
+        );
+        
+        $gcms['ios'][0][] = $gcmList[0]; 
+        $gcms['android'][0][] = $gcmList[1];
+        */
+        
+        //d($gcms);
+        $this->load->helper("text");
+        $notifyRes = array();
         try {
-            foreach($updateItems as $mid => $v):
-                if(count($v['gcmList']) > 0):
-                    $message = $v['messageInfo'];
-                    $NotifRes = $this->push_notification_model->send_notification($v['gcmList'], $message['headLine'], $message['body'], $message['notifyImage']);                    
-                    d($NotifRes,false);
-                    $this->db->reset_query();
-                    $this->db->where("messageId", $mid)
-                             ->update_batch("message_log", $v['updateList'], 'messageLogId');
+            if(@$messageInfo->preview == NULL):
+                $messageInfo->preview = $messageInfo->headLine;
+            endif;
+            $body = @$messageInfo->preview;//character_limiter(trim(strip_tags(html_entity_decode(preg_replace('/\s+/', ' ', trim($messageInfo->body))))), 100);
+            foreach($gcms['ios'] as $k => $v):
+                if(count($v) > 0):
+                    $notifyRes[] = $this->push_notification_model->send_notification($v, $messageInfo->headLine, $body, $messageInfo->messageId, base_url().'assets/uploads/files/'.$messageInfo->notifyImage, 'ios');
                 endif;
             endforeach;
+            
+            foreach($gcms['android'] as $k => $v):
+                if(count($v) > 0):
+                    $notifyRes[] = $this->push_notification_model->send_notification($v, $messageInfo->headLine, $body, $messageInfo->messageId, base_url().'assets/uploads/files/'.$messageInfo->notifyImage, 'android');
+                endif;
+            endforeach;
+            
+            echo "sending notification done. ";
+            $this->db->reset_query();
+            $this->db->where("messageId", $messageInfo->messageId)
+                     ->update("message", array('completed' => 1));
+            
+            echo 'Notification sent';
+            d($notifyRes,false);
+            die();
         }
         catch(Exception $e){
-            d($e->getMessage());
+            echo $e->getMessage();
+            //var_dump($notifyRes);
+            die();
         }
-        
-        d($res->result());
-    }
-    
-    function index2() {
-
-        $id = "dwtKWZaqg6Q:APA91bEgoMfwiWu6EhSvjdod0vY8t3ergmv7A-P9VEFM-1FOKMci4cHCqMQ5rociPAcepg9evUrQExz1lcqzr7cLZa27OxJ-_IdEpmK1gntlQaf9tjqxYxF7v_7dbdg7FeQueshIf8Jzj2OxCbclKsJz5mH67xd3bw";
-        $url = 'https://fcm.googleapis.com/fcm/send';
-
-        $message = array(
-            'title' => 'Test Title',
-            'subtitle' => 'test sub title',
-            'body' => 'Test Body',
-            'vibrate' => 1,
-            'sound' => 1,
-            'image' => 'https://pay.google.com/about/static/images/social/og_image.jpg'
-        );
-
-        $fields = array(
-            //'to' => $id,
-            //'notification' => $message,
-            "registration_ids" => array(
-                'cwrNE0RM-TU:APA91bHkitG59y1DB9u9LLhwPjHCRyN4EbPCwUIvK7i2MQ7Rm56AyEvilhOEe7FMzbMmFesYc20ftD8jw6Y3_P00rtbafdfJjGjwnotuUAL-rrhsSbm8dYCe4LRTWxOby0dmXu05m0oq',
-                'ert3puQEj_4:APA91bFgzDN-HH0zv8k-afG2WICE_SHebKdqACGPvWdVcZxPehIRVFU3v-eDFTiMitq5EclPwPnQEkbqkgkEdJa8aazN5iC0-aSOeZKNR5pJnOl9wifuhCumcz50XHzgu6VVWl_Y2BpC'
-            ), //["device_token_1", "device_token_2"],
-            'data' => $message
-        );
-        $fields = json_encode($fields);
-
-        $headers = array(
-            'Authorization: key=AAAAn9utpPo:APA91bEmpM842xu2Pw6vAv8qtLZhj1KJlrdFFrYOU1jUPP3L6JTcnE80YLgTkeUnPSCwrKPb_PeDJLiatR2LvHq4OZ2BpX7pErBPk6RpXVgBQwhNamd4n-QX9VaViDfgbNXgKkIARXE0Grm6gatkzYKpoSJKnfi6lg',
-            'Content-Type: application/json'
-        );
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
-
-        $result = curl_exec($ch);
-        echo $result;
-        curl_close($ch);
-    }
-
+    }    
 }

@@ -31,7 +31,7 @@ class Routing_number extends CI_Controller {
 
             //$crud->unset_add();
             //$crud->unset_edit();
-            $crud->unset_delete();
+            //$crud->unset_delete();
 
             if (!ci_check_permission("canAddRoutingNumber")):
                 $crud->unset_add();

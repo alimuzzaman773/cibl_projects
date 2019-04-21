@@ -435,4 +435,63 @@ class Reports_model extends CI_Model {
         }
         return false;
     }
+
+    function getUtilityBillList($params = array()) {
+        if (isset($params['count']) && $params['count'] == true) {
+            $this->db->select("COUNT(p.payment_id) as total");
+        } else {
+            $this->db->select('p.*, bpt.fromAccNo as bpt_from_ac, bpt.amount as bpt_amount, bpt.narration as bpt_narration, bpt.isSuccess as bpt_success,'
+                . 'vt.fromAccNo as vt_from_ac, vt.amount as vt_amount, st.fromAccNo as st_from_ac, st.amount as st_amount,'
+                . 'lt.fromAccNo as lt_from_ac, lt.amount as lt_amount, o1t.fromAccNo as o1t_from_ac, o1t.amount as o1t_amount,'
+                . 'o2t.fromAccNo as o2t_from_ac, o2t.amount as o2t_amount', FALSE);
+        }
+
+        $this->db->from(TBL_SSL_BILL_PAYMENT . " p")
+            ->join(TBL_APPS_TRANSACTION . " bpt", "bpt.transferId = p.bp_transfer_id", "left")
+            ->join(TBL_APPS_TRANSACTION . " vt", "vt.transferId = p.vat_transfer_id", "left")
+            ->join(TBL_APPS_TRANSACTION . " st", "st.transferId = p.stamp_transfer_id", "left")
+            ->join(TBL_APPS_TRANSACTION . " lt", "lt.transferId = p.lpc_transfer_id", "left")
+            ->join(TBL_APPS_TRANSACTION . " o1t", "o1t.transferId = p.other1_transfer_id", "left")
+            ->join(TBL_APPS_TRANSACTION . " o2t", "o2t.transferId = p.other2_transfer_id", "left");
+//->where("p.isSuccess", "Y");
+
+        if (isset($params['payment_id']) && (int) $params['payment_id']):
+            $this->db->where("p.payment_id", $params['payment_id']);
+        endif;
+
+        if (isset($params['skyId']) && (int) $params['skyId']):
+            $this->db->where("p.skyId", $params['skyId']);
+        endif;
+
+        if (isset($params['utility']) && trim($params['utility']) != ""):
+            $this->db->where("p.utility_name", $params['utility']);
+        endif;
+
+        if (isset($params['status']) && trim($params['status']) != ""):
+            $this->db->where("p.isSuccess", $params['status']);
+        endif;
+
+        if (isset($params['search']) && trim($params['search']) != ""):
+            $this->db->group_start()
+                ->or_like("bpt.fromAccNo", $params['search'], 'both')
+                ->or_like("bpt.amount", $params['search'], 'both')
+                ->group_end();
+        endif;
+
+        if (isset($params['fromdate']) && isset($params['todate']) && $params['fromdate'] != null && $params['todate'] != null):
+            $this->db->where("(DATE(p.created) between " . $this->db->escape($params['fromdate']) . " AND " . $this->db->escape($params['todate']) . ")");
+        endif;
+
+        if (isset($params['limit']) && (int) $params['limit'] > 0):
+            $offset = (isset($params['offset'])) ? $params['offset'] : 0;
+            $this->db->limit($params['limit'], $offset);
+        endif;
+
+        $result = $this->db->order_by("p.payment_id", "DESC")->get();
+
+        if ($result->num_rows() > 0) {
+            return $result;
+        }
+        return false;
+    }
 }

@@ -46,6 +46,9 @@ define("TBL_APP_USER_ACTIVITY_LOG_TYPE", DB_PREFIX . "app_user_activity_log_type
 define("TBL_APP_USERS_MC", DB_PREFIX . "apps_users_mc");
 define("TBL_APP_USERS_GROUP", DB_PREFIX . "apps_users_group");
 define("TBL_BO_ACTIVITY_LOG", DB_PREFIX . "bo_activity_log");
+define("TBL_SSL_BILL_PAYMENT", DB_PREFIX . "ssl_bill_payment");
+define('TBL_APPS_TRANSACTION', DB_PREFIX . "apps_transaction");
+
 
 // All Constant Variables:
 define("PRODUCT_REQUEST_REPORTING_MAIL", serialize(array('mail1' => "abc@gmail.com", 'mail2' => "abc@yahoo.com")));
