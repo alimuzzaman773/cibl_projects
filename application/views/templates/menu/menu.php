@@ -132,76 +132,80 @@
                             <div class="yamm-content">
                                 <div class="row">                                    
                                     <div class="clearfix mb">
-                                        <ul class="col-md-2 col-lg-2 col-xs-12 list-unstyled">
-                                            <li><p><b>Maker</b></p></li>
-                                            <?php if (ci_check_permission("canViewAdminUserCreateMenu")): ?>
-                                                <li><a href="<?= base_url() . 'admin_users_maker' ?>">Admin Users</a></li>
-                                            <?php endif; ?>
+                                        <?php if (ci_check_permission("canViewMakerMenu")): ?>
+                                            <ul class="col-md-2 col-lg-2 col-xs-12 list-unstyled">
+                                                <li><p><b>Maker</b></p></li>
+                                                <?php if (ci_check_permission("canViewAdminUserCreateMenu")): ?>
+                                                    <li><a href="<?= base_url() . 'admin_users_maker' ?>">Admin Users</a></li>
+                                                <?php endif; ?>
 
-                                            <?php if (ci_check_permission("canViewAdminUserGroupCreateMenu")): ?>
-                                                <li><a href="<?= base_url() . 'admin_user_group_maker' ?>">Admin User Group</a></li>
-                                            <?php endif; ?>
+                                                <?php if (ci_check_permission("canViewAdminUserGroupCreateMenu")): ?>
+                                                    <li><a href="<?= base_url() . 'admin_user_group_maker' ?>">Admin User Group</a></li>
+                                                <?php endif; ?>
 
-                                            <?php if (ci_check_permission("canViewAppsUserCreateMenu")): ?>
-                                                <li><a href="<?= base_url() . 'client_registration/index' ?>">Apps users</a></li>
-                                            <?php endif; ?>
+                                                <?php if (ci_check_permission("canViewAppsUserCreateMenu")): ?>
+                                                    <li><a href="<?= base_url() . 'client_registration/index' ?>">Apps users</a></li>
+                                                <?php endif; ?>
 
-                                            <?php if (ci_check_permission("canViewPinCreateMenu")): ?>
-                                                <li><a class="hidden" href="<?= base_url() . 'pin_generation/viewPinByAction' ?>">Pin</a></li>
-                                            <?php endif; ?>
-                                            <!--
-                                            <?php if (ci_check_permission("canViewBillerSetupMenu")): ?>
-                                                <li><a href="<?= base_url() . 'biller_setup_maker' ?>">Biller Setup</a></li>
-                                            <?php endif; ?>
-                                            -->
-                                            <?php if (ci_check_permission("canViewLimitPackgaeMenu")): ?>
-                                                <li><a href="<?= base_url() . 'transaction_limit_setup_maker' ?>">Transaction Package Limit</a></li>
-                                            <?php endif; ?>
-                                            <?php if (ci_check_permission("canViewPasswordPolicyMenu")): ?>
-                                                <li class="hide"><a href="<?= base_url() . 'validation_setup' ?>">Password Policy</a></li>
-                                            <?php endif; ?>
-                                            <?php if (ci_check_permission("canViewPermissionMenu")): ?>
-                                                <li class="hide"><a href="<?= base_url() ?>permission">Permission</a></li>
-                                            <?php endif; ?>
-                                        </ul>
-                                        <ul class="col-md-2 col-lg-2 col-xs-12 list-unstyled">
-                                            <li><p><b>Checker</b></p></li>
-                                            <?php if (ci_check_permission("canViewAdminUserGroupAuthorizationMenu")): ?>
-                                                <li><a href="<?= base_url() . 'admin_user_group_checker' ?>">Admin User Group Authorization</a></li>
-                                            <?php endif; ?>
-                                            <?php if (ci_check_permission("canViewAdminUserAuthorizationMenu")): ?>
-                                                <li><a href="<?= base_url() . 'admin_users_checker' ?>">Admin User Authorization</a></li>
-                                            <?php endif; ?>
-                                            <?php if (ci_check_permission("canViewLimitSetupAuthorizationMenu")): ?>
-                                                <li><a href="<?= base_url() . 'transaction_limit_setup_checker' ?>">Transaction Package Limit Authorization</a></li>
-                                            <?php endif; ?>
-                                            <?php if (ci_check_permission("canViewAppsUserAuthorizationMenu")): ?>
-                                                <li><a href="<?= base_url() . 'client_registration_checker' ?>">Apps Users Authorization</a></li>
-                                            <?php endif; ?>
-                                            <?php if (ci_check_permission("canViewDeviceAuthorizationMenu")): ?>
-                                                <li><a class="hidden" href="<?= base_url() . 'device_info_checker' ?>">Device Authorization</a></li>
-                                            <?php endif; ?>
-                                            <!--
-                                            <?php if (ci_check_permission("canViewBillerSetupAuthorizationMenu")): ?>
-                                                    <li><a href="<?= base_url() . 'biller_setup_checker' ?>">Biller Setup Authorization</a></li>
-                                            <?php endif; ?>
-                                            -->
-                                            <?php if (ci_check_permission("canViewPinResetAuthorizationMenu")): ?>
-                                                <li><a class="hidden" href="<?= base_url() . 'pin_generation_checker' ?>">Pin Reset Authorization</a></li>
-                                            <?php endif; ?>
+                                                <?php if (ci_check_permission("canViewPinCreateMenu")): ?>
+                                                    <li><a class="hidden" href="<?= base_url() . 'pin_generation/viewPinByAction' ?>">Pin</a></li>
+                                                <?php endif; ?>
+                                                <!--
+                                                <?php if (ci_check_permission("canViewBillerSetupMenu")): ?>
+                                                        <li><a href="<?= base_url() . 'biller_setup_maker' ?>">Biller Setup</a></li>
+                                                <?php endif; ?>
+                                                -->
+                                                <?php if (ci_check_permission("canViewLimitPackgaeMenu")): ?>
+                                                    <li><a href="<?= base_url() . 'transaction_limit_setup_maker' ?>">Transaction Package Limit</a></li>
+                                                <?php endif; ?>
+                                                <?php if (ci_check_permission("canViewPasswordPolicyMenu")): ?>
+                                                    <li class="hide"><a href="<?= base_url() . 'validation_setup' ?>">Password Policy</a></li>
+                                                <?php endif; ?>
+                                                <?php if (ci_check_permission("canViewPermissionMenu")): ?>
+                                                    <li class="hide"><a href="<?= base_url() ?>permission">Permission</a></li>
+                                                <?php endif; ?>
+                                            </ul>
+                                        <?php endif; ?>
+                                        <?php if (ci_check_permission("canViewCheckerMenu")): ?>
+                                            <ul class="col-md-2 col-lg-2 col-xs-12 list-unstyled">
+                                                <li><p><b>Checker</b></p></li>
+                                                <?php if (ci_check_permission("canViewAdminUserGroupAuthorizationMenu")): ?>
+                                                    <li><a href="<?= base_url() . 'admin_user_group_checker' ?>">Admin User Group Authorization</a></li>
+                                                <?php endif; ?>
+                                                <?php if (ci_check_permission("canViewAdminUserAuthorizationMenu")): ?>
+                                                    <li><a href="<?= base_url() . 'admin_users_checker' ?>">Admin User Authorization</a></li>
+                                                <?php endif; ?>
+                                                <?php if (ci_check_permission("canViewLimitSetupAuthorizationMenu")): ?>
+                                                    <li><a href="<?= base_url() . 'transaction_limit_setup_checker' ?>">Transaction Package Limit Authorization</a></li>
+                                                <?php endif; ?>
+                                                <?php if (ci_check_permission("canViewAppsUserAuthorizationMenu")): ?>
+                                                    <li><a href="<?= base_url() . 'client_registration_checker' ?>">Apps Users Authorization</a></li>
+                                                <?php endif; ?>
+                                                <?php if (ci_check_permission("canViewDeviceAuthorizationMenu")): ?>
+                                                    <li><a class="hidden" href="<?= base_url() . 'device_info_checker' ?>">Device Authorization</a></li>
+                                                <?php endif; ?>
+                                                <!--
+                                                <?php if (ci_check_permission("canViewBillerSetupAuthorizationMenu")): ?>
+                                                            <li><a href="<?= base_url() . 'biller_setup_checker' ?>">Biller Setup Authorization</a></li>
+                                                <?php endif; ?>
+                                                -->
+                                                <?php if (ci_check_permission("canViewPinResetAuthorizationMenu")): ?>
+                                                    <li><a class="hidden" href="<?= base_url() . 'pin_generation_checker' ?>">Pin Reset Authorization</a></li>
+                                                <?php endif; ?>
 
-                                            <?php if (ci_check_permission("canViewPinCreateAuthorizationMenu")): ?>
-                                                <li><a class="hidden" href="<?= base_url() . 'pin_create_checker' ?>">Pin Create Authorization</a></li>
-                                            <?php endif; ?>
+                                                <?php if (ci_check_permission("canViewPinCreateAuthorizationMenu")): ?>
+                                                    <li><a class="hidden" href="<?= base_url() . 'pin_create_checker' ?>">Pin Create Authorization</a></li>
+                                                <?php endif; ?>
 
-                                            <?php if (ci_check_permission("canViewPasswordPolicyAuthorizationMenu")): ?>
-                                                <li class="hidden"><a href="<?= base_url() . 'password_policy_checker' ?>">Password Policy Authorization</a></li>
-                                            <?php endif; ?>
+                                                <?php if (ci_check_permission("canViewPasswordPolicyAuthorizationMenu")): ?>
+                                                    <li class="hidden"><a href="<?= base_url() . 'password_policy_checker' ?>">Password Policy Authorization</a></li>
+                                                <?php endif; ?>
 
-                                            <?php if (ci_check_permission("canViewAppsUserDeleteAuthorizationMenu")): ?>
-                                                <li><a class="hidden" href="<?= base_url() . 'apps_user_delete_checker' ?>">Apps User Delete Authorization</a></li>
-                                            <?php endif; ?>
-                                        </ul>
+                                                <?php if (ci_check_permission("canViewAppsUserDeleteAuthorizationMenu")): ?>
+                                                    <li><a class="hidden" href="<?= base_url() . 'apps_user_delete_checker' ?>">Apps User Delete Authorization</a></li>
+                                                <?php endif; ?>
+                                            </ul>
+                                        <?php endif; ?>
                                         <ul class="col-md-2 col-lg-2 col-xs-12 list-unstyled">
                                             <li><p><b>Request Process</b></p></li>
 
@@ -227,7 +231,7 @@
                                             <?php endif; ?>
                                             <!--
                                             <?php if (ci_check_permission("canViewBillerSetupMenu")): ?>
-                                                    <li><a href="<?= base_url() . 'bill_type_setup' ?>">Bill Type Setup</a></li>
+                                                        <li><a href="<?= base_url() . 'bill_type_setup' ?>">Bill Type Setup</a></li>
                                             <?php endif; ?>
                                             -->
                                             <li><a href="<?= base_url() . 'account_type/index' ?>">Account Categories Setup</a></li>
@@ -290,18 +294,18 @@
                                         <li><a href="<?= base_url() . 'reports/product_request' ?>">Product Request</a></li>
                                         <li><a href="<?= base_url() . 'reports/banking_request' ?>">Banking Request</a></li>
                                     </ul>
-                                   <!--
-                                    <ul class="col-md-2 col-xs-12 list-unstyled">
-                                        <li><p><b>Card Payment</b></p></li>
-                                        <li><a href="<?= base_url() . 'reports/card_payment_report' ?>">Card Payment Report</a></li>
-                                        <li><a href="<?= base_url() . 'reports/mobile_topup_card_report' ?>">Bill Payment Report</a></li>   
-                                    </ul>
+                                    <!--
+                                     <ul class="col-md-2 col-xs-12 list-unstyled">
+                                         <li><p><b>Card Payment</b></p></li>
+                                         <li><a href="<?= base_url() . 'reports/card_payment_report' ?>">Card Payment Report</a></li>
+                                         <li><a href="<?= base_url() . 'reports/mobile_topup_card_report' ?>">Bill Payment Report</a></li>   
+                                     </ul>
                                     -->
                                     <ul class="col-md-2 col-xs-12 list-unstyled">
                                         <li><p><b>Call Center</b></p></li>
                                         <li><a href="<?= base_url() . 'reports/call_center_report' ?>">Call Center User Report</a></li>                                        
                                     </ul>
-                          
+
                                 </div>
                             </div>
                         </div>
@@ -320,7 +324,7 @@
                                         <li><p><b>Apps User</b></p></li>
                                         <li><a href="<?= base_url() . 'call_center/#/user_list' ?>">User Authorization</a></li>
                                     </ul>
-                                     <?php // endif; ?>
+                                    <?php // endif; ?>
                                     <?php // if(ci_check_permission("canViewCallCenterAccount")): ?>
                                     <ul class="col-md-2 col-xs-12 list-unstyled">
                                         <li><p><b>Account/Card</b></p></li>
