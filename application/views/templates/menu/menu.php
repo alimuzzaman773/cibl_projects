@@ -152,7 +152,7 @@
                                                 <?php endif; ?>
                                                 <!--
                                                 <?php if (ci_check_permission("canViewBillerSetupMenu")): ?>
-                                                        <li><a href="<?= base_url() . 'biller_setup_maker' ?>">Biller Setup</a></li>
+                                                            <li><a href="<?= base_url() . 'biller_setup_maker' ?>">Biller Setup</a></li>
                                                 <?php endif; ?>
                                                 -->
                                                 <?php if (ci_check_permission("canViewLimitPackgaeMenu")): ?>
@@ -186,7 +186,7 @@
                                                 <?php endif; ?>
                                                 <!--
                                                 <?php if (ci_check_permission("canViewBillerSetupAuthorizationMenu")): ?>
-                                                            <li><a href="<?= base_url() . 'biller_setup_checker' ?>">Biller Setup Authorization</a></li>
+                                                                <li><a href="<?= base_url() . 'biller_setup_checker' ?>">Biller Setup Authorization</a></li>
                                                 <?php endif; ?>
                                                 -->
                                                 <?php if (ci_check_permission("canViewPinResetAuthorizationMenu")): ?>
@@ -206,47 +206,160 @@
                                                 <?php endif; ?>
                                             </ul>
                                         <?php endif; ?>
-                                        <ul class="col-md-2 col-lg-2 col-xs-12 list-unstyled">
-                                            <li><p><b>Request Process</b></p></li>
+                                        <?php if (ci_check_permission("canViewRequestProcessMenu")): ?>
+                                            <ul class="col-md-2 col-lg-2 col-xs-12 list-unstyled">
+                                                <li><p><b>Request Process</b></p></li>
 
-                                            <?php if (ci_check_permission("canViewProductRequestMenu")): ?>
-                                                <li><a href="<?= base_url() . 'priority_request_process/getRequests' ?>">Priority</a></li>
-                                            <?php endif; ?>
+                                                <?php if (ci_check_permission("canViewProductRequestMenu")): ?>
+                                                    <li><a href="<?= base_url() . 'priority_request_process/getRequests' ?>">Priority</a></li>
+                                                <?php endif; ?>
 
-                                            <?php if (ci_check_permission("canViewProductRequestMenu")): ?>
-                                                <li><a href="<?= base_url() . 'product_request_process/index' ?>">Product</a></li>
-                                            <?php endif; ?>
+                                                <?php if (ci_check_permission("canViewProductRequestMenu")): ?>
+                                                    <li><a href="<?= base_url() . 'product_request_process/index' ?>">Product</a></li>
+                                                <?php endif; ?>
 
-                                            <?php if (ci_check_permission("canViewBankingRequestMenu")): ?>
-                                                <li><a href="<?= base_url() . 'banking_service_request/getRequests' ?>">Banking</a></li>
-                                            <?php endif; ?>
+                                                <?php if (ci_check_permission("canViewBankingRequestMenu")): ?>
+                                                    <li><a href="<?= base_url() . 'banking_service_request/getRequests' ?>">Banking</a></li>
+                                                <?php endif; ?>
+                                            </ul>
+                                        <?php endif; ?>
+                                        <?php if (ci_check_permission("canViewConfigurationMenu")): ?>
+                                            <ul class="col-md-2 col-xs-12 list-unstyled">
+                                                <li><p><b>Configuration</b></p></li>
+                                                <?php if (ci_check_permission("canViewPasswordPolicyMenu")): ?>
+                                                    <li><a href="<?= base_url() . 'password_policy_setup' ?>">Password Policy Setup</a></li>
+                                                <?php endif; ?>
+                                                <?php if (ci_check_permission("canViewRoutingNumberMenu")): ?>
+                                                    <li><a href="<?= base_url() . 'routing_number' ?>">Routing Number Setup</a></li>
+                                                <?php endif; ?>
+                                                <!--
+                                                <?php if (ci_check_permission("canViewBillerSetupMenu")): ?>
+                                                                <li><a href="<?= base_url() . 'bill_type_setup' ?>">Bill Type Setup</a></li>
+                                                <?php endif; ?>
+                                                -->
+                                                <li><a href="<?= base_url() . 'account_type/index' ?>">Account Categories Setup</a></li>
+                                                <li><a href="<?= base_url() . 'fund_transfer_setup/index' ?>">Fund Transfer Setup</a></li>
+                                                <li><a href="<?= base_url() . 'activity_log_type/index' ?>">Activity Log Type Setup</a></li>
+                                            </ul>
+                                        <?php endif; ?>
+                                        <?php if (ci_check_permission("canViewApplicationSettingsMenu")): ?>
+                                            <ul class="col-md-2 col-lg-2 col-xs-12 list-unstyled">
+                                                <li><p><b>Application settings</b></p></li>
+                                                <?php //if (ci_check_permission("canViewApplicationSettingsMenu")): ?>
+                                                <li><a href="<?= base_url() . 'settings' ?>"> Application settings</a></li>
+                                                <?php //endif; ?>
+                                            </ul>
+                                        <?php endif; ?>
+                                        <?php if (ci_check_permission("canViewLogMenu")): ?>
+                                            <ul class="col-md-2 col-lg-2 col-xs-12 list-unstyled">
+                                                <li><p><b>Logs</b></p></li>
+                                                <li><a href="<?= base_url() . 'log/bo_log' ?>"> BO Activity log</a></li>
+                                            </ul>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>    
+                    </ul>
+                </li>
+            <?php endif; ?>
+            <?php if (ci_check_permission("canViewReportMenu")): ?>
+                <li class="dropdown yamm-fw">
+                    <a href="#" id="dropModules" role="button" data-toggle="dropdown">Reports<b class="caret"></b></a>
+                    <ul id="dropModules" class="dropdown-menu" role="menu" aria-labelledby="dropModules">                    
+                        <li class="">
+                            <div class="yamm-content">
+                                <div class="row">                                    
+                                    <div class="clearfix mb">
+                                        <ul class="col-md-2 col-xs-12 list-unstyled">
+                                            <li><p><b>Apps User Reports</b></p></li>
+                                            <li><a href="<?= base_url() . 'reports/user_status' ?>">Apps Users' Status</a></li>
+                                            <li><a href="<?= base_url() . 'reports/customer_info' ?>">Customer Information</a></li>
+                                            <li><a href="<?= base_url() . 'reports/user_login_info' ?>">User Last Login Information</a></li>
+    <!--                                         <li><a href="<?= base_url() . 'reports/fund_transfer' ?>">Fund Transfer</a></li>
+                                            <li><a href="<?= base_url() . 'reports/other_fund_transfer' ?>">Other Fund Transfer</a></li> -->
+                                            <li><a href="<?= base_url() . 'reports/customer_activity_report' ?>">Apps User Activity Log</a></li>
                                         </ul>
                                         <ul class="col-md-2 col-xs-12 list-unstyled">
-                                            <li><p><b>Configuration</b></p></li>
-                                            <?php if (ci_check_permission("canViewPasswordPolicyMenu")): ?>
-                                                <li><a href="<?= base_url() . 'password_policy_setup' ?>">Password Policy Setup</a></li>
-                                            <?php endif; ?>
-                                            <?php if (ci_check_permission("canViewRoutingNumberMenu")): ?>
-                                                <li><a href="<?= base_url() . 'routing_number' ?>">Routing Number Setup</a></li>
-                                            <?php endif; ?>
-                                            <!--
-                                            <?php if (ci_check_permission("canViewBillerSetupMenu")): ?>
-                                                        <li><a href="<?= base_url() . 'bill_type_setup' ?>">Bill Type Setup</a></li>
-                                            <?php endif; ?>
-                                            -->
-                                            <li><a href="<?= base_url() . 'account_type/index' ?>">Account Categories Setup</a></li>
-                                            <li><a href="<?= base_url() . 'fund_transfer_setup/index' ?>">Fund Transfer Setup</a></li>
-                                            <li><a href="<?= base_url() . 'activity_log_type/index' ?>">Activity Log Type Setup</a></li>
+                                            <li><p><b>Admin Reports</b></p></li>
+                                            <li><a href="<?= base_url() . 'reports/id_modification' ?>">Last User ID Modification</a></li>
                                         </ul>
-                                        <ul class="col-md-2 col-lg-2 col-xs-12 list-unstyled">
-                                            <li><p><b>Application settings</b></p></li>
-                                            <?php //if (ci_check_permission("canViewApplicationSettingsMenu")): ?>
-                                            <li><a href="<?= base_url() . 'settings' ?>"> Application settings</a></li>
-                                            <?php //endif; ?>
+                                        <ul class="col-md-2 col-xs-12 list-unstyled">
+                                            <li><p><b>Transaction Reports</b></p></li>
+                                            <li><a href="<?= base_url() . 'reports/fund_transfer_details' ?>">Fund Transfer</a></li>
+                                            <li><a href="<?= base_url() . 'reports/utility_bill_report' ?>">Utility Bill Details Report</a></li>
+                                            <!-- <li><a href="<?= base_url() . 'reports/fund_transfer' ?>">Fund Transfer</a></li>
+                                            <li><a href="<?= base_url() . 'reports/other_fund_transfer' ?>">Other Fund Transfer</a></li> -->
                                         </ul>
-                                        <ul class="col-md-2 col-lg-2 col-xs-12 list-unstyled">
-                                            <li><p><b>Logs</b></p></li>
-                                            <li><a href="<?= base_url() . 'log/bo_log' ?>"> BO Activity log</a></li>
+                                        <!--
+                                        <ul class="col-md-2 col-xs-12 list-unstyled">
+                                            <li><p><b>Billing Report</b></p></li>
+                                            <li><a href="<?= base_url() . 'reports/bill_pay' ?>">Billing Information</a></li>
+                                        </ul>
+                                        -->
+                                        <ul class="col-md-2 col-xs-12 list-unstyled">
+                                            <li><p><b>Request Report</b></p></li>
+                                            <li><a href="<?= base_url() . 'reports/priority_request' ?>">Priority Request</a></li>
+                                            <li><a href="<?= base_url() . 'reports/product_request' ?>">Product Request</a></li>
+                                            <li><a href="<?= base_url() . 'reports/banking_request' ?>">Banking Request</a></li>
+                                        </ul>
+                                        <!--
+                                         <ul class="col-md-2 col-xs-12 list-unstyled">
+                                             <li><p><b>Card Payment</b></p></li>
+                                             <li><a href="<?= base_url() . 'reports/card_payment_report' ?>">Card Payment Report</a></li>
+                                             <li><a href="<?= base_url() . 'reports/mobile_topup_card_report' ?>">Bill Payment Report</a></li>   
+                                         </ul>
+                                        -->
+                                        <ul class="col-md-2 col-xs-12 list-unstyled">
+                                            <li><p><b>Call Center</b></p></li>
+                                            <li><a href="<?= base_url() . 'reports/call_center_report' ?>">Call Center User Report</a></li>                                        
+                                        </ul>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </li>    
+                    </ul>
+                </li>
+            <?php endif; ?>
+            <?php if (ci_check_permission("canViewCallCenterMenu")): ?>
+                <li class="dropdown yamm-fw">
+                    <a href="#" id="dropModules" role="button" data-toggle="dropdown">Call Center<b class="caret"></b></a>
+                    <ul id="dropModules" class="dropdown-menu" role="menu" aria-labelledby="dropModules">                    
+                        <li class="">
+                            <div class="yamm-content">
+                                <div class="row">                                    
+                                    <div class="clearfix mb">
+                                        <?php // if(ci_check_permission("canViewCallCenterAppsUser")): ?>
+                                        <ul class="col-md-2 col-xs-12 list-unstyled">
+                                            <li><p><b>Apps User</b></p></li>
+                                            <li><a href="<?= base_url() . 'call_center/#/user_list' ?>">User Authorization</a></li>
+                                        </ul>
+                                        <?php // endif; ?>
+                                        <?php // if(ci_check_permission("canViewCallCenterAccount")): ?>
+                                        <ul class="col-md-2 col-xs-12 list-unstyled">
+                                            <li><p><b>Account/Card</b></p></li>
+                                            <li><a href="<?= base_url() . 'call_center/#/request_account' ?>">Account / Card Authorized</a></li>
+                                        </ul>
+                                        <?php // endif; ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>    
+                    </ul>
+                </li>
+            <?php endif; ?>
+            <?php if (ci_check_permission("canViewTransactionListMenu")): ?>
+                <li class="dropdown yamm-fw">
+                    <a href="#" id="dropModules" role="button" data-toggle="dropdown">Transaction<b class="caret"></b></a>
+                    <ul id="dropModules" class="dropdown-menu" role="menu" aria-labelledby="dropModules">                    
+                        <li class="">
+                            <div class="yamm-content">
+                                <div class="row">                                    
+                                    <div class="clearfix mb">
+                                        <ul class="col-md-2 col-xs-12 list-unstyled">
+                                            <li><p><b>Bill Payment</b></p></li>
+                                            <li><a href="<?= base_url() . 'utility_bill/#/utility_list' ?>">Bill Payment</a></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -255,105 +368,6 @@
                     </ul>
                 </li>
             <?php endif; ?>
-            <li class="dropdown yamm-fw">
-                <a href="#" id="dropModules" role="button" data-toggle="dropdown">Reports<b class="caret"></b></a>
-                <ul id="dropModules" class="dropdown-menu" role="menu" aria-labelledby="dropModules">                    
-                    <li class="">
-                        <div class="yamm-content">
-                            <div class="row">                                    
-                                <div class="clearfix mb">
-                                    <ul class="col-md-2 col-xs-12 list-unstyled">
-                                        <li><p><b>Apps User Reports</b></p></li>
-                                        <li><a href="<?= base_url() . 'reports/user_status' ?>">Apps Users' Status</a></li>
-                                        <li><a href="<?= base_url() . 'reports/customer_info' ?>">Customer Information</a></li>
-                                        <li><a href="<?= base_url() . 'reports/user_login_info' ?>">User Last Login Information</a></li>
-<!--                                         <li><a href="<?= base_url() . 'reports/fund_transfer' ?>">Fund Transfer</a></li>
-                                        <li><a href="<?= base_url() . 'reports/other_fund_transfer' ?>">Other Fund Transfer</a></li> -->
-                                        <li><a href="<?= base_url() . 'reports/customer_activity_report' ?>">Apps User Activity Log</a></li>
-                                    </ul>
-                                    <ul class="col-md-2 col-xs-12 list-unstyled">
-                                        <li><p><b>Admin Reports</b></p></li>
-                                        <li><a href="<?= base_url() . 'reports/id_modification' ?>">Last User ID Modification</a></li>
-                                    </ul>
-                                    <ul class="col-md-2 col-xs-12 list-unstyled">
-                                        <li><p><b>Transaction Reports</b></p></li>
-                                        <li><a href="<?= base_url() . 'reports/fund_transfer_details' ?>">Fund Transfer</a></li>
-                                        <li><a href="<?= base_url() . 'reports/utility_bill_report' ?>">Utility Bill Details Report</a></li>
-                                        <!-- <li><a href="<?= base_url() . 'reports/fund_transfer' ?>">Fund Transfer</a></li>
-                                        <li><a href="<?= base_url() . 'reports/other_fund_transfer' ?>">Other Fund Transfer</a></li> -->
-                                    </ul>
-                                    <!--
-                                    <ul class="col-md-2 col-xs-12 list-unstyled">
-                                        <li><p><b>Billing Report</b></p></li>
-                                        <li><a href="<?= base_url() . 'reports/bill_pay' ?>">Billing Information</a></li>
-                                    </ul>
-                                    -->
-                                    <ul class="col-md-2 col-xs-12 list-unstyled">
-                                        <li><p><b>Request Report</b></p></li>
-                                        <li><a href="<?= base_url() . 'reports/priority_request' ?>">Priority Request</a></li>
-                                        <li><a href="<?= base_url() . 'reports/product_request' ?>">Product Request</a></li>
-                                        <li><a href="<?= base_url() . 'reports/banking_request' ?>">Banking Request</a></li>
-                                    </ul>
-                                    <!--
-                                     <ul class="col-md-2 col-xs-12 list-unstyled">
-                                         <li><p><b>Card Payment</b></p></li>
-                                         <li><a href="<?= base_url() . 'reports/card_payment_report' ?>">Card Payment Report</a></li>
-                                         <li><a href="<?= base_url() . 'reports/mobile_topup_card_report' ?>">Bill Payment Report</a></li>   
-                                     </ul>
-                                    -->
-                                    <ul class="col-md-2 col-xs-12 list-unstyled">
-                                        <li><p><b>Call Center</b></p></li>
-                                        <li><a href="<?= base_url() . 'reports/call_center_report' ?>">Call Center User Report</a></li>                                        
-                                    </ul>
-
-                                </div>
-                            </div>
-                        </div>
-                    </li>    
-                </ul>
-            </li>
-            <li class="dropdown yamm-fw">
-                <a href="#" id="dropModules" role="button" data-toggle="dropdown">Call Center<b class="caret"></b></a>
-                <ul id="dropModules" class="dropdown-menu" role="menu" aria-labelledby="dropModules">                    
-                    <li class="">
-                        <div class="yamm-content">
-                            <div class="row">                                    
-                                <div class="clearfix mb">
-                                    <?php // if(ci_check_permission("canViewCallCenterAppsUser")): ?>
-                                    <ul class="col-md-2 col-xs-12 list-unstyled">
-                                        <li><p><b>Apps User</b></p></li>
-                                        <li><a href="<?= base_url() . 'call_center/#/user_list' ?>">User Authorization</a></li>
-                                    </ul>
-                                    <?php // endif; ?>
-                                    <?php // if(ci_check_permission("canViewCallCenterAccount")): ?>
-                                    <ul class="col-md-2 col-xs-12 list-unstyled">
-                                        <li><p><b>Account/Card</b></p></li>
-                                        <li><a href="<?= base_url() . 'call_center/#/request_account' ?>">Account / Card Authorized</a></li>
-                                    </ul>
-                                    <?php // endif; ?>
-                                </div>
-                            </div>
-                        </div>
-                    </li>    
-                </ul>
-            </li>
-            <li class="dropdown yamm-fw">
-                <a href="#" id="dropModules" role="button" data-toggle="dropdown">Transaction<b class="caret"></b></a>
-                <ul id="dropModules" class="dropdown-menu" role="menu" aria-labelledby="dropModules">                    
-                    <li class="">
-                        <div class="yamm-content">
-                            <div class="row">                                    
-                                <div class="clearfix mb">
-                                    <ul class="col-md-2 col-xs-12 list-unstyled">
-                                        <li><p><b>Bill Payment</b></p></li>
-                                        <li><a href="<?= base_url() . 'utility_bill/#/utility_list' ?>">Bill Payment</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </li>    
-                </ul>
-            </li>
         </ul>
         <ul class="nav navbar-nav pull-right">
             <li class="yamm-fw" style="color: #fff; margin-top: 5px;">User Name : <?php echo $this->my_session->userName ?> <br>User Group : <?php echo $this->my_session->group; ?></li>
