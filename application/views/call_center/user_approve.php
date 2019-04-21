@@ -135,14 +135,14 @@
                     <option value="sms">sms</option>
                 </select>
             </div>
-            <?php if (ci_check_permission("callCenterMaker")): ?>
+            <?php if (ci_check_permission("callCenterChecker")): ?>
                 <div class="btn-group">
                     <button class="btn btn-md btn-primary" id="test" ng-show="user.makerActionBy <= 0 && user.checkerActionBy > 0" data-ng-click="approveUser(user.skyId)">
                         <i class="glyphicon glyphicon-check"></i> Checker Approve
                     </button>         
                 </div>
             <?php endif; ?>
-            <?php if (ci_check_permission("callCenterChecker")): ?>
+            <?php if (ci_check_permission("callCenterMaker")): ?>
                 <div class="btn-group">
                     <a class="btn btn-md btn-primary" id="test2" ng-show="(user.checkerActionBy <= 0 && user.makerActionBy <= 0)" ng-click="approveUserChecker(user.skyId)">
                         <i class="glyphicon glyphicon-check"></i> Maker Approve
