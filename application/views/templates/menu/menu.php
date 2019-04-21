@@ -152,7 +152,7 @@
                                                 <?php endif; ?>
                                                 <!--
                                                 <?php if (ci_check_permission("canViewBillerSetupMenu")): ?>
-                                                            <li><a href="<?= base_url() . 'biller_setup_maker' ?>">Biller Setup</a></li>
+                                                                <li><a href="<?= base_url() . 'biller_setup_maker' ?>">Biller Setup</a></li>
                                                 <?php endif; ?>
                                                 -->
                                                 <?php if (ci_check_permission("canViewLimitPackgaeMenu")): ?>
@@ -186,7 +186,7 @@
                                                 <?php endif; ?>
                                                 <!--
                                                 <?php if (ci_check_permission("canViewBillerSetupAuthorizationMenu")): ?>
-                                                                <li><a href="<?= base_url() . 'biller_setup_checker' ?>">Biller Setup Authorization</a></li>
+                                                                    <li><a href="<?= base_url() . 'biller_setup_checker' ?>">Biller Setup Authorization</a></li>
                                                 <?php endif; ?>
                                                 -->
                                                 <?php if (ci_check_permission("canViewPinResetAuthorizationMenu")): ?>
@@ -234,7 +234,7 @@
                                                 <?php endif; ?>
                                                 <!--
                                                 <?php if (ci_check_permission("canViewBillerSetupMenu")): ?>
-                                                                <li><a href="<?= base_url() . 'bill_type_setup' ?>">Bill Type Setup</a></li>
+                                                                    <li><a href="<?= base_url() . 'bill_type_setup' ?>">Bill Type Setup</a></li>
                                                 <?php endif; ?>
                                                 -->
                                                 <li><a href="<?= base_url() . 'account_type/index' ?>">Account Categories Setup</a></li>
@@ -330,18 +330,18 @@
                             <div class="yamm-content">
                                 <div class="row">                                    
                                     <div class="clearfix mb">
-                                        <?php // if(ci_check_permission("canViewCallCenterAppsUser")): ?>
-                                        <ul class="col-md-2 col-xs-12 list-unstyled">
-                                            <li><p><b>Apps User</b></p></li>
-                                            <li><a href="<?= base_url() . 'call_center/#/user_list' ?>">User Authorization</a></li>
-                                        </ul>
-                                        <?php // endif; ?>
-                                        <?php // if(ci_check_permission("canViewCallCenterAccount")): ?>
-                                        <ul class="col-md-2 col-xs-12 list-unstyled">
-                                            <li><p><b>Account/Card</b></p></li>
-                                            <li><a href="<?= base_url() . 'call_center/#/request_account' ?>">Account / Card Authorized</a></li>
-                                        </ul>
-                                        <?php // endif; ?>
+                                        <?php if (ci_check_permission("canViewCallCenterAppsUser")): ?>
+                                            <ul class="col-md-2 col-xs-12 list-unstyled">
+                                                <li><p><b>Apps User</b></p></li>
+                                                <li><a href="<?= base_url() . 'call_center/#/user_list' ?>">User Authorization</a></li>
+                                            </ul>
+                                        <?php endif; ?>
+                                        <?php if (ci_check_permission("canViewCallCenterAccount")): ?>
+                                            <ul class="col-md-2 col-xs-12 list-unstyled">
+                                                <li><p><b>Account/Card</b></p></li>
+                                                <li><a href="<?= base_url() . 'call_center/#/request_account' ?>">Account / Card Authorized</a></li>
+                                            </ul>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             </div>
