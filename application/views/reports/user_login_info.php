@@ -26,16 +26,15 @@
             <th>Client ID</th>
             <th>Apps ID</th>
             <th>Customer Name</th>
+            <th>Father Name</th>
             <th>Email ID</th>
             <th>Mobile No</th>
             <th>Create Date</th>
             <th>Last Login Date</th>
             <th>Last Logout Date</th>
-            <th>IMEI No</th>
         </tr>
         </thead>
         <tbody>
-
         <?php $i=0; foreach ($rows as $rows) { $i++; ?>
             <tr>
                 <td><?php echo $i; ?></td>
@@ -43,12 +42,12 @@
                 <td><?php echo $rows->clientId; ?></td>
                 <td><?php echo $rows->eblSkyId; ?></td>
                 <td><?php echo $rows->userName; ?></td>
+                <td><?php echo $rows->fatherName; ?></td>
                 <td><?php echo $rows->userEmail; ?></td>
                 <td><?php echo $rows->userMobNo1; ?></td>
                 <td><?php echo show_date_time($rows->creationDtTm); ?></td>
                 <td><?php echo show_date_time($rows->loginDtTm); ?></td>
                 <td><?php echo show_date_time($rows->logoutDtTm); ?></td>
-                <td><?php echo $rows->imeiNo; ?></td>
             </tr>
         <?php } ?>
         </tbody>

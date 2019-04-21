@@ -105,7 +105,7 @@ class Reports_model extends CI_Model {
                 ->where('apps_users.isPublished', 1)
                 ->select('apps_users.*, admin_users.adminUserName, admin_users.fullName')
                 ->from('apps_users')
-                ->join('admin_users', 'apps_users.createdBy = admin_users.adminUserId', 'left')
+                ->join('admin_users', 'apps_users.checkerActionBy = admin_users.adminUserId', 'left')
                 ->join('atms', 'apps_users.homeBranchCode = atms.branchCode', 'left')
                 ->get();
         return ($query->num_rows() > 0) ? $query->result() : false;
