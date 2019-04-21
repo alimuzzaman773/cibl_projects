@@ -1,17 +1,17 @@
-<h3 class="title">Apps User Checker</h3>
 <div class="container">
+    <h3 class="title-underlined">Apps User Checker</h3>
     <div id="showUsers">
-        <table class="table table-striped table-bordered">
-            <thead>
-                <tr>
-                    <th style="text-align: center; color: red" width="50%">Changed Data</th>
-                    <th style="text-align: center; <?= $publishDataModeOfDisplay_c ?>; color: green">Published Data</th>
-                </tr>
-            </thead>
-            <tbody >
-                <tr>
-                    <td style="text-align:center">
-                        <form method="post" style="" id="appsUserApproveOrReject" name="appsUserApproveOrReject" action="<?php echo base_url(); ?>client_registration_checker/getReason">
+        <form method="post" style="" id="appsUserApproveOrReject" name="appsUserApproveOrReject" action="<?php echo base_url(); ?>client_registration_checker/getReason">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th style="text-align: center; color: red" width="50%">Changed Data</th>
+                        <th style="text-align: center; <?= $publishDataModeOfDisplay_c ?>; color: green">Published Data</th>
+                    </tr>
+                </thead>
+                <tbody >
+                    <tr>
+                        <td style="text-align:center">
                             <input hidden type="text" name="skyId" id="skyId" value="<?= $appsUser['skyId'] ?>">
                             <input hidden type="text" name="makerActionDtTm" id="makerActionDtTm" value="<?= $makerActionDtTm ?>">
                             <input hidden type="text" name="checkerActionDtTm" id="checkerActionDtTm" value="<?= $checkerActionDtTm ?>">
@@ -19,7 +19,7 @@
 
                             <table class="table table-striped table-bordered">    
                                 <tr>
-                                    <th align="left" scope="row">ESB ID</th>
+                                    <th align="left" scope="row">Apps ID</th>
                                     <td><?php echo text_match($appsUser['eblSkyId'], $appsUser['eblSkyId_c']); ?></td>
                                 </tr>
 
@@ -148,76 +148,179 @@
                                 </div>
                             </div>
 
+                            
+                        </td>
 
-                            <h3 style="color:green" > Cards Information </h3>
 
-                            <div class="alert alert-success"><?php echo $message ?></div>
+                        <td style="text-align:center; <?= $publishDataModeOfDisplay_c ?>">
 
-                            <div style="text-align:center; <?= $cardsModeOfDisplay ?>" >
+                            <table class="table table-striped table-bordered">    
+                                <tr>
+                                    <th align="left" scope="row">ESB ID</th>
+                                    <td><?= $appsUser['eblSkyId_c'] ?></td>
+                                </tr>
 
+                                <tr>
+                                    <th align="left" scope="row">CFID</th>
+                                    <td><?= $appsUser['cfId_c'] ?></td>
+                                </tr>
+
+                                <tr>
+                                    <th align="left" scope="row">Client ID</th>
+                                    <td><?= $appsUser['clientId_c'] ?></td>
+                                </tr>
+
+                                <tr>
+                                    <th align="left" scope="row">User Group Name</th>
+                                    <td><?= $appsUser['mainUserGroupName'] ?></td>
+                                </tr>
+
+
+                                <tr>
+                                    <th align="left" scope="row">Date of Birth</th>
+                                    <td><?= $appsUser['dob_c'] ?></td>
+                                </tr>
+
+
+                                <tr>
+                                    <th align="left" scope="row">Gender</th>
+                                    <td><?= $appsUser['gender_c'] ?></td>
+                                </tr>
+
+
+                                <tr>
+                                    <th align="left" scope="row">Father's Name</th>
+                                    <td><?= $appsUser['fatherName_c'] ?></td>
+                                </tr>
+
+                                <tr>
+                                    <th align="left" scope="row">Mother's Name</th>
+                                    <td><?= $appsUser['motherName_c'] ?></td>
+                                </tr>
+
+
+                                <tr>
+                                    <th align="left" scope="row">Contact Number</th>
+                                    <td><?= $appsUser['userMobNo1_c'] ?></td>
+                                </tr>
+
+
+                                <tr>
+                                    <th align="left" scope="row">Alternate Contact Number</th>
+                                    <td><?= $appsUser['userMobNo2_c'] ?></td>
+                                </tr>
+
+                                <tr>
+                                    <th align="left" scope="row">User Name</th>
+                                    <td><?= $appsUser['userName_c'] ?></td>
+                                </tr>
+
+
+                                <tr>
+                                    <th align="left" scope="row">Email</th>
+                                    <td><?= $appsUser['userEmail_c'] ?></td>
+                                </tr>
+
+
+                                <tr>
+                                    <th align="left" scope="row">Current Address</th>
+                                    <td><?= $appsUser['currAddress_c'] ?></td>
+                                </tr>
+
+
+                                <tr>
+                                    <th align="left" scope="row">Parmanent Address</th>
+                                    <td><?= $appsUser['parmAddress_c'] ?></td>
+                                </tr>
+
+
+                                <tr>
+                                    <th align="left" scope="row">Mailing Address</th>
+                                    <td><?= $appsUser['billingAddress_c'] ?></td>
+                                </tr>
+
+
+                                <tr>
+                                    <th align="left" scope="row">Home Branch Code </th>
+                                    <td><?= $appsUser['homeBranchCode_c'] ?></td>
+                                </tr>
+
+
+                                <tr>
+                                    <th align="left" scope="row">Home Branch Name</th>
+                                    <td><?= $homeBranchName_c ?></td>
+                                </tr>
+
+
+                                <tr>
+                                    <th align="left" scope="row">Active/Inactive</th>
+                                    <td><?= $isActive_c ?></td>
+                                </tr>
+
+                                <tr>
+                                    <th align="left" scope="row">Lock/Unlock</th>
+                                    <td><?= $isLocked_c ?></td>
+                                </tr>
+
+
+
+                                <tr>
+                                    <th align="left" scope="row">Maker Action</th>
+                                    <td><?= $appsUser['makerAction_c'] ?></td>
+                                </tr>
+
+                                <tr>
+                                    <th align="left" scope="row">Maker Action Date Time</th>
+                                    <td><?= $makerActionDtTm_c ?></td>
+                                </tr>
+
+                            </table>
+
+                            <div>
+                                <h3>Card Information</h3>
                                 <table class="table table-striped table-bordered">
-
-                                    <tr>
-                                        <th align="left" scope="row">Client ID</th>
-                                        <td><?php echo text_match($appsUser['clientId'], $appsUser['clientId_c']); ?></td>
-                                    </tr>
-
-                                    <tr>
-                                        <th align="left" scope="row">Card User Name</th>
-                                        <td><?php echo text_match($userNameCard, $userNameCard_c); ?></td>
-                                    </tr>
-
-                                    <tr>
-                                        <th align="left" scope="row">Mother's Name</th>
-                                        <td><?php echo text_match($mothersNameCard, $mothersNameCard_c); ?></td>
-                                    </tr>
-
-                                    <tr>
-                                        <th align="left" scope="row">Date of birth</th>
-                                        <td><?php echo text_match($dobCard, $dobCard_c) ?></td>
-                                    </tr>
-
-                                    <tr>
-                                        <th align="left" scope="row">Billing Address</th>
-                                        <td><?php echo text_match($clientBillingAddress, $clientBillingAddress_c) ?></td>
-                                    </tr>
-
+                                    <thead>
+                                        <tr>
+                                            <th style="text-align:center">Card Number</th>
+                                            <th style="text-align:center">Email</th>
+                                            <th style="text-align:center">Phone</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody data-bind="foreach: cardList">
+                                        <tr>
+                                            <td style="text-align:center" data-bind="text:cardNo"></td>
+                                            <td style="text-align:center" data-bind="text:email"></td>
+                                            <td style="text-align:center" data-bind="text:mobile"></td>
+                                        </tr>
+                                    </tbody>
                                 </table>
 
-                            </div>
 
-                            <div style="<?= $cardsModeOfDisplay ?>">
-                                <h3 style="color:green" > Card Numbers </h3>
-                                <div>
-                                    <table class="table table-striped table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <th style="text-align:center">Card Number</th>
-                                                <th style="text-align:center">Card Type</th>
-                                                <th style="text-align:center">Currency</th>
-                                                <th style="text-align:center">Card Status</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php foreach ($multiCard as $multiCard) { ?>
-                                                <tr>
-                                                    <td style="text-align:center"><?php echo $multiCard['cardNumber']; ?></td>
-                                                    <td style="text-align:center"><?php echo $multiCard['cardType']; ?></td>
-                                                    <td style="text-align:center"><?php echo $multiCard['cardCurrency']; ?></td>
-                                                    <td style="text-align:center"><?php echo $multiCard['cardStatus']; ?></td>
-                                                </tr>
-                                            <?php } ?>
-                                        </tbody>
-                                    </table>
-                                </div>
                             </div>
 
                             <br>
 
+                            <div id="reasonDiv_c" style="<?= $reasonModeOfDisplay_c ?>" >
+                                <h3 style="color:red" >Reject Reason</h3>
+                                <textarea name="reason_c" id="reason_c" cols="40" rows="5" readonly></textarea>
+                                <br><br>
+                            </div>
+
                             <table width="100" border="0" cellpadding="2">
                                 <tr>
-                                    <td width="100"><button class="btn btn-success" onclick="writeReason(); return false;">Write New Reason</button></td>
-                                    <td width="100"><button class="btn btn-success" onclick="cancelReason(); return false;">Cancel Reason</button></td>
+                                    <td width="100"></td>
+                                    <td width="100"></td>
+                                    <td></td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <table width="300" border="0" cellpadding="2">
+                                <tr>
+                                    <td width="200"><button class="btn btn-success" onclick="writeReason(); return false;">Write New Reason</button></td>
+                                    <td width=""><button class="btn btn-success" onclick="cancelReason(); return false;">Cancel Reason</button></td>
                                 </tr>
                             </table>
 
@@ -235,250 +338,27 @@
                                 <br><br>
                             </div>
 
-                        </form>
 
-                        <table width="100" border="0" cellpadding="2">
-                            <tr>
-                                <td width="100"><button class="btn btn-success" onclick="approve();">Approve</button></td>
-                                <td><a href="<?php echo base_url(); ?>client_registration_checker" class="btn btn-warning"><i class="icon-remove"></i><span>Back</span></a></td>
-                                <td width="100"><button class="btn btn-danger" onclick="reject();">Reject</button></td>
-                            </tr>
-                        </table>
-                    </td>
-
-
-                    <td style="text-align:center; <?= $publishDataModeOfDisplay_c ?>">
-
-                        <table class="table table-striped table-bordered">    
-                            <tr>
-                                <th align="left" scope="row">ESB ID</th>
-                                <td><?= $appsUser['eblSkyId_c'] ?></td>
-                            </tr>
-
-                            <tr>
-                                <th align="left" scope="row">CFID</th>
-                                <td><?= $appsUser['cfId_c'] ?></td>
-                            </tr>
-
-                            <tr>
-                                <th align="left" scope="row">Client ID</th>
-                                <td><?= $appsUser['clientId_c'] ?></td>
-                            </tr>
-
-                            <tr>
-                                <th align="left" scope="row">User Group Name</th>
-                                <td><?= $appsUser['mainUserGroupName'] ?></td>
-                            </tr>
-
-
-                            <tr>
-                                <th align="left" scope="row">Date of Birth</th>
-                                <td><?= $appsUser['dob_c'] ?></td>
-                            </tr>
-
-
-                            <tr>
-                                <th align="left" scope="row">Gender</th>
-                                <td><?= $appsUser['gender_c'] ?></td>
-                            </tr>
-
-
-                            <tr>
-                                <th align="left" scope="row">Father's Name</th>
-                                <td><?= $appsUser['fatherName_c'] ?></td>
-                            </tr>
-
-                            <tr>
-                                <th align="left" scope="row">Mother's Name</th>
-                                <td><?= $appsUser['motherName_c'] ?></td>
-                            </tr>
-
-
-                            <tr>
-                                <th align="left" scope="row">Contact Number</th>
-                                <td><?= $appsUser['userMobNo1_c'] ?></td>
-                            </tr>
-
-
-                            <tr>
-                                <th align="left" scope="row">Alternate Contact Number</th>
-                                <td><?= $appsUser['userMobNo2_c'] ?></td>
-                            </tr>
-
-                            <tr>
-                                <th align="left" scope="row">User Name</th>
-                                <td><?= $appsUser['userName_c'] ?></td>
-                            </tr>
-
-
-                            <tr>
-                                <th align="left" scope="row">Email</th>
-                                <td><?= $appsUser['userEmail_c'] ?></td>
-                            </tr>
-
-
-                            <tr>
-                                <th align="left" scope="row">Current Address</th>
-                                <td><?= $appsUser['currAddress_c'] ?></td>
-                            </tr>
-
-
-                            <tr>
-                                <th align="left" scope="row">Parmanent Address</th>
-                                <td><?= $appsUser['parmAddress_c'] ?></td>
-                            </tr>
-
-
-                            <tr>
-                                <th align="left" scope="row">Mailing Address</th>
-                                <td><?= $appsUser['billingAddress_c'] ?></td>
-                            </tr>
-
-
-                            <tr>
-                                <th align="left" scope="row">Home Branch Code </th>
-                                <td><?= $appsUser['homeBranchCode_c'] ?></td>
-                            </tr>
-
-
-                            <tr>
-                                <th align="left" scope="row">Home Branch Name</th>
-                                <td><?= $homeBranchName_c ?></td>
-                            </tr>
-
-
-                            <tr>
-                                <th align="left" scope="row">Active/Inactive</th>
-                                <td><?= $isActive_c ?></td>
-                            </tr>
-
-                            <tr>
-                                <th align="left" scope="row">Lock/Unlock</th>
-                                <td><?= $isLocked_c ?></td>
-                            </tr>
-
-
-
-                            <tr>
-                                <th align="left" scope="row">Maker Action</th>
-                                <td><?= $appsUser['makerAction_c'] ?></td>
-                            </tr>
-
-                            <tr>
-                                <th align="left" scope="row">Maker Action Date Time</th>
-                                <td><?= $makerActionDtTm_c ?></td>
-                            </tr>
-
-                        </table>
-
-                        <div>
-                            <h3 style="color:green" > Account Numbers </h3>
-                            <div data-bind="visible: publishedAccounts().length > 0">
-                                <table class="table table-striped table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th style="text-align:center">Account Number</th>
-                                            <th style="text-align:center">Account Type</th>
-                                            <th style="text-align:center">Product Name</th>
-                                            <th style="text-align:center">Currency</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody data-bind="foreach: publishedAccounts">
-                                        <tr>
-                                            <td style="text-align:center" data-bind="text:accNo"></td>
-                                            <td style="text-align:center" data-bind="text:accType"></td>
-                                            <td style="text-align:center" data-bind="text:accName"></td>
-                                            <td style="text-align:center" data-bind="text:accCurrency"></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        <h3 style="color:green" > Cards Information </h3>
-                        <div class="alert alert-success" ><?php echo $message_c ?></div>
-
-                        <div style="text-align:center; <?= $cardsModeOfDisplay_c ?>" >
-
-                            <table class="table table-striped table-bordered">
-
+                            <table width="400" style="margin-top:20px" border="0" cellpadding="2">
                                 <tr>
-                                    <th align="left" scope="row">Client ID</th>
-                                    <td><?= $appsUser['clientId_c'] ?></td>
+                                    <td width="100">
+                                        <button class="btn btn-success" onclick="approve();">Approve</button>
+                                    </td>
+                                    <td width="100">
+                                        <a href="<?php echo base_url(); ?>client_registration_checker" class="btn btn-warning">
+                                            <i class="icon-remove"></i><span>Back</span>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-danger" onclick="reject();">Reject</button>
+                                    </td>
                                 </tr>
-
-                                <tr>
-                                    <th align="left" scope="row">Card User Name</th>
-                                    <td><?= $userNameCard_c ?></td>
-                                </tr>
-
-
-                                <tr>
-                                    <th align="left" scope="row">Mother's Name</th>
-                                    <td><?= $mothersNameCard_c ?></td>
-                                </tr>
-
-
-                                <tr>
-                                    <th align="left" scope="row">Date of birth</th>
-                                    <td><?= $dobCard_c ?></td>
-                                </tr>
-
-                                <tr>
-                                    <th align="left" scope="row">Billing Address</th>
-                                    <td><?= $clientBillingAddress_c ?></td>
-                                </tr>
-
                             </table>
-
-                        </div>
-
-                        <div style="<?= $cardsModeOfDisplay_c ?>">
-                            <h3 style="color:green" > Card Numbers </h3>
-                            <div>
-                                <table class="table table-striped table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th style="text-align:center">Card Number</th>
-                                            <th style="text-align:center">Card Type</th>
-                                            <th style="text-align:center">Currency</th>
-                                            <th style="text-align:center">Card Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach ($multiCard_c as $multiCard_c) { ?>
-                                            <tr>
-                                                <td style="text-align:center"><?php echo $multiCard_c['cardNumber']; ?></td>
-                                                <td style="text-align:center"><?php echo $multiCard_c['cardType']; ?></td>
-                                                <td style="text-align:center"><?php echo $multiCard_c['cardCurrency']; ?></td>
-                                                <td style="text-align:center"><?php echo $multiCard_c['cardStatus']; ?></td>
-                                            </tr>
-                                        <?php } ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-
-                        <br>
-
-                        <div id="reasonDiv_c" style="<?= $reasonModeOfDisplay_c ?>" >
-                            <h3 style="color:red" >Reject Reason</h3>
-                            <textarea name="reason_c" id="reason_c" cols="40" rows="5" readonly></textarea>
-                            <br><br>
-                        </div>
-
-                        <table width="100" border="0" cellpadding="2">
-                            <tr>
-                                <td width="100"></td>
-                                <td width="100"></td>
-                                <td></td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            </tbody>
-        </table>    
+                        </td>
+                    </tr>
+                </tbody>
+            </table>    
+        </form>
     </div>
 </div>
 
@@ -531,6 +411,7 @@
 
 <script type="text/javascript" charset="utf-8">
     var changedAccountInfo = <?= $accountInfo ?>;
+    var cardListArray = <?= json_encode($cardList) ?>;
 
     if (jQuery.isEmptyObject(<?= $accountInfo_c ?>)) {
         var publishedAccountInfo = null;
@@ -542,6 +423,7 @@
         var self = this;
         self.changedAccounts = ko.observableArray(changedAccountInfo);
         self.publishedAccounts = ko.observableArray(publishedAccountInfo);
+        self.cardList = ko.observableArray(cardListArray);
     }
     ko.applyBindings(new vm());
 </script>

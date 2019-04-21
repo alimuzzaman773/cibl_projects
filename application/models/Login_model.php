@@ -196,11 +196,11 @@ class Login_model extends CI_Model {
     }
 
 // **** To return account information of specific users according to requirement *****
-    
+
     function getUserAccounts($p = array()) {
         $this->db->select("a.*, atm.ATMName")
-                 ->from("account_info a")
-                 ->join("atms atm", "atm.branchCode = a.accBranchCode and eblNearYou = 1", "left");
+                ->from("account_info a")
+                ->join("atms atm", "atm.branchCode = a.accBranchCode and eblNearYou = 1", "left");
 
         if (isset($p['skyId']) && (int) $p['skyId']) {
             $this->db->where("a.skyId", $p['skyId']);
@@ -214,14 +214,21 @@ class Login_model extends CI_Model {
             $this->db->where("a.accTypeCode", $p['typeCode']);
         }
 
+        if (isset($p['type']) && trim($p['type']) != "") {
+            $this->db->where("a.type", $p['type']);
+        }
+
         $result = $this->db->get();
 
         return $result->num_rows() > 0 ? $result : false;
     }
 
     public function checkAccount($userData, $account = NULL) {
-        
+
         $p['skyId'] = $userData['skyId'];
+        if (isset($userData['type'])):
+            $p['type'] = $userData['type'];
+        endif;
         if ($account !== NULL):
             $p['accountNo'] = $account;
         endif;
