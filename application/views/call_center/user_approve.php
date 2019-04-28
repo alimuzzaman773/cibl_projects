@@ -81,7 +81,7 @@
             </tr>
         </table>
     </div>
-    
+
     <div class="col-xs-12 col-sm-12 col-md-12" data-ng-if="user_accounts.length > 0">
         <table class="table table-striped table-bordered">
             <thead>
@@ -104,7 +104,7 @@
             </tr>
         </table>
     </div>
-    
+
     <div class="col-xs-12 col-sm-12 col-md-12" data-ng-if="user_cards.length > 0">
         <table class="table table-striped table-bordered">
             <thead>
@@ -134,18 +134,21 @@
                     <option value="email">email</option>
                     <option value="sms">sms</option>
                 </select>
-            </div>    
-            <div class="btn-group">
-                <button class="btn btn-md btn-primary" id="test" ng-show="user.makerActionBy <= 0 && user.checkerActionBy > 0" data-ng-click="approveUser(user.skyId)">
-                    <i class="glyphicon glyphicon-check"></i> Maker Approve
-                </button>         
             </div>
-             <div class="btn-group">
-                <a class="btn btn-md btn-primary" id="test2" ng-show="(user.checkerActionBy <= 0 && user.makerActionBy <= 0)" ng-click="approveUserChecker(user.skyId)">
-                    <i class="glyphicon glyphicon-check"></i> Checker Approve
-                </a>         
-            </div> 
-            
+            <?php if (ci_check_permission("callCenterChecker")): ?>
+                <div class="btn-group">
+                    <button class="btn btn-md btn-primary" id="test" ng-show="user.makerActionBy <= 0 && user.checkerActionBy > 0" data-ng-click="approveUser(user.skyId)">
+                        <i class="glyphicon glyphicon-check"></i> Checker Approve
+                    </button>         
+                </div>
+            <?php endif; ?>
+            <?php if (ci_check_permission("callCenterMaker")): ?>
+                <div class="btn-group">
+                    <a class="btn btn-md btn-primary" id="test2" ng-show="(user.checkerActionBy <= 0 && user.makerActionBy <= 0)" ng-click="approveUserChecker(user.skyId)">
+                        <i class="glyphicon glyphicon-check"></i> Maker Approve
+                    </a>         
+                </div> 
+            <?php endif; ?>
         </form>
     </div>
 </div>

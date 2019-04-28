@@ -59,11 +59,19 @@ class Priority_request_process_model extends CI_Model {
             $this->db->where("typeCode", $params['type_code']);
         }
 
-        if(isset($params['search']) && trim($params['search']) != "") {
+        /*if(isset($params['search']) && trim($params['search']) != "") {
             $this->db->group_start()
                     ->or_like("service_request.referenceNo", $params['search'], 'both')
                     ->or_like("service_request.email", $params['search'], 'both')
                     ->group_end();
+        }*/
+
+        if (isset($params['eblSkyId']) && trim($params['eblSkyId']) != "") {
+            $this->db->where("apps_users.eblSkyId", $params['eblSkyId']);
+        }
+        
+        if ((isset($params['from_date']) && trim($params['from_date']) != "") && (isset($params['to_date']) && trim($params['to_date']) != "")) {
+            $this->db->where("sb.requestDtTm between {$this->db->escape($params["from_date"])} AND {$this->db->escape($params["to_date"])}", null,false);
         }
         $this->db->order_by("serviceRequestID", "desc");
 
@@ -71,7 +79,6 @@ class Priority_request_process_model extends CI_Model {
             $offset = (isset($params['offset'])) ? $params['offset'] : 0;
             $this->db->limit($params['limit'], $offset);
         }
-        
         $query = $this->db->get();
         return $query->num_rows() > 0 ? $query : false;
     }

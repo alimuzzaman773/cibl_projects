@@ -24,6 +24,8 @@ class Priority_request_process extends CI_Controller {
         $params['get_count'] = (bool) $this->input->get("get_count", true);
         $params['search'] = $this->input->get("search", true);
         $params['type_code'] = $this->input->get("type_code", true);
+        $params['from_date'] = $this->input->get("from_date", true);
+        $params['to_date'] = $this->input->get("to_date", true);
 
         $data['total'] = array();
         $data['priority_list'] = array();

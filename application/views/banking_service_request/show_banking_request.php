@@ -14,7 +14,18 @@
                     </select>
                 </div>
             </div>-->
-            
+            <div class="col-xs-3 col-sm-2">
+                <div class="form-group">
+                    <label>From Date</label> 
+                    <input type="text" name="fromDate" id="fromDate" class="form-control input-sm" ng-model="searchParams.from_date" placeholder="Search by From Date"/>
+                </div>
+            </div>
+            <div class="col-xs-3 col-sm-2">
+                <div class="form-group">
+                    <label>To Date</label> 
+                    <input type="text" name="toDate" id="toDate"  class="form-control input-sm" ng-model="searchParams.to_date" placeholder="Search by To Date"/>
+                </div>
+            </div>
             <div class="col-xs-3 col-sm-3">
                 <div class="form-group">
                     <label>Service Type</label> 
@@ -25,9 +36,9 @@
                 </div>
             </div>
             <div class="col-xs-3 col-sm-3">
-                <div class="row">
-                    <label>Search</label>
-                    <input class="form-control input-sm" type="text" ng-model="searchParams.search" placeholder="Search by Reference No., Email">
+                <div class="form-group">
+                    <label>Apps ID</label> 
+                    <input type="text" placeholder="Search by Apps ID" class="form-control" data-ng-model="searchParams.eblSkyId" />
                 </div>
             </div>
             <div class="col-xs-3 col-sm-3">
@@ -125,6 +136,9 @@
     </div>   
 </div>
 
+<script src="<?php echo asset_url() ?>js/jqueryui/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="<?php echo asset_url() ?>css/jqueryui/jquery-ui-1.9.2.css"/>
+
 <?php
 ci_add_js(base_url() . ASSETS_FOLDER . "angularjs/directives/dirPagination.js");
 ci_add_js(asset_url() . 'app/service_request/banking_module.js');
@@ -133,6 +147,15 @@ ci_add_js(asset_url() . 'app/service_request/banking_module.js');
 <script type="text/javascript" charset="utf-8">
     var app = app || {};
     app.filterTypeCode = '<?=$this->input->get('typeCode',true)?>';
+    
+    $("#fromDate, #toDate").datepicker({
+        dateFormat: 'yy-mm-dd',
+        constrainInput: true
+    }).on('focusin', function () {
+        $(this).prop("readonly", true);
+    }).on('focusout', function () {
+        $(this).prop("readonly", false);
+    });
 </script>
 
 <?php if(true == false): ?>

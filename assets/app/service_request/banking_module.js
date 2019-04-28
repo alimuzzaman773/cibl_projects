@@ -9,8 +9,10 @@ BankingModuleApp.controller("BankingController", ["$scope", "$http", function ($
         $scope.currentPageNumber = 1;
 
         $scope.searchParams = {
+            from_date: "",
+            to_date: "",
             type_code: "",
-            search: ""
+            eblSkyId: ""
         };
 
         $scope.pagination = {
@@ -23,8 +25,10 @@ BankingModuleApp.controller("BankingController", ["$scope", "$http", function ($
 
         $scope.resetSearch = function () {
             $scope.searchParams = {
+                from_date: "",
+                to_date: "",
                 type_code: "",
-                search: ""
+                eblSkyId: ""
             };
 
             $scope.filterTypeCode = '';
@@ -45,9 +49,13 @@ BankingModuleApp.controller("BankingController", ["$scope", "$http", function ($
                 $params.type_code = $scope.searchParams.type_code;
             }
 
-            if($scope.searchParams.search !== null && $.trim($scope.searchParams.search) !== "") {
-                $params.search = $scope.searchParams.search;
+            if ($scope.searchParams.eblSkyId !== null
+                    && $.trim($scope.searchParams.eblSkyId) !== "") {
+                $params.eblSkyId = $scope.searchParams.eblSkyId;
             }
+
+            $params.from_date = $scope.searchParams.from_date;
+            $params.to_date = $scope.searchParams.to_date;
 
             app.showModal();
             $http({

@@ -28,12 +28,23 @@ class Product_request_process_model extends CI_Model {
                     ->where('creationDtTm <=', $params["to_date"]);
         }
 
-        if(isset($params['search']) && trim($params['search']) != "") {
+        /*if(isset($params['search']) && trim($params['search']) != "") {
             $this->db->group_start()
                     ->or_like("product_apply_request.productName", $params['search'], 'both')
                     ->or_like("product_apply_request.email", $params['search'], 'both')
                     ->or_like("product_apply_request.contactNo", $params['search'], 'both')
                     ->group_end();
+        }*/
+        if (isset($params['customer_name']) && trim($params['customer_name']) != "") {
+            $this->db->like('name', $params["customer_name"], "both");
+        }
+        
+        if (isset($params['customer_email']) && trim($params['customer_email']) != "") {
+            $this->db->like('email', $params["customer_email"], "both");
+        }
+        
+        if (isset($params['customer_mobile']) && trim($params['customer_mobile']) != "") {
+            $this->db->like('contactNo', $params["customer_mobile"], "both");
         }
 
         $this->db->order_by("applyId", "desc");

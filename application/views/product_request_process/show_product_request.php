@@ -16,11 +16,23 @@
             </div>
         </div>
         <div class="col-xs-4 col-sm-3">
-                <div class="row">
-                    <label>Search</label>
-                    <input class="form-control input-sm" type="text" ng-model="searchParams.search" placeholder="Search by Contact No., Email, Product Name">
-                </div>
+            <div class="form-group">
+                <label>Customer Name</label> 
+                <input type="text" name="customerName" id="customerName"  class="form-control input-sm" ng-model="searchParams.customer_name" placeholder="Search by Name"/>
             </div>
+        </div>
+        <div class="col-xs-4 col-sm-3">
+            <div class="form-group">
+                <label>Customer Email</label> 
+                <input type="text" name="customerEmail" id="customerEmail"  class="form-control input-sm" ng-model="searchParams.customer_email" placeholder="Search by Email"/>
+            </div>
+        </div>
+         <div class="col-xs-4 col-sm-3">
+            <div class="form-group">
+                <label>Customer Mobile</label> 
+                <input type="text" name="customerMobile" id="customerMobile"  class="form-control input-sm" ng-model="searchParams.customer_mobile" placeholder="Search by Mobile"/>
+            </div>
+        </div>
         <div class="col-xs-4 col-sm-2">
             <div class="form-group">
                 <label style="display:block" class="hidden-xs">&nbsp;&nbsp;</label>
@@ -95,13 +107,17 @@ ci_add_js(asset_url() . 'app/service_request/product_module.js');
 ?>
 
 <script type="text/javascript" charset="utf-8">
-                var app = app || {};
+    var app = app || {};
 
 
-                $("#fromDate, #toDate").datepicker({
-                    dateFormat: 'yy-mm-dd',
-                    constrainInput: true
-                });
+    $("#fromDate, #toDate").datepicker({
+        dateFormat: 'yy-mm-dd',
+        constrainInput: true
+    }).on('focusin', function () {
+        $(this).prop("readonly", true);
+    }).on('focusout', function () {
+        $(this).prop("readonly", false);
+    });
 </script>
 
 <!--
