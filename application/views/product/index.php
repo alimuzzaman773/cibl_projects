@@ -1,4 +1,4 @@
-<h2 class="title-underlined">Products</h2>
+<h2 class="title-underlined"><?= $pageTitle ?></h2>
 <?= $output ?>
 
 <script>
@@ -18,19 +18,21 @@
         return $html;
     };
 
-    app.getOptions = function (categories, parent_id) {
+    app.getOptions = function (categories, type) {
         var $html = '<option></option>';
         $.each(categories, function (i, v) {
             //console.log(v,i)
-            $html += '<option value="' + v.pc_id + '">' + v.name + '</option>';
+            if (type !== undefined && type == v.type && app.parseInt(v.parent_id, 0) <= 0) {
+                $html += '<option value="' + v.pc_id + '">' + v.name + '</option>';
+            }
         });
         return $html;
     };
 
-    app.crudState = '<?=$crudState?>';
+    app.crudState = '<?= $crudState ?>';
     $(document).ready(function (e) {
-        if(app.crudState == 'add' || app.crudState == 'edit'){
-            var $optionHtml = app.getOptions(app.categories);
+        if (app.crudState == 'add' || app.crudState == 'edit') {
+            var $optionHtml = app.getOptions(app.categories, 'product');
             //console.log($optionHtml);
             $("#field-parentName").html($optionHtml);
             $("#field-parentName").val(app.productInfo.parentName);
@@ -38,10 +40,10 @@
             setTimeout(function () {
                 var $childOption = app.getChildOptions(app.categories, app.productInfo.parentName);
                 console.log($childOption);
-                $("#field-childName").chosen('destroy');
-                $("#field-childName").html($childOption);
-                $("#field-childName").val(app.productInfo.childName);
-                $("#field-childName").chosen();
+                $("#field-pc_id").chosen('destroy');
+                $("#field-pc_id").html($childOption);
+                $("#field-pc_id").val(app.productInfo.pc_id);
+                $("#field-pc_id").chosen();
 
             }, 1000);
 
@@ -49,11 +51,11 @@
                 console.log("parent value", $(this).val());
                 var $childOption = app.getChildOptions(app.categories, $(this).val());
                 console.log($childOption);
-                $("#field-childName").chosen('destroy');
-                $("#field-childName").html($childOption);
-                $("#field-childName").chosen();
-                $("#field-childName").val(app.productInfo.childName);
-            });            
+                $("#field-pc_id").chosen('destroy');
+                $("#field-pc_id").html($childOption);
+                $("#field-pc_id").chosen();
+                $("#field-pc_id").val(app.productInfo.pc_id);
+            });
         }
     });
 </script>

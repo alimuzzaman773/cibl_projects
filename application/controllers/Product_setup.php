@@ -20,8 +20,9 @@ class Product_setup extends CI_Controller {
             $crud->set_theme(TABLE_THEME);
             $crud->set_subject('Product');
             $crud->set_table(TBL_PRODUCT_SETUP);
+            $crud->order_by('productId', 'desc');
 
-            $crud->required_fields('type', 'parentName', 'childName', 'productName');
+            $crud->required_fields('type', 'parentName', 'pc_id', 'productName');
 
             $crud->unique_fields('productName');
 
@@ -30,18 +31,18 @@ class Product_setup extends CI_Controller {
             $time = date("Y-m-d H:i:s");
             $creatorId = $this->my_session->userId;
 
-            $crud->add_fields('pc_id', 'type', 'parentName', 'childName', 'productName', 'tagline', 'productDetails', 'isActive', 'productOrder', 'creationDtTm', 'updateDtTm');
-            $crud->edit_fields('pc_id', 'type', 'parentName', 'childName', 'productName', 'tagline', 'productDetails', 'isActive', 'productOrder', 'updateDtTm');
+            $crud->add_fields('type', 'parentName', 'pc_id', 'productName', 'tagline', 'productDetails', 'isActive', 'productOrder', 'creationDtTm', 'updateDtTm');
+            $crud->edit_fields('type', 'parentName', 'pc_id', 'productName', 'tagline', 'productDetails', 'isActive', 'productOrder', 'updateDtTm');
 
             $crud->change_field_type('creationDtTm', 'hidden', $time);
             $crud->change_field_type('updateDtTm', 'hidden', $time);
             $crud->change_field_type('createdBy', 'hidden', $creatorId);
             $crud->change_field_type('updatedBy', 'hidden', $creatorId);
-            $crud->change_field_type('pc_id', 'hidden', '-1');
+            //$crud->change_field_type('pc_id', 'hidden');
 
             $crud->display_as('type', 'Type');
             $crud->display_as('parentName', 'Category');
-            $crud->display_as('childName', 'Sub-Category');
+            $crud->display_as('pc_id', 'Sub-Category');
             $crud->display_as('tagline', 'Tagline');
             $crud->display_as('productDetails', 'Description');
             $crud->display_as('productName', 'Product Name');
@@ -55,13 +56,14 @@ class Product_setup extends CI_Controller {
                 NULL => ''
             );
 
-            $typeList = array('product' => 'Products', 'partner' => 'EMI Partners', 'benefit' => 'Discount Partners');
-            $crud->change_field_type('type', 'dropdown', $typeList);
+            //$typeList = array('product' => 'Products', 'partner' => 'EMI Partners', 'benefit' => 'Discount Partners');
+            $crud->change_field_type('type', 'hidden', "product");
             $crud->change_field_type('parentName', 'dropdown', $categoryList);
-            $crud->change_field_type('childName', 'dropdown', $categoryList);
+            $crud->change_field_type('pc_id', 'dropdown', $categoryList);
 
             $this->db->select("*")
-                    ->from(TBL_PRODUCT_CATEGORIES);
+                    ->from(TBL_PRODUCT_CATEGORIES)
+                    ->where("type", "product");
             $cRes = $this->db->get();
             foreach ($cRes->result() as $r):
                 $categoryList[] = $r;
@@ -109,7 +111,7 @@ class Product_setup extends CI_Controller {
     }
 
     function getProductInfo($pid) {
-        
+
         $this->db->select("*")
                 ->from(TBL_PRODUCT_SETUP)
                 ->where("productId", $pid);
@@ -122,7 +124,6 @@ class Product_setup extends CI_Controller {
         return false;
     }
 
-    
     function categories() {
 
         $this->my_session->authorize("canViewProduct");
@@ -131,8 +132,9 @@ class Product_setup extends CI_Controller {
             $crud->set_theme(TABLE_THEME);
             $crud->set_subject('Category Setup');
             $crud->set_table(TBL_PRODUCT_CATEGORIES);
+            $crud->order_by('pc_id', 'desc');
 
-            $crud->columns('name', 'created', 'updated');
+            $crud->columns('type', 'name', 'created', 'updated');
 
             $crud->display_as('type', 'Type');
             $crud->display_as('parent_id', 'Parent Category');
@@ -146,7 +148,7 @@ class Product_setup extends CI_Controller {
             $crud->add_fields('type', 'parent_id', 'name', 'created_by', 'updated_by', 'created', 'updated');
             $crud->edit_fields('type', 'parent_id', 'name', 'updated', 'updated_by');
 
-           $categories = array(
+            $categories = array(
                 NULL => ''
             );
 
@@ -156,69 +158,69 @@ class Product_setup extends CI_Controller {
             $crud->change_field_type('created_by', 'hidden', $creatorId);
             $crud->change_field_type('updated_by', 'hidden', $creatorId);
 
-           //$crud->set_relation('parent_id', "product_categories", 'pc_id');
-           //$crud->set_relation('pc_id', "product_categories", 'name');
+            //$crud->set_relation('parent_id', "product_categories", 'pc_id');
+            //$crud->set_relation('pc_id', "product_categories", 'name');
 
 
             $this->db->select("*")
-                     ->from(TBL_PRODUCT_CATEGORIES);
+                    ->from(TBL_PRODUCT_CATEGORIES);
             if ($this->uri->segment(3) == "edit" && $this->uri->segment(4) > 0):
                 $pc_id = (int) $this->uri->segment(4);
                 $this->db->where_not_in("pc_id", array($pc_id));
             endif;
             $res = $this->db->get();
-            
+
             foreach ($res->result() as $r):
                 $categories[] = $r;
             endforeach;
 
-            
+
             $categoryInfo = NULL;
             if ($this->uri->segment(3) == "edit" && $this->uri->segment(4) > 0):
                 $this->db->reset_query();
                 $this->db->select("*")
-                         ->from(TBL_PRODUCT_CATEGORIES)
-                         ->where("pc_id", $this->uri->segment(4));
+                        ->from(TBL_PRODUCT_CATEGORIES)
+                        ->where("pc_id", $this->uri->segment(4));
                 $catRes = $this->db->get();
                 $categoryInfo = $catRes->row();
             endif;
-            
-            
+
+
             $crud->callback_add_field('type', function () {
                 $idata = array();
                 $idata['type'] = array('product' => 'Products', 'partner' => 'EMI Partners', 'benefit' => 'Benefit Partners');
                 $idata['value'] = "";
-                return $this->load->view("product_category/type_dd.php", $idata,true);
+                return $this->load->view("product_category/type_dd.php", $idata, true);
             });
-            
+
             $crud->callback_edit_field('type', function ($value, $primary_key) {
                 $idata = array();
                 $idata['type'] = array('product' => 'Products', 'partner' => 'EMI Partners', 'benefit' => 'Benefit Partners');
                 $idata['value'] = $value;
-                return $this->load->view("product_category/type_dd.php", $idata,true);
+                return $this->load->view("product_category/type_dd.php", $idata, true);
             });
-            
+
             $crud->callback_add_field('parent_id', function () {
                 $categoriesList = $this->db->select("*")
-                                           ->from(TBL_PRODUCT_CATEGORIES)->get()->result();
-                
+                                ->from(TBL_PRODUCT_CATEGORIES)->get()->result();
+
                 $idata = array();
                 $idata['categoryList'] = $categoriesList;
                 $idata['catInfo'] = NULL;
-                return $this->load->view("product_category/parent_dd.php", $idata,true);
+                return $this->load->view("product_category/parent_dd.php", $idata, true);
             });
-            
+
             $crud->callback_edit_field('parent_id', function ($value, $primary_key) {
                 $categoriesList = $this->db->select("*")
-                                           ->from(TBL_PRODUCT_CATEGORIES)->get()->result();
-                
+                                ->from(TBL_PRODUCT_CATEGORIES)->get()->result();
+
                 $idata = array();
                 $idata['categoryList'] = $categoriesList;
                 $idata['catInfo'] = $value;
-                return $this->load->view("product_category/parent_dd.php", $idata,true);
+                return $this->load->view("product_category/parent_dd.php", $idata, true);
             });
-            
-            
+
+
             $crud->unset_delete();
 
             if (!ci_check_permission("canAddProduct")):
