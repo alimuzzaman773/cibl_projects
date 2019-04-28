@@ -229,6 +229,41 @@ CallCenterModuleApp.controller('CallCenterController', ['$scope', '$http', '$rou
             return false;
         };
 
+        $scope.rejectRequest = function (userId)
+        {
+            if (!confirm("Do you really want to reject this user?")) {
+                return false;
+            }
+
+            var $remarks = prompt("Please provide a rejection reason");
+            if ($remarks == null || $.trim($remarks) == '') {
+                alert("Please provide a rejection reason");
+                return false;
+            }
+
+            var $pData = {
+                skyId: userId,
+                remarks: $remarks
+            };
+
+            app.showModal();
+            $http({method: 'post', url: app.baseUrl + 'api/call_center/reject_user/', data: jQuery.param($pData)})
+                    .success(function (data) {
+                        app.hideModal();
+                        if (data.success == false) {
+                            alert(data.msg);
+                            return false;
+                        }
+                        alert("User has been rejected successfully");
+                        window.location.href = app.baseUrl + "call_center";
+                    })
+                    .error(function () {
+                        app.hideModal();
+                        alert("There was a problem, please try again.")
+                    });
+            return false;
+        };
+
         $scope.init = function () {
             if ($routeParams.uid !== undefined) {
                 $scope.get_user_info();

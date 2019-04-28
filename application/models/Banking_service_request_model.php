@@ -116,15 +116,23 @@ class Banking_service_request_model extends CI_Model {
             $this->db->where("sb.typeCode", $params['type_code']);
         }
         
+        if ((isset($params['from_date']) && trim($params['from_date']) != "") && (isset($params['to_date']) && trim($params['to_date']) != "")) {
+            $this->db->where("sb.requestDtTm between {$this->db->escape($params["from_date"])} AND {$this->db->escape($params["to_date"])}", null,false);
+        }
+
         if(isset($params['serviceTypeCode']) && trim($params['serviceTypeCode']) != ''):
             $this->db->where("st.serviceTypeCode", $params['serviceTypeCode']);
         endif;
 
-        if(isset($params['search']) && trim($params['search']) != "") {
+        /*if(isset($params['search']) && trim($params['search']) != "") {
             $this->db->group_start()
                     ->or_like("sb.referenceNo", $params['search'], 'both')
                     ->or_like("sb.mobileNo", $params['search'], 'both')
                     ->group_end();
+        }*/
+
+        if (isset($params['eblSkyId']) && trim($params['eblSkyId']) != "") {            
+            $this->db->where("au.eblSkyId", $params['eblSkyId']);
         }
 
         $this->db->order_by("sb.serviceId", "desc");

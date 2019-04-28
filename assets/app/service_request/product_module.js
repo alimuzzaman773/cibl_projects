@@ -11,7 +11,9 @@ ProductModuleApp.controller("ProductController", ["$scope", "$http", function ($
         $scope.searchParams = {
             from_date: "",
             to_date: "",
-            search: ""
+            customer_name: "",
+            customer_mobile: "",
+            customer_email: ""
         };
 
         $scope.pagination = {
@@ -26,7 +28,9 @@ ProductModuleApp.controller("ProductController", ["$scope", "$http", function ($
             $scope.searchParams = {
                 from_date: "",
                 to_date: "",
-                search: ""
+                customer_name: "",
+                customer_mobile: "",
+                customer_email: ""
             };
 
             $scope.getResultsPage(1);
@@ -48,10 +52,24 @@ ProductModuleApp.controller("ProductController", ["$scope", "$http", function ($
                 $params.to_date = $scope.searchParams.to_date;
             }
 
-            if($scope.searchParams.search !== null && $.trim($scope.searchParams.search) !== ""){
+/*            if($scope.searchParams.search !== null && $.trim($scope.searchParams.search) !== ""){
                 $params.search = $scope.searchParams.search;
             }
+*/          
+            if ($scope.searchParams.customer_name !== null
+                    && $.trim($scope.searchParams.customer_name) !== "") {
+                $params.customer_name = $scope.searchParams.customer_name;
+            }
+            
+            if ($scope.searchParams.customer_mobile !== null
+                    && $.trim($scope.searchParams.customer_mobile) !== "") {
+                $params.customer_mobile = $scope.searchParams.customer_mobile;
+            }
 
+            if ($scope.searchParams.customer_email !== null
+                    && $.trim($scope.searchParams.customer_email) !== "") {
+                $params.customer_email = $scope.searchParams.customer_email;
+            }
             app.showModal();
             $http({
                 method: "get",

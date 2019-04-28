@@ -9,7 +9,9 @@ PriorityModuleApp.controller("PriorityController", ["$scope", "$http", function 
         $scope.currentPageNumber = 1;
 
         $scope.searchParams = {
-            search: ""
+            from_date: "",
+            to_date: "",
+            eblSkyId: ""
         };
 
         $scope.pagination = {
@@ -24,7 +26,7 @@ PriorityModuleApp.controller("PriorityController", ["$scope", "$http", function 
             $scope.searchParams = {
                 from_date: "",
                 to_date: "",
-                search: ""
+                eblSkyId: ""
             };
 
             $scope.getResultsPage(1);
@@ -43,9 +45,13 @@ PriorityModuleApp.controller("PriorityController", ["$scope", "$http", function 
                 $params.type_code = $scope.searchParams.type_code;
             }
 
-            if($scope.searchParams.search !== null && $.trim($scope.searchParams.search) !== ""){
-                $params.search = $scope.searchParams.search;
+            if($scope.searchParams.eblSkyId !== null && $.trim($scope.searchParams.eblSkyId) !== ""){
+                $params.eblSkyId = $scope.searchParams.eblSkyId;
             }
+
+            $params.from_date = $scope.searchParams.from_date;
+            $params.to_date = $scope.searchParams.to_date;
+
 
             app.showModal();
             $http({

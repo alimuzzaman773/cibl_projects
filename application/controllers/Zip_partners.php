@@ -98,7 +98,7 @@ class Zip_partners extends CI_Controller {
 
             $output->categories = $categoryList;
 
-            $output->productInfo = array();
+            $output->zipInfo = array();
             if ($resP) {
                 $output->zipInfo = $resP->row();
             }

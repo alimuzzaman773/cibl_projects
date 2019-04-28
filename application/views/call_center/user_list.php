@@ -87,6 +87,11 @@
                                             <i class="glyphicon glyphicon-send"></i> Resend PIN
                                         </a>
                                     </li>
+                                     <li data-ng-if="i.isRejected == '0' && i.isPublished == '0'">
+                                        <a style="cursor: pointer" ng-click="rejectRequest(i.skyId);">
+                                            <i class="glyphicon glyphicon-trash"></i> Reject User
+                                        </a>
+                                    </li>
                                     <li>
                                         <a ng-if="i.skyIdOriginal <= 0" href="<?= base_url() . "call_center/#/remove/" ?>{{i.skyId}}">
                                             <i class="glyphicon glyphicon-trash"></i> Remove

@@ -69,9 +69,9 @@ class Locator_setup extends CI_Controller {
             if (!ci_check_permission("canDetailsLocatorSetup")):
                 $crud->unset_read();
             endif;
-            if (!ci_check_permission("canExportLocatorSetup")):
+            /*if (!ci_check_permission("canExportLocatorSetup")):
                 $crud->unset_export();
-            endif;
+            endif;*/
             if (!ci_check_permission("canPrintLocatorSetup")):
                 $crud->unset_print();
             endif;
