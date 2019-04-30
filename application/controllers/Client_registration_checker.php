@@ -21,6 +21,37 @@ class Client_registration_checker extends CI_Controller {
         $this->load->view('site_template.php', $data);
     }
 
+    public function get_unapproved_users_list(){
+        $this->my_session->authorize("canViewAppsUserAuthorization");
+        $params['limit'] = (int) $this->input->get("limit", true);
+        $params['offset'] = (int) $this->input->get("offset", true);
+        $params['get_count'] = (bool) $this->input->get("get_count", true);
+        $params['eblSkyId'] = $this->input->get("eblSkyId", true);
+        $params['from_date'] = $this->input->get("from_date", true);
+        $params['to_date'] = $this->input->get("to_date", true);
+
+        $data['total'] = array();
+        $data['list'] = array();
+
+        if ((int) $params['get_count'] > 0) {
+            $countParams = $params;
+            unset($countParams['limit']);
+            unset($countParams['offset']);
+            $countParams['count'] = true;
+            $countRes = $this->client_registration_model_checker->getUnapprovedAppsUsers($countParams);
+            if ($countRes):
+                $data['total'] = $countRes->num_rows();
+            endif;
+        }
+        $result = $this->client_registration_model_checker->getUnapprovedAppsUsers($params);
+        if ($result) {
+            $data['list'] = $result->result();
+        }
+        
+        $data['q'] = log_last_query($data['q']);
+        my_json_output($data);
+    }
+
     public function getAppsUserForApproval($id) {
         $this->my_session->authorize("canApproveAppsUser");
         $data['multiCard'] = array();
