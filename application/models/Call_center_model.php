@@ -11,22 +11,44 @@ class Call_center_model extends CI_Model {
         if (isset($p['get_count']) && (int) $p['get_count'] > 0):
             $this->db->select('count(*) as total', false);
         else:
-            $this->db->select('aum.*');
+            $this->db->select('aum.*, atms.ATMName as branchName, ra.created as created_on');
         endif;
 
         $this->db->from('apps_users_mc aum')
+                ->join('registration_attempts ra', "ra.skyId = aum.skyId", "inner")
+                ->join('atms', 'aum.homeBranchCode = atms.branchCode', 'left')
+                ->order_by("ra.created_on", "DESC")
                 ->group_start()
                 //->where('aum.isLocked', 0)
-                ->or_where("(isPublished = 0 AND isActive = 0 AND appsGroupId = 0)", null, false)
+                ->or_where("(aum.isPublished = 0 AND aum.isActive = 0 AND aum.appsGroupId = 0)", null, false)
                 //->where("isActive", 0)
                 //->where("appsGroupId", 0)
                 //->where('callCenterApprove', 'unapproved')
                 //->or_where('callCenterApprove', 'pending')
-                ->or_where('(isLocked = 1 AND remarks = "password reset request")', null, false)
+                ->or_where('(aum.isLocked = 1 AND remarks = "password reset request")', null, false)
                 ->group_end()
                 //->where('aum.isActive', 1)
                 //->where('aum.isPublished', 0)
-                ->order_by('skyId', 'desc');
+                ->order_by('aum.skyId', 'desc');
+
+        if (isset($p['search']) && trim($p['search']) != ''):
+            $this->db->group_start()
+                    ->or_like("aum.cfId", $p['search'])
+                    ->or_like("aum.eblSkyId", $p['search'])
+                    ->or_like("aum.clientId", $p['search'])
+                    ->or_like("aum.userName", $p['search'])
+                    ->or_like('aum.userName2', $p['search'])
+                    ->or_like("aum.userEmail", $p['search'])
+                    ->or_like("aum.userMobNo1", $p['search'])
+                    ->or_like('aum.fatherName', $p['search'])
+                    ->or_like('aum.motherName', $p['search'])
+                    ->or_like('atms.ATMName', $p['search'])
+                    ->group_end();
+        endif;
+
+        if (isset($p['from_date']) && trim($p['from_date']) != '' && isset($p['to_date']) && trim($p['to_date']) != ''):
+            $this->db->where("ra.created_on between {$this->db->escape($p['from_date'])} AND {$this->db->escape($p['to_date'])}", null, false);
+        endif;
 
         if (isset($p['limit']) && (int) $p['limit'] > 0) {
             $offset = (isset($p['offset']) && $p['offset'] != null) ? (int) $p['offset'] : 0;

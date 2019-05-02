@@ -14,6 +14,9 @@ class Call_center extends CI_Controller {
         $p['get_count'] = (bool) $this->input->get("get_count", true);
         $p['limit'] = $this->input->get('limit', true);
         $p['offset'] = $this->input->get('offset', true);
+        $p['from_date'] = $this->input->get('from_date', true);
+        $p['to_date'] = $this->input->get('to_date', true);
+        $p['search'] = $this->input->get('search', true);
         $this->load->model("call_center_model");
 
         $json['total'] = 0;

@@ -27,6 +27,44 @@
     </div>
 </div>
 
+<div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="row">
+        <div class="form-group col-sm-4 col-xs-6">
+            <label>Search</label>
+            <input type="text" class="form-control" data-ng-model="searchParams.search" placeholder="Search by Apps ID, User Name, Customer ID, Father or Mother Name" />
+        </div>
+        <div class="form-group col-sm-3 col-xs-6">
+            <label>From Date</label>
+            <input type="text" readonly="true" class="form-control" data-ng-model="searchParams.from_date" id="fromDate" />                
+        </div>
+        <div class="form-group col-sm-3 col-xs-6">
+            <label>To Date</label>
+            <input type="text" readonly="true" class="form-control" data-ng-model="searchParams.to_date" id="toDate" />                
+        </div>
+        <!--
+        <div class="form-group col-sm-4 col-xs-6">
+            <label>Filter By:</label>
+            <select class="form-control" data-ng-model="searchParams.filter_by">
+                <option value="activation">Waiting Account Activation</option>
+                <option value="passwordReset">Waiting Password Reset</option>
+                <option value="activationPending24">Activation Pending More Than 24 Hours</option>
+                <option value="passwordResetPending24">Password Reset Request Pending More Than 24 Hours</option>
+            </select>
+        </div>
+        -->
+        <div class="form-group col-xs-6 col-sm-2">
+            <label style="display:block" class="hidden-xs">&nbsp;&nbsp;</label>
+            <button class="btn btn-primary btn-sm" data-ng-click="getResultsPage(1)">
+                <i class="glyphicon glyphicon-search"></i>
+            </button>
+
+            <button class="btn btn-primary btn-sm" data-ng-click="resetSearch();">
+                <i class="glyphicon glyphicon-refresh"></i> Reset
+            </button>
+        </div>
+    </div>
+</div>
+
 <div class="col-md-12 col-sm-12 text-right" data-ng-show="totalCount > 0">        
     <span class="label label-primary"> Displaying: {{ ((per_page * currentPageNumber) - (per_page - 1))}} to {{ upper_range()}} of {{ totalCount}}</span>            
 </div>
@@ -38,6 +76,7 @@
                     <tr class="bg-primary">
                         <th>SI#</th>
                         <th>Apps ID</th>
+                        <th>User ID</th>
                         <th>CIF ID</th>
                         <th>User Name</th>
                         <th>Father Name</th>
@@ -48,6 +87,8 @@
                         <th>Gender</th>
                         <th>DOB</th>
                         <th>Remarks</th>
+                        <th>Branch</th>
+                        <th>Registration Date</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -55,6 +96,7 @@
                     <tr dir-paginate="i in user_list | itemsPerPage: per_page track by $index" total-items="totalCount" current-page="pagination.current">
                         <td>{{(per_page * (currentPageNumber - 1)) + ($index + 1)}}</td>
                         <td>{{i.eblSkyId}}</td>
+                        <td>{{i.userName2}}</td>
                         <td>{{i.cfId}}</td>
                         <td>{{i.userName}}</td>
                         <td>{{i.fatherName}}</td>
@@ -65,6 +107,8 @@
                         <td>{{i.gender}}</td>
                         <td>{{i.dob}}</td>
                         <td>{{i.remarks}}</td>
+                        <td>{{i.branchName}}</td>
+                        <td>{{i.created_on}}</td>
                         <td>
                             <div class="dropdown pull-right">
                                 <button class="btn btn-primary btn-xs dropdown-toggle" type="button" data-toggle="dropdown">
@@ -87,7 +131,7 @@
                                             <i class="glyphicon glyphicon-send"></i> Resend PIN
                                         </a>
                                     </li>
-                                     <li data-ng-if="i.isRejected == '0' && i.isPublished == '0'">
+                                    <li data-ng-if="i.isRejected == '0' && i.isPublished == '0'">
                                         <a style="cursor: pointer" ng-click="rejectRequest(i.skyId);">
                                             <i class="glyphicon glyphicon-trash"></i> Reject User
                                         </a>
@@ -102,7 +146,7 @@
                         </td>
                     </tr>
                     <tr data-ng-show="user_list.length <= 0">
-                        <td colspan="13">No data found</td>
+                        <td colspan="16">No data found</td>
                     </tr>
                 </tbody>
             </table>
@@ -112,3 +156,22 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript" charset="utf-8">
+    var app = app || {};
+    
+     $(document).ready(function(e){          
+        //populateBranchList("branchId");
+        
+        $("#fromDate").datepicker({yearRange:'c-10:c+10',dateFormat:'yy-mm-dd',changeMonth:true,changeYear:true}).on('focusin',function(){
+            $(this).prop("readonly",true);
+        }).on('focusout',function(){
+            $(this).prop("readonly",false);
+        });
+        $("#toDate").datepicker({yearRange:'c-10:c+10',dateFormat:'yy-mm-dd',changeMonth:true,changeYear:true}).on('focusin',function(){
+            $(this).prop("readonly",true);
+        }).on('focusout',function(){
+            $(this).prop("readonly",false);
+        });
+    });
+</script>

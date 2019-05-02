@@ -390,7 +390,10 @@ class Reports_model extends CI_Model {
                 
         if(isset($p['eblSkyId']) && trim($p['eblSkyId']) != '')
         {            
-            $this->db->where("au.eblSkyId", $p['eblSkyId']);
+            $this->db->group_start()
+                    ->where("au.eblSkyId", $p['eblSkyId'])
+                    ->or_where("au.userName2", $p['eblSkyId'])
+                    ->group_end();
         }
         
         if(isset($p['fromdate']) && isset($p['todate']))

@@ -44,22 +44,27 @@ CallCenterModuleApp.controller('CallCenterController', ['$scope', '$http', '$rou
         $scope.currentPageNumber = 1;
         $scope.uid = $routeParams.uid;
         $scope.user = {};
-        
+
         $scope.resetSkyId = null;
         $scope.otp_channel_pin = 'sms';
 
         $scope.pin_sending_url = null;
-        $scope.showResetModal = function($skyId, $type) {
+        $scope.showResetModal = function ($skyId, $type) {
             $scope.resetSkyId = $skyId;
-            if($type =='pin_send'){
+            if ($type == 'pin_send') {
                 $scope.pin_sending_url = 'confirm_password_reset';
-            }
-            else if($type =='pin_resend'){
+            } else if ($type == 'pin_resend') {
                 $scope.pin_sending_url = 'resend_user_pin';
             }
-                    
+
             $('#resetModal').modal('show');
             return false;
+        };
+
+        $scope.searchParams = {
+            from_date: "",
+            to_date: "",
+            search: ''
         };
 
         $scope.pagination = {
@@ -69,6 +74,17 @@ CallCenterModuleApp.controller('CallCenterController', ['$scope', '$http', '$rou
         $scope.pageChanged = function (newPage) {
             $scope.getResultsPage(newPage);
         };
+        
+        $scope.resetSearch = function () {
+            $scope.searchParams = {
+                from_date: "",
+                to_date: "",
+                search: ''
+            };
+
+            $scope.getResultsPage(1);
+            return false;
+        };
 
         $scope.getResultsPage = function (pageNumber, childId) {
             var $params = {
@@ -76,6 +92,18 @@ CallCenterModuleApp.controller('CallCenterController', ['$scope', '$http', '$rou
                 offset: $scope.per_page * (pageNumber - 1),
                 get_count: true
             };
+
+            if ($scope.searchParams.search !== null && $.trim($scope.searchParams.search) != '') {
+                $params.search = $scope.searchParams.search;
+            }
+
+            if (($scope.searchParams.from_date !== null
+                    && $.trim($scope.searchParams.from_date) !== "") &&
+                    ($scope.searchParams.to_date !== null
+                            && $.trim($scope.searchParams.to_date) !== "")) {
+                $params.from_date = $scope.searchParams.from_date;
+                $params.to_date = $scope.searchParams.to_date;
+            }
 
             app.showModal();
             $http({method: 'get', url: app.baseUrl + 'api/call_center/user_list', params: $params})
@@ -103,129 +131,129 @@ CallCenterModuleApp.controller('CallCenterController', ['$scope', '$http', '$rou
 
         $scope.user_accounts = [];
         $scope.user_cards = [];
-        $scope.get_user_info = function () 
+        $scope.get_user_info = function ()
         {
             app.showModal();
             $http({method: 'get', url: app.baseUrl + 'api/call_center/get_user_info/' + $scope.uid})
-            .success(function (data) {
-                $scope.user = data.user_info;
-                $scope.user_accounts = data.user_accounts;
-                app.hideModal();
-            })
-            .error(function () {
-                app.hideModal();
-                alert("There was a problem, please try again.")
-            });
+                    .success(function (data) {
+                        $scope.user = data.user_info;
+                        $scope.user_accounts = data.user_accounts;
+                        app.hideModal();
+                    })
+                    .error(function () {
+                        app.hideModal();
+                        alert("There was a problem, please try again.")
+                    });
             return false;
         };
-        
-        $scope.approveUserChecker = function (userId) 
+
+        $scope.approveUserChecker = function (userId)
         {
             console.log("asdasdas");
-           if(!confirm("Do you really want to activate this user for maker action?")){
+            if (!confirm("Do you really want to activate this user for maker action?")) {
                 return false;
             }
-            
+
             app.showModal();
             $http({method: 'post', url: app.baseUrl + 'api/call_center/user_approve_checker/' + userId})
-            .success(function (data) {
-                app.hideModal();
-                if (data.success == false) {
-                    alert(data.msg);
-                    return false;
-                }
-                window.location.href = app.baseUrl + "call_center/#/user_list";
-            })
-            .error(function () {
-                app.hideModal();
-                alert("There was a problem, please try again.")
-            });
-            return false; 
+                    .success(function (data) {
+                        app.hideModal();
+                        if (data.success == false) {
+                            alert(data.msg);
+                            return false;
+                        }
+                        window.location.href = app.baseUrl + "call_center/#/user_list";
+                    })
+                    .error(function () {
+                        app.hideModal();
+                        alert("There was a problem, please try again.")
+                    });
+            return false;
         };
 
         $scope.otp_channel = 'email';
-        $scope.approveUser = function (userId) 
+        $scope.approveUser = function (userId)
         {
-            if(!confirm("Do you really want to activate this user?")){
+            if (!confirm("Do you really want to activate this user?")) {
                 return false;
             }
-            
+
             var $pData = {
-                otp_channel : jQuery("#otp_channel").val()
+                otp_channel: jQuery("#otp_channel").val()
             };
-            
+
             app.showModal();
             $http({method: 'post', url: app.baseUrl + 'api/call_center/user_approve/' + userId, data: jQuery.param($pData)})
-            .success(function (data) {
-                app.hideModal();
-                if (data.success == false) {
-                    alert(data.msg);
-                    return false;
-                }
-                window.location.href = app.baseUrl + "call_center/#/user_list";
-            })
-            .error(function () {
-                app.hideModal();
-                alert("There was a problem, please try again.")
-            });
+                    .success(function (data) {
+                        app.hideModal();
+                        if (data.success == false) {
+                            alert(data.msg);
+                            return false;
+                        }
+                        window.location.href = app.baseUrl + "call_center/#/user_list";
+                    })
+                    .error(function () {
+                        app.hideModal();
+                        alert("There was a problem, please try again.")
+                    });
             return false;
         };
 
         $scope.approvedConfirmation = function () {
             app.showModal();
             $http({method: 'get', url: app.baseUrl + 'api/call_center/approve_confirmation/' + $scope.uid})
-            .success(function (data) {
-                app.hideModal();
-                if (data.success === false) {
-                    alert(data.msg);
-                    return false;
-                }
-                if (confirm("Successfully approved!")) {
-                    window.location.href = app.baseUrl + "call_center/#/user_list/";
-                }
-            })
-            .error(function () {
-                app.hideModal();
-                alert("There was a problem, please try again.")
-            });
+                    .success(function (data) {
+                        app.hideModal();
+                        if (data.success === false) {
+                            alert(data.msg);
+                            return false;
+                        }
+                        if (confirm("Successfully approved!")) {
+                            window.location.href = app.baseUrl + "call_center/#/user_list/";
+                        }
+                    })
+                    .error(function () {
+                        app.hideModal();
+                        alert("There was a problem, please try again.")
+                    });
             return false;
         };
-        
-        $scope.sendPasswordResetPin = function($skyId){
-            if($scope.pin_sending_url == null){
+
+        $scope.sendPasswordResetPin = function ($skyId) {
+            if ($scope.pin_sending_url == null) {
                 alert('PIN sending URL is not defined');
                 return false;
             }
-            
+
             if (!confirm("Do you really want to send the new password pin?")) {
                 $('#resetModal').modal('hide');
                 return false;
-            }            
+            }
             $scope.resetSkyId = null;
             $('#resetModal').modal('hide');
             app.showModal();
             $http({
-                method: 'post', 
-                data: jQuery.param({'skyId' : $skyId, otp_channel : $scope.otp_channel_pin}), 
-                url: app.baseUrl + 'api/call_center/'+$scope.pin_sending_url})
-            .success(function (data) {                
-                app.hideModal();
-                $('#resetModal').modal('hide');
-                if (data.success === false) {
-                    alert(data.msg);
-                    return false;
-                }
-                
-                $scope.pin_sending_url = null;
-                alert("Password pin has been sent");
-                window.location.href = app.baseUrl + "call_center/#/user_list/";
-                
-            })
-            .error(function () {
-                app.hideModal();
-                $('#resetModal').modal('hide');
-                alert("There was a problem, please try again.")
-            });
+                method: 'post',
+                data: jQuery.param({'skyId': $skyId, otp_channel: $scope.otp_channel_pin}),
+                url: app.baseUrl + 'api/call_center/' + $scope.pin_sending_url})
+                    .success(function (data) {
+                        app.hideModal();
+                        $('#resetModal').modal('hide');
+                        if (data.success === false) {
+                            alert(data.msg);
+                            return false;
+                        }
+
+                        $scope.pin_sending_url = null;
+                        alert("Password pin has been sent");
+                        window.location.href = app.baseUrl + "call_center/#/user_list/";
+
+                    })
+                    .error(function () {
+                        app.hideModal();
+                        $('#resetModal').modal('hide');
+                        alert("There was a problem, please try again.")
+                    });
             return false;
         };
 
@@ -267,9 +295,8 @@ CallCenterModuleApp.controller('CallCenterController', ['$scope', '$http', '$rou
         $scope.init = function () {
             if ($routeParams.uid !== undefined) {
                 $scope.get_user_info();
-            }
-            else{
-                $scope.getResultsPage(1);                
+            } else {
+                $scope.getResultsPage(1);
             }
         };
         $scope.init();
