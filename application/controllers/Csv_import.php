@@ -53,6 +53,11 @@ class Csv_import extends CI_Controller {
             $res_arr_values = array();
             $csv_array = $this->csvimport->get_array($file_path);
 
+            $columnError = $this->checkColumnName($csv_array);
+            if (!$columnError["success"]) {
+                my_json_output($columnError);
+            }
+
             foreach ($csv_array as $row) {
                 $insert_data = array(
                     'bankName' => $row['bankName'],
@@ -128,6 +133,39 @@ class Csv_import extends CI_Controller {
             'msg' => 'No csv data imported'
         );
         my_json_output($json);
+    }
+
+    function checkColumnName($csv_array) {
+        if (!isset($csv_array[0]['bankName'])) {
+            return array(
+                'success' => false,
+                'msg' => "Invalid Bank Name Column"
+            );
+        }
+
+        if (!isset($csv_array[0]['districtName'])) {
+            return array(
+                'success' => false,
+                'msg' => "Invalid District Name Column"
+            );
+        }
+
+        if (!isset($csv_array[0]['branchName'])) {
+            return array(
+                'success' => false,
+                'msg' => "Invalid Branch Name Column"
+            );
+        }
+        if (!isset($csv_array[0]['routingNumber'])) {
+            return array(
+                'success' => false,
+                'msg' => "Invalid Routing Number Column"
+            );
+        }
+
+        return array(
+            'success' => true
+        );
     }
 
 }
