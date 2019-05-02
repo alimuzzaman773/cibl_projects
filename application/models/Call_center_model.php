@@ -11,21 +11,24 @@ class Call_center_model extends CI_Model {
         if (isset($p['get_count']) && (int) $p['get_count'] > 0):
             $this->db->select('count(*) as total', false);
         else:
-            $this->db->select('aum.*, atms.ATMName as branchName, ra.created as created_on');
+            $this->db->select('aum.*, adm.adminUserName makerName, atms.ATMName as branchName, adc.adminUserName checkerName, au.skyId as skyIdOriginal, ra.raId, ra.entityType, ra.created as created_on, ra.otpChannel', false);
         endif;
 
-        $this->db->from('apps_users_mc aum')
-                ->join('registration_attempts ra', "ra.skyId = aum.skyId", "inner")
+            $this->db->from('apps_users_mc aum')
+                ->join('apps_users au', "au.skyId = aum.skyId", "left")
                 ->join('atms', 'aum.homeBranchCode = atms.branchCode', 'left')
+                ->join('registration_attempts ra', "ra.skyId = aum.skyId", "inner")
+                ->join('admin_users adm', 'adm.adminUserId = aum.makerActionBy', 'left')
+                ->join('admin_users adc', 'adc.adminUserId = aum.checkerActionBy', 'left')
                 ->order_by("ra.created_on", "DESC")
                 ->group_start()
                 //->where('aum.isLocked', 0)
                 ->or_where("(aum.isPublished = 0 AND aum.isActive = 0 AND aum.appsGroupId = 0)", null, false)
-                //->where("isActive", 0)
-                //->where("appsGroupId", 0)
-                //->where('callCenterApprove', 'unapproved')
-                //->or_where('callCenterApprove', 'pending')
-                ->or_where('(aum.isLocked = 1 AND remarks = "password reset request")', null, false)
+                //->where("aum.isPublished", 0)
+                //->where("aum.isActive", 0)
+                //->where("aum.appsGroupId", 0)
+                //->where('aum.callCenterApprove', 'unapproved')
+                //->or_where('aum.callCenterApprove', 'pending')
                 ->group_end()
                 //->where('aum.isActive', 1)
                 //->where('aum.isPublished', 0)
