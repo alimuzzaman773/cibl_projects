@@ -55,7 +55,7 @@
                     <button style="text-align:left" id="deselectAll" data-bind="click :$root.deselectAll, visible: false" class="btn btn-primary">Deselect All</button>
                 </th>
                 <th hidden style="text-align:center" >SKY ID</th>
-                <th style="text-align:center" >ESB ID</th>
+                <th style="text-align:center" >APPS ID</th>
                 <th style="text-align:center" >CFID</th>
                 <th style="text-align:center" >Gender</th>
                 <th style="text-align:center" >Date of Birth</th>

@@ -11,11 +11,11 @@ class Client_registration_model_checker extends CI_Model {
         $this->db->where('apps_users_mc.mcStatus =', 0);
         //$this->db->where("apps_users_mc.salt2 IS Null");
         //$this->db->where('apps_users_mc.makerActionBy !=', $this->my_session->userId);
-        $this->db->select('apps_users_mc.*, apps_users_group.userGroupName');
+        $this->db->select('apps_users_mc.*, apps_users_group.userGroupName, atms.ATMName as branchName');
         $this->db->from('apps_users_mc');
         $this->db->join('apps_users au', "au.skyId = apps_users_mc.skyId", "inner");
         $this->db->join('apps_users_group', 'apps_users_mc.appsGroupId = apps_users_group.appsGroupId', "left");
-
+        $this->db->join('atms', 'apps_users_mc.homeBranchCode = atms.branchCode', 'left');
 
         if (isset($params['search']) && trim($params['search']) != ''):
             $this->db->group_start()

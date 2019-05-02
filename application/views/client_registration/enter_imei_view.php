@@ -8,7 +8,7 @@
         
         <table class="table table-bordered table-striped">
             <tr>
-                <th style="width:200px;" align="left" scope="row">ESB ID</th>
+                <th style="width:200px;" align="left" scope="row">APPS ID</th>
                 <td><input class="form-control" type="text" name="eblSkyId" id="eblSkyId" value="<?=$eblSkyId ?>" size="20" readonly /></td>                    
             </tr>
             <tr>

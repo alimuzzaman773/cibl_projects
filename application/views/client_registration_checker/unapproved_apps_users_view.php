@@ -64,7 +64,7 @@
                             <th>Date of Birth</th>
                             <th>Email</th>
                             <th>Gender</th>
-                            <!-- <th>Branch</th> -->
+                            <th>Branch</th>
                             <th>Status</th>
                             <td>Action</td>
                         </tr>
@@ -86,7 +86,7 @@
                             <td>{{i.dob}}</td>
                             <td>{{i.userEmail}}</td>
                             <td>{{i.gender}}</td>
-                            <!-- <td>{{i.branchName}}</td> -->
+                            <td>{{i.branchName}}</td>
                             <td>
                                 <span data-ng-class="{'text-success': i.mcStatus == '1', 'text-danger': i.mcStatus == '0'}">{{i.mcStatus=='1' ? 'Approved' : 'Wait for approve'}}</span>
                             </td>

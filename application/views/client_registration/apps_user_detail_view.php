@@ -8,7 +8,7 @@
             </tr>
         </thead>    
         <tr>
-            <th style="width:200px;">ESB ID</th>
+            <th style="width:200px;">APPS ID</th>
             <td><?= $userInfo['eblSkyId'] ?></td>
         </tr>
         <tr>
@@ -135,7 +135,7 @@
         <table class="table table-striped table-bordered">
             <thead>
                 <tr class="bg-primary">
-                    <th style="text-align:center">ESB ID</th>
+                    <th style="text-align:center">APPS ID</th>
                     <th style="text-align:center">Identifier</th>
                     <th style="text-align:center">Is Verified</th>
                     <th style="text-align:center">Verify Date</th>

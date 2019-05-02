@@ -16,7 +16,7 @@
                     <thead>
                         <tr class="bg-primary">
                             <th>SL#</th>
-                            <th>ESB ID</th>
+                            <th>APPS ID</th>
                             <th>User Group</th>
                             <th>Maker Action</th>
                             <th>Status</th>

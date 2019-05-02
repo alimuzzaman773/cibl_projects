@@ -14,7 +14,7 @@
 
         <table class="table table-bordered table-bordered table-striped">
             <tr>
-                <th style="width:200px;">ESB ID</th>
+                <th style="width:200px;">APPS ID</th>
                 <td><input type="text" class="form-control" name="eblSkyId" id="eblSkyId" value="<?= $eblSkyId ?>" size="20" readonly /></td>                
             </tr>
             <tr>

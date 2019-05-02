@@ -48,7 +48,7 @@
         <thead>
             <tr class="bg-primary">
                 <th>SI#</th>
-                <th>SKY ID</th>
+                <th>ID</th>
                 <th>Apps ID</th>
                 <th>User ID</th>
                 <th>CIF ID</th>

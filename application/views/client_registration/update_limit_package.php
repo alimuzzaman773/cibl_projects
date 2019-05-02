@@ -12,7 +12,7 @@
         <tr>
             <td>SKY ID</td>
             <td>{{skyInfo.skyId}}</td>
-            <td>ESB ID</td>
+            <td>APPS ID</td>
             <td>{{skyInfo.eblSkyId}}</td>
         </tr>
         <tr>

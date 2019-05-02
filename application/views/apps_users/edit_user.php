@@ -13,7 +13,7 @@
 			<input hidden class="textbox" type="text" name="skyId" id="skyId" value="<?= $skyId ?>">
 
 
-			<h4>ESB ID</h4>
+			<h4>APPS ID</h4>
 			<input type="text" name="eblSkyId" value="<?= $eblSkyId ?>" readonly>
 			<br><br>
 
