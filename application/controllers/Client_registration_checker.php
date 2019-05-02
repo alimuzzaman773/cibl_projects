@@ -26,10 +26,10 @@ class Client_registration_checker extends CI_Controller {
         $params['limit'] = (int) $this->input->get("limit", true);
         $params['offset'] = (int) $this->input->get("offset", true);
         $params['get_count'] = (bool) $this->input->get("get_count", true);
-        $params['eblSkyId'] = $this->input->get("eblSkyId", true);
-        $params['from_date'] = $this->input->get("from_date", true);
-        $params['to_date'] = $this->input->get("to_date", true);
-
+        $params['search'] = $this->input->get("search", true);
+        $params['isLocked'] = $this->input->get("isLocked", true);
+        $params['isActive'] = $this->input->get("isActive", true);
+        
         $data['total'] = array();
         $data['list'] = array();
 

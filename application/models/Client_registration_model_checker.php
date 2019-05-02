@@ -16,12 +16,32 @@ class Client_registration_model_checker extends CI_Model {
         $this->db->join('apps_users au', "au.skyId = apps_users_mc.skyId", "inner");
         $this->db->join('apps_users_group', 'apps_users_mc.appsGroupId = apps_users_group.appsGroupId', "left");
 
-        if ((isset($params['from_date']) && trim($params['from_date']) != "") && (isset($params['to_date']) && trim($params['to_date']) != "")) {
-            $this->db->where("apps_users_mc.makerActionDt between {$this->db->escape($params["from_date"])} AND {$this->db->escape($params["to_date"])}", null,false);
+
+        if (isset($params['search']) && trim($params['search']) != ''):
+            $this->db->group_start()
+                    ->or_like('apps_users_mc.skyId', $params['search'])
+                    ->or_like('apps_users_mc.eblSkyId', $params['search'])
+                    ->or_like('apps_users_mc.userName', $params['search'])
+                    ->or_like('apps_users_mc.userName2', $params['search'])
+                    ->or_like('apps_users_mc.cfId', $params['search'])
+                    ->or_like('apps_users_mc.userEmail', $params['search'])
+                    ->or_like('apps_users_mc.userMobNo1', $params['search'])
+                    ->or_like('apps_users_mc.fatherName', $params['search'])
+                    ->or_like('apps_users_mc.motherName', $params['search'])
+                    // ->or_like('atms.ATMName', $params['search'])
+                    ->group_end();
+        endif;
+        if (isset($params['isLocked']) && trim($params['isLocked']) != '') {
+            $this->db->where('apps_users_mc.isLocked', $params['isLocked']);
         }
 
-        if (isset($params['eblSkyId']) && trim($params['eblSkyId']) != "") {            
-            $this->db->where("apps_users_mc.eblSkyId", $params['eblSkyId']);
+        if (isset($params['isActive']) && trim($params['isActive']) != '') {
+            $this->db->where('apps_users_mc.isActive', $params['isActive']);
+        }
+
+        if (isset($params['limit']) && (int) $params['limit'] > 0) {
+            $offset = (isset($params['offset']) && $params['offset'] != null) ? (int) $params['offset'] : 0;
+            $this->db->limit($params['limit'], $offset);
         }
         
         $this->db->order_by('apps_users_mc.makerActionDt', 'DESC');

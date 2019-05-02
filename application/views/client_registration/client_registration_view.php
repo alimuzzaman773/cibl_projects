@@ -54,8 +54,6 @@
                 <th>CIF ID</th>
                 <th>Father's name</th>
                 <th>Mother's name</th>
-                <th>Lock/Unlock</th>
-                <th>Active/Inactive</th>
                 <th>Status</th>
                 <th>User Name</th>
                 <th>User Group</th>

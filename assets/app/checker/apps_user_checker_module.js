@@ -9,9 +9,9 @@ var AppsUserCheckerModule = angular.module('AppsUserCheckerModule',["angularUtil
         $scope.currentPageNumber = 1;
         
         $scope.searchParams = {
-            from_date: "",
-            to_date: "",
-            eblSkyId: ""
+            isLocked: "",
+            isActive: "",
+            search: ""
         };
 
         $scope.pagination = {
@@ -24,9 +24,9 @@ var AppsUserCheckerModule = angular.module('AppsUserCheckerModule',["angularUtil
 
         $scope.resetSearch = function () {
             $scope.searchParams = {
-                from_date: "",
-                to_date: "",
-                eblSkyId: ""
+                isLocked: "",
+                isActive: "",
+                search: ""
             };
             $scope.getResultsPage(1);
             return false;
@@ -40,13 +40,20 @@ var AppsUserCheckerModule = angular.module('AppsUserCheckerModule',["angularUtil
                 get_count: true
             };
 
-            if ($scope.searchParams.eblSkyId !== null
-                    && $.trim($scope.searchParams.eblSkyId) !== "") {
-                $params.eblSkyId = $scope.searchParams.eblSkyId;
+            if ($scope.searchParams.search !== null
+                    && $.trim($scope.searchParams.search) !== "") {
+                $params.search = $scope.searchParams.search;
             }
 
-            $params.from_date = $scope.searchParams.from_date;
-            $params.to_date = $scope.searchParams.to_date;
+            if ($scope.searchParams.isLocked !== null
+                && $.trim($scope.searchParams.isLocked) !== "") {
+                $params.isLocked = $scope.searchParams.isLocked;
+            }
+
+            if ($scope.searchParams.isActive !== null
+                && $.trim($scope.searchParams.isActive) !== "") {
+                $params.isActive = $scope.searchParams.isActive;
+            }
 
             $http({
             	method: "get",
@@ -56,6 +63,7 @@ var AppsUserCheckerModule = angular.module('AppsUserCheckerModule',["angularUtil
                 app.hideModal();
                 var $result = response.data;
                 $scope.apps_user_data = $result.list;
+                console.log($scope.apps_user_data);
                 $scope.totalCount = $result.total;
                 $scope.currentPageNumber = pageNumber;
                 $scope.pagination.current = $scope.currentPageNumber;
