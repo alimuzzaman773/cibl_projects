@@ -20,13 +20,14 @@ class Zip_partners extends CI_Controller {
             $crud = new grocery_CRUD();
 
             $crud->set_theme(TABLE_THEME);
-            $crud->set_subject('Zip Partners');
+            $crud->set_subject('EMI Partners');
 
-            $crud->set_table('zip_partners');
+            $crud->set_table(TBL_ZIP_PARTNERS);
+            $crud->order_by('zipId', 'desc');
 
             $crud->columns('mechant_name', 'tenor', 'merchant_web_site', 'mobile', 'uploadImage');
 
-            $crud->required_fields('type', 'parentName', 'childName', 'category', 'mechant_name', 'offerType');
+            $crud->required_fields('type', 'parentName', 'pc_id', 'category', 'mechant_name', 'offerType');
             $this->load->config('grocery_crud');
             $this->config->set_item('grocery_crud_file_upload_allow_file_types', 'gif|jpeg|jpg|png');
 
@@ -36,18 +37,17 @@ class Zip_partners extends CI_Controller {
             $time = date("Y-m-d H:i:s");
             $creatorId = $this->my_session->userId;
 
-            $crud->add_fields('pc_id', 'type', 'parentName', 'childName', 'mechant_name', 'mobile', 'tenor', 'offerType', 'fromDate', 'toDate', 'remarks', 'merchant_web_site', 'uploadImage', 'banner', 'creationDtTm', 'updateDtTm');
-            $crud->edit_fields('pc_id', 'type', 'parentName', 'childName', 'mechant_name', 'mobile', 'tenor', 'offerType', 'fromDate', 'toDate', 'remarks', 'merchant_web_site', 'uploadImage', 'banner', 'updateDtTm');
+            $crud->add_fields('type', 'parentName', 'pc_id', 'mechant_name', 'mobile', 'tenor', 'offerType', 'fromDate', 'toDate', 'remarks', 'merchant_web_site', 'uploadImage', 'banner', 'creationDtTm', 'updateDtTm');
+            $crud->edit_fields('type', 'parentName', 'pc_id', 'mechant_name', 'mobile', 'tenor', 'offerType', 'fromDate', 'toDate', 'remarks', 'merchant_web_site', 'uploadImage', 'banner', 'updateDtTm');
 
             $crud->change_field_type('creationDtTm', 'hidden', $time);
             $crud->change_field_type('updateDtTm', 'hidden', $time);
             $crud->change_field_type('createdBy', 'hidden', $creatorId);
             $crud->change_field_type('updatedBy', 'hidden', $creatorId);
-            $crud->change_field_type('pc_id', 'hidden', '-1');
 
             $crud->display_as('type', 'Type')
                     ->display_as('parentName', 'Category')
-                    ->display_as('childName', 'Sub-Category')
+                    ->display_as('pc_id', 'Sub-Category')
                     ->display_as('mechant_name', 'Mechant Name')
                     ->display_as('tenor', 'Tenor')
                     ->display_as('offerType', 'Offer Type (Date range must be given in case of limited offer)')
@@ -64,13 +64,14 @@ class Zip_partners extends CI_Controller {
                 NULL => ''
             );
 
-            $typeList = array('product' => 'Products', 'partner' => 'EMI Partners', 'benefit' => 'Discount Partners');
-            $crud->change_field_type('type', 'dropdown', $typeList);
+            //$typeList = array('product' => 'Products', 'partner' => 'EMI Partners', 'benefit' => 'Discount Partners');
+            $crud->change_field_type('type', 'hidden', 'partner');
             $crud->change_field_type('parentName', 'dropdown', $categoryList);
-            $crud->change_field_type('childName', 'dropdown', $categoryList);
+            $crud->change_field_type('pc_id', 'dropdown', $categoryList);
 
             $this->db->select("*")
-                    ->from(TBL_PRODUCT_CATEGORIES);
+                    ->from(TBL_PRODUCT_CATEGORIES)
+                    ->where("type", "partner");
             $cRes = $this->db->get();
             foreach ($cRes->result() as $r):
                 $categoryList[] = $r;
@@ -92,12 +93,12 @@ class Zip_partners extends CI_Controller {
             $output = $crud->render();
             $output->css = "";
             $output->js = "";
-            $output->pageTitle = "Zip Partners";
+            $output->pageTitle = "EMI Partners";
             $output->base_url = base_url();
 
             $output->categories = $categoryList;
 
-            $output->productInfo = array();
+            $output->zipInfo = array();
             if ($resP) {
                 $output->zipInfo = $resP->row();
             }

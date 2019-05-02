@@ -6,7 +6,7 @@ class Client_registration_model_checker extends CI_Model {
         parent::__construct();
     }
 
-    public function getUnapprovedAppsUsers() {
+    public function getUnapprovedAppsUsers($params = array()) {
         //$this->db->order_by("skyId", "desc");
         $this->db->where('apps_users_mc.mcStatus =', 0);
         //$this->db->where("apps_users_mc.salt2 IS Null");
@@ -15,13 +15,21 @@ class Client_registration_model_checker extends CI_Model {
         $this->db->from('apps_users_mc');
         $this->db->join('apps_users au', "au.skyId = apps_users_mc.skyId", "inner");
         $this->db->join('apps_users_group', 'apps_users_mc.appsGroupId = apps_users_group.appsGroupId', "left");
+
+        if ((isset($params['from_date']) && trim($params['from_date']) != "") && (isset($params['to_date']) && trim($params['to_date']) != "")) {
+            $this->db->where("apps_users_mc.makerActionDt between {$this->db->escape($params["from_date"])} AND {$this->db->escape($params["to_date"])}", null,false);
+        }
+
+        if (isset($params['eblSkyId']) && trim($params['eblSkyId']) != "") {            
+            $this->db->where("apps_users_mc.eblSkyId", $params['eblSkyId']);
+        }
         
         $this->db->order_by('apps_users_mc.makerActionDt', 'DESC');
         $this->db->order_by('apps_users_mc.makerActionTm', 'DESC');
         //$this->db->order_by('apps_users_mc.skyId', 'desc');
         
         $query = $this->db->get();
-        return $query->result();
+        return $query->num_rows() > 0 ? $query : false;
     }
 
     //userGroupForM.userGroupName as mainUserGroupName, userGroupForMC.userGroupName as mcUserGroupName, 

@@ -18,11 +18,12 @@ class Discount_partners extends CI_Controller {
             $crud = new grocery_CRUD();
 
             $crud->set_theme(TABLE_THEME);
-            $crud->set_subject('PBL Discount Partners');
-            $crud->set_table('discount_partners');
+            $crud->set_subject('Discount Partners');
+            $crud->set_table(TBL_DISCOUNT_PARTNERS);
+            $crud->order_by('discountID', 'desc');
 
-            $crud->required_fields('type', 'parentName', 'childName', 'partner_name');
-            
+            $crud->required_fields('type', 'parentName', 'pc_id', 'partner_name');
+
             $this->config->set_item('grocery_crud_file_upload_allow_file_types', 'gif|jpeg|jpg|png');
 
             $crud->columns('partner_name', 'details', 'address', 'url', 'mobileno', 'DiscountUploadImage');
@@ -32,18 +33,18 @@ class Discount_partners extends CI_Controller {
             $time = date("Y-m-d H:i:s");
             $creatorId = $this->my_session->userId;
 
-            $crud->add_fields('pc_id', 'type', 'parentName', 'childName', 'partner_name', 'offerType', 'fromDate', 'toDate', 'details', 'discountPercentage', 'address', 'url', 'mobileno', 'DiscountUploadImage', 'creationDtTm', 'updateDtTm');
-            $crud->edit_fields('pc_id', 'type', 'parentName', 'childName', 'partner_name', 'offerType', 'fromDate', 'toDate', 'details', 'discountPercentage', 'address', 'url', 'mobileno', 'DiscountUploadImage', 'updateDtTm');
+            $crud->add_fields('type', 'parentName', 'pc_id', 'partner_name', 'offerType', 'fromDate', 'toDate', 'details', 'discountPercentage', 'address', 'url', 'mobileno', 'DiscountUploadImage', 'creationDtTm', 'updateDtTm');
+            $crud->edit_fields('type', 'parentName', 'pc_id', 'partner_name', 'offerType', 'fromDate', 'toDate', 'details', 'discountPercentage', 'address', 'url', 'mobileno', 'DiscountUploadImage', 'updateDtTm');
 
             $crud->change_field_type('creationDtTm', 'hidden', $time);
             $crud->change_field_type('updateDtTm', 'hidden', $time);
             $crud->change_field_type('createdBy', 'hidden', $creatorId);
             $crud->change_field_type('updatedBy', 'hidden', $creatorId);
-            $crud->change_field_type('pc_id', 'hidden', '-1');
+            //$crud->change_field_type('pc_id', 'hidden', '-1');
 
             $crud->display_as('type', 'Type')
                     ->display_as('parentName', 'Category')
-                    ->display_as('childName', 'Sub-Category')
+                    ->display_as('pc_id', 'Sub-Category')
                     ->display_as('partner_name', 'Partner Name')
                     ->display_as('details', 'Discount/Offer Detail')
                     ->display_as('offerType', 'Offer Type (Date range must be given in case of limited offer)')
@@ -62,13 +63,14 @@ class Discount_partners extends CI_Controller {
                 NULL => ''
             );
 
-            $typeList = array('product' => 'Products', 'partner' => 'EMI Partners', 'benefit' => 'Discount Partners');
-            $crud->change_field_type('type', 'dropdown', $typeList);
+            //$typeList = array('product' => 'Products', 'partner' => 'EMI Partners', 'benefit' => 'Discount Partners');
+            $crud->change_field_type('type', 'hidden', 'benefit');
             $crud->change_field_type('parentName', 'dropdown', $categoryList);
-            $crud->change_field_type('childName', 'dropdown', $categoryList);
+            $crud->change_field_type('pc_id', 'dropdown', $categoryList);
 
             $this->db->select("*")
-                    ->from(TBL_PRODUCT_CATEGORIES);
+                    ->from(TBL_PRODUCT_CATEGORIES)
+                    ->where("type", "benefit");
             $cRes = $this->db->get();
             foreach ($cRes->result() as $r):
                 $categoryList[] = $r;
@@ -96,8 +98,6 @@ class Discount_partners extends CI_Controller {
                 $output->discountInfo = $resP->row();
             }
             $output->crudState = $crud->getState();
-
-
             $output->css = "";
             $output->js = "";
             $output->pageTitle = "Discount Partners";
