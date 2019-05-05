@@ -75,9 +75,7 @@
                 <td>{{a.cfId}}</td>
                 <td>{{a.fatherName}}</td>
                 <td>{{a.motherName}}</td>
-                <td data-ng-class="{'test' : setStatus($index), 'bg-success' : a.isLocked == 0, 'bg-danger' : a.isLocked == 1}">{{a.isLocked == 1 ? 'Locked' : 'Unlocked'}}</td>
                 <td data-ng-class="{'bg-success' : a.isActive == 1, 'bg-danger' : a.isActive == 0}">{{a.isActive == 1 ? 'Active' : 'Inactive'}}</td>
-                <td class="{{a.statusColor}}">{{a.status}}</td>                
                 <td>{{a.userName}}</td>
                 <td>{{a.userGroupName}}</td>
                 <td>{{a.dob}}</td>

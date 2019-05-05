@@ -128,7 +128,7 @@
                         <td>{{i.checkerActionDt}} {{i.checkerActionTm}}</td>
                         <td>{{i.checkerName}}</td>
                         <td>{{i.makerActionDt}} {{i.makerActionTm}}</td>
-                        <td>{{i.isRejected == 1 ? 'Rejected' : 'Approved'}}</td>
+                        <td>{{i.isRejected == 1 ? 'Rejected' : ''}}</td>
                         <td ng-class="{'bg-success' : (i.skyIdOriginal > 0), 'bg-primary' : (i.skyIdOriginal <= 0 || i.skyIdOriginal == null)}">
                             {{i.skyIdOriginal > 0 ? 'Approved' : 'Waiting for Approved'}}
                         </td>
@@ -148,26 +148,32 @@
                                             <i class="glyphicon glyphicon-send"></i> Send Password Reset Pin
                                         </a>
                                     </li>
+                                    <!--
                                     <li data-ng-if="i.isRejected != '1' && i.passwordReset == '1' && i.isPublished == '1'">
                                         <a style="cursor: pointer" ng-click="showResetModal(i.skyId, 'pin_send');">
                                             <i class="glyphicon glyphicon-send"></i> Send Password Reset Pin
                                         </a>
-                                    </li>                                    
+                                    </li>
+                                    -->
+                                    <!--
                                     <li data-ng-if="i.isPublished == '0'">
                                         <a style="cursor: pointer" ng-click="showResetModal(i.skyId, 'pin_resend');">
                                             <i class="glyphicon glyphicon-send"></i> Resend PIN To New User
                                         </a>
-                                    </li>                                    
+                                    </li>
+                                    -->
                                     <li data-ng-if="i.isRejected == '0' && i.isPublished == '0'">
                                         <a style="cursor: pointer" ng-click="rejectRequest(i.skyId);">
                                             <i class="glyphicon glyphicon-trash"></i> Reject User
                                         </a>
                                     </li>
+                                    <!--
                                     <li>
                                         <a ng-if="i.skyIdOriginal <= 0" href="<?= base_url() . "call_center/#/remove/" ?>{{i.skyId}}">
                                             <i class="glyphicon glyphicon-trash"></i> Remove
                                         </a>
                                     </li>
+                                    -->
                                 </ul>
                             </div>
                         </td>

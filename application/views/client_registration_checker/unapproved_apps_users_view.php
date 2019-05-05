@@ -108,7 +108,7 @@
                             </td>
                         </tr>
                         <tr data-ng-show="apps_user_data.length <= 0">
-                            <td colspan="10">No data found</td>
+                            <td colspan="16">No data found</td>
                         </tr>
                     </tbody>
                 </table>
