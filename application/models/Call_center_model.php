@@ -14,7 +14,7 @@ class Call_center_model extends CI_Model {
             $this->db->select('aum.*, adm.adminUserName makerName, atms.ATMName as branchName, adc.adminUserName checkerName, au.skyId as skyIdOriginal, ra.raId, ra.entityType, ra.created as created_on, ra.otpChannel', false);
         endif;
 
-            $this->db->from('apps_users_mc aum')
+        $this->db->from('apps_users_mc aum')
                 ->join('apps_users au', "au.skyId = aum.skyId", "left")
                 ->join('atms', 'aum.homeBranchCode = atms.branchCode', 'left')
                 ->join('registration_attempts ra', "ra.skyId = aum.skyId", "inner")
@@ -22,13 +22,12 @@ class Call_center_model extends CI_Model {
                 ->join('admin_users adc', 'adc.adminUserId = aum.checkerActionBy', 'left')
                 ->order_by("ra.created_on", "DESC")
                 ->group_start()
-                //->where('aum.isLocked', 0)
-                ->or_where("(aum.isPublished = 0 AND aum.isActive = 0 AND aum.appsGroupId = 0)", null, false)
+                ->where('aum.isLocked', 0)
                 //->where("aum.isPublished", 0)
                 //->where("aum.isActive", 0)
                 //->where("aum.appsGroupId", 0)
-                //->where('aum.callCenterApprove', 'unapproved')
-                //->or_where('aum.callCenterApprove', 'pending')
+                //->where('callCenterApprove', 'unapproved')
+                //->or_where('callCenterApprove', 'pending')
                 ->group_end()
                 //->where('aum.isActive', 1)
                 //->where('aum.isPublished', 0)
@@ -40,14 +39,22 @@ class Call_center_model extends CI_Model {
                     ->or_like("aum.eblSkyId", $p['search'])
                     ->or_like("aum.clientId", $p['search'])
                     ->or_like("aum.userName", $p['search'])
-                    ->or_like('aum.userName2', $p['search'])
                     ->or_like("aum.userEmail", $p['search'])
                     ->or_like("aum.userMobNo1", $p['search'])
-                    ->or_like('aum.fatherName', $p['search'])
-                    ->or_like('aum.motherName', $p['search'])
-                    ->or_like('atms.ATMName', $p['search'])
                     ->group_end();
         endif;
+
+        if (isset($p['branch']) && trim($p['branch']) != '') {
+            $this->db->where("atms.branchCode", $p["branch"]);
+        }
+        
+        if (isset($p['status']) && trim($p['status']) != '') {
+            $this->db->where("aum.isPublished", $p["status"]);
+        }
+        
+        if (isset($p['status']) && trim($p['status']) == 2) {
+            $this->db->where("aum.isRejected", 1);
+        }
 
         if (isset($p['from_date']) && trim($p['from_date']) != '' && isset($p['to_date']) && trim($p['to_date']) != ''):
             $this->db->where("ra.created_on between {$this->db->escape($p['from_date'])} AND {$this->db->escape($p['to_date'])}", null, false);
@@ -64,10 +71,10 @@ class Call_center_model extends CI_Model {
 
     function getUserInfo($userId) {
 
-        $this->db->select('aum.*, ra.raId, ra.entityType, ra.entityNumber, ra.created_on', false)
+        $this->db->select('aum.*, ra.raId, ra.entityType, ra.entityNumber, ra.created_on, ra.otpChannel', false)
                 ->from('apps_users_mc aum')
-                ->join("registration_attempts ra", "ra.skyId = aum.skyId", "left")
-                //->where('aum.isLocked', 0)
+                ->join("registration_attempts ra", "ra.skyId = aum.skyId", "inner")
+                ->where('aum.isLocked', 0)
                 ->where("aum.isPublished", 0)
                 ->where("aum.isActive", 0)
                 ->where("aum.appsGroupId", 0)
@@ -85,13 +92,16 @@ class Call_center_model extends CI_Model {
 
     function getUserInfoForPasswordReset($userId) {
 
-        $this->db->select('aum.*', false)
+        $this->db->select('aum.*, ra.raId, ra.entityType, ra.entityNumber, ra.created_on', false)
                 ->from('apps_users aum')
-                ->where('aum.remarks', 'Password Reset Request')
-                ->where('aum.isLocked', 1)
-                //->where("aum.isPublished", 1)
+                ->join("registration_attempts ra", "ra.skyId = aum.skyId", "inner")
+                //->where('aum.remarks', 'Password Reset Request')
+                //->where('aum.isLocked', 1)
+                ->where("aum.passwordReset", 1)
+                ->where("aum.isPublished", 1)
                 ->where("aum.isActive", 1)
                 ->where("aum.skyId", $userId)
+                ->order_by("ra.raId", "DESC")
                 ->limit(1);
 
         $result = $this->db->get();
@@ -725,6 +735,17 @@ class Call_center_model extends CI_Model {
                 "msg" => $e->getMessage()
             );
         }
+    }
+
+    public function getAllBranch() {
+
+        $this->db->select('ATMID, ATMName, branchCode', false)
+                ->from('atms')
+                ->where("eblNearYou", 1)
+                ->order_by("ATMName", "ASC");
+
+        $query = $this->db->get();
+        return $query->num_rows() > 0 ? $query : false;
     }
 
 }

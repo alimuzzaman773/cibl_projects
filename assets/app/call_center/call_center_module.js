@@ -39,6 +39,7 @@ CallCenterModuleApp.controller('CallCenterController', ['$scope', '$http', '$rou
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
 
         $scope.user_list = [];
+        $scope.branch_list = [];
         $scope.totalCount = 0;
         $scope.per_page = 7;
         $scope.currentPageNumber = 1;
@@ -64,7 +65,9 @@ CallCenterModuleApp.controller('CallCenterController', ['$scope', '$http', '$rou
         $scope.searchParams = {
             from_date: "",
             to_date: "",
-            search: ''
+            search: '',
+            status: '',
+            branch: ''
         };
 
         $scope.pagination = {
@@ -74,12 +77,14 @@ CallCenterModuleApp.controller('CallCenterController', ['$scope', '$http', '$rou
         $scope.pageChanged = function (newPage) {
             $scope.getResultsPage(newPage);
         };
-        
+
         $scope.resetSearch = function () {
             $scope.searchParams = {
                 from_date: "",
                 to_date: "",
-                search: ''
+                search: '',
+                status: '',
+                branch: ''
             };
 
             $scope.getResultsPage(1);
@@ -97,6 +102,14 @@ CallCenterModuleApp.controller('CallCenterController', ['$scope', '$http', '$rou
                 $params.search = $scope.searchParams.search;
             }
 
+            if ($scope.searchParams.branch !== null && $.trim($scope.searchParams.branch) != '') {
+                $params.branch = $scope.searchParams.branch;
+            }
+            
+            if ($scope.searchParams.status !== null && $.trim($scope.searchParams.status) != '') {
+                $params.status = $scope.searchParams.status;
+            }
+
             if (($scope.searchParams.from_date !== null
                     && $.trim($scope.searchParams.from_date) !== "") &&
                     ($scope.searchParams.to_date !== null
@@ -111,6 +124,7 @@ CallCenterModuleApp.controller('CallCenterController', ['$scope', '$http', '$rou
                         app.hideModal();
                         var $result = response.data;
                         $scope.user_list = $result.user_list;
+                        $scope.branch_list = $result.branch_list;
                         $scope.totalCount = $result.total;
                         $scope.currentPageNumber = pageNumber;
                         $scope.pagination.current = $scope.currentPageNumber;

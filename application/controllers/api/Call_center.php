@@ -17,6 +17,8 @@ class Call_center extends CI_Controller {
         $p['from_date'] = $this->input->get('from_date', true);
         $p['to_date'] = $this->input->get('to_date', true);
         $p['search'] = $this->input->get('search', true);
+        $p['branch'] = $this->input->get('branch', true);
+        $p['status'] = $this->input->get('status', true);
         $this->load->model("call_center_model");
 
         $json['total'] = 0;
@@ -35,8 +37,11 @@ class Call_center extends CI_Controller {
         if ($result):
             $json['user_list'] = $result->result();
         endif;
-
-        $json['q'] = $this->db->last_query();
+        
+        $json['branch_list']=array();
+        $branch = $this->call_center_model->getAllBranch();
+        $json['branch_list'] = $branch->result();
+        //$json['q'] = $this->db->last_query();
         my_json_output($json);
     }
 
@@ -55,7 +60,6 @@ class Call_center extends CI_Controller {
               if($registrationres):
 
               endif; */
-
 
             $accounts = $this->call_center_model->getUserAccounts($userId, $userData->entityNumber);
             if ($accounts):
@@ -349,7 +353,8 @@ class Call_center extends CI_Controller {
                 "isLocked" => 0,
                 'remarks' => '',
                 'isReset' => 1,
-                'wrongAttempts' => 0
+                'wrongAttempts' => 0,
+                'passwordReset' => 0
             );
 
             $this->db->reset_query();
@@ -357,16 +362,9 @@ class Call_center extends CI_Controller {
                     ->update("apps_users", $udata);
 
             $this->db->reset_query();
-            $mcData = array(
-                "isActive" => 1,
-                "isPublished" => 1,
-                "isLocked" => 0,
-                'remarks' => '',
-                'isReset' => 1,
-                'wrongAttempts' => 0
-            );
+
             $this->db->where("skyId", $userInfo->skyId)
-                    ->update("apps_users_mc", $mcData);
+                    ->update("apps_users_mc", $udata);
 
             $otpData = array(
                 "pin" => $pin,

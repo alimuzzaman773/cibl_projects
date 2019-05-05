@@ -16,7 +16,7 @@
             <tr class="bg-primary">
                 <th>#SL</th>
                 <th>Device ID</th>
-                <th>Device ID</th>
+                <th>User ID</th>
                 <th>Apps ID</th>
                 <th>IMEI No.</th>
                 <th>Is Verified</th>
