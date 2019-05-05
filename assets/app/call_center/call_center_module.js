@@ -105,7 +105,7 @@ CallCenterModuleApp.controller('CallCenterController', ['$scope', '$http', '$rou
             if ($scope.searchParams.branch !== null && $.trim($scope.searchParams.branch) != '') {
                 $params.branch = $scope.searchParams.branch;
             }
-            
+
             if ($scope.searchParams.status !== null && $.trim($scope.searchParams.status) != '') {
                 $params.status = $scope.searchParams.status;
             }
@@ -231,6 +231,18 @@ CallCenterModuleApp.controller('CallCenterController', ['$scope', '$http', '$rou
                         alert("There was a problem, please try again.")
                     });
             return false;
+        };
+
+        $scope.approveStatusMessage = function (userInfo) {
+ 
+            var msg = "New Request";
+            if (userInfo.skyIdOriginal > 0) {
+                msg = "Approved";
+            }
+            if (userInfo.makerActionBy > 0 && userInfo.checkerActionBy <= 0) {
+               msg="Waiting for approved";
+            }
+            return msg;
         };
 
         $scope.sendPasswordResetPin = function ($skyId) {

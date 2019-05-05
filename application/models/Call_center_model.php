@@ -28,10 +28,14 @@ class Call_center_model extends CI_Model {
                 //->where("aum.appsGroupId", 0)
                 //->where('callCenterApprove', 'unapproved')
                 //->or_where('callCenterApprove', 'pending')
-                ->group_end()
-                //->where('aum.isActive', 1)
-                //->where('aum.isPublished', 0)
-                ->order_by('aum.skyId', 'desc');
+                ->group_end();
+        //->where('aum.isActive', 1)
+        //->where('aum.isPublished', 0)
+        if (ci_check_permission("callCenterChecker")) {
+            $this->db->where("aum.isPublished", 0)
+                    ->where("aum.makerActionBy >", 0);
+        }
+        $this->db->order_by('aum.skyId', 'desc');
 
         if (isset($p['search']) && trim($p['search']) != ''):
             $this->db->group_start()
@@ -47,13 +51,17 @@ class Call_center_model extends CI_Model {
         if (isset($p['branch']) && trim($p['branch']) != '') {
             $this->db->where("atms.branchCode", $p["branch"]);
         }
-        
+
         if (isset($p['status']) && trim($p['status']) != '') {
             $this->db->where("aum.isPublished", $p["status"]);
         }
-        
+
         if (isset($p['status']) && trim($p['status']) == 2) {
             $this->db->where("aum.isRejected", 1);
+        }
+        
+        if (isset($p['status']) && trim($p['status']) == 3) {
+            $this->db->where("aum.makerActionBy > ", 0);
         }
 
         if (isset($p['from_date']) && trim($p['from_date']) != '' && isset($p['to_date']) && trim($p['to_date']) != ''):
@@ -146,10 +154,10 @@ class Call_center_model extends CI_Model {
 
     function userApproveChecker($userId) {
         $userInfo = array(
-            "checkerAction" => 'Account Activation',
-            "checkerActionDt" => date("Y-m-d"),
-            "checkerActionTm" => date("H:i:s"),
-            "checkerActionBy" => $this->my_session->userId,
+            "makerAction" => 'Account Activation',
+            "makerActionDt" => date("Y-m-d"),
+            "makerActionTm" => date("H:i:s"),
+            "makerActionBy" => $this->my_session->userId,
         );
         $this->db->where("skyId", $userId)
                 ->update("apps_users_mc", $userInfo);
@@ -198,10 +206,10 @@ class Call_center_model extends CI_Model {
 
             $userInfoMerge = array(
                 "appsGroupId" => $appsGroupId,
-                "makerAction" => 'Account Activation',
-                "makerActionDt" => date("Y-m-d"),
-                "makerActionTm" => date("H:i:s"),
-                "makerActionBy" => $this->my_session->userId,
+                "checkerAction" => 'Account Activation',
+                "checkerActionDt" => date("Y-m-d"),
+                "checkerActionTm" => date("H:i:s"),
+                "checkerActionBy" => $this->my_session->userId,
                 "passWord" => md5($pin),
                 "pinExpiryReferenceTm" => date("Y-m-d H:i:s"),
                 "isActive" => 1,

@@ -41,9 +41,10 @@
         <div class="form-group col-sm-2 col-xs-2">
             <label>Status</label>
             <select class="form-control" data-ng-model="searchParams.status">
-                <option value="0">Pending</option>
+                <option value="0">Request User</option>
                 <option value="1">Approved</option>
                 <option value="2">Rejected</option>
+                <option value="3">Waiting for Approved</option>
             </select>
         </div>
         <div class="form-group col-sm-2 col-xs-2">
@@ -130,7 +131,7 @@
                         <td>{{i.makerActionDt}} {{i.makerActionTm}}</td>
                         <td>{{i.isRejected == 1 ? 'Rejected' : ''}}</td>
                         <td ng-class="{'bg-success' : (i.skyIdOriginal > 0), 'bg-primary' : (i.skyIdOriginal <= 0 || i.skyIdOriginal == null)}">
-                            {{i.skyIdOriginal > 0 ? 'Approved' : 'Waiting for Approved'}}
+                           {{approveStatusMessage(i)}}
                         </td>
                         <td>
                             <div class="dropdown pull-right">

@@ -137,7 +137,7 @@
             </div>
             <?php if (ci_check_permission("callCenterChecker")): ?>
                 <div class="btn-group">
-                    <button class="btn btn-md btn-primary" id="test" ng-show="user.makerActionBy <= 0 && user.checkerActionBy > 0" data-ng-click="approveUser(user.skyId)">
+                    <button class="btn btn-md btn-primary" id="test" ng-show="user.makerActionBy > 0 && user.checkerActionBy <= 0" data-ng-click="approveUser(user.skyId)">
                         <i class="glyphicon glyphicon-check"></i> Checker Approve
                     </button>         
                 </div>
