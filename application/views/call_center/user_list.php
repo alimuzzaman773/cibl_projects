@@ -16,7 +16,6 @@
                     <option value="email">EMAIL</option>
                 </select>
             </div>
-
             <div class="modal-footer">
                 <button class="btn btn-primary" data-ng-click="sendPasswordResetPin(resetSkyId);">
                     Confirm and send PIN
@@ -30,7 +29,7 @@
     <div class="row">
         <div class="form-group col-sm-2 col-xs-2">
             <label>Search</label>
-            <input type="text" class="form-control" data-ng-model="searchParams.search" placeholder="Search by Apps ID, User Name, Customer ID, Father or Mother Name" />
+            <input type="text" class="form-control" data-ng-model="searchParams.search" placeholder="Search by Apps ID, User Name, Customer ID, Father or Mother Name" title="Search by Apps ID, User Name, Customer ID, Father or Mother Name" />
         </div>
         <div class="form-group col-sm-2 col-xs-2">
             <label>Branch</label>
@@ -41,10 +40,10 @@
         <div class="form-group col-sm-2 col-xs-2">
             <label>Status</label>
             <select class="form-control" data-ng-model="searchParams.status">
-                <option value="0">Request User</option>
+                <option value="0">New Request</option>
                 <option value="1">Approved</option>
                 <option value="2">Rejected</option>
-                <option value="3">Waiting for Approved</option>
+                <option value="3">Waiting for Approval</option>
             </select>
         </div>
         <div class="form-group col-sm-2 col-xs-2">
@@ -93,6 +92,7 @@
                         <th>CIF ID</th>
                         <th>User Name</th>
                         <th>Father Name</th>
+                        <th>Mother Name</th>
                         <th>User Email</th>
                         <th>User Mobile</th>
                         <th>Current Address</th>
@@ -101,10 +101,12 @@
                         <th>Remarks</th>
                         <th>Branch</th>
                         <th>Registration Date</th>
-                        <th>Checker</th>
-                        <th>Maker Date</th>
+                        <!--
                         <th>Maker</th>
+                        <th>Maker Date</th>
+                        <th>Checker</th>
                         <th>Checker Date</th>
+                        -->
                         <th>Rejected</th>
                         <th>Status</th>
                         <th>Action</th>
@@ -117,6 +119,7 @@
                         <td>{{i.cfId}}</td>
                         <td>{{i.userName}}</td>
                         <td>{{i.fatherName}}</td>
+                         <td>{{i.motherName}}</td>
                         <td>{{i.userEmail}}</td>
                         <td>{{i.userMobNo1}}</td>
                         <td>{{i.currAddress}}</td>
@@ -125,10 +128,12 @@
                         <td>{{i.remarks}}</td>
                         <td>{{i.branchName}}</td>
                         <td>{{i.created_on}}</td>
+                        <!--
                         <td>{{i.makerName}}</td>
                         <td>{{i.checkerActionDt}} {{i.checkerActionTm}}</td>
                         <td>{{i.checkerName}}</td>
                         <td>{{i.makerActionDt}} {{i.makerActionTm}}</td>
+                        -->
                         <td>{{i.isRejected == 1 ? 'Rejected' : ''}}</td>
                         <td ng-class="{'bg-success' : (i.skyIdOriginal > 0), 'bg-primary' : (i.skyIdOriginal <= 0 || i.skyIdOriginal == null)}">
                            {{approveStatusMessage(i)}}
@@ -180,7 +185,7 @@
                         </td>
                     </tr>
                     <tr data-ng-show="user_list.length <= 0">
-                        <td colspan="21">No data found</td>
+                        <td colspan="17">No data found</td>
                     </tr>
                 </tbody>
             </table>

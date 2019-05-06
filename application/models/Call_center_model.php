@@ -59,7 +59,7 @@ class Call_center_model extends CI_Model {
         if (isset($p['status']) && trim($p['status']) == 2) {
             $this->db->where("aum.isRejected", 1);
         }
-        
+
         if (isset($p['status']) && trim($p['status']) == 3) {
             $this->db->where("aum.makerActionBy > ", 0);
         }
@@ -215,7 +215,8 @@ class Call_center_model extends CI_Model {
                 "isActive" => 1,
                 "isPublished" => 1,
                 "isLocked" => 0,
-                "isReset" => 1
+                "isReset" => 1,
+                "mcStatus" => 1
             );
 
             $userInfo = array_merge($userInfo, $userInfoMerge);

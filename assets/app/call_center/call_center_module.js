@@ -240,7 +240,10 @@ CallCenterModuleApp.controller('CallCenterController', ['$scope', '$http', '$rou
                 msg = "Approved";
             }
             if (userInfo.makerActionBy > 0 && userInfo.checkerActionBy <= 0) {
-               msg="Waiting for approved";
+               msg="Waiting for approval";
+            }
+            if (userInfo.isRejected > 0) {
+               msg="Rejected";
             }
             return msg;
         };

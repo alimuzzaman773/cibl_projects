@@ -561,11 +561,11 @@ class Call_center extends CI_Controller {
         $uData = array(
             "isRejected" => 1,
             "remarks" => $remarks,
-            'checkerAction' => 'rejected',
-            'checkerActionComment' => $remarks,
-            'checkerActionDt' => date("Y-m-d"),
-            'checkerActionTm' => date("H:i:s"),
-            'checkerActionBy' => $this->my_session->userId
+            'makerAction' => 'rejected',
+            'makerActionComment' => $remarks,
+            'makerActionDt' => date("Y-m-d"),
+            'makerActionTm' => date("H:i:s"),
+            'makerActionBy' => $this->my_session->userId
         );
 
         try {

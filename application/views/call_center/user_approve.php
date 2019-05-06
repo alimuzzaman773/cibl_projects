@@ -128,7 +128,7 @@
     </div>
     <div class="col-xs-12 col-sm-3 col-md-3">
         <form name="testform">
-            <div class="form-group" ng-if="user.makerActionBy <= 0 && user.checkerActionBy > 0">
+            <div class="form-group" ng-if="user.makerActionBy > 0 && user.checkerActionBy <= 0">
                 <label>PIN Sending Channel</label>
                 <select class="form-control input-sm" id="otp_channel" ng-model="otp_channel">
                     <option value="email">email</option>
