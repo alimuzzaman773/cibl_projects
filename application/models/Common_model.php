@@ -62,8 +62,8 @@ class Common_model extends CI_Model {
         try {
             
             set_smtp_config($mail);
-            $mail->From = 'mail.eblsky@ebl-bd.com';
-            $mail->FromName = 'EBL SKYBANKING Admin Panel';
+            $mail->From = 'nopreply@premierbankltd.com';
+            $mail->FromName = 'Premier Plus Admin Panel';
 
             $recepients = explode(";", $maildata['to']);
             foreach ($recepients as $index => $value) {

@@ -51,12 +51,12 @@
                 <th>SL#</th>
                 <th>Name</th>
                 <th>Contact No</th>
-                <th>Prefer Call Date</th>
+                <th>Request Date</th>
                 <th>Email</th>
                 <th>Location</th>
                 <th>Product Name</th>
-                <th>Request Date</th>
                 <th>Status</th>
+                <th>Mail Date</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -66,12 +66,12 @@
                 <td>{{(per_page * (currentPageNumber - 1)) + ($index + 1)}}</td>
                 <td>{{ item.name}}</td>
                 <td>{{ item.contactNo}}</td>
-                <td>{{ item.preferredCallDtTm}}</td>
+                <td>{{ item.creationDtTm}}</td>
                 <td>{{ item.email}}</td>
                 <td>{{ item.myLocation}}</td>
                 <td>{{ item.productName}}</td>
-                <td>{{ item.requestDtTm}}</td>
-                <td>{{ item.status1}}</td>
+                <td>{{ item.status ==1 ? "Mail Sent" : "Pending"}}</td>
+                 <td>{{ item.updateDtTm}}</td>
                 <td>
                     <div class="dropdown pull-right">
                         <button class="btn btn-primary btn-xs dropdown-toggle" type="button" data-toggle="dropdown">
