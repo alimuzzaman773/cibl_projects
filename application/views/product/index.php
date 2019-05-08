@@ -9,9 +9,8 @@
 
     app.getChildOptions = function (categories, parent_id) {
         var $html = '<option></option>';
-        $.each(categories, function (i, v) {
-            console.log(parent_id, v.parent_id, "child")
-            if (parent_id !== undefined && parent_id == v.parent_id) {
+        $.each(categories, function (i, v) {	
+            if (parent_id !== undefined && v.parent_id !== null && v.name !== undefined) {
                 $html += '<option value="' + v.pc_id + '">' + v.name + '</option>';
             }
         });
@@ -21,8 +20,8 @@
     app.getOptions = function (categories, type) {
         var $html = '<option></option>';
         $.each(categories, function (i, v) {
-            //console.log(v,i)
-            if (type !== undefined && type == v.type && app.parseInt(v.parent_id, 0) <= 0) {
+           // console.log(v,i)
+           if (type !== undefined && type == v.type && app.parseInt(v.parent_id, 0) <= 0) {
                 $html += '<option value="' + v.pc_id + '">' + v.name + '</option>';
             }
         });
@@ -39,7 +38,7 @@
 
             setTimeout(function () {
                 var $childOption = app.getChildOptions(app.categories, app.productInfo.parentName);
-                console.log($childOption);
+              //  console.log($childOption);
                 $("#field-pc_id").chosen('destroy');
                 $("#field-pc_id").html($childOption);
                 $("#field-pc_id").val(app.productInfo.pc_id);
@@ -48,9 +47,9 @@
             }, 1000);
 
             $("#field-parentName").on('change', function (e) {
-                console.log("parent value", $(this).val());
+                //console.log("parent value", $(this).val());
                 var $childOption = app.getChildOptions(app.categories, $(this).val());
-                console.log($childOption);
+               // console.log($childOption);
                 $("#field-pc_id").chosen('destroy');
                 $("#field-pc_id").html($childOption);
                 $("#field-pc_id").chosen();

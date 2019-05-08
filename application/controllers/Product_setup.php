@@ -134,6 +134,7 @@ class Product_setup extends CI_Controller {
             $crud->set_table(TBL_PRODUCT_CATEGORIES);
             $crud->order_by('pc_id', 'desc');
 
+            $crud->required_fields('type');
             $crud->columns('type', 'name','isActive', 'created', 'updated');
 
             $crud->display_as('type', 'Type');

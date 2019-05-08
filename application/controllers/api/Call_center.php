@@ -541,10 +541,11 @@ class Call_center extends CI_Controller {
         }
     }
 
-    function reject_user() {
-        $skyId = $this->input->post("skyId", true);
-        $remarks = $this->input->post("remarks", true);
-
+    function reject_user() 
+    {
+        $skyId = $this->input->post("skyId",true);
+        $remarks = $this->input->post("remarks",true);
+        
         $this->load->model(array('mailer_model', 'call_center_model'));
 
         $getUserInfo = $this->call_center_model->getUserInfo((int) $skyId);
@@ -561,11 +562,11 @@ class Call_center extends CI_Controller {
         $uData = array(
             "isRejected" => 1,
             "remarks" => $remarks,
-            'makerAction' => 'rejected',
-            'makerActionComment' => $remarks,
-            'makerActionDt' => date("Y-m-d"),
-            'makerActionTm' => date("H:i:s"),
-            'makerActionBy' => $this->my_session->userId
+            'checkerAction' => 'rejected',
+            'checkerActionComment' => $remarks,
+            'checkerActionDt' => date("Y-m-d"),
+            'checkerActionTm' => date("H:i:s"),
+            'checkerActionBy' => $this->my_session->userId
         );
 
         try {
@@ -583,8 +584,10 @@ class Call_center extends CI_Controller {
             $json = array(
                 "success" => true
             );
-            my_json_output($json);
-        } catch (Exception $e) {
+            my_json_output($json);    
+        }
+        catch(Exception $e)
+        {
             $json = array(
                 'success' => false,
                 'msg' => $e->getMessage()
