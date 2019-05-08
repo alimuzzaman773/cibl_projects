@@ -55,7 +55,7 @@ class Discount_partners extends CI_Controller {
                     ->display_as('mobileno', 'Mobile No')
                     ->display_as('DiscountUploadImage', 'Upload Image');
 
-            $crud->callback_after_upload(array($this, 'discount_callback_after_upload'));
+            //$crud->callback_after_upload(array($this, 'discount_callback_after_upload'));
             $crud->set_relation('category', 'partner_type_setup', 'discountPartners');
             $crud->set_field_upload('DiscountUploadImage', 'assets/uploads/files');
 
