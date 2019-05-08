@@ -24,7 +24,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <th align="left" scope="row">ESB ID</th>
+                        <th align="left" scope="row">APPS ID</th>
                         <td id="esbId"><?= $esbId ?></td>
                     </tr>
                     <tr>

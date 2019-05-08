@@ -21,7 +21,7 @@
 
                 <tbody >
                     <tr>
-                        <th align="left" scope="row">ESB ID</th>
+                        <th align="left" scope="row">APPS ID</th>
                         <td id = "esbId"><?= $esbId ?></td>
                     </tr>
 
@@ -379,7 +379,7 @@
                         alert("User created successfully");
                         window.location = "<?= base_url() ?>apps_users/userGroupSelection?skyId=" + data + "&action=add";
                     } else {
-                        alert("This ESB ID is Used");
+                        alert("This Apps ID is Used");
                         window.location = "<?= base_url() ?>apps_users/addAppsUser";
                     }
                 },

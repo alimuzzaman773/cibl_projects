@@ -13,11 +13,12 @@ class Client_registration_model extends CI_Model {
         if (isset($p['get_count']) && (int) $p['get_count'] > 0):
             $this->db->select('count(*) as total', false);
         else:
-            $this->db->select('apps_users_mc.*, apps_users_group.userGroupName');
+            $this->db->select('apps_users_mc.*, apps_users_group.userGroupName, atms.ATMName as branchName');
         endif;
 
         $this->db->from('apps_users_mc');
         $this->db->join('apps_users_group', 'apps_users_mc.appsGroupId = apps_users_group.appsGroupId', 'left');
+        $this->db->join('atms', 'apps_users_mc.homeBranchCode = atms.branchCode', 'left');
         //$this->db->where("apps_users_mc.salt2 IS Null");
         //$this->db->where('apps_users_mc.makerActionBy', $this->my_session->userId);
         $this->db->where_in('apps_users_mc.mcStatus', array(1, 2));
@@ -31,11 +32,13 @@ class Client_registration_model extends CI_Model {
                     ->or_like('apps_users_mc.skyId', $p['search'])
                     ->or_like('apps_users_mc.eblSkyId', $p['search'])
                     ->or_like('apps_users_mc.userName', $p['search'])
+                    ->or_like('apps_users_mc.userName2', $p['search'])
                     ->or_like('apps_users_mc.cfId', $p['search'])
-                    ->or_like('apps_users_mc.clientId', $p['search'])
-                    ->or_like('apps_users_mc.prepaidId', $p['search'])
                     ->or_like('apps_users_mc.userEmail', $p['search'])
                     ->or_like('apps_users_mc.userMobNo1', $p['search'])
+                    ->or_like('apps_users_mc.fatherName', $p['search'])
+                    ->or_like('apps_users_mc.motherName', $p['search'])
+                    ->or_like('atms.ATMName', $p['search'])
                     ->group_end();
         endif;
 

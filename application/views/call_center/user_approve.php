@@ -17,7 +17,7 @@
                 </tr>
             </thead>    
             <tr>
-                <th style="width:200px;">ESB ID</th>
+                <th style="width:200px;">APPS ID</th>
                 <td>{{user.eblSkyId}}</td>
             </tr>
 
@@ -128,7 +128,7 @@
     </div>
     <div class="col-xs-12 col-sm-3 col-md-3">
         <form name="testform">
-            <div class="form-group" ng-if="user.makerActionBy <= 0 && user.checkerActionBy > 0">
+            <div class="form-group" ng-if="user.makerActionBy > 0 && user.checkerActionBy <= 0">
                 <label>PIN Sending Channel</label>
                 <select class="form-control input-sm" id="otp_channel" ng-model="otp_channel">
                     <option value="email">email</option>
@@ -137,7 +137,7 @@
             </div>
             <?php if (ci_check_permission("callCenterChecker")): ?>
                 <div class="btn-group">
-                    <button class="btn btn-md btn-primary" id="test" ng-show="user.makerActionBy <= 0 && user.checkerActionBy > 0" data-ng-click="approveUser(user.skyId)">
+                    <button class="btn btn-md btn-primary" id="test" ng-show="user.makerActionBy > 0 && user.checkerActionBy <= 0" data-ng-click="approveUser(user.skyId)">
                         <i class="glyphicon glyphicon-check"></i> Checker Approve
                     </button>         
                 </div>

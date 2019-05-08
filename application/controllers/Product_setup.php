@@ -134,19 +134,20 @@ class Product_setup extends CI_Controller {
             $crud->set_table(TBL_PRODUCT_CATEGORIES);
             $crud->order_by('pc_id', 'desc');
 
-            $crud->columns('type', 'name', 'created', 'updated');
+            $crud->columns('type', 'name','isActive', 'created', 'updated');
 
             $crud->display_as('type', 'Type');
             $crud->display_as('parent_id', 'Parent Category');
             $crud->display_as('name', 'Category Name');
+            $crud->display_as('isActive', 'Active Status');
             $crud->display_as('created', 'Created Date');
             $crud->display_as('updated', 'Updated Date');
 
             $time = date("Y-m-d H:i:s");
             $creatorId = $this->my_session->userId;
 
-            $crud->add_fields('type', 'parent_id', 'name', 'created_by', 'updated_by', 'created', 'updated');
-            $crud->edit_fields('type', 'parent_id', 'name', 'updated', 'updated_by');
+            $crud->add_fields('type', 'parent_id', 'name', 'isActive', 'created_by', 'updated_by', 'created', 'updated');
+            $crud->edit_fields('type', 'parent_id', 'name','isActive', 'updated', 'updated_by');
 
             $categories = array(
                 NULL => ''

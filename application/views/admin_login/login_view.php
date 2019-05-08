@@ -24,7 +24,7 @@
                     <form class="form-horizontal" action="<?php echo base_url(); ?>admin_login/checkUserDetails" method="POST">
                         <fieldset>
                             <div id="legend">
-                                <legend class="">EBL SKYBANKING</legend>
+                                <legend class="">PREMIER PLUS</legend>
                             </div>    
                             <div class="control-group">
                                 <!-- Username -->

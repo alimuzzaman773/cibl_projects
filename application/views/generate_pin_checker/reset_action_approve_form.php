@@ -17,7 +17,7 @@
                             <input hidden type="text" name="checkerAction" id="checkerAction" value="" >
                             <table class="table table-striped table-bordered">    
                                 <tr>
-                                    <th align="left" scope="row">ESB ID</th>
+                                    <th align="left" scope="row">APPS ID</th>
                                     <td><?= $resetPin['eblSkyId'] ?></td>
                                 </tr>
                                 

@@ -11,9 +11,8 @@ ProductModuleApp.controller("ProductController", ["$scope", "$http", function ($
         $scope.searchParams = {
             from_date: "",
             to_date: "",
-            customer_name: "",
-            customer_mobile: "",
-            customer_email: ""
+            search: "",
+            status: ""
         };
 
         $scope.pagination = {
@@ -28,9 +27,8 @@ ProductModuleApp.controller("ProductController", ["$scope", "$http", function ($
             $scope.searchParams = {
                 from_date: "",
                 to_date: "",
-                customer_name: "",
-                customer_mobile: "",
-                customer_email: ""
+                search: "",
+                status: ""
             };
 
             $scope.getResultsPage(1);
@@ -52,16 +50,16 @@ ProductModuleApp.controller("ProductController", ["$scope", "$http", function ($
                 $params.to_date = $scope.searchParams.to_date;
             }
 
-/*            if($scope.searchParams.search !== null && $.trim($scope.searchParams.search) !== ""){
+            if($scope.searchParams.search !== null && $.trim($scope.searchParams.search) !== ""){
                 $params.search = $scope.searchParams.search;
             }
-*/          
-            if ($scope.searchParams.customer_name !== null
-                    && $.trim($scope.searchParams.customer_name) !== "") {
-                $params.customer_name = $scope.searchParams.customer_name;
+          
+            if ($scope.searchParams.status !== null
+                    && $.trim($scope.searchParams.status) !== "") {
+                $params.status = $scope.searchParams.status;
             }
             
-            if ($scope.searchParams.customer_mobile !== null
+            /*if ($scope.searchParams.customer_mobile !== null
                     && $.trim($scope.searchParams.customer_mobile) !== "") {
                 $params.customer_mobile = $scope.searchParams.customer_mobile;
             }
@@ -69,7 +67,7 @@ ProductModuleApp.controller("ProductController", ["$scope", "$http", function ($
             if ($scope.searchParams.customer_email !== null
                     && $.trim($scope.searchParams.customer_email) !== "") {
                 $params.customer_email = $scope.searchParams.customer_email;
-            }
+            }*/
             app.showModal();
             $http({
                 method: "get",

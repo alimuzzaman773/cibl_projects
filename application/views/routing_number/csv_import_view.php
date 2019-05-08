@@ -7,7 +7,8 @@
         <input class="form-control" type="file" name="userfile" id="userFile" />
         <button type="button" class="btn btn-primary" onclick="return app.uploadCsv();">
             Upload
-        </button>        
+        </button>
+        <p><small>Only CSV file allowed</small></p>
     </div>
 </form>
 

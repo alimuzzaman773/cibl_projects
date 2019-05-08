@@ -3,37 +3,35 @@
 <div class="container" id="ProductModuleApp" data-ng-controller="ProductController">    
 
     <div class="row">       
-        <div class="col-xs-4 col-sm-3">
+        <div class="col-xs-2 col-sm-2">
             <div class="form-group">
                 <label>From Date</label> 
                 <input type="text" name="fromDate" id="fromDate" class="form-control input-sm" ng-model="searchParams.from_date" placeholder="Search by From Date"/>
             </div>
         </div>
-        <div class="col-xs-4 col-sm-3">
+        <div class="col-xs-2 col-sm-2">
             <div class="form-group">
                 <label>To Date</label> 
                 <input type="text" name="toDate" id="toDate"  class="form-control input-sm" ng-model="searchParams.to_date" placeholder="Search by To Date"/>
             </div>
         </div>
-        <div class="col-xs-4 col-sm-3">
+        <div class="col-xs-2 col-sm-3">
             <div class="form-group">
-                <label>Customer Name</label> 
-                <input type="text" name="customerName" id="customerName"  class="form-control input-sm" ng-model="searchParams.customer_name" placeholder="Search by Name"/>
+                <label>Search</label> 
+                <input type="text" name="search" id="search"  class="form-control input-sm" ng-model="searchParams.search" placeholder="Search by Product Name, Customer Name, Email, Contact No"/>
             </div>
         </div>
-        <div class="col-xs-4 col-sm-3">
+        <div class="col-xs-2 col-sm-2">
             <div class="form-group">
-                <label>Customer Email</label> 
-                <input type="text" name="customerEmail" id="customerEmail"  class="form-control input-sm" ng-model="searchParams.customer_email" placeholder="Search by Email"/>
+                <label>Status</label>
+                <select class="form-control input-sm" id="status" name="status" ng-model="searchParams.status">
+                    <option value=""></option>
+                    <option value="0">Pending</option>
+                    <option value="1">Mail Sent</option>
+                </select>
             </div>
         </div>
-         <div class="col-xs-4 col-sm-3">
-            <div class="form-group">
-                <label>Customer Mobile</label> 
-                <input type="text" name="customerMobile" id="customerMobile"  class="form-control input-sm" ng-model="searchParams.customer_mobile" placeholder="Search by Mobile"/>
-            </div>
-        </div>
-        <div class="col-xs-4 col-sm-2">
+        <div class="col-xs-2 col-sm-2">
             <div class="form-group">
                 <label style="display:block" class="hidden-xs">&nbsp;&nbsp;</label>
                 <button class="btn btn-primary btn-sm" data-ng-click="getResultsPage(1)">
@@ -51,12 +49,12 @@
                 <th>SL#</th>
                 <th>Name</th>
                 <th>Contact No</th>
-                <th>Prefer Call Date</th>
+                <th>Request Date</th>
                 <th>Email</th>
                 <th>Location</th>
                 <th>Product Name</th>
-                <th>Request Date</th>
                 <th>Status</th>
+                <th>Mail Date</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -66,12 +64,12 @@
                 <td>{{(per_page * (currentPageNumber - 1)) + ($index + 1)}}</td>
                 <td>{{ item.name}}</td>
                 <td>{{ item.contactNo}}</td>
-                <td>{{ item.preferredCallDtTm}}</td>
+                <td>{{ item.creationDtTm}}</td>
                 <td>{{ item.email}}</td>
                 <td>{{ item.myLocation}}</td>
                 <td>{{ item.productName}}</td>
-                <td>{{ item.requestDtTm}}</td>
-                <td>{{ item.status1}}</td>
+                <td>{{ item.status ==1 ? "Mail Sent" : "Pending"}}</td>
+                 <td>{{ item.updateDtTm}}</td>
                 <td>
                     <div class="dropdown pull-right">
                         <button class="btn btn-primary btn-xs dropdown-toggle" type="button" data-toggle="dropdown">
@@ -241,7 +239,7 @@ ci_add_js(asset_url() . 'app/service_request/product_module.js');
 <form method="get" id="productRequestForm" name="productRequestForm" action="<?php echo base_url(); ?>product_request_process/getRequest">
     <div class="container">
         <div class="row">       
-            <div class="col-xs-4 col-sm-3">
+            <div class="col-xs-4 col-sm-2">
                 <div class="form-group">
                     <label>From Dates</label> 
                     <input type="text" name="fromDate" id="fromDate" class="form-control input-sm" placeholder="Enter From Date"/>

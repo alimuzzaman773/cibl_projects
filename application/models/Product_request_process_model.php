@@ -28,24 +28,31 @@ class Product_request_process_model extends CI_Model {
                     ->where('creationDtTm <=', $params["to_date"]);
         }
 
-        /*if(isset($params['search']) && trim($params['search']) != "") {
-            $this->db->group_start()
-                    ->or_like("product_apply_request.productName", $params['search'], 'both')
-                    ->or_like("product_apply_request.email", $params['search'], 'both')
-                    ->or_like("product_apply_request.contactNo", $params['search'], 'both')
-                    ->group_end();
-        }*/
-        if (isset($params['customer_name']) && trim($params['customer_name']) != "") {
-            $this->db->like('name', $params["customer_name"], "both");
+        if(isset($params['search']) && trim($params['search']) != "") {
+          $this->db->group_start()
+          ->or_like("product_apply_request.name", $params['search'],'both')
+          ->or_like("product_apply_request.productName", $params['search'], 'both')
+          ->or_like("product_apply_request.email", $params['search'], 'both')
+          ->or_like("product_apply_request.contactNo", $params['search'], 'both')
+          ->group_end();
         }
         
-        if (isset($params['customer_email']) && trim($params['customer_email']) != "") {
+        if (isset($params['status'])) {
+            if ((int)$params['status'] == 1) {
+                $this->db->where('product_apply_request.status =', $params['status']);
+            } if ((int)$params['status'] == 0) {
+                $this->db->where('product_apply_request.status =', $params['status']);
+                $this->db->or_where('product_apply_request.status =', null);
+            }
+        }
+
+        /*if (isset($params['customer_email']) && trim($params['customer_email']) != "") {
             $this->db->like('email', $params["customer_email"], "both");
         }
-        
+
         if (isset($params['customer_mobile']) && trim($params['customer_mobile']) != "") {
             $this->db->like('contactNo', $params["customer_mobile"], "both");
-        }
+        }*/
 
         $this->db->order_by("applyId", "desc");
 
@@ -68,7 +75,7 @@ class Product_request_process_model extends CI_Model {
                 $row = $queryInstruction->row();
                 $previousInstruction = $row->mailBodyInstruction;
             }
-            $data['mailBodyInstruction'] = $previousInstruction . "<br>" . $dateTime . "<br>" . $this->my_session->userInfo['fullName'] . "<br>" . $bodyInstruction;
+            $data['mailBodyInstruction'] = $previousInstruction . "<br>" . $dateTime . "<br>" . $bodyInstruction;
         }
 
         $data['status'] = 1;
@@ -80,6 +87,8 @@ class Product_request_process_model extends CI_Model {
         $productReqMailArr = array();
         $data = array();
         $mailArr = array();
+        $mailCcArr = array();
+        $mailBccArr = array();
 
         if ($mailData['to']) {
             $mailToArr = explode(";", $mailData['to']);
@@ -94,6 +103,7 @@ class Product_request_process_model extends CI_Model {
                 $mailArr[] = $mailCcArr[$i];
             }
         }
+
         if ($mailData['bcc']) {
             $mailBccArr = explode(";", $mailData['bcc']);
             for ($i = 0; $i < count($mailBccArr); $i++) {

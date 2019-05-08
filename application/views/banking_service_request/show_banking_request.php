@@ -95,7 +95,7 @@
                 <td>{{ item.reason}}</td>
                 <td>{{ item.remarks}}</td>
                 <td>{{ item.requestDtTm}}</td>
-                <td>{{ item.status1}}</td>
+                <td>{{ item.status1==1? 'Mail Sent': 'Pending'}}</td>
                 <td>
                     <div class="dropdown pull-right">
                         <button class="btn btn-primary btn-xs dropdown-toggle" type="button" data-toggle="dropdown">

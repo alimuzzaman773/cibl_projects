@@ -2,27 +2,31 @@
     <table class="table table-bordered table-condensed table-striped table-hover">
         <thead>
             <tr class="bg-primary">
-                <th colspan="2">Apps Users Registration Stats</th>
+                <th colspan="2">Apps Users Pending Registration Status</th>
             </tr>
         </thead>
         <tr>
-            <td style="width: 260px"><b>Total PBL ID:</b></td>
+            <td style="width: 260px"><b>Total Customer Registration Request:</b></td>
             <td><?=$totalId?></td>
         </tr>
         <?php foreach($registrationType as $k=> $r): ?>
+        <!--
         <tr>
             <td><b><?= ucfirst(str_replace("_", " ", $k))?></b></td>
             <td><?=number_format(($r/$totalId)*100,2)?>%</td>
         </tr>
+        -->
         <?php endforeach; ?>
         <tr>
             <td><b>Password Reset Request:</b></td>
             <td><?=$passwordResetCount?></td>
         </tr>
+        <!--
         <tr>
             <td><b>Password Reset vs Total:</b></td>
             <td><?=($totalId > 0) ? ($passwordResetCount/$totalId)*100 : 0?>%</td>
         </tr>
+        -->
     </table>    
 </div>
 

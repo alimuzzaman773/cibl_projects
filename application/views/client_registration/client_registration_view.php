@@ -11,7 +11,7 @@
         <div class="row">
             <div class="form-group col-sm-4 col-xs-6">
                 <label>Search</label>
-                <input type="text" class="form-control" data-ng-model="searchParams.search" placeholder="Search by skyid, esbid, name, cfid, clientid, prepaidid" />
+                <input type="text" class="form-control" data-ng-model="searchParams.search" placeholder="Search by Apps ID, User Name, Customer ID, Father or Mother Name" />
             </div>
             <div class="form-group col-sm-3 col-xs-6">
                 <label>Is Locked?</label>
@@ -48,20 +48,19 @@
         <thead>
             <tr class="bg-primary">
                 <th>SI#</th>
-                <th>SKY ID</th>
+                <th>ID</th>
                 <th>Apps ID</th>
+                <th>User ID</th>
                 <th>CIF ID</th>
-                <th>Client ID</th>
                 <th>Father's name</th>
                 <th>Mother's name</th>
-                <th>Lock/Unlock</th>
-                <th>Active/Inactive</th>
                 <th>Status</th>
                 <th>User Name</th>
                 <th>User Group</th>
                 <th>Date of Birth</th>
                 <th>Email</th>
                 <th>Gender</th>
+                <th>Branch</th>
                 <th>Checker Comment</th>
                 <th>Checker Action</th>
                 <td>Action</td>
@@ -72,18 +71,17 @@
                 <td>{{$index + 1}}</td>
                 <td>{{a.skyId}}</td>
                 <td>{{a.eblSkyId}}</td>
+                <td>{{a.userName2}}</td>
                 <td>{{a.cfId}}</td>
-                <td>{{a.clientId}}</td>
                 <td>{{a.fatherName}}</td>
                 <td>{{a.motherName}}</td>
-                <td data-ng-class="{'test' : setStatus($index), 'bg-success' : a.isLocked == 0, 'bg-danger' : a.isLocked == 1}">{{a.isLocked == 1 ? 'Locked' : 'Unlocked'}}</td>
                 <td data-ng-class="{'bg-success' : a.isActive == 1, 'bg-danger' : a.isActive == 0}">{{a.isActive == 1 ? 'Active' : 'Inactive'}}</td>
-                <td class="{{a.statusColor}}">{{a.status}}</td>                
                 <td>{{a.userName}}</td>
                 <td>{{a.userGroupName}}</td>
                 <td>{{a.dob}}</td>
                 <td>{{a.userEmail}}</td>
                 <td>{{a.gender}}</td>
+                <td>{{a.branchName}}</td>
                 <td>{{a.checkerActionComment}}</td>
                 <td>{{a.checkerAction}}</td>
                 <td>

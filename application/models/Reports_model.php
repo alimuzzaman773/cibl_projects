@@ -246,121 +246,117 @@ class Reports_model extends CI_Model {
                 ->from("priority_request_mail prm")
                 ->join("service_request sr", "sr.serviceRequestID = prm.requestApplyId", "left")
                 ->order_by("requestApplyId", "ASC");
-        
-        if($from_date != null && $to_date != null):
-            $this->db->where("sr.creationDtTm between {$this->db->escape($from_date)} AND {$this->db->escape($to_date)}", null,false);
+
+        if ($from_date != null && $to_date != null):
+            $this->db->where("sr.creationDtTm between {$this->db->escape($from_date)} AND {$this->db->escape($to_date)}", null, false);
         endif;
-        
+
         $query = $this->db->get();
         return ($query->num_rows() > 0) ? $query->result() : false;
     }
 
-    function getCardPayments($p = array())
-    {
-        $this->db->select("abp.*, au.userName",FALSE)
+    function getCardPayments($p = array()) {
+        $this->db->select("abp.*, au.userName", FALSE)
                 ->from("apps_bill_pay abp")
-                ->join("apps_users au","au.skyId = abp.skyId", "left")
+                ->join("apps_users au", "au.skyId = abp.skyId", "left")
                 ->join("biller_setup bs", "bs.billerId = abp.billerId", "left");
-        
-        if(isset($p['fromdate']) && isset($p['todate'])):
+
+        if (isset($p['fromdate']) && isset($p['todate'])):
             $this->db->group_start()
-                     ->where("date(abp.creationDtTm) between {$this->db->escape($p['fromdate'])} AND {$this->db->escape($p['todate'])}",null,false)
-                     ->group_end();
-        endif;       
-        
-        if(isset($p['billerId']) && (int)$p['billerId'] > 0):
+                    ->where("date(abp.creationDtTm) between {$this->db->escape($p['fromdate'])} AND {$this->db->escape($p['todate'])}", null, false)
+                    ->group_end();
+        endif;
+
+        if (isset($p['billerId']) && (int) $p['billerId'] > 0):
             $this->db->where('abp.billerId', $p['billerId']);
         endif;
-        
-        if(isset($p['isSuccess'])):
+
+        if (isset($p['isSuccess'])):
             $this->db->where('abp.isSuccess', $p['isSuccess']);
         endif;
-        
+
         $result = $this->db->order_by("abp.creationDtTm", "DESC")
-                           ->get();
+                ->get();
         return $result->num_rows() > 0 ? $result : false;
     }
-    
-    function getMobilePaymentByCard($p = array())
-    {
-        $this->db->select("abp.*, au.userName",FALSE)
+
+    function getMobilePaymentByCard($p = array()) {
+        $this->db->select("abp.*, au.userName", FALSE)
                 ->from("apps_bill_pay abp")
-                ->join("apps_users au","au.skyId = abp.skyId", "left")
+                ->join("apps_users au", "au.skyId = abp.skyId", "left")
                 ->join("biller_setup bs", "bs.billerId = abp.billerId", "left");
-        
-        if(isset($p['fromdate']) && isset($p['todate'])):
+
+        if (isset($p['fromdate']) && isset($p['todate'])):
             $this->db->group_start()
-                     ->where("date(abp.creationDtTm) between {$this->db->escape($p['fromdate'])} AND {$this->db->escape($p['todate'])}",null,false)
-                     ->group_end();
-        endif;       
-        
-        if(isset($p['billerId']) && (int)$p['billerId'] > 0):
+                    ->where("date(abp.creationDtTm) between {$this->db->escape($p['fromdate'])} AND {$this->db->escape($p['todate'])}", null, false)
+                    ->group_end();
+        endif;
+
+        if (isset($p['billerId']) && (int) $p['billerId'] > 0):
             $this->db->where('abp.billerId', $p['billerId']);
         endif;
-        
-        if(isset($p['isSuccess'])):
+
+        if (isset($p['isSuccess'])):
             $this->db->where('abp.isSuccess', $p['isSuccess']);
         endif;
-        
+
         $result = $this->db->order_by("abp.creationDtTm", "DESC")
-                           ->get();
+                ->get();
         return $result->num_rows() > 0 ? $result : false;
     }
-    
-    function getCallCenterUserList($p = array())
-    {
+
+    function getCallCenterUserList($p = array()) {
         $dateTime = date("Y-m-d H:i:s");
-        
-        
+
+
         $this->db->select("aum.*, au.skyId as skyIdOriginal, ra.created_on as registrationDate, ra.entityType,"
-                        . " TIMESTAMPDIFF(SECOND, CONCAT(aum.makerActionDt, ' ', aum.makerActionTm), '{$dateTime}') as activationDiff,"
-                        . " TIMESTAMPDIFF(SECOND, aum.passwordResetDtTm, '{$dateTime}') as passwordResetDiff",false);
-        
+                . " TIMESTAMPDIFF(SECOND, CONCAT(aum.makerActionDt, ' ', aum.makerActionTm), '{$dateTime}') as activationDiff,"
+                . " TIMESTAMPDIFF(SECOND, aum.passwordResetDtTm, '{$dateTime}') as passwordResetDiff", false);
+
         $this->db->from('apps_users aum')
                 ->join('apps_users au', "au.skyId = aum.skyId", "left")
                 ->join('registration_attempts ra', 'ra.skyId = aum.skyId', 'left')
                 ->order_by('aum.skyId', 'desc');
-                
-        if(isset($p['skyIdOriginal']) && $p['skyIdOriginal'] == 0){
+
+        if (isset($p['skyIdOriginal']) && $p['skyIdOriginal'] == 0) {
             $this->db->having('(skyIdOriginal IS NULL OR skyIdOriginal <= 0)', null, false);
-            if(isset($p['fromdate']) && isset($p['todate'])){
+            if (isset($p['fromdate']) && isset($p['todate'])) {
                 $this->db->where("ra.created_on between {$this->db->escape($p['fromdate'])} AND {$this->db->escape($p['todate'])}", null, false);
             }
         }
-        
-        if(isset($p['skyIdOriginal']) && (int)$p['skyIdOriginal'] > 0){
+
+        if (isset($p['skyIdOriginal']) && (int) $p['skyIdOriginal'] > 0) {
             $this->db->having('(skyIdOriginal > 0)', null, false);
-            if(isset($p['fromdate']) && isset($p['todate'])){
+            if (isset($p['fromdate']) && isset($p['todate'])) {
                 $this->db->where("ra.created_on between {$this->db->escape($p['fromdate'])} AND {$this->db->escape($p['todate'])}", null, false);
             }
         }
-        
-        if(isset($p['passwordReset']) && $p['passwordReset'] != NULL)
-        {
+
+        if (isset($p['passwordReset']) && $p['passwordReset'] != NULL) {
             $this->db->where('aum.passwordReset', $p['passwordReset']);
         }
-        
-        if(isset($p['activationPending24']) && (int)$p['activationPending24']  > 0){
-            $this->db->having("activationDiff > {$this->db->escape($p['activationPending24'])}", null,false);
+
+        if (isset($p['activationPending24']) && (int) $p['activationPending24'] > 0) {
+            $this->db->having("activationDiff > {$this->db->escape($p['activationPending24'])}", null, false);
         }
-        
-        if(isset($p['passwordResetPending24']) && (int)$p['passwordResetPending24']  > 0){            
-            $this->db->having("passwordResetDiff > {$this->db->escape($p['passwordResetPending24'])}", null,false);
+
+        if (isset($p['passwordResetPending24']) && (int) $p['passwordResetPending24'] > 0) {
+            $this->db->having("passwordResetDiff > {$this->db->escape($p['passwordResetPending24'])}", null, false);
         }
-        
-        if(isset($p['search']) && trim($p['search']) != ''):
+
+        if (isset($p['search']) && trim($p['search']) != ''):
             $this->db->group_start()
-                     ->or_like('aum.skyId', $p['search'])
-                     ->or_like('aum.eblSkyId', $p['search'])
-                     ->or_like('aum.userName', $p['search'])
-                     ->or_like('aum.cfId', $p['search'])
-                     ->or_like('aum.clientId', $p['search'])
-                     ->or_like('aum.prepaidId', $p['search'])
-                     ->or_like('aum.userEmail', $p['search'])
-                     ->or_like('aum.userMobNo1', $p['search'])
-                     ->group_end();
+                    ->or_like('aum.skyId', $p['search'])
+                    ->or_like('aum.eblSkyId', $p['search'])
+                    ->or_like('aum.userName', $p['search'])
+                    ->or_like('aum.cfId', $p['search'])
+                    ->or_like('aum.clientId', $p['search'])
+                    ->or_like('aum.prepaidId', $p['search'])
+                    ->or_like('aum.userEmail', $p['search'])
+                    ->or_like('aum.userMobNo1', $p['search'])
+                    ->group_end();
         endif;
-        
+
         if (isset($p['limit']) && (int) $p['limit'] > 0) {
             $offset = (isset($p['offset']) && $p['offset'] != null) ? (int) $p['offset'] : 0;
             $this->db->limit($p['limit'], $offset);
@@ -373,39 +369,39 @@ class Reports_model extends CI_Model {
         else:
             $sql = $this->db->get_compiled_select();
         endif;
-        
-        $query = $this->db->query($sql);
-        return $query->num_rows() > 0 ? $query : false;
-    }
-    
-    function getCustomerActivity($p = array())
-    {
-        $this->db->select("au.*, ra.created_on as registrationDate, ra.entityType,"                        
-                        . " al.actionName, al.actionCode,al.commDtTm",false);
-        
-        $this->db->from('apps_users au')
-                 ->join('registration_attempts ra', 'ra.skyId = au.skyId', 'left')
-                 ->join('app_user_activity_log al', 'al.skyId = au.skyId', 'left')
-                 ->order_by('au.skyId', 'desc');
-                
-        if(isset($p['eblSkyId']) && trim($p['eblSkyId']) != '')
-        {            
-            $this->db->where("au.eblSkyId", $p['eblSkyId']);
-        }
-        
-        if(isset($p['fromdate']) && isset($p['todate']))
-        {            
-            $this->db->where("date(al.commDtTm) between {$this->db->escape($p['fromdate'])} AND {$this->db->escape($p['todate'])}", $p['eblSkyId']);
-        }
-        
-        $sql = $this->db->get_compiled_select();
-        
+
         $query = $this->db->query($sql);
         return $query->num_rows() > 0 ? $query : false;
     }
 
-    function getFundTransferDetails($params = array()){
-        $trn_type = array('05','06','07','08');
+    function getCustomerActivity($p = array()) {
+        $this->db->select("au.*, al.commDtTm as registrationDate, ra.entityType,"
+                . " al.actionName, al.actionCode,al.commDtTm", false);
+
+        $this->db->from('apps_users au')
+                ->join('registration_attempts ra', 'ra.skyId = au.skyId', 'left')
+                ->join('app_user_activity_log al', 'al.skyId = au.skyId', 'left')
+                ->order_by('au.skyId', 'desc');
+
+        if (isset($p['eblSkyId']) && trim($p['eblSkyId']) != '') {
+            $this->db->group_start()
+                    ->where("au.eblSkyId", $p['eblSkyId'])
+                    ->or_where("au.userName2", $p['eblSkyId'])
+                    ->group_end();
+        }
+
+        if (isset($p['fromdate']) && isset($p['todate'])) {
+            $this->db->where("date(al.commDtTm) between {$this->db->escape($p['fromdate'])} AND {$this->db->escape($p['todate'])}", $p['eblSkyId']);
+        }
+        $this->db->order_by("al.commDtTm", "DESC");
+        $sql = $this->db->get_compiled_select();
+
+        $query = $this->db->query($sql);
+        return $query->num_rows() > 0 ? $query : false;
+    }
+
+    function getFundTransferDetails($params = array()) {
+        $trn_type = array('05', '06', '07', '08');
         if (isset($params['count']) && $params['count'] == true) {
             $this->db->select("COUNT(t.transferId) as total");
         } else {
@@ -441,18 +437,18 @@ class Reports_model extends CI_Model {
             $this->db->select("COUNT(p.payment_id) as total");
         } else {
             $this->db->select('p.*, bpt.fromAccNo as bpt_from_ac, bpt.amount as bpt_amount, bpt.narration as bpt_narration, bpt.isSuccess as bpt_success,'
-                . 'vt.fromAccNo as vt_from_ac, vt.amount as vt_amount, st.fromAccNo as st_from_ac, st.amount as st_amount,'
-                . 'lt.fromAccNo as lt_from_ac, lt.amount as lt_amount, o1t.fromAccNo as o1t_from_ac, o1t.amount as o1t_amount,'
-                . 'o2t.fromAccNo as o2t_from_ac, o2t.amount as o2t_amount', FALSE);
+                    . 'vt.fromAccNo as vt_from_ac, vt.amount as vt_amount, st.fromAccNo as st_from_ac, st.amount as st_amount,'
+                    . 'lt.fromAccNo as lt_from_ac, lt.amount as lt_amount, o1t.fromAccNo as o1t_from_ac, o1t.amount as o1t_amount,'
+                    . 'o2t.fromAccNo as o2t_from_ac, o2t.amount as o2t_amount', FALSE);
         }
 
         $this->db->from(TBL_SSL_BILL_PAYMENT . " p")
-            ->join(TBL_APPS_TRANSACTION . " bpt", "bpt.transferId = p.bp_transfer_id", "left")
-            ->join(TBL_APPS_TRANSACTION . " vt", "vt.transferId = p.vat_transfer_id", "left")
-            ->join(TBL_APPS_TRANSACTION . " st", "st.transferId = p.stamp_transfer_id", "left")
-            ->join(TBL_APPS_TRANSACTION . " lt", "lt.transferId = p.lpc_transfer_id", "left")
-            ->join(TBL_APPS_TRANSACTION . " o1t", "o1t.transferId = p.other1_transfer_id", "left")
-            ->join(TBL_APPS_TRANSACTION . " o2t", "o2t.transferId = p.other2_transfer_id", "left");
+                ->join(TBL_APPS_TRANSACTION . " bpt", "bpt.transferId = p.bp_transfer_id", "left")
+                ->join(TBL_APPS_TRANSACTION . " vt", "vt.transferId = p.vat_transfer_id", "left")
+                ->join(TBL_APPS_TRANSACTION . " st", "st.transferId = p.stamp_transfer_id", "left")
+                ->join(TBL_APPS_TRANSACTION . " lt", "lt.transferId = p.lpc_transfer_id", "left")
+                ->join(TBL_APPS_TRANSACTION . " o1t", "o1t.transferId = p.other1_transfer_id", "left")
+                ->join(TBL_APPS_TRANSACTION . " o2t", "o2t.transferId = p.other2_transfer_id", "left");
 //->where("p.isSuccess", "Y");
 
         if (isset($params['payment_id']) && (int) $params['payment_id']):
@@ -473,9 +469,9 @@ class Reports_model extends CI_Model {
 
         if (isset($params['search']) && trim($params['search']) != ""):
             $this->db->group_start()
-                ->or_like("bpt.fromAccNo", $params['search'], 'both')
-                ->or_like("bpt.amount", $params['search'], 'both')
-                ->group_end();
+                    ->or_like("bpt.fromAccNo", $params['search'], 'both')
+                    ->or_like("bpt.amount", $params['search'], 'both')
+                    ->group_end();
         endif;
 
         if (isset($params['fromdate']) && isset($params['todate']) && $params['fromdate'] != null && $params['todate'] != null):
@@ -494,4 +490,5 @@ class Reports_model extends CI_Model {
         }
         return false;
     }
+
 }
