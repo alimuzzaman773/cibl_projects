@@ -27,7 +27,7 @@ class Zip_partners extends CI_Controller {
 
             $crud->columns('mechant_name', 'tenor', 'merchant_web_site', 'mobile', 'uploadImage');
 
-            $crud->required_fields('type', 'parentName', 'pc_id', 'category', 'mechant_name', 'offerType');
+            $crud->required_fields('type', 'pc_id', 'category', 'mechant_name', 'offerType');
             $this->load->config('grocery_crud');
             $this->config->set_item('grocery_crud_file_upload_allow_file_types', 'gif|jpeg|jpg|png');
 
@@ -37,8 +37,8 @@ class Zip_partners extends CI_Controller {
             $time = date("Y-m-d H:i:s");
             $creatorId = $this->my_session->userId;
 
-            $crud->add_fields('type', 'parentName', 'pc_id', 'mechant_name', 'mobile', 'tenor', 'offerType', 'fromDate', 'toDate', 'remarks', 'merchant_web_site', 'uploadImage', 'banner', 'creationDtTm', 'updateDtTm');
-            $crud->edit_fields('type', 'parentName', 'pc_id', 'mechant_name', 'mobile', 'tenor', 'offerType', 'fromDate', 'toDate', 'remarks', 'merchant_web_site', 'uploadImage', 'banner', 'updateDtTm');
+            $crud->add_fields('type', 'pc_id', 'mechant_name', 'mobile', 'tenor', 'offerType', 'fromDate', 'toDate', 'remarks', 'merchant_web_site', 'uploadImage', 'banner', 'creationDtTm', 'updateDtTm');
+            $crud->edit_fields('type', 'pc_id', 'mechant_name', 'mobile', 'tenor', 'offerType', 'fromDate', 'toDate', 'remarks', 'merchant_web_site', 'uploadImage', 'banner', 'updateDtTm');
 
             $crud->change_field_type('creationDtTm', 'hidden', $time);
             $crud->change_field_type('updateDtTm', 'hidden', $time);
@@ -46,8 +46,7 @@ class Zip_partners extends CI_Controller {
             $crud->change_field_type('updatedBy', 'hidden', $creatorId);
 
             $crud->display_as('type', 'Type')
-                    ->display_as('parentName', 'Category')
-                    ->display_as('pc_id', 'Sub-Category')
+                    ->display_as('pc_id', 'Category')
                     ->display_as('mechant_name', 'Mechant Name')
                     ->display_as('tenor', 'Tenor')
                     ->display_as('offerType', 'Offer Type (Date range must be given in case of limited offer)')
@@ -66,7 +65,7 @@ class Zip_partners extends CI_Controller {
 
             //$typeList = array('product' => 'Products', 'partner' => 'EMI Partners', 'benefit' => 'Discount Partners');
             $crud->change_field_type('type', 'hidden', 'partner');
-            $crud->change_field_type('parentName', 'dropdown', $categoryList);
+            //$crud->change_field_type('parentName', 'dropdown', $categoryList);
             $crud->change_field_type('pc_id', 'dropdown', $categoryList);
 
             $this->db->select("*")
