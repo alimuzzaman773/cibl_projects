@@ -19,6 +19,7 @@ class Product_request_process extends CI_Controller {
         $this->load->view('site_template.php', $data);
     }
 
+
     function get_requests_ajax() {
         $this->my_session->authorize("canViewProductRequest");
         $params['limit'] = (int) $this->input->get("limit", true);
@@ -28,6 +29,8 @@ class Product_request_process extends CI_Controller {
         $params['to_date'] = $this->input->get("to_date", true);
         $params['search'] = $this->input->get("search", true);
         $params['status'] = $this->input->get("status", true);
+        $params['product_name'] = $this->input->get("product_name", true);
+        $params['get_product_names'] = $this->input->get("get_product_names", true);
         /*$params['customer_email'] = $this->input->get("customer_email", true);
         $params['customer_mobile'] = $this->input->get("customer_mobile", true);*/
 
@@ -50,7 +53,6 @@ class Product_request_process extends CI_Controller {
         }
         my_json_output($data);
     }
-
     /*
       public function getRequest() {
       $data["fromDate"] = $this->input->get("fromDate");

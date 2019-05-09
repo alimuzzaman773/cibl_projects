@@ -7,8 +7,10 @@ ProductModuleApp.controller("ProductController", ["$scope", "$http", function ($
         $scope.totalCount = 0;
         $scope.per_page = 10;
         $scope.currentPageNumber = 1;
+        $scope.productNames = [];
 
         $scope.searchParams = {
+            product_name: "",
             from_date: "",
             to_date: "",
             search: "",
@@ -25,6 +27,7 @@ ProductModuleApp.controller("ProductController", ["$scope", "$http", function ($
 
         $scope.resetSearch = function () {
             $scope.searchParams = {
+                product_name: "",
                 from_date: "",
                 to_date: "",
                 search: "",
@@ -34,6 +37,17 @@ ProductModuleApp.controller("ProductController", ["$scope", "$http", function ($
             $scope.getResultsPage(1);
             return false;
         };
+
+        $scope.getProductNames = function() {
+            $http({
+                method: 'get',
+                url: app.baseUrl + "product_request_process/get_requests_ajax",
+                params: {get_product_names: 'true'}
+            }).then(function(response){
+                $scope.productNames = response.data.product_list;
+                console.log($scope.productNames);
+            })
+        }
 
         $scope.getResultsPage = function (pageNumber) {
             var $params = {
@@ -52,6 +66,10 @@ ProductModuleApp.controller("ProductController", ["$scope", "$http", function ($
 
             if($scope.searchParams.search !== null && $.trim($scope.searchParams.search) !== ""){
                 $params.search = $scope.searchParams.search;
+            }
+
+            if($scope.searchParams.product_name !== null && $.trim($scope.searchParams.product_name) !== ""){
+                $params.product_name = $scope.searchParams.product_name;
             }
           
             if ($scope.searchParams.status !== null
@@ -97,6 +115,7 @@ ProductModuleApp.controller("ProductController", ["$scope", "$http", function ($
         };
 
         $scope.init = function () {
+            $scope.getProductNames();
             $scope.getResultsPage(1);
         };
 
