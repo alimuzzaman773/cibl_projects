@@ -342,7 +342,7 @@ class Call_center_model extends CI_Model {
             $this->db->limit($p['limit'], $offset);
         }
 
-        $query = $this->db->order_by('au.skyId', 'desc')
+        $query = $this->db->order_by('au.id', 'desc')
                 ->get();
 
         return $query->num_rows() > 0 ? $query : false;
