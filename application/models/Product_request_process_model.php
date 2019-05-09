@@ -17,6 +17,8 @@ class Product_request_process_model extends CI_Model {
 
         if (isset($params['count']) && $params['count'] == true) {
             $this->db->select("COUNT(applyId) as total");
+        } elseif (isset($params['get_product_names']) && trim($params['get_product_names']) != "") {
+            $this->db->select('productName', FALSE);
         } else {
             $this->db->select('*', FALSE);
         }
@@ -31,12 +33,16 @@ class Product_request_process_model extends CI_Model {
         if(isset($params['search']) && trim($params['search']) != "") {
           $this->db->group_start()
           ->or_like("product_apply_request.name", $params['search'],'both')
-          ->or_like("product_apply_request.productName", $params['search'], 'both')
           ->or_like("product_apply_request.email", $params['search'], 'both')
           ->or_like("product_apply_request.contactNo", $params['search'], 'both')
           ->group_end();
         }
-        
+
+        if (isset($params['product_name']) && trim($params['product_name']) != "") {
+            $this->db->like('productName', $params["product_name"], "both");
+        }
+
+
         if (isset($params['status'])) {
             if ((int)$params['status'] == 1) {
                 $this->db->where('product_apply_request.status =', $params['status']);
@@ -53,6 +59,10 @@ class Product_request_process_model extends CI_Model {
         if (isset($params['customer_mobile']) && trim($params['customer_mobile']) != "") {
             $this->db->like('contactNo', $params["customer_mobile"], "both");
         }*/
+        if(isset($params['get_product_names']) && trim($params['get_product_names']) != "") {
+            $this->db->where('product_apply_request.productName !=', "");
+            $this->db->group_by('product_apply_request.productName');            
+        }
 
         $this->db->order_by("applyId", "desc");
 

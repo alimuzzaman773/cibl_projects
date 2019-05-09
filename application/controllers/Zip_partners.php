@@ -58,7 +58,7 @@ class Zip_partners extends CI_Controller {
                     ->display_as('uploadImage', 'Upload Image');
 
             $crud->set_field_upload('uploadImage', 'assets/uploads/files');
-            $crud->callback_after_upload(array($this, 'zip_callback_after_upload'));
+            //$crud->callback_after_upload(array($this, 'zip_callback_after_upload'));
 
             $categoryList = array(
                 NULL => ''
