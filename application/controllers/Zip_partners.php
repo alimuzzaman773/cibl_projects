@@ -25,7 +25,7 @@ class Zip_partners extends CI_Controller {
             $crud->set_table(TBL_ZIP_PARTNERS);
             $crud->order_by('zipId', 'desc');
 
-            $crud->columns('mechant_name', 'tenor', 'merchant_web_site', 'mobile', 'uploadImage');
+            $crud->columns('mechant_name', 'tenor', 'merchant_web_site', 'mobile', 'uploadImage', 'isActive');
 
             $crud->required_fields('type', 'pc_id', 'category', 'mechant_name', 'offerType');
             $this->load->config('grocery_crud');
@@ -37,8 +37,8 @@ class Zip_partners extends CI_Controller {
             $time = date("Y-m-d H:i:s");
             $creatorId = $this->my_session->userId;
 
-            $crud->add_fields('type', 'pc_id', 'mechant_name', 'mobile', 'tenor', 'offerType', 'fromDate', 'toDate', 'remarks', 'merchant_web_site', 'uploadImage', 'banner', 'creationDtTm', 'updateDtTm');
-            $crud->edit_fields('type', 'pc_id', 'mechant_name', 'mobile', 'tenor', 'offerType', 'fromDate', 'toDate', 'remarks', 'merchant_web_site', 'uploadImage', 'banner', 'updateDtTm');
+            $crud->add_fields('type', 'pc_id', 'mechant_name', 'mobile', 'tenor', 'offerType', 'fromDate', 'toDate', 'remarks', 'merchant_web_site', 'uploadImage', 'banner', 'isActive', 'creationDtTm', 'updateDtTm');
+            $crud->edit_fields('type', 'pc_id', 'mechant_name', 'mobile', 'tenor', 'offerType', 'fromDate', 'toDate', 'remarks', 'merchant_web_site', 'uploadImage', 'banner', 'isActive', 'updateDtTm');
 
             $crud->change_field_type('creationDtTm', 'hidden', $time);
             $crud->change_field_type('updateDtTm', 'hidden', $time);
@@ -54,7 +54,8 @@ class Zip_partners extends CI_Controller {
                     ->display_as('toDate', 'To Date')
                     ->display_as('remarks', 'Remarks')
                     ->display_as('merchant_web_site', 'Merchant Web Site')
-                    ->display_as('uploadImage', 'Upload Image');
+                    ->display_as('uploadImage', 'Upload Image')
+                    ->display_as('isActive', 'Is Active');
 
             $crud->set_field_upload('uploadImage', 'assets/uploads/files');
             //$crud->callback_after_upload(array($this, 'zip_callback_after_upload'));
