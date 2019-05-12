@@ -26,15 +26,15 @@ class Discount_partners extends CI_Controller {
 
             $this->config->set_item('grocery_crud_file_upload_allow_file_types', 'gif|jpeg|jpg|png');
 
-            $crud->columns('partner_name', 'details', 'address', 'url', 'mobileno', 'DiscountUploadImage');
+            $crud->columns('partner_name', 'details', 'address', 'url', 'mobileno', 'DiscountUploadImage', 'isActive');
 
             $crud->field_type('offerType', 'dropdown', array('0' => 'Unlimited', '1' => 'Limited'));
 
             $time = date("Y-m-d H:i:s");
             $creatorId = $this->my_session->userId;
 
-            $crud->add_fields('type', 'pc_id', 'partner_name', 'offerType', 'fromDate', 'toDate', 'details', 'discountPercentage', 'address', 'url', 'mobileno', 'DiscountUploadImage', 'creationDtTm', 'updateDtTm');
-            $crud->edit_fields('type', 'pc_id', 'partner_name', 'offerType', 'fromDate', 'toDate', 'details', 'discountPercentage', 'address', 'url', 'mobileno', 'DiscountUploadImage', 'updateDtTm');
+            $crud->add_fields('type', 'pc_id', 'partner_name', 'offerType', 'fromDate', 'toDate', 'details', 'discountPercentage', 'address', 'url', 'mobileno', 'DiscountUploadImage', 'isActive', 'creationDtTm', 'updateDtTm');
+            $crud->edit_fields('type', 'pc_id', 'partner_name', 'offerType', 'fromDate', 'toDate', 'details', 'discountPercentage', 'address', 'url', 'mobileno', 'DiscountUploadImage', 'isActive', 'updateDtTm');
 
             $crud->change_field_type('creationDtTm', 'hidden', $time);
             $crud->change_field_type('updateDtTm', 'hidden', $time);
@@ -53,7 +53,8 @@ class Discount_partners extends CI_Controller {
                     ->display_as('address', 'Location/Address')
                     ->display_as('url', 'Web site')
                     ->display_as('mobileno', 'Mobile No')
-                    ->display_as('DiscountUploadImage', 'Upload Image');
+                    ->display_as('DiscountUploadImage', 'Upload Image')
+                    ->display_as('isActive', 'Is Active');
 
             //$crud->callback_after_upload(array($this, 'discount_callback_after_upload'));
             $crud->set_relation('category', 'partner_type_setup', 'discountPartners');
