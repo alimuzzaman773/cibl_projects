@@ -92,6 +92,13 @@
                                                 <li><a href="<?= base_url() . 'news_events/index/add' ?>">Add News And Events</a></li>
                                             </ul>
                                         <?php endif; ?>
+                                        <?php if (ci_check_permission("canViewFilesMenu")): ?>
+                                            <ul class="col-md-2 col-xs-12 list-unstyled">
+                                                <li><p><b>Product & Services Setup</b></p></li>
+                                                <li><a href="<?= base_url() . 'files/index' ?>">Files</a></li>
+                                                <li><a href="<?= base_url() . 'files/index/add' ?>">Add Files</a></li>
+                                            </ul>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                                 <div class="divider"></div>

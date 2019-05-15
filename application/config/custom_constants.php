@@ -48,6 +48,7 @@ define("TBL_APP_USERS_GROUP", DB_PREFIX . "apps_users_group");
 define("TBL_BO_ACTIVITY_LOG", DB_PREFIX . "bo_activity_log");
 define("TBL_SSL_BILL_PAYMENT", DB_PREFIX . "ssl_bill_payment");
 define('TBL_APPS_TRANSACTION', DB_PREFIX . "apps_transaction");
+define("TBL_FILES", DB_PREFIX . "files");
 
 
 // All Constant Variables:
