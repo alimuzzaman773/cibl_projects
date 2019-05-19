@@ -234,16 +234,16 @@ CallCenterModuleApp.controller('CallCenterController', ['$scope', '$http', '$rou
         };
 
         $scope.approveStatusMessage = function (userInfo) {
- 
-            var msg = "New Request";
-            if (userInfo.skyIdOriginal > 0) {
-                msg = "Approved";
-            }
+
+            var msg = "Approved";
             if (userInfo.makerActionBy > 0 && userInfo.checkerActionBy <= 0) {
-               msg="Waiting for approval";
+                msg = "Waiting for approval";
             }
             if (userInfo.isRejected > 0) {
-               msg="Rejected";
+                msg = "Rejected";
+            }
+            if (userInfo.isRejected === '0' && userInfo.isPublished === '1' && userInfo.passwordReset === '1') {
+                msg = "Password Reset Request";
             }
             return msg;
         };
@@ -274,9 +274,8 @@ CallCenterModuleApp.controller('CallCenterController', ['$scope', '$http', '$rou
                         }
 
                         $scope.pin_sending_url = null;
-                        alert("Password pin has been sent");
-                        window.location.href = app.baseUrl + "call_center/#/user_list/";
-
+                        alert("Successfully PIN sent to user");
+                        window.location.href = app.baseUrl + "call_center";
                     })
                     .error(function () {
                         app.hideModal();

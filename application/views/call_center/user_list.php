@@ -149,18 +149,19 @@
                                             <i class="glyphicon glyphicon-flash"></i> Details
                                         </a>
                                     </li>
-                                    <li data-ng-show="false" data-ng-if="i.isRejected != '1' && i.isPublished == '1'">
+									<!--
+                                    <li data-ng-if="i.isRejected != '1' && i.isPublished == '1'">
                                         <a style="cursor: pointer" ng-click="sendPasswordResetPin(i.skyId);">
                                             <i class="glyphicon glyphicon-send"></i> Send Password Reset Pin
                                         </a>
                                     </li>
-                                    <!--
+									-->
                                     <li data-ng-if="i.isRejected != '1' && i.passwordReset == '1' && i.isPublished == '1'">
                                         <a style="cursor: pointer" ng-click="showResetModal(i.skyId, 'pin_send');">
                                             <i class="glyphicon glyphicon-send"></i> Send Password Reset Pin
                                         </a>
                                     </li>
-                                    -->
+                                    
                                     <!--
                                     <li data-ng-if="i.isPublished == '0'">
                                         <a style="cursor: pointer" ng-click="showResetModal(i.skyId, 'pin_resend');">
