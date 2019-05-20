@@ -85,6 +85,11 @@
                                                 <li><a href="<?= base_url() . 'discount_partners/index/add' ?>">Add Discount Partners</a></li>
                                             </ul>
                                         <?php endif; ?>
+                                    </div>
+                                </div>
+                                <div class="divider"></div>
+                                <div class="row">                                    
+                                    <div class="clearfix mb">
                                         <?php if (ci_check_permission("canViewNewsAndEventsSetupMenu")): ?>
                                             <ul class="col-md-2 col-xs-12 list-unstyled">
                                                 <li><p><b>News And Events Setup</b></p></li>
@@ -94,16 +99,11 @@
                                         <?php endif; ?>
                                         <?php if (ci_check_permission("canViewFilesMenu")): ?>
                                             <ul class="col-md-2 col-xs-12 list-unstyled">
-                                                <li><p><b>Product & Services Setup</b></p></li>
-                                                <li><a href="<?= base_url() . 'files/index' ?>">Files</a></li>
+                                                <li><p><b>Files Upload</b></p></li>
+                                                <li><a href="<?= base_url() . 'files/index' ?>">File List</a></li>
                                                 <li><a href="<?= base_url() . 'files/index/add' ?>">Add Files</a></li>
                                             </ul>
                                         <?php endif; ?>
-                                    </div>
-                                </div>
-                                <div class="divider"></div>
-                                <div class="row">                                    
-                                    <div class="clearfix mb">
                                         <?php if (ci_check_permission("canViewNotificationSetupMenu")): ?>
                                             <ul class="col-md-2 col-xs-12 list-unstyled">
                                                 <li><p><b>Notification</b></p></li>
