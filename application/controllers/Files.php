@@ -24,7 +24,7 @@ class Files extends CI_Controller {
 
             $crud->required_fields('name', 'fileName');
 
-            $crud->columns('name', 'fileName' );
+            $crud->columns('name', 'fileName');
 
             $crud->set_field_upload('fileName', 'assets/uploads/files');
 
@@ -69,9 +69,9 @@ class Files extends CI_Controller {
         }
     }
 
-    public function _callback_file_name($value, $row){
-        $path = base_url().'assets/uploads/files/'.$value;
+    public function _callback_file_name($value, $row) {
+        $path = LIVE_URL . 'assets/uploads/files/' . $value;
         return "<a href='$path' target='_blank'>$path</a>";
     }
+
 }
-?>
