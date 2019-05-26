@@ -25,7 +25,7 @@ class Zip_partners extends CI_Controller {
             $crud->set_table(TBL_ZIP_PARTNERS);
             $crud->order_by('zipId', 'desc');
 
-            $crud->columns('mechant_name', 'tenor', 'merchant_web_site', 'mobile', 'uploadImage', 'isActive');
+            $crud->columns('mechant_name', 'tenor', 'address', 'merchant_web_site', 'mobile', 'uploadImage', 'isActive');
 
             $crud->required_fields('type', 'pc_id', 'category', 'mechant_name', 'offerType');
             $this->load->config('grocery_crud');
@@ -37,8 +37,8 @@ class Zip_partners extends CI_Controller {
             $time = date("Y-m-d H:i:s");
             $creatorId = $this->my_session->userId;
 
-            $crud->add_fields('type', 'pc_id', 'mechant_name', 'mobile', 'tenor', 'offerType', 'fromDate', 'toDate', 'remarks', 'merchant_web_site', 'uploadImage', 'banner', 'isActive', 'creationDtTm', 'updateDtTm');
-            $crud->edit_fields('type', 'pc_id', 'mechant_name', 'mobile', 'tenor', 'offerType', 'fromDate', 'toDate', 'remarks', 'merchant_web_site', 'uploadImage', 'banner', 'isActive', 'updateDtTm');
+            $crud->add_fields('type', 'pc_id', 'mechant_name', 'mobile', 'tenor', 'offerType', 'fromDate', 'toDate', 'remarks', 'merchant_web_site', 'address', 'uploadImage', 'isActive', 'creationDtTm', 'updateDtTm');
+            $crud->edit_fields('type', 'pc_id', 'mechant_name', 'mobile', 'tenor', 'offerType', 'fromDate', 'toDate', 'remarks', 'merchant_web_site', 'address', 'uploadImage', 'isActive', 'updateDtTm');
 
             $crud->change_field_type('creationDtTm', 'hidden', $time);
             $crud->change_field_type('updateDtTm', 'hidden', $time);
