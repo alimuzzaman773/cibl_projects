@@ -190,14 +190,14 @@ class Product_setup extends CI_Controller {
 
             $crud->callback_add_field('type', function () {
                 $idata = array();
-                $idata['type'] = array('product' => 'Products', 'partner' => 'EMI Partners', 'benefit' => 'Benefit Partners');
+                $idata['type'] = array('product' => 'Products', 'partner' => 'EMI Partners', 'benefit' => 'Discount Partners');
                 $idata['value'] = "";
                 return $this->load->view("product_category/type_dd.php", $idata, true);
             });
 
             $crud->callback_edit_field('type', function ($value, $primary_key) {
                 $idata = array();
-                $idata['type'] = array('product' => 'Products', 'partner' => 'EMI Partners', 'benefit' => 'Benefit Partners');
+                $idata['type'] = array('product' => 'Products', 'partner' => 'EMI Partners', 'benefit' => 'Discount Partners');
                 $idata['value'] = $value;
                 return $this->load->view("product_category/type_dd.php", $idata, true);
             });
