@@ -10,6 +10,9 @@ $this->load->view("ajax_report/render_report_parameters.php", $params);
                 <th>Transaction Type</th>
                 <th>From Account</th>
                 <th>To Account</th>
+                <th>Routing Number</th>
+                <th>Reference Number</th>
+                <th>File Name</th>
                 <th>Amount</th>
                 <th>Status</th>
             </tr>
@@ -18,13 +21,16 @@ $this->load->view("ajax_report/render_report_parameters.php", $params);
             <?php
             $sl = 1;
             foreach ($result as $i) {
-            ?>
+                ?>
                 <tr>
                     <td><?= ($sl++) ?></td>
                     <td><?= $i->creationDtTm ?></td>
                     <td><?= get_trn_type($i->trnType) ?></td>
                     <td><?= $i->fromAccNo ?></td>
-                    <td><?= $i->toAccNo?></td>
+                    <td><?= $i->toAccNo ?></td>
+                    <td><?= $i->rcvrRtNo ?></td>
+                    <td><?= $i->crossRefNo > 0 ? $i->crossRefNo : '' ?></td>
+                    <td><?= $i->fileName ?></td>
                     <td align="right"><?= $i->amount ?></td>
                     <td><?= ($i->isSuccess == "Y") ? "Success" : "Failed" ?></td>
                 </tr>

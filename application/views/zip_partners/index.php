@@ -36,7 +36,7 @@
             //console.log($optionHtml);
             $("#field-pc_id").html($optionHtml);
             $("#field-pc_id").val(app.productInfo.pc_id);
-            
+
 //            $("#field-parentName").html($optionHtml);
 //            $("#field-parentName").val(app.productInfo.parentName);
 
@@ -60,5 +60,19 @@
 //                $("#field-pc_id").val(app.productInfo.pc_id);
 //            });
         }
+
+        $('#field-offerType').change(function () {
+            var val = $('#field-offerType option:selected').val();
+
+            //console.log(val);
+
+            if (val == "1") {
+                $('#fromDate_field_box').show();
+                $('#toDate_field_box').show();
+            } else {
+                $('#fromDate_field_box').hide();
+                $('#toDate_field_box').hide();
+            }
+        });
     });
 </script>

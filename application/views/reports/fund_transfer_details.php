@@ -35,6 +35,20 @@
             </td>
         </tr>
         <tr>
+            <td><b>Transaction Type</b></td>
+            <td>
+                <div class="col-md-3">
+                    <select class="form-control input-sm" name="trn_type">
+                        <option value="">Show All</option>
+                        <option value="05">Account To Card Fund Transfer</option>
+                        <option value="06">Own Account Fund Transfer</option>
+                        <option value="07">Within Bank Fund Transfer</option>
+                        <option value="08">Other Bank Fund Transfer</option>
+                    </select>
+                </div>
+            </td>
+        </tr>
+        <tr>
             <td></td>
             <td>
                 <div class="col-sm-3 col-xs-12">

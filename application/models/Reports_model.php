@@ -416,6 +416,10 @@ class Reports_model extends CI_Model {
             $this->db->where("t.isSuccess", $params['status']);
         endif;
 
+        if (isset($params['trn_type']) && trim($params['trn_type']) != ""):
+            $this->db->where("t.trnType", $params['trn_type']);
+        endif;
+
         if (isset($params['fromdate']) && isset($params['todate']) && $params['fromdate'] != null && $params['todate'] != null):
             $this->db->where("(DATE(t.creationDtTm) between " . $this->db->escape($params['fromdate']) . " AND " . $this->db->escape($params['todate']) . ")");
         endif;
