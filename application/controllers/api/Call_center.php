@@ -37,8 +37,8 @@ class Call_center extends CI_Controller {
         if ($result):
             $json['user_list'] = $result->result();
         endif;
-        
-        $json['branch_list']=array();
+
+        $json['branch_list'] = array();
         $branch = $this->call_center_model->getAllBranch();
         $json['branch_list'] = $branch->result();
         //$json['q'] = $this->db->last_query();
@@ -132,7 +132,7 @@ class Call_center extends CI_Controller {
         if ($otp_channel == "sms"):
             $smsData = array(
                 "mobileNo" => "88" . ltrim($userInfo->userMobNo1, "88"),
-                "message" => "Your one time account activation pin is {$pin}"
+                "message" => "Your one time account activation pin is {$pin} for" . $userInfo->eblSkyId
             );
 
             $this->load->library("sms_service");
@@ -541,11 +541,10 @@ class Call_center extends CI_Controller {
         }
     }
 
-    function reject_user() 
-    {
-        $skyId = $this->input->post("skyId",true);
-        $remarks = $this->input->post("remarks",true);
-        
+    function reject_user() {
+        $skyId = $this->input->post("skyId", true);
+        $remarks = $this->input->post("remarks", true);
+
         $this->load->model(array('mailer_model', 'call_center_model'));
 
         $getUserInfo = $this->call_center_model->getUserInfo((int) $skyId);
@@ -584,10 +583,8 @@ class Call_center extends CI_Controller {
             $json = array(
                 "success" => true
             );
-            my_json_output($json);    
-        }
-        catch(Exception $e)
-        {
+            my_json_output($json);
+        } catch (Exception $e) {
             $json = array(
                 'success' => false,
                 'msg' => $e->getMessage()
