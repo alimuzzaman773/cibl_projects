@@ -41,13 +41,13 @@ class Advertisement extends CI_Controller {
 
             $crud->display_as('advertisementName', 'Advertisement Name')
                     ->display_as('advertisementCode', 'Advertisement Code')
-                    ->display_as('addvertisementImage', 'Advertisement Image(720 X 90)');
+                    ->display_as('addvertisementImage', 'Advertisement Image');
 
             //$crud->callback_after_upload(array($this, 'addvertisementImage_callback_after_upload'));
             $crud->set_field_upload('addvertisementImage', 'assets/uploads/files');
 
-            $crud->callback_after_insert(array($this, 'imageTransfer'));
-            $crud->callback_after_update(array($this, 'imageTransfer'));
+            //$crud->callback_after_insert(array($this, 'imageTransfer'));
+            //$crud->callback_after_update(array($this, 'imageTransfer'));
             
             $crud->unset_print();
 
