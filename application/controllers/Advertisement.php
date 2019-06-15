@@ -23,6 +23,15 @@ class Advertisement extends CI_Controller {
             $crud->set_table('advertisement');
 
             $crud->required_fields('advertisementName', 'addvertisementImage', 'advertisementCode');
+
+            if ((int) $this->uri->segment(4) > 0):
+                $crud->set_rules('advertisementName', 'Advertisement Name', 'trim|required');
+                $crud->set_rules('advertisementCode', 'Advertisement Code', 'trim|required');
+            else:
+                $crud->set_rules("advertisementName", "Advertisement Name", "trim|required|is_unique[advertisement.advertisementName]");
+                $crud->set_rules("advertisementCode", "Advertisement Code", "trim|required|is_unique[advertisement.advertisementCode]");
+            endif;
+
             $this->load->config('grocery_crud');
             $this->config->set_item('grocery_crud_file_upload_allow_file_types', 'gif|jpeg|jpg|png');
 
@@ -48,17 +57,17 @@ class Advertisement extends CI_Controller {
 
             //$crud->callback_after_insert(array($this, 'imageTransfer'));
             //$crud->callback_after_update(array($this, 'imageTransfer'));
-            
+
             $crud->unset_print();
 
             if (!ci_check_permission("canAddAdvertisement")):
                 $crud->unset_add();
             endif;
-            
+
             if (!ci_check_permission("canEditAdvertisement")):
                 $crud->unset_edit();
             endif;
-            
+
             if (!ci_check_permission("canDeleteAdvertisement")):
                 $crud->unset_delete();
             endif;
