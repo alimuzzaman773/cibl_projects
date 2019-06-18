@@ -7,12 +7,12 @@ class Sms_service {
         Requests::register_autoloader();
 
         $params = array(
-            "user" => "pblib",
-            "pass" => "PBLib5m5",
+            "user" => "PBLIBank",
+            "pass" => "20@7U72i",
             "sms[0][0]" => ltrim($smsData['mobileNo']),
             "sms[0][1]" => $smsData['message'],
             "sms[0][2]" => "123456",
-            "sid" => "PBLIB"
+            "sid" => "PBLInternetBank"
         );
 
         try {
