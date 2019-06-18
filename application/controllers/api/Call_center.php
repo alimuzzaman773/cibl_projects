@@ -209,7 +209,7 @@ class Call_center extends CI_Controller {
         else:
             $smsData = array(
                 "mobileNo" => "88" . ltrim($userInfo->userMobNo1, "88"),
-                "message" => "Welcome to the bank at your hand. Your Premier+ user has been created. Your User ID is {$userInfo->eblSkyId} and Temporary Password is {$pin}. You can change your User ID to your choice and this change can be done only once."
+                "message" => "Welcome to the bank at your hand. Your pmoney Smart Banking user has been created. Your User ID is {$userInfo->eblSkyId} and Temporary Password is {$pin}. You can change your User ID to your choice and this change can be done only once."
             );
 
             $this->load->library("sms_service");
