@@ -27,7 +27,7 @@
 
 <div class="col-md-12 col-sm-12 col-xs-12">
     <div class="row">
-        <div class="form-group col-sm-2 col-xs-2">
+        <div class="form-group col-sm-4 col-xs-4">
             <label>Search</label>
             <input type="text" class="form-control" data-ng-model="searchParams.search" placeholder="Search by Apps ID, User Name, Customer ID, Father or Mother Name" title="Search by Apps ID, User Name, Customer ID, Father or Mother Name" />
         </div>
@@ -37,6 +37,7 @@
                 <option ng-repeat="branch in branch_list" value="{{branch.branchCode}}">{{branch.ATMName}}</option>
             </select>
         </div>
+        <!--
         <div class="form-group col-sm-2 col-xs-2">
             <label>Status</label>
             <select class="form-control" data-ng-model="searchParams.status">
@@ -46,6 +47,7 @@
                 <option value="3">Waiting for Approval</option>
             </select>
         </div>
+        -->
         <div class="form-group col-sm-2 col-xs-2">
             <label>From Date</label>
             <input type="text" readonly="true" class="form-control" data-ng-model="searchParams.from_date" id="fromDate" />                
@@ -136,7 +138,7 @@
                         -->
                         <td>{{i.isRejected == 1 ? 'Rejected' : ''}}</td>
                         <td ng-class="{'bg-success' : (i.skyIdOriginal > 0), 'bg-primary' : (i.skyIdOriginal <= 0 || i.skyIdOriginal == null)}">
-                           {{approveStatusMessage(i)}}
+                            {{i.skyIdOriginal > 0 ? 'Activated' : 'Waiting Activation'}}
                         </td>
                         <td>
                             <div class="dropdown pull-right">
