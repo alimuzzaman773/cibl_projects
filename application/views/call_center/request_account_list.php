@@ -34,9 +34,9 @@
                         <td>{{(per_page * (currentPageNumber - 1)) + ($index + 1)}}</td>
                         <td>{{i.eblSkyId}}</td>
                         <td>{{i.cfId}}</td>
+                        <td>{{i.userName}}</td>
                         <td>{{i.fatherName}}</td>
                         <td>{{i.motherName}}</td>
-                        <td>{{i.userName}}</td>
                         <td>{{i.userEmail}}</td>
                         <td>{{i.userMobNo1}}</td>
                         <td>{{i.gender}}</td>
