@@ -55,6 +55,7 @@
                 <th>Father's name</th>
                 <th>Mother's name</th>
                 <th>Status</th>
+                <th>IsLock</th>
                 <th>User Name</th>
                 <th>User Group</th>
                 <th>Date of Birth</th>
@@ -76,6 +77,7 @@
                 <td>{{a.fatherName}}</td>
                 <td>{{a.motherName}}</td>
                 <td data-ng-class="{'bg-success' : a.isActive == 1, 'bg-danger' : a.isActive == 0}">{{a.isActive == 1 ? 'Active' : 'Inactive'}}</td>
+                <td data-ng-class="{'bg-success' : a.isLocked == 0, 'bg-danger' : a.isLocked == 1}">{{a.isLocked == 1 ? 'Locked' : 'Unlocked'}}</td>
                 <td>{{a.userName}}</td>
                 <td>{{a.userGroupName}}</td>
                 <td>{{a.dob}}</td>
