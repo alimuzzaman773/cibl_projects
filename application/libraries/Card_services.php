@@ -20,7 +20,8 @@ class Card_services {
         );
 
         $requestInfo = array(
-            "file" => "card_details"
+            "file" => "card_details",
+            "method" => "CardDetails"
         );
 
         $result = $this->pushToCms($requestInfo, $requestData);
@@ -95,16 +96,17 @@ class Card_services {
             "account_no" => $account["Number"],
             "product_name" => $card["ProductName"],
             "expiry_date" => $card["ExpDate"],
+            "card_status" => $card["StGeneral"],
             "activated" => $card["Activated"],
             "card_type" => $card["CardType"],
             "product_code" => $card["ProductShortCode"],
             "created_date" => $card["CreateDate"],
             "name" => $info["Title"] . " " . $info["LastName"],
-            "gender" => $info["Gender"],
+            "gender" => isset($info["Gender"]) ? $info["Gender"] : "",
             "marital_status" => $info["MaritalStatus"],
-            "address" => $address["Address1"],
-            "city" => $address["City"],
-            "currency" => $address["Country"],
+            "address" => isset($address["Address1"]) ? $address["Address1"] : "",
+            "city" => isset($address["City"]) ? $address["City"] : "",
+            "currency" => isset($address["Country"]) ? $address["Country"] : "",
             "mobile_no" => isset($address["Mobile"]) ? $address["Mobile"] : "",
             "email" => isset($address["Email"]) ? $address["Email"] : ""
         );
@@ -130,21 +132,14 @@ class Card_services {
         );
 
         $requestInfo = array(
-            "file" => "card_balance"
+            "file" => "card_balance",
+            "method" => "CardBalance"
         );
 
         $result = $this->pushToCms($requestInfo, $requestData);
         if (!$result["success"]) {
             return $result;
         }
-
-        if (empty($result["data"]["EntityInquiryResponse"]["EntityInquiryResult"]["Customer"])):
-            return array(
-                "success" => false,
-                "log" => $result,
-                "msg" => "There are no card found"
-            );
-        endif;
 
         $res = $result["data"]["EntityInquiryResponse"]["EntityInquiryResult"];
         if (isset($res["Result"]["Code"]) && $res["Result"]["Code"] != '0') {
@@ -169,6 +164,7 @@ class Card_services {
             );
         }
         $account = $customer["Account"];
+
 
         if (!isset($account["Card"])) {
             return array(
@@ -225,6 +221,7 @@ class Card_services {
             "last_transaction" => isset($card["LastTrxnDate"]) ? $card["LastTrxnDate"] : "",
             "next_statment_date" => isset($card["NextStatementDate"]) ? $card["NextStatementDate"] : "",
             "expiry_date" => $cardInfo["Data"]["ExpDate"],
+            "card_status" => $cardInfo["Data"]["StGeneral"],
             "activated" => $cardInfo["Data"]["Activated"],
             "card_type" => $cardInfo["Data"]["CardType"],
             "product_code" => $card["ProductShortCode"],
@@ -233,8 +230,8 @@ class Card_services {
             "due_date" => isset($statement["DueDate"]) ? $statement["DueDate"] : "",
             "mr_point" => $statement["ClosingRewardPoints"],
             "name" => $info["Title"] . " " . $info["LastName"],
-            "gender" => $info["Gender"],
-            "marital_status" => $info["MaritalStatus"],
+            "gender" => isset($info["Gender"]) ? $info["Gender"] : "",
+            "marital_status" => isset($info["MaritalStatus"]) ? $info["MaritalStatus"] : "",
             "address" => isset($address["Address1"]) ? $address["Address1"] : "",
             "city" => isset($address["City"]) ? $address["City"] : "",
             "currency" => $card["Currency"],
@@ -265,7 +262,8 @@ class Card_services {
         );
 
         $requestInfo = array(
-            "file" => "card_statement"
+            "file" => "card_statement",
+            "method" => "CardStatement"
         );
 
         $result = $this->pushToCms($requestInfo, $requestData);
@@ -331,7 +329,8 @@ class Card_services {
         );
 
         $requestInfo = array(
-            "file" => "credit_transaction"
+            "file" => "credit_transaction",
+            "method" => "AccountToCardTransaction"
         );
 
         $result = $this->pushToCms($requestInfo, $requestData);
@@ -356,7 +355,8 @@ class Card_services {
     public function ticketGenerate() {
 
         $requestInfo = array(
-            "file" => "ticket_generate"
+            "file" => "ticket_generate",
+            "method" => "SessionCreate"
         );
 
         $result = $this->pushToCms($requestInfo, array());
@@ -383,18 +383,34 @@ class Card_services {
         endif;
 
         try {
+            $requestXml = $ci->load->view("card_request/" . $requestInfo["file"] . ".php", $requestData, true);
+
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, CARD_URL);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_NTLM);
-            curl_setopt($ch, CURLOPT_USERPWD, "PBL\\testuser2:Xyz12345");
+            curl_setopt($ch, CURLOPT_USERPWD, CARD_AUTH);
             curl_setopt($ch, CURLOPT_TIMEOUT, 10);
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: text/xml'));
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $ci->load->view("card_request/" . $requestInfo["file"] . ".php", $requestData, true));
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $requestXml);
 
             $output = curl_exec($ch);
+
+            $xmlLogData = array(
+                'url' => CARD_URL,
+                'source' => 'cms',
+                'method_name' => $requestInfo["method"],
+                'requestXml' => $requestXml,
+                'responseXml' => $output,
+                'errorText' => '',
+                'created' => date("Y-m-d H:i:s")
+            );
+
+            $ci->load->model("log_model");
+            $ci->log_model->addXmlLog($xmlLogData);
+
             if ($output == NULL) {
                 return array(
                     "success" => false,
