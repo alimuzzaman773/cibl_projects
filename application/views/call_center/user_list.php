@@ -27,11 +27,11 @@
 
 <div class="col-md-12 col-sm-12 col-xs-12">
     <div class="row">
-        <div class="form-group col-sm-4 col-xs-4">
+        <div class="form-group col-sm-3 col-xs-12">
             <label>Search</label>
             <input type="text" class="form-control" data-ng-model="searchParams.search" placeholder="Search by Apps ID, User Name, Customer ID, Father or Mother Name" title="Search by Apps ID, User Name, Customer ID, Father or Mother Name" />
         </div>
-        <div class="form-group col-sm-2 col-xs-2">
+        <div class="form-group col-sm-3 col-xs-12">
             <label>Branch</label>
             <select class="form-control" data-ng-model="searchParams.branch">
                 <option ng-repeat="branch in branch_list" value="{{branch.branchCode}}">{{branch.ATMName}}</option>
@@ -48,13 +48,27 @@
             </select>
         </div>
         -->
-        <div class="form-group col-sm-2 col-xs-2">
+        <div class="form-group col-sm-3 col-xs-12">
             <label>From Date</label>
             <input type="text" readonly="true" class="form-control" data-ng-model="searchParams.from_date" id="fromDate" />                
         </div>
-        <div class="form-group col-sm-2 col-xs-2">
+        <div class="form-group col-sm-3 col-xs-12">
             <label>To Date</label>
             <input type="text" readonly="true" class="form-control" data-ng-model="searchParams.to_date" id="toDate" />                
+        </div>
+        <div class="form-group col-sm-3 col-xs-12">
+            <label>Status (Registration)</label>
+            <select class="form-control" data-ng-model="searchParams.is_regester">
+                <option value="1">Activated</option>
+                <option value="0">Waiting Activation</option>
+            </select>
+        </div>
+        <div class="form-group col-sm-3 col-xs-12">
+            <label>Password Reset</label>
+            <select class="form-control" data-ng-model="searchParams.password_reset">
+                <option value="0">Accepted</option>
+                <option value="1">New Request</option>
+            </select>
         </div>
         <!--
         <div class="form-group col-sm-4 col-xs-6">
@@ -111,6 +125,7 @@
                         -->
                         <th>Rejected</th>
                         <th>Status</th>
+                        <th>IsReset</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -139,6 +154,9 @@
                         <td>{{i.isRejected == 1 ? 'Rejected' : ''}}</td>
                         <td ng-class="{'bg-success' : (i.skyIdOriginal > 0), 'bg-primary' : (i.skyIdOriginal <= 0 || i.skyIdOriginal == null)}">
                             {{i.skyIdOriginal > 0 ? 'Activated' : 'Waiting Activation'}}
+                        </td>
+                        <td>
+                            <span class="text-danger" data-ng-if="i.isRejected != '1' && i.passwordReset == '1' && i.isPublished == '1'">Request for password request</span>
                         </td>
                         <td>
                             <div class="dropdown pull-right">
@@ -186,7 +204,7 @@
                         </td>
                     </tr>
                     <tr data-ng-show="user_list.length <= 0">
-                        <td colspan="17">No data found</td>
+                        <td colspan="18">No data found</td>
                     </tr>
                 </tbody>
             </table>

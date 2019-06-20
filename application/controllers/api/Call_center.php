@@ -19,6 +19,8 @@ class Call_center extends CI_Controller {
         $p['search'] = $this->input->get('search', true);
         $p['branch'] = $this->input->get('branch', true);
         $p['status'] = $this->input->get('status', true);
+        $p['is_regester'] = (bool) $this->input->get("is_regester", true);
+        $p['password_reset'] = (bool) $this->input->get("password_reset", true);
         $this->load->model("call_center_model");
 
         $json['total'] = 0;

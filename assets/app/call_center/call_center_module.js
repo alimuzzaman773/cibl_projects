@@ -41,7 +41,7 @@ CallCenterModuleApp.controller('CallCenterController', ['$scope', '$http', '$rou
         $scope.user_list = [];
         $scope.branch_list = [];
         $scope.totalCount = 0;
-        $scope.per_page = 7;
+        $scope.per_page = 10;
         $scope.currentPageNumber = 1;
         $scope.uid = $routeParams.uid;
         $scope.user = {};
@@ -67,7 +67,9 @@ CallCenterModuleApp.controller('CallCenterController', ['$scope', '$http', '$rou
             to_date: "",
             search: '',
             status: '',
-            branch: ''
+            branch: '',
+            is_regester: '',
+            password_reset: ''
         };
 
         $scope.pagination = {
@@ -84,7 +86,9 @@ CallCenterModuleApp.controller('CallCenterController', ['$scope', '$http', '$rou
                 to_date: "",
                 search: '',
                 status: '',
-                branch: ''
+                branch: '',
+            is_regester: '',
+            password_reset: ''
             };
 
             $scope.getResultsPage(1);
@@ -108,6 +112,14 @@ CallCenterModuleApp.controller('CallCenterController', ['$scope', '$http', '$rou
 
             if ($scope.searchParams.status !== null && $.trim($scope.searchParams.status) != '') {
                 $params.status = $scope.searchParams.status;
+            }
+            
+            if ($scope.searchParams.is_regester !== null && $.trim($scope.searchParams.is_regester) != '') {
+                $params.is_regester = $scope.searchParams.is_regester;
+            }
+            
+            if ($scope.searchParams.password_reset !== null && $.trim($scope.searchParams.password_reset) != '') {
+                $params.password_reset = $scope.searchParams.password_reset;
             }
 
             if (($scope.searchParams.from_date !== null

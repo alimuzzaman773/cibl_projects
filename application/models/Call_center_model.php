@@ -35,7 +35,6 @@ class Call_center_model extends CI_Model {
             $this->db->where("aum.isPublished", 0)
                     ->where("aum.makerActionBy >", 0);
         }
-        $this->db->order_by('aum.skyId', 'desc');
 
         if (isset($p['search']) && trim($p['search']) != ''):
             $this->db->group_start()
@@ -73,7 +72,17 @@ class Call_center_model extends CI_Model {
             $this->db->limit($p['limit'], $offset);
         }
 
-        $query = $this->db->get();
+        if (isset($p['is_regester']) && (int) $p['is_regester'] > 0):
+            $this->db->where("au.skyId > ", 0);
+        endif;
+
+        if (isset($p['password_reset']) && (int) $p['password_reset'] > 0):
+            $this->db->where("aum.isRejected !=", 1)
+                    ->where("aum.isPublished > ", 0)
+                    ->where("aum.passwordReset ", $p['password_reset']);
+        endif;
+        
+        $query = $this->db->order_by('aum.skyId', 'desc')->get();
         return $query->num_rows() > 0 ? $query : false;
     }
 
