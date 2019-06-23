@@ -22,10 +22,10 @@ class Call_center_model extends CI_Model {
                 ->join('admin_users adc', 'adc.adminUserId = aum.checkerActionBy', 'left')
                 ->where('aum.isLocked', 0);
 
-        if (ci_check_permission("callCenterChecker")):
-            $this->db->where("aum.isPublished", 0)
-                    ->where("aum.makerActionBy >", 0);
-        endif;
+//        if (ci_check_permission("callCenterChecker")):
+//            $this->db->where("aum.isPublished", 0)
+//                    ->where("aum.makerActionBy >", 0);
+//        endif;
 
         if (isset($params['search']) && trim($params['search']) != ''):
             $this->db->group_start()
