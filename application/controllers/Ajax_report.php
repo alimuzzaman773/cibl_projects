@@ -122,6 +122,7 @@ class Ajax_report extends MX_Controller {
         $p['fromdate'] = $this->input->get_post("fromdate", true);
         $p['todate'] = $this->input->get_post("todate", true);
         $p['filter_by'] = $this->input->get_post("filterBy", true);
+        $p['approved_by'] = $this->input->get_post("approved_by", true);
 
         if ($p['filter_by'] == 'activated'):
             $p['skyIdOriginal'] = 1;

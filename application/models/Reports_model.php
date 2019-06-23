@@ -308,14 +308,14 @@ class Reports_model extends CI_Model {
     function getCallCenterUserList($p = array()) {
         $dateTime = date("Y-m-d H:i:s");
 
-
         $this->db->select("aum.*, au.skyId as skyIdOriginal, ra.created_on as registrationDate, ra.entityType,"
                 . " TIMESTAMPDIFF(SECOND, CONCAT(aum.makerActionDt, ' ', aum.makerActionTm), '{$dateTime}') as activationDiff,"
-                . " TIMESTAMPDIFF(SECOND, aum.passwordResetDtTm, '{$dateTime}') as passwordResetDiff", false);
+                . " TIMESTAMPDIFF(SECOND, aum.passwordResetDtTm, '{$dateTime}') as passwordResetDiff, adu.fullName as adminFullname", false);
 
-        $this->db->from('apps_users aum')
+        $this->db->from('apps_users_mc aum')
                 ->join('apps_users au', "au.skyId = aum.skyId", "left")
                 ->join('registration_attempts ra', 'ra.skyId = aum.skyId', 'left')
+                ->join('admin_users adu', "adu.adminUserId = aum.checkerActionBy", "left")
                 ->order_by('aum.skyId', 'desc');
 
         if (isset($p['skyIdOriginal']) && $p['skyIdOriginal'] == 0) {
@@ -324,6 +324,10 @@ class Reports_model extends CI_Model {
                 $this->db->where("ra.created_on between {$this->db->escape($p['fromdate'])} AND {$this->db->escape($p['todate'])}", null, false);
             }
         }
+        
+        if (isset($p['approved_by']) && (int) $p['approved_by'] > 0):
+            $this->db->where("aum.checkerActionBy", $p['approved_by']);
+        endif;
 
         if (isset($p['skyIdOriginal']) && (int) $p['skyIdOriginal'] > 0) {
             $this->db->having('(skyIdOriginal > 0)', null, false);

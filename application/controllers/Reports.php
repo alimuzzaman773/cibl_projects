@@ -387,6 +387,8 @@ class Reports extends MX_Controller {
         $data['css_files'] = array();
         $data['js_files'] = array();
 
+        $data['user_list'] = $this->db->get("admin_users")->result();
+        
         $data['body_template'] = "reports/call_center_report.php";
         $this->load->view('site_template.php', $data);
     }
