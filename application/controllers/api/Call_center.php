@@ -11,40 +11,55 @@ class Call_center extends CI_Controller {
     }
 
     function user_list() {
-        $p['get_count'] = (bool) $this->input->get("get_count", true);
-        $p['limit'] = $this->input->get('limit', true);
-        $p['offset'] = $this->input->get('offset', true);
-        $p['from_date'] = $this->input->get('from_date', true);
-        $p['to_date'] = $this->input->get('to_date', true);
-        $p['search'] = $this->input->get('search', true);
-        $p['branch'] = $this->input->get('branch', true);
-        $p['status'] = $this->input->get('status', true);
-        $p['is_regester'] = (bool) $this->input->get("is_regester", true);
-        $p['password_reset'] = (bool) $this->input->get("password_reset", true);
+        $params['limit'] = (int) $this->input->get("limit", true);
+        $params['offset'] = (int) $this->input->get("offset", true);
+        $params['get_count'] = true;
+        $params['from_date'] = $this->input->get("from_date", true);
+        $params['to_date'] = $this->input->get("to_date", true);
+        $params['search'] = $this->input->get('search', true);
+        $params['branch'] = $this->input->get('branch', true);
+        $params['status'] = $this->input->get('status', true);
+        $params['is_regester'] = (bool) $this->input->get("is_regester", true);
+        $params['password_reset'] = (bool) $this->input->get("password_reset", true);
+
         $this->load->model("call_center_model");
+        $data['total'] = 0;
+        $data['user_list'] = array();
+        $data['branch_list'] = array();
 
-        $json['total'] = 0;
-        $json['user_list'] = array();
-
-        if ($p['get_count']) {
-            $params['get_count'] = 1;
-            $result = $this->call_center_model->getAllUsers($params);
-            if ($result):
-                $json['total'] = $result->row()->total;
+        if ((int) $params['get_count'] > 0) {
+            $countParams = $params;
+            unset($countParams['limit']);
+            unset($countParams['offset']);
+            $countParams['count'] = true;
+            $countRes = $this->call_center_model->getAllUsers($countParams);
+            if ($countRes):
+                $data['total'] = $countRes->row()->total;
             endif;
         }
 
-        unset($p['get_count']);
-        $result = $this->call_center_model->getAllUsers($p);
-        if ($result):
-            $json['user_list'] = $result->result();
+        $result = $this->call_center_model->getAllUsers($params);
+        if (!$result):
+            $json = array(
+                "success" => false,
+                "user_list" => [],
+                "total" => 0,
+                "msg" => "No Info Found!"
+            );
+
+            echo json_encode($json);
+            die();
         endif;
 
-        $json['branch_list'] = array();
+        $data['success'] = true;
+        $data['user_list'] = $result->result();
+
         $branch = $this->call_center_model->getAllBranch();
-        $json['branch_list'] = $branch->result();
-        //$json['q'] = $this->db->last_query();
-        my_json_output($json);
+        if ($branch):
+            $data['branch_list'] = $branch->result();
+        endif;
+
+        my_json_output($data);
     }
 
     function get_user_info($userId) {

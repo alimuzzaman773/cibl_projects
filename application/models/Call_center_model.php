@@ -7,7 +7,77 @@ class Call_center_model extends CI_Model {
         $this->load->database();
     }
 
-    public function getAllUsers($p) {
+    function getAllUsers($params = array()) {
+        if (isset($params['count']) && $params['count'] == true) {
+            $this->db->select('count(*) as total', false);
+        } else {
+            $this->db->select('aum.*, adm.adminUserName makerName, atms.ATMName as branchName, adc.adminUserName checkerName, au.skyId as skyIdOriginal, ra.raId, ra.entityType, ra.created as created_on, ra.otpChannel', false);
+        }
+
+        $this->db->from('apps_users_mc aum')
+                ->join('apps_users au', "au.skyId = aum.skyId", "left")
+                ->join('atms', 'aum.homeBranchCode = atms.branchCode', 'left')
+                ->join('registration_attempts ra', "ra.skyId = aum.skyId", "inner")
+                ->join('admin_users adm', 'adm.adminUserId = aum.makerActionBy', 'left')
+                ->join('admin_users adc', 'adc.adminUserId = aum.checkerActionBy', 'left')
+                ->where('aum.isLocked', 0);
+
+        if (ci_check_permission("callCenterChecker")):
+            $this->db->where("aum.isPublished", 0)
+                    ->where("aum.makerActionBy >", 0);
+        endif;
+
+        if (isset($params['search']) && trim($params['search']) != ''):
+            $this->db->group_start()
+                    ->or_like("aum.cfId", $params['search'])
+                    ->or_like("aum.eblSkyId", $params['search'])
+                    ->or_like("aum.clientId", $params['search'])
+                    ->or_like("aum.userName", $params['search'])
+                    ->or_like("aum.userEmail", $params['search'])
+                    ->or_like("aum.userMobNo1", $params['search'])
+                    ->group_end();
+        endif;
+
+        if (isset($params['branch']) && trim($params['branch']) != ''):
+            $this->db->where("atms.branchCode", $params["branch"]);
+        endif;
+
+        if (isset($params['status']) && trim($params['status']) != ''):
+            $this->db->where("aum.isPublished", $params["status"]);
+        endif;
+
+        if (isset($params['status']) && trim($params['status']) == 2):
+            $this->db->where("aum.isRejected", 1);
+        endif;
+
+        if (isset($params['status']) && trim($params['status']) == 3):
+            $this->db->where("aum.makerActionBy > ", 0);
+        endif;
+
+        if (isset($params['from_date']) && trim($params['from_date']) != '' && isset($params['to_date']) && trim($params['to_date']) != ''):
+            $this->db->where("ra.created_on between {$this->db->escape($params['from_date'])} AND {$this->db->escape($params['to_date'])}", null, false);
+        endif;
+
+        if (isset($params['limit']) && (int) $params['limit'] > 0):
+            $offset = (isset($params['offset']) && $params['offset'] != null) ? (int) $params['offset'] : 0;
+            $this->db->limit($params['limit'], $offset);
+        endif;
+
+        if (isset($params['is_regester']) && (int) $params['is_regester'] > 0):
+            $this->db->where("au.skyId > ", 0);
+        endif;
+
+        if (isset($params['password_reset']) && (int) $params['password_reset'] > 0):
+            $this->db->where("aum.isRejected !=", 1)
+                    ->where("aum.isPublished > ", 0)
+                    ->where("aum.passwordReset ", $params['password_reset']);
+        endif;
+
+        $query = $this->db->order_by('ra.created_on', 'desc')->get();
+        return $query->num_rows() > 0 ? $query : false;
+    }
+
+    public function getAllUsers_($p) {
         if (isset($p['get_count']) && (int) $p['get_count'] > 0):
             $this->db->select('count(*) as total', false);
         else:
@@ -81,7 +151,7 @@ class Call_center_model extends CI_Model {
                     ->where("aum.isPublished > ", 0)
                     ->where("aum.passwordReset ", $p['password_reset']);
         endif;
-        
+
         $query = $this->db->order_by('aum.skyId', 'desc')->get();
         return $query->num_rows() > 0 ? $query : false;
     }
