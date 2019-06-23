@@ -159,7 +159,7 @@
                                                 <?php endif; ?>
                                                 <!--
                                                 <?php if (ci_check_permission("canViewBillerSetupMenu")): ?>
-                                                                <li><a href="<?= base_url() . 'biller_setup_maker' ?>">Biller Setup</a></li>
+                                                                    <li><a href="<?= base_url() . 'biller_setup_maker' ?>">Biller Setup</a></li>
                                                 <?php endif; ?>
                                                 -->
                                                 <?php if (ci_check_permission("canViewLimitPackgaeMenu")): ?>
@@ -193,7 +193,7 @@
                                                 <?php endif; ?>
                                                 <!--
                                                 <?php if (ci_check_permission("canViewBillerSetupAuthorizationMenu")): ?>
-                                                                    <li><a href="<?= base_url() . 'biller_setup_checker' ?>">Biller Setup Authorization</a></li>
+                                                                        <li><a href="<?= base_url() . 'biller_setup_checker' ?>">Biller Setup Authorization</a></li>
                                                 <?php endif; ?>
                                                 -->
                                                 <?php if (ci_check_permission("canViewPinResetAuthorizationMenu")): ?>
@@ -241,7 +241,7 @@
                                                 <?php endif; ?>
                                                 <!--
                                                 <?php if (ci_check_permission("canViewBillerSetupMenu")): ?>
-                                                                    <li><a href="<?= base_url() . 'bill_type_setup' ?>">Bill Type Setup</a></li>
+                                                                        <li><a href="<?= base_url() . 'bill_type_setup' ?>">Bill Type Setup</a></li>
                                                 <?php endif; ?>
                                                 -->
                                                 <li><a href="<?= base_url() . 'account_type/index' ?>">Account Categories Setup</a></li>
@@ -270,14 +270,14 @@
                     </ul>
                 </li>
             <?php endif; ?>
-            <?php if (ci_check_permission("canViewReportMenu")): ?>
-                <li class="dropdown yamm-fw">
-                    <a href="#" id="dropModules" role="button" data-toggle="dropdown">Reports<b class="caret"></b></a>
-                    <ul id="dropModules" class="dropdown-menu" role="menu" aria-labelledby="dropModules">                    
-                        <li class="">
-                            <div class="yamm-content">
-                                <div class="row">                                    
-                                    <div class="clearfix mb">
+            <li class="dropdown yamm-fw">
+                <a href="#" id="dropModules" role="button" data-toggle="dropdown">Reports<b class="caret"></b></a>
+                <ul id="dropModules" class="dropdown-menu" role="menu" aria-labelledby="dropModules">                    
+                    <li class="">
+                        <div class="yamm-content">
+                            <div class="row">                                    
+                                <div class="clearfix mb">
+                                    <?php if (ci_check_permission("canViewReportMenu")): ?>
                                         <ul class="col-md-2 col-xs-12 list-unstyled">
                                             <li><p><b>Apps User Reports</b></p></li>
                                             <li><a href="<?= base_url() . 'reports/user_status' ?>">Apps Users' Status</a></li>
@@ -317,18 +317,17 @@
                                              <li><a href="<?= base_url() . 'reports/mobile_topup_card_report' ?>">Bill Payment Report</a></li>   
                                          </ul>
                                         -->
-                                        <ul class="col-md-2 col-xs-12 list-unstyled">
-                                            <li><p><b>Call Center</b></p></li>
-                                            <li><a href="<?= base_url() . 'reports/call_center_report' ?>">Call Center User Report</a></li>                                        
-                                        </ul>
-
-                                    </div>
+                                    <?php endif; ?>
+                                    <ul class="col-md-2 col-xs-12 list-unstyled">
+                                        <li><p><b>Call Center</b></p></li>
+                                        <li><a href="<?= base_url() . 'reports/call_center_report' ?>">Call Center User Report</a></li>                                        
+                                    </ul>
                                 </div>
                             </div>
-                        </li>    
-                    </ul>
-                </li>
-            <?php endif; ?>
+                        </div>
+                    </li>    
+                </ul>
+            </li>
             <?php if (ci_check_permission("canViewCallCenterMenu")): ?>
                 <li class="dropdown yamm-fw">
                     <a href="#" id="dropModules" role="button" data-toggle="dropdown">Call Center<b class="caret"></b></a>

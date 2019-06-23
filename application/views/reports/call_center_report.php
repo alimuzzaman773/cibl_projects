@@ -20,8 +20,21 @@
                 </select>
             </div>
         </td>
-    </tr>   
-    <tr  id="registrationDate" style="display:none">
+    </tr>
+    <tr>
+        <td><b>Approved By</b></td>
+        <td>
+            <div class="col-sm-3 col-xs-12">
+                <select class="form-control input-sm" name="approved_by" id="approved_by">
+                    <option value="">All</option>
+                    <?php foreach($user_list as $b): ?>
+                    <option value="<?=$b->adminUserId?>"><?=$b->fullName?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        </td>
+    </tr>
+    <tr id="registrationDate" style="display:none">
         <td><b>Registration Date</b><br></td>
         <td>
             <div>
