@@ -88,7 +88,12 @@ class Card_services {
                 "msg" => "Address information not found"
             );
         }
+        
         $address = $info["Addresses"]["AdditionalAddressDetails"];
+
+        if (isset($info["Addresses"]["AdditionalAddressDetails"][0])) {
+            $address = $info["Addresses"]["AdditionalAddressDetails"][0];
+        }
 
         $details = array(
             "card_no" => $cardInfo["Number"],
