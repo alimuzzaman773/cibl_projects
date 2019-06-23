@@ -460,15 +460,15 @@ class Utility_services {
 
             case "dpdc":
                 $key = $auth = array(
-                    "utility_auth_key" => "DP15147854699683",
-                    "utility_secret_key" => "F1xvbrWzgPOtVKej"
+                    "utility_auth_key" => "DP15608603114568",
+                    "utility_secret_key" => "zrllsCH5YrSd0YeU"
                 );
                 break;
 
             case "desco":
                 $key = $auth = array(
-                    "utility_auth_key" => "DE15147853658738",
-                    "utility_secret_key" => "McjteFIIuM5RIhjt"
+                    "utility_auth_key" => "DE15608602161220",
+                    "utility_secret_key" => "nDG8QRpBz7bi8bIE"
                 );
                 break;
 
