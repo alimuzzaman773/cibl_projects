@@ -310,10 +310,11 @@ class Reports_model extends CI_Model {
 
         $this->db->select("aum.*, au.skyId as skyIdOriginal, ra.created_on as registrationDate, ra.entityType,"
                 . " TIMESTAMPDIFF(SECOND, CONCAT(aum.makerActionDt, ' ', aum.makerActionTm), '{$dateTime}') as activationDiff,"
-                . " TIMESTAMPDIFF(SECOND, aum.passwordResetDtTm, '{$dateTime}') as passwordResetDiff, adu.fullName as adminFullname", false);
+                . " TIMESTAMPDIFF(SECOND, aum.passwordResetDtTm, '{$dateTime}') as passwordResetDiff, adu.fullName as adminFullname, a.ATMName as branchName,", false);
 
         $this->db->from('apps_users_mc aum')
                 ->join('apps_users au', "au.skyId = aum.skyId", "left")
+                ->join('atms a', 'aum.homeBranchCode = a.branchCode', 'left')
                 ->join('registration_attempts ra', 'ra.skyId = aum.skyId', 'left')
                 ->join('admin_users adu', "adu.adminUserId = aum.checkerActionBy", "left")
                 ->order_by('aum.skyId', 'desc');
@@ -324,7 +325,11 @@ class Reports_model extends CI_Model {
                 $this->db->where("ra.created_on between {$this->db->escape($p['fromdate'])} AND {$this->db->escape($p['todate'])}", null, false);
             }
         }
-        
+
+        if (isset($p['branch']) && trim($p['branch']) != ''):
+            $this->db->where("a.branchCode", $p["branch"]);
+        endif;
+
         if (isset($p['approved_by']) && (int) $p['approved_by'] > 0):
             $this->db->where("aum.checkerActionBy", $p['approved_by']);
         endif;
