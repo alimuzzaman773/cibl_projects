@@ -9,14 +9,13 @@ $this->load->view("ajax_report/render_report_parameters.php", $params);
                 <th>Apps ID</th>                
                 <th>Apps User ID</th>
                 <th>Customer ID</th>
-                <!--<th>Client ID</th>-->
-                <!--<th>Prepaid ID</th>-->
                 <th>Customer Name</th>
-                <th>Email ID</th>
-                <th>Phone</th>
+                <th>User Email</th>
+                <th>User Mobile</th>
                 <th>Enrollment Date</th>
                 <th>Requested Through</th>
                 <th>Approved By</th>
+                <th>Branch</th>
             </tr>
         </thead>
         <tbody>
@@ -29,19 +28,18 @@ $this->load->view("ajax_report/render_report_parameters.php", $params);
                     <td><?= $r->skyId ?></td>
                     <td><?= $r->eblSkyId ?></td>
                     <td><?= $r->cfId ?></td>
-                    <!--<td><?= $r->clientId ?></td>-->
-                    <!--<td><?= $r->prepaidId ?></td>-->
                     <td><?= $r->userName ?></td>
                     <td><?= $r->userEmail ?></td>
                     <td><?= $r->userMobNo1 ?></td>
                     <td><?= $r->registrationDate ?></td>
                     <td><?= $r->entityType ?></td>
-                    <td><?= $r->adminFullname ?></td>                
+                    <td><?= $r->adminFullname ?></td>
+                    <td><?= $r->branchName ?></td>
                 </tr>
             <?php endforeach; ?>
             <?php if (count($result) <= 0): ?>
                 <tr>
-                    <td colspan="10">No data found</td>
+                    <td colspan="11">No data found</td>
                 </tr>
             <?php endif; ?>
         </tbody>
