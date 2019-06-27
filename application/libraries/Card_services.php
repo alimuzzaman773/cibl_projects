@@ -88,12 +88,16 @@ class Card_services {
                 "msg" => "Address information not found"
             );
         }
-        
+
         $address = $info["Addresses"]["AdditionalAddressDetails"];
 
         if (isset($info["Addresses"]["AdditionalAddressDetails"][0])) {
             $address = $info["Addresses"]["AdditionalAddressDetails"][0];
         }
+
+        $title = isset($info["Title"]) ? $info["Title"] : '';
+        $firstName = isset($info["FirstName"]) ? $info["FirstName"] : '';
+        $lastName = isset($info["LastName"]) ? $info["LastName"] : '';
 
         $details = array(
             "card_no" => $cardInfo["Number"],
@@ -106,7 +110,7 @@ class Card_services {
             "card_type" => $card["CardType"],
             "product_code" => $card["ProductShortCode"],
             "created_date" => $card["CreateDate"],
-            "name" => $info["Title"] . " " . $info["LastName"],
+            "name" => $title . " " . $firstName . " " . $lastName,
             "gender" => isset($info["Gender"]) ? $info["Gender"] : "",
             "marital_status" => $info["MaritalStatus"],
             "address" => isset($address["Address1"]) ? $address["Address1"] : "",
@@ -180,7 +184,13 @@ class Card_services {
         $cardInfo = $account["Card"];
 
         if (isset($account["Card"][0])) {
-            $cardInfo = $account["Card"][0];
+            $cardArr = $account["Card"];
+            foreach ($cardArr as $crd) {
+                if ($crd["Number"] == $data["card_no"]) {
+                    $cardInfo = $crd;
+                    break;
+                }
+            }
         }
 
         if (!isset($account["Data"])) {
@@ -216,6 +226,14 @@ class Card_services {
         }
         $address = $info["Addresses"]["AdditionalAddressDetails"];
 
+        if (isset($info["Addresses"]["AdditionalAddressDetails"][0])) {
+            $address = $info["Addresses"]["AdditionalAddressDetails"][0];
+        }
+
+        $title = isset($info["Title"]) ? $info["Title"] : '';
+        $firstName = isset($info["FirstName"]) ? $info["FirstName"] : '';
+        $lastName = isset($info["LastName"]) ? $info["LastName"] : '';
+
         $details = array(
             "card_no" => $cardInfo["Number"],
             "account_no" => $account["Number"],
@@ -234,7 +252,7 @@ class Card_services {
             "min_due" => $statement["MinDue"],
             "due_date" => isset($statement["DueDate"]) ? $statement["DueDate"] : "",
             "mr_point" => $statement["ClosingRewardPoints"],
-            "name" => $info["Title"] . " " . $info["LastName"],
+            "name" => $title . " " . $firstName . " " . $lastName,
             "gender" => isset($info["Gender"]) ? $info["Gender"] : "",
             "marital_status" => isset($info["MaritalStatus"]) ? $info["MaritalStatus"] : "",
             "address" => isset($address["Address1"]) ? $address["Address1"] : "",
