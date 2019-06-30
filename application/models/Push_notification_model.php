@@ -182,7 +182,7 @@ class Push_notification_model extends CI_Model {
         $fields = json_encode($fields);
         
         $headers = array(
-            'Authorization: key=AAAAn9utpPo:APA91bEmpM842xu2Pw6vAv8qtLZhj1KJlrdFFrYOU1jUPP3L6JTcnE80YLgTkeUnPSCwrKPb_PeDJLiatR2LvHq4OZ2BpX7pErBPk6RpXVgBQwhNamd4n-QX9VaViDfgbNXgKkIARXE0Grm6gatkzYKpoSJKnfi6lg',
+            'Authorization: key=AAAAD5bmRMU:APA91bGGvhv3Hp2rMjxcGqQ94RlhDUIYACtwlED225xdEDw8aW2TSB9Xy21Pp0wU1dWwr5WSBS7AlgSfnWbCCmJ4HAnvL9Gm77BfRkdpOLC8pkT6EscTWW9HjHAM5w63J2GJY50XriKT',
             'Content-Type: application/json'
         );
 
