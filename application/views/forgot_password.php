@@ -1,14 +1,16 @@
-<form class="form" id="" action="<?= $base_url . "admin_login/retriveForgotPassword" ?>" method="post"> 
+<form class="form" id="" action="<?= base_url() . "admin_login/retriveForgotPassword" ?>" method="post"> 
     <div class="center-block text-center">
-        <img src="<?= asset_url() . "images/logo.png" ?>" />
+        <img src="<?= asset_url() . "images/login_logo.png" ?>" width="200" />
     </div>
     <div class="row" style="margin:0 auto;width:400px">
         <div class="col-md-12 col-xs-12">
             <div id="legend">
-                <legend class="">Retrive Password</legend>
+                <legend class="">Retrieve Password</legend>
             </div>
             <div class="form-group center-block">
-                <span class="small-text"><?= $this->my_session->getLoginError() ?></span>    
+                <span class="small-text text-danger">
+                    <?php echo (isset($message) && $message!="")? $message: "";?>
+                </span>    
             </div>
             <div class="form-group has-feedback">
                 <label>Username</label>
@@ -18,7 +20,7 @@
 
             <div class="form-group has-feedback">
                 <label>Email</label>
-                <input type="password" name="userEmail" class="form-control" required/>
+                <input type="text" name="userEmail" class="form-control" required/>
                 <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
             </div>
             <div class="form-group">

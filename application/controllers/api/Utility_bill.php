@@ -57,6 +57,7 @@ class Utility_bill extends CI_Controller {
             $dataList[$k]['skyId'] = $i->skyId;
             $dataList[$k]['eblSkyId'] = $i->eblSkyId;
             $dataList[$k]['userName'] = $i->userName;
+            $dataList[$k]['userName2'] = $i->userName2;
             $dataList[$k]['created'] = $i->created;
             $dataList[$k]['utility_name'] = $i->utility_name;
             $dataList[$k]['bpt_from_ac'] = $i->bpt_from_ac;

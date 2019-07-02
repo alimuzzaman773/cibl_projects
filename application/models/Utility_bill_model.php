@@ -7,7 +7,7 @@ class Utility_bill_model extends CI_Model {
         if (isset($params['count']) && $params['count'] == true) {
             $this->db->select("COUNT(p.payment_id) as total");
         } else {
-            $this->db->select('p.*, au.eblSkyId, au.userName, bpt.fromAccNo as bpt_from_ac, bpt.amount as bpt_amount, bpt.narration as bpt_narration, bpt.isSuccess as bpt_success,'
+            $this->db->select('p.*, au.eblSkyId, au.userName, au.userName2, bpt.fromAccNo as bpt_from_ac, bpt.amount as bpt_amount, bpt.narration as bpt_narration, bpt.isSuccess as bpt_success,'
                     . 'vt.fromAccNo as vt_from_ac, vt.amount as vt_amount, st.fromAccNo as st_from_ac, st.amount as st_amount,'
                     . 'lt.fromAccNo as lt_from_ac, lt.amount as lt_amount, o1t.fromAccNo as o1t_from_ac, o1t.amount as o1t_amount,'
                     . 'o2t.fromAccNo as o2t_from_ac, o2t.amount as o2t_amount', FALSE);
@@ -39,6 +39,11 @@ class Utility_bill_model extends CI_Model {
             $this->db->group_start()
                     ->or_like("bpt.fromAccNo", $params['search'], 'both')
                     ->or_like("bpt.amount", $params['search'], 'both')
+                    ->or_like("au.eblSkyId", $params['search'], 'both')
+                    ->or_like("au.userName", $params['search'], 'both')
+                    ->or_like("au.userName2", $params['search'], 'both')
+                    ->or_like("p.entity_number", $params['search'], 'both')
+                    ->or_like("p.bill_response", $params['search'], 'both')
                     ->group_end();
         endif;
 

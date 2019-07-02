@@ -125,27 +125,37 @@ class Admin_login extends CI_Controller {
         $userName = $this->input->post('username');
         $email = $this->bocrypter->Encrypt($this->input->post('userEmail'));
         $DBdata = $this->admin_users_model_maker->getUserEmail($userName, $email);
+
         if (!empty($DBdata)) {
-            $maildata['to'] = $this->bocrypter->Decrypt($DBdata['email']);
-            $maildata['subject'] = "Retrive Forgotten Password";
-            $maildata['body'] = "<p>Dear Sir/Madam,</p>
-                                 <p>Your old password is - " . $this->bocrypter->Decrypt($DBdata['encryptedPassword']) . "</p>
-                                 <p>Thanks & Regards, <br/>EBL SKY AdminPanel</p>";
-            $response = $this->common_model->send_mail($maildata);
-            if ($response == 1) {
+            
+            $mailData["to"] = $this->bocrypter->Decrypt($DBdata['email']);
+            $mailData["from"] = "simple@ebl-com.bd";
+            $mailData["fromName"] = "PMONEY";
+            $mailData["subject"] = "Retrieve Forgotten Password";
+            $mailData['body'] = "<p>Dear Sir/Madam,</p>
+                                 <p>Your password is - " . $this->bocrypter->Decrypt($DBdata['encryptedPassword']) . "</p>
+                                 <p>Thanks & Regards, <br/>Premier Bank Limited</p>";
+
+            $this->load->model("mailer_model");
+            $response = $this->mailer_model->sendMail($mailData);
+            
+            if ($response["success"]) {
                 // change the forgotpassword flag //
                 $update['forgotpassword'] = 1;
                 $this->db->update('admin_users', $update, array('adminUserName' => $userName, 'email' => $email));
                 $this->db->update('admin_users_mc', $update, array('adminUserName' => $userName, 'email' => $email));
                 $data['message'] = "Old password has been sent to your provided email. Please check and login.";
-                $this->load->view('admin_login/login_view.php', $data);
+                $data['body_template'] = "login.php";
+                $this->load->view('site_template.php', $data);
             } else {
                 $data['message'] = "Mail sending failed. Please Try again";
-                $this->load->view('admin_login/forgot_password_view.php', $data);
+                $data['body_template'] = "forgot_password.php";
+                $this->load->view('site_template.php', $data);
             }
         } else {
             $data['message'] = "The provided Username/Email is wrong";
-            $this->load->view('admin_login/forgot_password_view.php', $data);
+            $data['body_template'] = "forgot_password.php";
+            $this->load->view('site_template.php', $data);
         }
     }
 
