@@ -79,6 +79,18 @@
                 <th align="left" scope="row">Mailing Address</th>
                 <td>{{user.billingAddress}}</td>
             </tr>
+            <tr>
+                <th align="left" scope="row">Request Type</th>
+                <td>{{user.entityType}}</td>
+            </tr>
+            <tr>
+                <th align="left" scope="row">Request Account/Card</th>
+                <td>{{user.entityNumber}}</td>
+            </tr>
+            <tr>
+                <th align="left" scope="row">Request Time</th>
+                <td>{{user.created_on}}</td>
+            </tr>
         </table>
     </div>
 
