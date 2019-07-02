@@ -183,10 +183,27 @@ Class My_session {
         $this->unSetLoginError();
         $row = $result->row_array();
 
-        if ($row['adminUserName'] == $user_name && $row['encryptedPassword'] != $encryptedpassword) {
+        $dbPass = $CI->bocrypter->Decrypt($row['encryptedPassword']);
+        if($dbPass == false || trim($dbPass) == ''):
+            $this->setLoginError("User password is not set in the system");
+            return false;
+        endif;
+        
+        /*if ($row['adminUserName'] != $user_name) {
+            $this->setLoginError("Username did not match");
+            return false;
+        }*/
+        
+        //&& $row['encryptedPassword'] != $encryptedpassword
+        if(trim($password) == ''):
+            $this->setLoginError("Password was not provided");
+            return false;
+        endif;
+        
+        if($dbPass !== $password):
             $this->setLoginError("Password did not match");
             return false;
-        }
+        endif;
 
         $this->setSessionVars($row);
 
