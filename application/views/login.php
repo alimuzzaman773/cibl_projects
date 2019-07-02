@@ -1,4 +1,4 @@
-<form class="form" id="loginform" action="<?= $base_url . "admin_login/checkUserDetails" ?>" method="post"> 
+<form class="form" id="loginform" action="<?= base_url() . "admin_login/checkUserDetails" ?>" method="post"> 
     <div class="center-block text-center">
         <img src="<?= asset_url() . "images/login_logo.png" ?>" width="200" />
     </div>
