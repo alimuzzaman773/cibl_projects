@@ -63,7 +63,7 @@ class Common_model extends CI_Model {
             
             set_smtp_config($mail);
             $mail->From = 'noreply@premierbankltd.com';
-            $mail->FromName = 'pmoney Smart Banking Admin Panel';
+            $mail->FromName = 'Premier Bank Limited';
 
             $recepients = explode(";", $maildata['to']);
             foreach ($recepients as $index => $value) {
@@ -118,7 +118,7 @@ class Common_model extends CI_Model {
             
             set_smtp_config($mail);
             
-            $mail->FromName = 'EBL SKYBANKING Admin Panel';
+            $mail->FromName = 'Premier Bank Limited';
 
             $recepients = explode(";", $maildata['to']);
             foreach ($recepients as $index => $value) {

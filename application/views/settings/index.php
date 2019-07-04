@@ -59,6 +59,12 @@
                     <small class=''>Time should be minutes</small>
                 </td>
             </tr>
+            <tr>
+                <td><b>BEFTN Date</b></td>
+                <td>
+                    <input type="text" class="form-control input-sm" name="beftn[beftn_date]" value="<?= $this->settings_model->getItem('beftn_date', $settings['beftn']) ?>" id="beftnDate" />                
+                </td>
+            </tr>
         </tbody>
         <tr>
             <td></td>
@@ -113,8 +119,15 @@
         $.validator.addMethod("time", function (value, element) {
             return this.optional(element) || /^(([0-1]?[0-9])|([2][0-3])):([0-5]?[0-9])(:([0-5]?[0-9]))?$/i.test(value);
         }, "Please enter a valid time. Format - 10:25");
-
         $("#settingsform").validate();
+        
+        
+        $("#beftnDate").datepicker({yearRange:'c-10:c+10', dateFormat:'dd-MM-yy', changeMonth:true, changeYear:true}).on('focusin', function(){
+        //$(this).prop("readonly", true);
+        }).on('focusout', function(){
+        //$(this).prop("readonly", false);
+        });
+        
 
     });
 </script>
