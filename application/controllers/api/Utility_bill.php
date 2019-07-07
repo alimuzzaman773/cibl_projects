@@ -60,6 +60,7 @@ class Utility_bill extends CI_Controller {
             $dataList[$k]['userName2'] = $i->userName2;
             $dataList[$k]['created'] = $i->created;
             $dataList[$k]['utility_name'] = $i->utility_name;
+            $dataList[$k]['from_account'] = $i->from_account;
             $dataList[$k]['bpt_from_ac'] = $i->bpt_from_ac;
             $dataList[$k]['bpt_amount'] = $i->bpt_amount;
             $dataList[$k]['isSuccess'] = $i->isSuccess;

@@ -82,7 +82,7 @@
                     <td>{{i.userName2}}</td>
                     <td>{{i.created}}</td>
                     <td>{{i.utility_name}}</td>
-                    <td>{{i.bpt_from_ac}}</td>
+                    <td>{{i.from_account}}</td>
                     <td>{{i.bpt_amount}}</td>
                     <td>{{i.isSuccess=='Y' ? 'Success' : 'Failed'}}</td>
                     <td ng-bind-html="i.bill_response_formated">
