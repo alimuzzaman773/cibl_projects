@@ -37,6 +37,7 @@ class Call_center_model extends CI_Model {
                     ->or_like("aum.userMobNo1", $params['search'])
                     ->or_like("ra.entityNumber", $params['search'])
                     ->or_like("ra.entityType", $params['search'])
+                    ->or_like("aum.concentrationName", $params['search'])
                     ->group_end();
         endif;
 

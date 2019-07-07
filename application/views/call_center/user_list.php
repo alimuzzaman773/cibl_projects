@@ -108,6 +108,7 @@
                         <th>CIF ID</th>
                         <th>Request Type</th>
                         <th>Request Number</th>
+                        <th>Customer Type</th>
                         <th>User Name</th>
                         <th>Father Name</th>
                         <th>Mother Name</th>
@@ -138,6 +139,7 @@
                         <td>{{i.cfId}}</td>
                         <td>{{i.entityType}}</td>
                         <td>{{i.entityNumber}}</td>
+                        <td>{{i.concentrationName}}</td>
                         <td>{{i.userName}}</td>
                         <td>{{i.fatherName}}</td>
                          <td>{{i.motherName}}</td>

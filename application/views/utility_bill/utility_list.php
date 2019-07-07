@@ -70,7 +70,8 @@
                     <th>From Account</th>
                     <th>Amount</th>
                     <th>Status</th>
-                    <th>Response Details</th>
+                    <th>SSL Bill Details</th>
+                    <th>SSL Payment Details</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -85,10 +86,11 @@
                     <td>{{i.from_account}}</td>
                     <td>{{i.bpt_amount}}</td>
                     <td>{{i.isSuccess=='Y' ? 'Success' : 'Failed'}}</td>
-                    <td ng-bind-html="i.bill_response_formated">
+                    <td ng-bind-html="i.bill_response_formated" style="json_view">
+                    <td ng-bind-html="i.payment_response_formated" style="json_view">
                     </td>
                     <td>
-                        <div class="dropdown pull-right" ng-if="i.utility_name !=='top_up'">
+                        <div class="dropdown pull-right" ng-if="i.utility_name !== 'top_up'">
                             <a class="btn btn-success dropdown-toggle btn-xs color_white" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Action <span class="caret"></span>
                             </a>
@@ -99,7 +101,7 @@
                     </td>
                 </tr>
                 <tr data-ng-show="bill_list.length <= 0">
-                    <td colspan="7">No data found</td>
+                    <td colspan="12">No data found</td>
                 </tr>
             </tbody>
         </table>
@@ -108,3 +110,10 @@
         </div>                
     </div>
 </div>
+
+<style>
+    .json_view{
+        width:200px !important; 
+        word-wrap:break-word;
+    }
+</style>

@@ -65,6 +65,7 @@ class Utility_bill extends CI_Controller {
             $dataList[$k]['bpt_amount'] = $i->bpt_amount;
             $dataList[$k]['isSuccess'] = $i->isSuccess;
             $dataList[$k]['bill_response_formated'] = json_display_html($i->bill_response);
+            $dataList[$k]['payment_response_formated'] = json_display_html($i->payment_response);
             $dataList[$k]['bill_response'] = $i->bill_response;
             $dataList[$k]['payment_id'] = $i->payment_id;
         endforeach;
