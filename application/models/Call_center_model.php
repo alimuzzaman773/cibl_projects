@@ -11,7 +11,7 @@ class Call_center_model extends CI_Model {
         if (isset($params['count']) && $params['count'] == true) {
             $this->db->select('count(*) as total', false);
         } else {
-            $this->db->select('aum.*, adm.adminUserName makerName, atms.ATMName as branchName, adc.adminUserName checkerName, au.skyId as skyIdOriginal, ra.raId, ra.entityType, ra.created as created_on, ra.otpChannel', false);
+            $this->db->select('aum.*, adm.adminUserName makerName, atms.ATMName as branchName, adc.adminUserName checkerName, au.skyId as skyIdOriginal, ra.raId, ra.entityType, ra.created as created_on, ra.otpChannel, ra.entityNumber', false);
         }
 
         $this->db->from('apps_users_mc aum')
@@ -35,6 +35,8 @@ class Call_center_model extends CI_Model {
                     ->or_like("aum.userName", $params['search'])
                     ->or_like("aum.userEmail", $params['search'])
                     ->or_like("aum.userMobNo1", $params['search'])
+                    ->or_like("ra.entityNumber", $params['search'])
+                    ->or_like("ra.entityType", $params['search'])
                     ->group_end();
         endif;
 

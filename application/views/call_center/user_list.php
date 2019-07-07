@@ -106,6 +106,8 @@
                         <th>SI#</th>
                         <th>Apps ID</th>
                         <th>CIF ID</th>
+                        <th>Request Type</th>
+                        <th>Request Number</th>
                         <th>User Name</th>
                         <th>Father Name</th>
                         <th>Mother Name</th>
@@ -134,6 +136,8 @@
                         <td>{{(per_page * (currentPageNumber - 1)) + ($index + 1)}}</td>
                         <td>{{i.eblSkyId}}</td>
                         <td>{{i.cfId}}</td>
+                        <td>{{i.entityType}}</td>
+                        <td>{{i.entityNumber}}</td>
                         <td>{{i.userName}}</td>
                         <td>{{i.fatherName}}</td>
                          <td>{{i.motherName}}</td>
