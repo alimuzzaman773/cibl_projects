@@ -330,7 +330,7 @@ class Call_center_model extends CI_Model {
         if (isset($p['get_count']) && (int) $p['get_count'] > 0):
             $this->db->select('count(*) as total', false);
         else:
-            $this->db->select('ar.type, ar.entityNumber, ar.status as approve_status, au.*');
+            $this->db->select('ar.type, ar.entityNumber, ar.status as approve_status, ar.created, au.*');
         endif;
 
         $this->db->from("account_add_requests ar")
@@ -342,6 +342,33 @@ class Call_center_model extends CI_Model {
 
         $this->db->where("au.isPublished", 1)
                 ->where("au.isActive", 1);
+
+        if (isset($p['search']) && trim($p['search']) != ''):
+            $this->db->group_start()
+                    ->or_like("au.cfId", $p['search'])
+                    ->or_like("au.eblSkyId", $p['search'])
+                    ->or_like("au.clientId", $p['search'])
+                    ->or_like("au.userName", $p['search'])
+                    ->or_like("au.userName2", $p['search'])
+                    ->or_like("au.userEmail", $p['search'])
+                    ->or_like("au.userMobNo1", $p['search'])
+                    ->or_like("au.fatherName", $p['search'])
+                    ->or_like("au.motherName", $p['search'])
+                    ->or_like("ar.entityNumber", $p['search'])
+                    ->group_end();
+        endif;
+
+        if (isset($p['approved_status']) && trim($p['approved_status']) != ''):
+            $this->db->where("ar.status", $p["approved_status"]);
+        endif;
+
+        if (isset($p['request_type']) && trim($p['request_type']) != ''):
+            $this->db->where("ar.type", $p["request_type"]);
+        endif;
+
+        if (isset($p['from_date']) && trim($p['from_date']) != '' && isset($p['to_date']) && trim($p['to_date']) != ''):
+            $this->db->where("ar.created between {$this->db->escape($p['from_date'])} AND {$this->db->escape($p['to_date'])}", null, false);
+        endif;
 
         if (isset($p['limit']) && (int) $p['limit'] > 0) {
             $offset = (isset($p['offset']) && $p['offset'] != null) ? (int) $p['offset'] : 0;

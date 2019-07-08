@@ -87,8 +87,8 @@ CallCenterModuleApp.controller('CallCenterController', ['$scope', '$http', '$rou
                 search: '',
                 status: '',
                 branch: '',
-            is_regester: '',
-            password_reset: ''
+                is_regester: '',
+                password_reset: ''
             };
 
             $scope.getResultsPage(1);
@@ -113,11 +113,11 @@ CallCenterModuleApp.controller('CallCenterController', ['$scope', '$http', '$rou
             if ($scope.searchParams.status !== null && $.trim($scope.searchParams.status) != '') {
                 $params.status = $scope.searchParams.status;
             }
-            
+
             if ($scope.searchParams.is_regester !== null && $.trim($scope.searchParams.is_regester) != '') {
                 $params.is_regester = $scope.searchParams.is_regester;
             }
-            
+
             if ($scope.searchParams.password_reset !== null && $.trim($scope.searchParams.password_reset) != '') {
                 $params.password_reset = $scope.searchParams.password_reset;
             }
@@ -356,16 +356,58 @@ CallCenterModuleApp.controller('RequestAccountController', ['$scope', '$http', '
             current: 1
         };
 
+        $scope.searchParams = {
+            from_date: "",
+            to_date: "",
+            search: '',
+            approved_status: '',
+            request_type: ''
+        };
+
+        $scope.resetSearch = function () {
+            $scope.searchParams = {
+                from_date: "",
+                to_date: "",
+                search: '',
+                approved_status: '',
+                request_type: ''
+            };
+
+            $scope.getResultsPage(1);
+            return false;
+        };
+
         $scope.pageChanged = function (newPage) {
             $scope.getResultsPage(newPage);
         };
 
         $scope.getResultsPage = function (pageNumber, childId) {
+            
             var $params = {
                 limit: $scope.per_page,
                 offset: $scope.per_page * (pageNumber - 1),
                 get_count: true
             };
+
+            if ($scope.searchParams.search !== null && $.trim($scope.searchParams.search) != '') {
+                $params.search = $scope.searchParams.search;
+            }
+
+            if ($scope.searchParams.approved_status !== null && $.trim($scope.searchParams.approved_status) != '') {
+                $params.approved_status = $scope.searchParams.approved_status;
+            }
+
+            if ($scope.searchParams.request_type !== null && $.trim($scope.searchParams.request_type) != '') {
+                $params.request_type = $scope.searchParams.request_type;
+            }
+
+            if (($scope.searchParams.from_date !== null
+                    && $.trim($scope.searchParams.from_date) !== "") &&
+                    ($scope.searchParams.to_date !== null
+                            && $.trim($scope.searchParams.to_date) !== "")) {
+                $params.from_date = $scope.searchParams.from_date;
+                $params.to_date = $scope.searchParams.to_date;
+            }
 
             app.showModal();
             $http({method: 'get', url: app.baseUrl + 'api/call_center/request_account_list', params: $params})
