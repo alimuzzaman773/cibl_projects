@@ -45,18 +45,6 @@ class Call_center_model extends CI_Model {
             $this->db->where("atms.branchCode", $params["branch"]);
         endif;
 
-        if (isset($params['status']) && trim($params['status']) != ''):
-            $this->db->where("aum.isPublished", $params["status"]);
-        endif;
-
-        if (isset($params['status']) && trim($params['status']) == 2):
-            $this->db->where("aum.isRejected", 1);
-        endif;
-
-        if (isset($params['status']) && trim($params['status']) == 3):
-            $this->db->where("aum.makerActionBy > ", 0);
-        endif;
-
         if (isset($params['from_date']) && trim($params['from_date']) != '' && isset($params['to_date']) && trim($params['to_date']) != ''):
             $this->db->where("ra.created_on between {$this->db->escape($params['from_date'])} AND {$this->db->escape($params['to_date'])}", null, false);
         endif;
@@ -66,14 +54,20 @@ class Call_center_model extends CI_Model {
             $this->db->limit($params['limit'], $offset);
         endif;
 
-        if (isset($params['is_regester']) && (int) $params['is_regester'] > 0):
-            $this->db->where("au.skyId > ", 0);
+        if (isset($params['is_regester']) && $params['is_regester'] == 0):
+            $this->db->where("aum.isPublished", "0");
         endif;
 
-        if (isset($params['password_reset']) && (int) $params['password_reset'] > 0):
-            $this->db->where("aum.isRejected !=", 1)
-                    ->where("aum.isPublished > ", 0)
-                    ->where("aum.passwordReset ", $params['password_reset']);
+        if (isset($params['is_regester']) && $params['is_regester'] == 1):
+            $this->db->where("aum.isPublished", "1");
+        endif;
+        
+        if (isset($params['password_reset']) && $params['password_reset'] == 0):
+            $this->db->where("aum.passwordReset", "0");
+        endif;
+
+        if (isset($params['password_reset']) && $params['password_reset'] == 1):
+            $this->db->where("aum.passwordReset", "1");
         endif;
 
         $query = $this->db->order_by('aum.passwordReset', 'desc')

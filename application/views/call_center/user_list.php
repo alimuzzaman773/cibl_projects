@@ -210,7 +210,7 @@
                         </td>
                     </tr>
                     <tr data-ng-show="user_list.length <= 0">
-                        <td colspan="18">No data found</td>
+                        <td colspan="21">No data found</td>
                     </tr>
                 </tbody>
             </table>
