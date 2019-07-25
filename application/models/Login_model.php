@@ -199,8 +199,8 @@ class Login_model extends CI_Model {
 
     function getUserAccounts($p = array()) {
         $this->db->select("a.*, atm.ATMName")
-                ->from("account_info a")
-                ->join("atms atm", "atm.branchCode = a.accBranchCode and eblNearYou = 1", "left");
+                 ->from("account_info a")
+                 ->join("atms atm", "atm.branchCode = a.accBranchCode and eblNearYou = 1", "left");
 
         if (isset($p['skyId']) && (int) $p['skyId']) {
             $this->db->where("a.skyId", $p['skyId']);
@@ -208,6 +208,10 @@ class Login_model extends CI_Model {
 
         if (isset($p['accountNo']) && trim($p['accountNo']) != "") {
             $this->db->where("a.accNo", $p['accountNo']);
+        }
+        
+        if (isset($p['account_delete']) && is_array($p['account_delete'])) {
+            $this->db->where_not_in("a.accountInfoID", $p['account_delete']);
         }
 
         if (isset($p['typeCode']) && trim($p['typeCode']) != "") {
@@ -224,13 +228,18 @@ class Login_model extends CI_Model {
     }
 
     public function checkAccount($userData, $account = NULL) {
-
+        
         $p['skyId'] = $userData['skyId'];
         if (isset($userData['type'])):
             $p['type'] = $userData['type'];
         endif;
+        
         if ($account !== NULL):
             $p['accountNo'] = $account;
+        endif;
+        
+        if(isset($userData['account_delete'])):
+            $p['account_delete'] = $userData['account_delete'];
         endif;
         //d($p);
         $result = $this->getUserAccounts($p);

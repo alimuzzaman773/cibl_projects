@@ -16,7 +16,7 @@ class Client_registration_model_checker extends CI_Model {
         $this->db->join('apps_users au', "au.skyId = apps_users_mc.skyId", "inner");
         $this->db->join('apps_users_group', 'apps_users_mc.appsGroupId = apps_users_group.appsGroupId', "left");
         $this->db->join('atms', 'apps_users_mc.homeBranchCode = atms.branchCode', 'left');
-
+        
         if (isset($params['search']) && trim($params['search']) != ''):
             $this->db->group_start()
                     ->or_like('apps_users_mc.skyId', $params['search'])
@@ -108,7 +108,7 @@ class Client_registration_model_checker extends CI_Model {
         return $query->row_array();
     }
 
-    public function UpdateInsertCheckerApprove($id, $data) {
+    public function UpdateInsertCheckerApprove($id, $data, $p = array()) {
         $this->db->where('skyId', $id);
         $this->db->update('apps_users_mc', $data);
 
@@ -143,6 +143,12 @@ class Client_registration_model_checker extends CI_Model {
 
         $tableData = $query->row_array();
         $this->db->insert('apps_users', $tableData);
+        
+        // Remove Account Number
+        if (isset($p['account_delete']) && is_array($p['account_delete'])):
+            $this->db->where_in('accountInfoID', $p['account_delete']);
+            $this->db->delete('account_info');
+        endif;
 
         // prepare data for activity log //
         $activityLog = array('activityJson' => json_encode($tableData),
@@ -157,7 +163,7 @@ class Client_registration_model_checker extends CI_Model {
         $this->db->insert('bo_activity_log', $activityLog);
     }
 
-    public function UpdateUpdateCheckerApprove($id, $data, $descision) {
+    public function UpdateUpdateCheckerApprove($id, $data, $descision, $p = array()) {
         $this->db->where('skyId', $id);
         $this->db->update('apps_users_mc', $data);
 
@@ -207,6 +213,12 @@ class Client_registration_model_checker extends CI_Model {
 
         $query = $this->db->get_where('apps_users', array('skyId' => $id));
         $jsonData = $query->row_array();
+        
+        // Remove Account Number
+        if (isset($p['account_delete']) && is_array($p['account_delete'])):
+            $this->db->where_in('accountInfoID', $p['account_delete']);
+            $this->db->delete('account_info');
+        endif;
 
         // prepare data for activity log //
         $activityLog = array('activityJson' => json_encode($jsonData),

@@ -27,6 +27,7 @@ AppUsersModuleApp.controller('AppUsersAddController', ['$scope', '$http', '$rout
 
         $scope.skyId = $routeParams.skyId;
         $scope.v_errors = [];
+        $scope.removed_account = [];
 
         //---SUBMIT BUTTON----
         $scope.saveItems = function () {
@@ -35,10 +36,15 @@ AppUsersModuleApp.controller('AppUsersAddController', ['$scope', '$http', '$rout
                 skyId: $scope.skyId,
                 cfId: $scope.cfId,
                 clientId: $scope.clientId,
+                prepaidId: $scope.prepaidId,
                 userName: $scope.userName,
+                userEmail: $scope.userEmail,
+                userMobNo1: $scope.userMobNo1,
+                userMobNo2: $scope.userMobNo2,
                 currAddress: $scope.currAddress,
                 parmAddress: $scope.parmAddress,
-                billingAddress: $scope.billingAddress
+                billingAddress: $scope.billingAddress,
+                dataDelete: $.parseJSON(angular.toJson($scope.removed_account)) //$scope.removed_account.toString()
             };
 
             app.showModal();
@@ -51,13 +57,16 @@ AppUsersModuleApp.controller('AppUsersAddController', ['$scope', '$http', '$rout
                             return false;
                         }
 
-                        if (data.success) {
-                            alert("AppUsers entries has been saved successfully!");
+                        if (data.success == true) {
+                            alert("Data has been saved successfully!");
                             $("#form_data")[0].reset();
                             window.location = app.baseUrl + "client_registration/index";
-                        } else {
-                            alert("Please try again!");
+                            return false;
                         }
+
+                        alert(data.msg);
+                        return;
+
 
                         //$scope.skyId = data.skyId;
                     })
@@ -78,10 +87,16 @@ AppUsersModuleApp.controller('AppUsersAddController', ['$scope', '$http', '$rout
                         $scope.eblSkyId = data.data.eblSkyId;
                         $scope.cfId = data.data.cfId;
                         $scope.clientId = data.data.clientId;
+                        $scope.prepaidId = data.data.prepaidId;
                         $scope.userName = data.data.userName;
+                        $scope.userEmail = data.data.userEmail;
+                        $scope.userMobNo1 = data.data.userMobNo1;
+                        $scope.userMobNo2 = data.data.userMobNo2;
                         $scope.currAddress = data.data.currAddress;
                         $scope.parmAddress = data.data.parmAddress;
                         $scope.billingAddress = data.data.billingAddress;
+
+                        $scope.user_accounts = data.accounts;
 
                         app.hideModal();
                     })
@@ -89,6 +104,22 @@ AppUsersModuleApp.controller('AppUsersAddController', ['$scope', '$http', '$rout
                         app.hideModal();
                         alert("There was a problem, please try again.")
                     });
+        };
+
+        $scope.remove_ac = function ($id, $val, $index) {
+            if($val > 0) {
+                $scope.removed_account.push($id)
+            } else {
+                $scope.removed_account.splice($index, 1);
+                return false;
+            }
+        };
+
+        $scope.select_all = 1;
+        $scope.check_all = function () {
+            angular.forEach($scope.removed_account, function (v, i) {
+                v.include = $scope.select_all;
+            });
         };
 
         $scope.init = function () {

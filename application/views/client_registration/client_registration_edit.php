@@ -33,8 +33,36 @@
                             </div>
                             <div class="col-md-4 col-lg-4 col-xs-12 col-sm-12">
                                 <div class="form-group">
+                                    <label>Prepaid ID</label>
+                                    <input type="text" name="prepaidId" class="form-control input-sm" ng-model="prepaidId" placeholder="ex: 12345.."/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 col-lg-4 col-xs-12 col-sm-12">
+                                <div class="form-group">
                                     <label>User Name</label>
                                     <input type="text" name="userName" class="form-control input-sm" ng-model="userName" placeholder="ex: john"/>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-lg-4 col-xs-12 col-sm-12">
+                                <div class="form-group">
+                                    <label>Email</label>
+                                    <input type="email" name="userEmail" class="form-control input-sm" ng-model="userEmail" placeholder="ex: email@domai.com"/>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-lg-4 col-xs-12 col-sm-12">
+                                <div class="form-group">
+                                    <label>Mobile No:1</label>
+                                    <input type="text" maxlength="11" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" name="userMobNo1" class="form-control input-sm" ng-model="userMobNo1" placeholder="Mobile Number 1"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 col-lg-4 col-xs-12 col-sm-12">
+                                <div class="form-group">
+                                    <label>Mobile No:2</label>
+                                    <input type="text" maxlength="11" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" name="userMobNo2" class="form-control input-sm" ng-model="userMobNo2" placeholder="Mobile Number 2"/>
                                 </div>
                             </div>
                         </div>
@@ -58,7 +86,42 @@
                                 </div>
                             </div>
                         </div>
+
                     </div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr class="bg-primary">
+                                <td colspan="5">Account Information</td>
+                            </tr>
+                        </thead>    
+                        <tr>
+                            <th>SI# Remove</th>
+                            <th>Account No</th>
+                            <th>Account Type</th>
+                            <th>Product Name</th>
+                            <th>Currency</th>
+                        </tr>
+                        <tr data-ng-repeat="ua in user_accounts track by $index" class="{{selected_ac == 1 ? 'bg-danger' : ''}}">
+                            <td>
+                                <div class="form-inline">
+                                    <label for="btn{{ua.accountInfoID}}">{{$index + 1}} 
+                                        <input  type="checkbox" id="btn{{ua.accountInfoID}}" class="checkbox" data-ng-true-value="1" data-ng-false-value="0" ng-model="selected_ac" ng-click="remove_ac(ua.accountInfoID, selected_ac, $index)"/>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>{{ua.accNo}}</td>
+                            <td>{{ua.accTypeName}} ({{ua.accTypeCode}})</td>
+                            <td>{{ua.accName}}</td>
+                            <td>{{ua.accCurrency}}</td>
+                        </tr>
+                        <tr data-ng-show="user_accounts.length <= 0">
+                            <td colspan="5">No data found</td>
+                        </tr>
+                    </table>
                 </div>
             </div>
             <div class="col-sm-12 col-xs-12" data-ng-show="v_errors.length > 0">

@@ -21,7 +21,7 @@ class Client_registration_checker extends CI_Controller {
         $this->load->view('site_template.php', $data);
     }
 
-    public function get_unapproved_users_list(){
+    public function get_unapproved_users_list() {
         $this->my_session->authorize("canViewAppsUserAuthorization");
         $params['limit'] = (int) $this->input->get("limit", true);
         $params['offset'] = (int) $this->input->get("offset", true);
@@ -29,7 +29,7 @@ class Client_registration_checker extends CI_Controller {
         $params['search'] = $this->input->get("search", true);
         $params['isLocked'] = $this->input->get("isLocked", true);
         $params['isActive'] = $this->input->get("isActive", true);
-        
+
         $data['total'] = array();
         $data['list'] = array();
 
@@ -47,7 +47,7 @@ class Client_registration_checker extends CI_Controller {
         if ($result) {
             $data['list'] = $result->result();
         }
-        
+
         $data['q'] = log_last_query($data['q']);
         my_json_output($data);
     }
@@ -159,40 +159,258 @@ class Client_registration_checker extends CI_Controller {
         }
 
         $data['appsUser'] = $dbData;
-        //d($db);
-        $cfParam = array(
-            'type' => 'account_number',
-            'skyId' => $dbData['skyId']
-        );
-        $data['accountInfo'] = json_encode($this->login_model->checkAccount($cfParam));
+
+        // For delete account
+        $dataDelete = json_decode($dbData['dataDelete'], true);
+        $dbData['account_delete'] = (!empty($dataDelete['account_delete']) ? $dataDelete['account_delete'] : null);
+
+        //d($data['account_delete']);
+        $data['accountInfo'] = json_encode($this->login_model->checkAccount($dbData));
 
         if ($dbData['skyId_c'] != NULL) {
             //$approvedAccounts = $this->client_registration_model_checker->getApprovedAccountsById($id);
             //$data['accountInfo_c'] = json_encode($this->login_model->checkAccount($approvedAccounts));
-            $data['accountInfo_c'] = json_encode($this->login_model->checkAccount($cfParam));
+            $data['accountInfo_c'] = json_encode($this->login_model->checkAccount(array('skyId' => $id)));
         } else {
             $data['accountInfo_c'] = json_encode((object) null);
         }
         
-        
-        $data['cardList'] = array();
-        if (!empty($dbData['clientId'])) {
-            $clrp = array(
-                'skyId' => $dbData['skyId'],
-                'type' => 'credit_card'
-            );
-            $cardListResult = $this->login_model->getUserAccounts($clrp);
-            if($cardListResult):
-                foreach($cardListResult->result() as $r):
-                    $cData = json_decode($r->accountData);
-                    $data['cardList'][] = array(
-                        'cardNo' => $r->accName,
-                        'email' => isset($cData->EMAIL) ? $cData->EMAIL : "",
-                        'mobile' => isset($cData->MOBILE) ? $cData->MOBILE : "",
-                    );
-                endforeach;
-            endif;
-        }
+        //d($dbData);
+
+//        $reqTypeCode = "10";
+//
+//        if (!empty($dbData['clientId'])) {
+//            $cardsData['methodName'] = "CARD_ACCOUNT_DETAILS";
+//            $cardsData['clientId'] = $dbData['clientId'];
+//            $cardsData['cardNumber'] = "NULL";
+//            $cardsData['cardCurrency'] = "NULL";
+//            $accDetail = $this->push_to_cbs_service_library->pushToCbsService($reqTypeCode, $cardsData);
+//            $accDetail = str_replace(array("\n", "\r", "\t"), '', $accDetail);
+//            $accDetail = simplexml_load_string($accDetail);
+//
+//            if ((string) $accDetail->ISSUCCESS == "Y") {
+//                $cardsData['methodName'] = "CARD_INFORMATION_DETAILS";
+//                $cardsData['clientId'] = $dbData['clientId'];
+//                $cardsData['cardNumber'] = (string) $accDetail->EBLCRD_OUTPUT->ITEM[0]->CARDNUMBER;
+//                $cardsData['cardCurrency'] = "NULL";
+//                $cardInfoDetail = $this->push_to_cbs_service_library->pushToCbsService($reqTypeCode, $cardsData);
+//                $cardInfoDetail = str_replace(array("\n", "\r", "\t"), '', $cardInfoDetail);
+//                $cardInfoDetail = simplexml_load_string($cardInfoDetail);
+//            }
+//        }
+//
+//
+//
+//        if (!empty($dbData['clientId_c'])) {
+//            $cardsData['methodName'] = "CARD_ACCOUNT_DETAILS";
+//            $cardsData['clientId'] = $dbData['clientId_c'];
+//            $cardsData['cardNumber'] = "NULL";
+//            $cardsData['cardCurrency'] = "NULL";
+//            $accDetail_c = $this->push_to_cbs_service_library->pushToCbsService($reqTypeCode, $cardsData);
+//            $accDetail_c = str_replace(array("\n", "\r", "\t"), '', $accDetail_c);
+//            $accDetail_c = simplexml_load_string($accDetail_c);
+//
+//            if ((string) $accDetail_c->ISSUCCESS == "Y") {
+//                $cardsData['methodName'] = "CARD_INFORMATION_DETAILS";
+//                $cardsData['clientId'] = $dbData['clientId_c'];
+//                $cardsData['cardNumber'] = (string) $accDetail_c->EBLCRD_OUTPUT->ITEM[0]->CARDNUMBER;
+//                $cardsData['cardCurrency'] = "NULL";
+//                $cardInfoDetail_c = $this->push_to_cbs_service_library->pushToCbsService($reqTypeCode, $cardsData);
+//                $cardInfoDetail_c = str_replace(array("\n", "\r", "\t"), '', $cardInfoDetail_c);
+//                $cardInfoDetail_c = simplexml_load_string($cardInfoDetail_c);
+//            }
+//        }
+//
+//
+//        if (empty($dbData['clientId']) && !empty($dbData['clientId_c'])) {
+//            $data['message'] = "Client ID is empty";
+//            if ((string) $accDetail_c->ISSUCCESS == "Y") {
+//                if ((string) $cardInfoDetail_c->ISSUCCESS == "Y") {
+//                    //$data['clientNumber_c'] = (string)$cardInfoDetail_c->EBLCRD_OUTPUT->ITEM[0]->CLIENTNUMBER;
+//                    //$data['cardNumber_c'] = $this->common_model->numberMasking(MASK, (string)$accDetail_c->EBLCRD_OUTPUT->ITEM[0]->CARDNUMBER);
+//                    //$data['cardType_c'] = (string)$cardInfoDetail_c->EBLCRD_OUTPUT->ITEM[0]->DEBITORCREDITCARD;
+//                    //$data['cardProductType_c'] = (string)$cardInfoDetail_c->EBLCRD_OUTPUT->ITEM[0]->CARDTYPE;
+//                    //$data['cardStatus_c'] = (string)$cardInfoDetail_c->EBLCRD_OUTPUT->ITEM[0]->CARDSTATUS;
+//                    $data['issupplementary_c'] = (string) $cardInfoDetail_c->EBLCRD_OUTPUT->ITEM[0]->ISSUPPLEMENTARY;
+//                    $data['primaryCardNumber_c'] = (string) $cardInfoDetail_c->EBLCRD_OUTPUT->ITEM[0]->PRIMARYCARDNUMBER;
+//                    $data['userNameCard_c'] = (string) $cardInfoDetail_c->EBLCRD_OUTPUT->ITEM[0]->EMBOSSEDNAME;
+//                    $data['expiryDate_c'] = (string) $cardInfoDetail_c->EBLCRD_OUTPUT->ITEM[0]->EXPIRYDATE;
+//                    $data['clientBillingAddress_c'] = (string) $cardInfoDetail_c->EBLCRD_OUTPUT->ITEM[0]->CLIENTBILLINGADDRESS;
+//                    $data['dobCard_c'] = (string) $cardInfoDetail_c->EBLCRD_OUTPUT->ITEM[0]->DOB;
+//                    $data['mothersNameCard_c'] = (string) $cardInfoDetail_c->EBLCRD_OUTPUT->ITEM[0]->MOTHERSNAME;
+//
+//                    /* new add for multi card */
+//                    $itemCount_c = count($accDetail_c->EBLCRD_OUTPUT->ITEM);
+//                    for ($w = 0; $w < $itemCount_c; $w++) {
+//                        $cardNo = (string) $accDetail_c->EBLCRD_OUTPUT->ITEM[$w]->CARDNUMBER;
+//                        $cardItem_c['cardNumber'] = $this->common_model->numberMasking(MASK, $cardNo);
+//                        $cardItem_c['cardType'] = checkCardTypes($cardNo);
+//                        $cardItem_c['cardStatus'] = (string) $accDetail_c->EBLCRD_OUTPUT->ITEM[$w]->CARDSTATUS;
+//                        $cardItem_c['cardCurrency'] = (string) $accDetail_c->EBLCRD_OUTPUT->ITEM[$w]->CURRENCYCODE;
+//                        $multiCardItem_c[] = $cardItem_c;
+//                    }
+//                    $data['multiCard_c'] = $multiCardItem_c;
+//                    /* new add for multi card */
+//
+//                    $data['cardsModeOfDisplay'] = "display: none;";
+//                    $data['cardsModeOfDisplay_c'] = "display: block;";
+//                    $data['message_c'] = "";
+//                } else {
+//                    $data['cardsModeOfDisplay'] = "display: none;";
+//                    $data['cardsModeOfDisplay_c'] = "display: none;";
+//                    $data['message_c'] = (string) $cardInfoDetail_c->WARNING;
+//                }
+//            } else {
+//                $data['cardsModeOfDisplay'] = "display: none;";
+//                $data['cardsModeOfDisplay_c'] = "display: none;";
+//                $data['message_c'] = (string) $accDetail_c->WARNING;
+//            }
+//        }
+//
+//
+//
+//        if (!empty($dbData['clientId']) && empty($dbData['clientId_c'])) {
+//            $data['message_c'] = "Client ID is empty";
+//            if ((string) $accDetail->ISSUCCESS == "Y") {
+//                if ((string) $cardInfoDetail->ISSUCCESS == "Y") {
+//                    //$data['clientNumber'] = (string)$cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->CLIENTNUMBER;
+//                    //$data['cardNumber'] = $this->common_model->numberMasking(MASK, (string)$accDetail->EBLCRD_OUTPUT->ITEM[0]->CARDNUMBER);
+//                    //$data['cardType'] = (string)$cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->DEBITORCREDITCARD;
+//                    //$data['cardProductType'] = (string)$cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->CARDTYPE;
+//                    //$data['cardStatus'] = (string)$cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->CARDSTATUS;
+//                    $data['issupplementary'] = (string) $cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->ISSUPPLEMENTARY;
+//                    $data['primaryCardNumber'] = (string) $cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->PRIMARYCARDNUMBER;
+//                    $data['userNameCard'] = (string) $cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->EMBOSSEDNAME;
+//                    $data['expiryDate'] = (string) $cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->EXPIRYDATE;
+//                    $data['clientBillingAddress'] = (string) $cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->CLIENTBILLINGADDRESS;
+//                    $data['dobCard'] = (string) $cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->DOB;
+//                    $data['mothersNameCard'] = (string) $cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->MOTHERSNAME;
+//
+//
+//                    /* new add for multi card */
+//                    $itemCount = count($accDetail->EBLCRD_OUTPUT->ITEM);
+//                    for ($w = 0; $w < $itemCount; $w++) {
+//                        $cardNo = (string) $accDetail->EBLCRD_OUTPUT->ITEM[$w]->CARDNUMBER;
+//                        $cardItem['cardNumber'] = $this->common_model->numberMasking(MASK, $cardNo);
+//                        $cardItem['cardType'] = checkCardTypes($cardNo);
+//                        $cardItem['cardStatus'] = (string) $accDetail->EBLCRD_OUTPUT->ITEM[$w]->CARDSTATUS;
+//                        $cardItem['cardCurrency'] = (string) $accDetail->EBLCRD_OUTPUT->ITEM[$w]->CURRENCYCODE;
+//                        $multiCardItem[] = $cardItem;
+//                    }
+//                    $data['multiCard'] = $multiCardItem;
+//                    /* new add for multi card */
+//
+//                    $data['cardsModeOfDisplay'] = "display: block;";
+//                    $data['cardsModeOfDisplay_c'] = "display: none;";
+//                    $data['message'] = "";
+//                } else {
+//                    $data['cardsModeOfDisplay'] = "display: none;";
+//                    $data['cardsModeOfDisplay_c'] = "display: none;";
+//                    $data['message'] = (string) $cardInfoDetail->WARNING;
+//                }
+//            } else {
+//                $data['cardsModeOfDisplay'] = "display: none;";
+//                $data['cardsModeOfDisplay_c'] = "display: none;";
+//                $data['message'] = (string) $accDetail->WARNING;
+//            }
+//        }
+//
+//
+//        if (!empty($dbData['clientId']) && !empty($dbData['clientId_c'])) {
+//            if ((string) $accDetail->ISSUCCESS == "Y") {
+//                if ((string) $cardInfoDetail->ISSUCCESS == "Y") {
+//                    //$data['clientNumber'] = (string)$cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->CLIENTNUMBER;
+//                    //$data['cardNumber'] = $this->common_model->numberMasking(MASK, (string)$accDetail->EBLCRD_OUTPUT->ITEM[0]->CARDNUMBER);
+//                    //$data['cardType'] = (string)$cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->DEBITORCREDITCARD;
+//                    //$data['cardProductType'] = (string)$cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->CARDTYPE;
+//                    //$data['cardStatus'] = (string)$cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->CARDSTATUS;
+//                    $data['issupplementary'] = (string) $cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->ISSUPPLEMENTARY;
+//                    $data['primaryCardNumber'] = (string) $cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->PRIMARYCARDNUMBER;
+//                    $data['userNameCard'] = (string) $cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->EMBOSSEDNAME;
+//                    $data['expiryDate'] = (string) $cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->EXPIRYDATE;
+//                    $data['clientBillingAddress'] = (string) $cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->CLIENTBILLINGADDRESS;
+//                    $data['dobCard'] = (string) $cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->DOB;
+//                    $data['mothersNameCard'] = (string) $cardInfoDetail->EBLCRD_OUTPUT->ITEM[0]->MOTHERSNAME;
+//
+//                    /* new add for multi card */
+//                    $itemCount = count($accDetail->EBLCRD_OUTPUT->ITEM);
+//                    for ($w = 0; $w < $itemCount; $w++) {
+//                        $cardNo = (string) $accDetail->EBLCRD_OUTPUT->ITEM[$w]->CARDNUMBER;
+//                        $cardItem['cardNumber'] = $this->common_model->numberMasking(MASK, $cardNo);
+//                        $cardItem['cardType'] = checkCardTypes($cardNo);
+//                        $cardItem['cardStatus'] = (string) $accDetail->EBLCRD_OUTPUT->ITEM[$w]->CARDSTATUS;
+//                        $cardItem['cardCurrency'] = (string) $accDetail->EBLCRD_OUTPUT->ITEM[$w]->CURRENCYCODE;
+//                        $multiCardItem[] = $cardItem;
+//                    }
+//
+//                    $data['multiCard'] = $multiCardItem;
+//                    /* new add for multi card */
+//
+//
+//                    $data['cardsModeOfDisplay'] = "display: block;";
+//                    $data['cardsModeOfDisplay_c'] = "display: block;";
+//                    $data['message'] = "";
+//                } else {
+//                    $data['cardsModeOfDisplay'] = "display: none;";
+//                    $data['cardsModeOfDisplay_c'] = "display: none;";
+//                    $data['message'] = (string) $cardInfoDetail->WARNING;
+//                }
+//            } else {
+//                $data['cardsModeOfDisplay'] = "display: none;";
+//                $data['cardsModeOfDisplay_c'] = "display: none;";
+//                $data['message'] = (string) $accDetail->WARNING;
+//            }
+//
+//
+//            if ((string) $accDetail_c->ISSUCCESS == "Y") {
+//                if ((string) $cardInfoDetail_c->ISSUCCESS == "Y") {
+//                    //$data['clientNumber_c'] = (string)$cardInfoDetail_c->EBLCRD_OUTPUT->ITEM[0]->CLIENTNUMBER;
+//                    //$data['cardNumber_c'] = $this->common_model->numberMasking(MASK, (string)$accDetail_c->EBLCRD_OUTPUT->ITEM[0]->CARDNUMBER);
+//                    //$data['cardType_c'] = (string)$cardInfoDetail_c->EBLCRD_OUTPUT->ITEM[0]->DEBITORCREDITCARD;
+//                    //$data['cardProductType_c'] = (string)$cardInfoDetail_c->EBLCRD_OUTPUT->ITEM[0]->CARDTYPE;
+//                    //$data['cardStatus_c'] = (string)$cardInfoDetail_c->EBLCRD_OUTPUT->ITEM[0]->CARDSTATUS;
+//                    $data['issupplementary_c'] = (string) $cardInfoDetail_c->EBLCRD_OUTPUT->ITEM[0]->ISSUPPLEMENTARY;
+//                    $data['primaryCardNumber_c'] = (string) $cardInfoDetail_c->EBLCRD_OUTPUT->ITEM[0]->PRIMARYCARDNUMBER;
+//                    $data['userNameCard_c'] = (string) $cardInfoDetail_c->EBLCRD_OUTPUT->ITEM[0]->EMBOSSEDNAME;
+//                    $data['expiryDate_c'] = (string) $cardInfoDetail_c->EBLCRD_OUTPUT->ITEM[0]->EXPIRYDATE;
+//                    $data['clientBillingAddress_c'] = (string) $cardInfoDetail_c->EBLCRD_OUTPUT->ITEM[0]->CLIENTBILLINGADDRESS;
+//                    $data['dobCard_c'] = (string) $cardInfoDetail_c->EBLCRD_OUTPUT->ITEM[0]->DOB;
+//                    $data['mothersNameCard_c'] = (string) $cardInfoDetail_c->EBLCRD_OUTPUT->ITEM[0]->MOTHERSNAME;
+//
+//                    /* new add for multi card */
+//                    $itemCount_c = count($accDetail_c->EBLCRD_OUTPUT->ITEM);
+//                    for ($w = 0; $w < $itemCount_c; $w++) {
+//                        $cardNo = (string) $accDetail_c->EBLCRD_OUTPUT->ITEM[$w]->CARDNUMBER;
+//                        $cardItem_c['cardNumber'] = $this->common_model->numberMasking(MASK, $cardNo);
+//                        $cardItem_c['cardType'] = checkCardTypes($cardNo);
+//                        $cardItem_c['cardStatus'] = (string) $accDetail_c->EBLCRD_OUTPUT->ITEM[$w]->CARDSTATUS;
+//                        $cardItem_c['cardCurrency'] = (string) $accDetail_c->EBLCRD_OUTPUT->ITEM[$w]->CURRENCYCODE;
+//                        $multiCardItem_c[] = $cardItem_c;
+//                    }
+//                    $data['multiCard_c'] = $multiCardItem_c;
+//                    /* new add for multi card */
+//
+//                    $data['cardsModeOfDisplay'] = "display: block;";
+//                    $data['cardsModeOfDisplay_c'] = "display: block;";
+//                    $data['message_c'] = "";
+//                } else {
+//                    $data['cardsModeOfDisplay'] = "display: none;";
+//                    $data['cardsModeOfDisplay_c'] = "display: none;";
+//                    $data['message_c'] = (string) $cardInfoDetail_c->WARNING;
+//                }
+//            } else {
+//                $data['cardsModeOfDisplay'] = "display: none;";
+//                $data['cardsModeOfDisplay_c'] = "display: none;";
+//                $data['message_c'] = (string) $accDetail_c->WARNING;
+//            }
+//        }
+//
+//        if (empty($dbData['clientId']) && empty($dbData['clientId_c'])) {
+//            $data['cardsModeOfDisplay'] = "display: none;";
+//            $data['message'] = "Client ID is empty";
+//            $data['cardsModeOfDisplay_c'] = "display: none;";
+//            $data['message_c'] = "Client ID is empty";
+//        }
 
         $data["pageTitle"] = "Apps User Checker";
         $data["body_template"] = "client_registration_checker/apps_user_approve_form.php";
@@ -219,20 +437,23 @@ class Client_registration_checker extends CI_Controller {
             $chkdata['checkerActionComment'] = NULL;
             $chkdata['mcStatus'] = 1;
 
+            $dataDelete = json_decode($dbData['dataDelete'], true);
+            $p['account_delete'] = (!empty($dataDelete['account_delete']) ? $dataDelete['account_delete'] : null);
+
             $res = $this->checkUserInteraction($id, $makerActionDtTm, $checkerActionDtTm);
 
             if ($res == 0) {
                 if ($dbData['isPublished'] == 0) {
                     // update and insert
-                    $this->client_registration_model_checker->UpdateInsertCheckerApprove($id, $chkdata);
+                    $this->client_registration_model_checker->UpdateInsertCheckerApprove($id, $chkdata, $p);
                 } else if ($dbData['isPublished'] == 1) {
 
                     if ($dbData['appsGroupId'] == $dbData['appsGroupId_c']) {
                         $descision = 1;
-                        $this->client_registration_model_checker->UpdateUpdateCheckerApprove($id, $chkdata, $descision);
+                        $this->client_registration_model_checker->UpdateUpdateCheckerApprove($id, $chkdata, $descision, $p);
                     } else {
                         $descision = 0;
-                        $this->client_registration_model_checker->UpdateUpdateCheckerApprove($id, $chkdata, $descision);
+                        $this->client_registration_model_checker->UpdateUpdateCheckerApprove($id, $chkdata, $descision, $p);
                     }
                 }
                 // activity log goes here

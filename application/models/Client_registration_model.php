@@ -34,6 +34,8 @@ class Client_registration_model extends CI_Model {
                     ->or_like('apps_users_mc.userName', $p['search'])
                     ->or_like('apps_users_mc.userName2', $p['search'])
                     ->or_like('apps_users_mc.cfId', $p['search'])
+                    ->or_like('apps_users_mc.clientId', $p['search'])
+                    ->or_like('apps_users_mc.prepaidId', $p['search'])
                     ->or_like('apps_users_mc.userEmail', $p['search'])
                     ->or_like('apps_users_mc.userMobNo1', $p['search'])
                     ->or_like('apps_users_mc.fatherName', $p['search'])
@@ -254,6 +256,56 @@ class Client_registration_model extends CI_Model {
             return $result;
         }
         return false;
+    }
+
+    function checkAppsUserData($tblName, $p = array()) {
+        $this->db->select("*")
+                ->from($tblName);
+
+        if (isset($p['cfId']) && trim($p['cfId']) != ''):
+            $this->db->where("cfId", $p['cfId']);
+        endif;
+
+        if (isset($p['clientId']) && trim($p['clientId']) != ''):
+            $this->db->where("clientId", $p['clientId']);
+        endif;
+
+        if (isset($p['skyIdNotIn']) && count($p['skyIdNotIn']) > 0):
+            $this->db->where_not_in("skyId", $p['skyIdNotIn']);
+        endif;
+
+        $result = $this->db->get();
+        if ($result->num_rows() > 0) {
+            return $result;
+        }
+        return false;
+    }
+
+    function getUserTransaction($p = array()) {
+        $query = $this->db->query("SELECT eblSkyId, 
+                (SELECT COUNT(transferId) FROM  apps_transaction apt where apt.skyId=trn.skyId and apt.trnType='06' and isSuccess='Y') as 'own_count',
+                (SELECT SUM(amount) FROM  apps_transaction apt where apt.skyId=trn.skyId and apt.trnType='06' and isSuccess='Y') as 'own_amount',
+                (SELECT COUNT(transferId) FROM  apps_transaction apt where apt.skyId=trn.skyId and apt.trnType='07' and isSuccess='Y') as 'inter_count',
+                (SELECT SUM(amount) FROM  apps_transaction apt where apt.skyId=trn.skyId and apt.trnType='07' and isSuccess='Y') as 'inter_amount',
+                (SELECT COUNT(transferId) FROM  apps_transaction apt where apt.skyId=trn.skyId and apt.trnType='08' and isSuccess='Y') as 'other_count',
+                (SELECT SUM(amount) FROM  apps_transaction apt where apt.skyId=trn.skyId and apt.trnType='08' and isSuccess='Y') as 'other_amount'
+                from apps_transaction trn where trn.skyId={$this->db->escape($p['skyId'])}
+                GROUP BY skyId");
+        return $query;
+    }
+
+    function getUserBillTransaction($p = array()) {
+
+        $query = $this->db->query("SELECT eblSkyId, 
+                (SELECT COUNT(billPayId) FROM  apps_bill_pay abp where abp.skyId=mabp.skyId and abp.billTypeCode='01' and isSuccess='Y') as 'recharge_count',
+                (SELECT SUM(amount) FROM  apps_bill_pay abp where abp.skyId=mabp.skyId and abp.billTypeCode='01' and isSuccess='Y') as 'recharge_amount',
+                (SELECT COUNT(billPayId) FROM  apps_bill_pay abp where abp.skyId=mabp.skyId and abp.billTypeCode='02' and isSuccess='Y') as 'wimax_count',
+                (SELECT SUM(amount) FROM  apps_bill_pay abp where abp.skyId=mabp.skyId and abp.billTypeCode='02' and isSuccess='Y') as 'wimax_amount',
+                (SELECT COUNT(billPayId) FROM  apps_bill_pay abp where abp.skyId=mabp.skyId and abp.billTypeCode='03' and isSuccess='Y') as 'card_count',
+                (SELECT SUM(amount) FROM  apps_bill_pay abp where abp.skyId=mabp.skyId and abp.billTypeCode='03' and isSuccess='Y') as 'card_amount'
+                from apps_bill_pay mabp where mabp.skyId={$this->db->escape($p['skyId'])}
+                GROUP BY skyId");
+        return $query;
     }
 
 }

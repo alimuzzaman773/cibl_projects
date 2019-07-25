@@ -1,6 +1,11 @@
 <div class="row">
     <div class="col-sm-12">
-        <h2 class="title-underlined ng-scope">User Remove</h2>
+        <h2 class="title-underlined ng-scope">
+            User Remove
+            <a href="<?php echo base_url() . 'client_registration/index'; ?>" class="btn btn-primary pull-right btn-sm">
+                <i class="glyphicon glyphicon-plus"></i> Apps User List
+            </a>
+        </h2>
     </div>
 </div>
 <div class="row">
@@ -107,12 +112,12 @@
     </div>
 </div>
 <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" data-ng-show="v_errors.length > 0">
-            <br clear ="all" />
-            <div class=" alert alert-danger" data-ng-bind-html="v_errors"></div>
-            <br clear ="all" />
-        </div>
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" data-ng-show="v_errors.length > 0">
+        <br clear ="all" />
+        <div class=" alert alert-danger" data-ng-bind-html="v_errors"></div>
+        <br clear ="all" />
     </div>
+</div>
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5 col-md-offset-7 col-lg-offset-7">
         <form data-ng-submit="remove_user(skyId)">
