@@ -101,7 +101,7 @@
                         <tr>
                             <th>SI# Remove</th>
                             <th>Account No</th>
-                            <th>Account Type</th>
+<!--                            <th>Account Type</th>-->
                             <th>Product Name</th>
                             <th>Currency</th>
                         </tr>
@@ -114,12 +114,12 @@
                                 </div>
                             </td>
                             <td>{{ua.accNo}}</td>
-                            <td>{{ua.accTypeName}} ({{ua.accTypeCode}})</td>
+<!--                            <td>{{ua.accTypeName}} ({{ua.accTypeCode}})</td>-->
                             <td>{{ua.accName}}</td>
                             <td>{{ua.accCurrency}}</td>
                         </tr>
                         <tr data-ng-show="user_accounts.length <= 0">
-                            <td colspan="5">No data found</td>
+                            <td colspan="4">No data found</td>
                         </tr>
                     </table>
                 </div>

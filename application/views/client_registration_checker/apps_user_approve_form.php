@@ -125,13 +125,13 @@
                             </table>
 
                             <div>
-                                <h3 style="color:green" > Account Numbers </h3>
+                                <h3 style="color:green" > Account and Card Numbers </h3>
                                 <div data-bind="visible: changedAccounts().length > 0">
                                     <table class="table table-striped table-bordered">
                                         <thead>
                                             <tr>
                                                 <th style="text-align:center">Account Number</th>
-                                                <th style="text-align:center">Account Type</th>
+<!--                                                <th style="text-align:center">Account Type</th>-->
                                                 <th style="text-align:center">Product Name</th>
                                                 <th style="text-align:center">Currency</th>
                                             </tr>
@@ -139,7 +139,7 @@
                                         <tbody data-bind="foreach: changedAccounts">
                                             <tr>
                                                 <td style="text-align:center" data-bind="text:accNo"></td>
-                                                <td style="text-align:center" data-bind="text:accType"></td>
+<!--                                                <td style="text-align:center" data-bind="text:accType"></td>-->
                                                 <td style="text-align:center" data-bind="text:accName"></td>
                                                 <td style="text-align:center" data-bind="text:accCurrency"></td>
                                             </tr>
@@ -308,13 +308,13 @@
                         </table>
 
                         <div>
-                            <h3 style="color:green" > Account Numbers </h3>
+                            <h3 style="color:green" > Account and Card Numbers </h3>
                             <div data-bind="visible: publishedAccounts().length > 0">
                                 <table class="table table-striped table-bordered">
                                     <thead>
                                         <tr>
                                             <th style="text-align:center">Account Number</th>
-                                            <th style="text-align:center">Account Type</th>
+<!--                                            <th style="text-align:center">Account Type</th>-->
                                             <th style="text-align:center">Product Name</th>
                                             <th style="text-align:center">Currency</th>
                                         </tr>
@@ -322,7 +322,7 @@
                                     <tbody data-bind="foreach: publishedAccounts">
                                         <tr>
                                             <td style="text-align:center" data-bind="text:accNo"></td>
-                                            <td style="text-align:center" data-bind="text:accType"></td>
+<!--                                            <td style="text-align:center" data-bind="text:accType"></td>-->
                                             <td style="text-align:center" data-bind="text:accName"></td>
                                             <td style="text-align:center" data-bind="text:accCurrency"></td>
                                         </tr>
