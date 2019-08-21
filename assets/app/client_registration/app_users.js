@@ -44,6 +44,13 @@ AppUsersModuleApp.controller('AppUsersAddController', ['$scope', '$http', '$rout
                 currAddress: $scope.currAddress,
                 parmAddress: $scope.parmAddress,
                 billingAddress: $scope.billingAddress,
+                isOwnAccTransfer: $scope.isOwnAccTransfer,
+                isEnterAccTransfer: $scope.isEnterAccTransfer,
+                isOtherAccTransfer: $scope.isOtherAccTransfer,
+                isAccToCardTransfer: $scope.isAccToCardTransfer,
+                isCardToAccTransfer: $scope.isCardToAccTransfer,
+                isUtilityTransfer: $scope.isUtilityTransfer,
+                isQrPayment: $scope.isQrPayment,
                 dataDelete: $.parseJSON(angular.toJson($scope.removed_account)) //$scope.removed_account.toString()
             };
 
@@ -95,6 +102,13 @@ AppUsersModuleApp.controller('AppUsersAddController', ['$scope', '$http', '$rout
                         $scope.currAddress = data.data.currAddress;
                         $scope.parmAddress = data.data.parmAddress;
                         $scope.billingAddress = data.data.billingAddress;
+                        $scope.isOwnAccTransfer = app.parseInt(data.data.isOwnAccTransfer);
+                        $scope.isEnterAccTransfer = app.parseInt(data.data.isEnterAccTransfer);
+                        $scope.isOtherAccTransfer = app.parseInt(data.data.isOtherAccTransfer);
+                        $scope.isAccToCardTransfer = app.parseInt(data.data.isAccToCardTransfer);
+                        $scope.isCardToAccTransfer = app.parseInt(data.data.isCardToAccTransfer);
+                        $scope.isUtilityTransfer = app.parseInt(data.data.isUtilityTransfer);
+                        $scope.isQrPayment = app.parseInt(data.data.isQrPayment);
 
                         $scope.user_accounts = data.accounts;
 
@@ -107,7 +121,7 @@ AppUsersModuleApp.controller('AppUsersAddController', ['$scope', '$http', '$rout
         };
 
         $scope.remove_ac = function ($id, $val, $index) {
-            if($val > 0) {
+            if ($val > 0) {
                 $scope.removed_account.push($id)
             } else {
                 $scope.removed_account.splice($index, 1);

@@ -23,6 +23,13 @@ class Client_registration extends CI_Controller {
         $params['currAddress'] = $this->input->post('currAddress', TRUE);
         $params['parmAddress'] = $this->input->post('parmAddress', TRUE);
         $params['billingAddress'] = $this->input->post('billingAddress', TRUE);
+        $params['isOwnAccTransfer'] = $this->input->post('isOwnAccTransfer', true);
+        $params['isEnterAccTransfer'] = $this->input->post('isEnterAccTransfer', true);
+        $params['isOtherAccTransfer'] = $this->input->post('isOtherAccTransfer', true);
+        $params['isAccToCardTransfer'] = $this->input->post('isAccToCardTransfer', true);
+        $params['isCardToAccTransfer'] = $this->input->post('isCardToAccTransfer', true);
+        $params['isUtilityTransfer'] = $this->input->post('isUtilityTransfer', true);
+        $params['isQrPayment'] = $this->input->post('isQrPayment', true);
         $dataDelete = $this->input->post('dataDelete', TRUE);
         $params['dataDelete'] = json_encode(array('account_delete' => $dataDelete));
 

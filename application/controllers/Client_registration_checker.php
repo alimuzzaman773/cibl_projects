@@ -158,6 +158,126 @@ class Client_registration_checker extends CI_Controller {
             $data['isLocked_c'] = "";
         }
 
+        // for enable disable transaction
+        $data['isOwnAccTransfer'] = "";
+        $data['isOwnAccTransfer_c'] = "";
+
+        if ($dbData['isOwnAccTransfer'] == "1") {
+            $data['isOwnAccTransfer'] = "Yes";
+        } else if ($dbData['isOwnAccTransfer'] == "0") {
+            $data['isOwnAccTransfer'] = "No";
+        }
+
+        if ($dbData['isOwnAccTransfer_c'] == "1") {
+            $data['isOwnAccTransfer_c'] = "Yes";
+        } else if ($dbData['isOwnAccTransfer_c'] == "0") {
+            $data['isOwnAccTransfer_c'] = "No";
+        } else {
+            $data['isOwnAccTransfer_c'] = "";
+        }
+
+        $data['isEnterAccTransfer'] = "";
+        $data['isEnterAccTransfer_c'] = "";
+
+        if ($dbData['isEnterAccTransfer'] == "1") {
+            $data['isEnterAccTransfer'] = "Yes";
+        } else if ($dbData['isEnterAccTransfer'] == "0") {
+            $data['isEnterAccTransfer'] = "No";
+        }
+
+        if ($dbData['isEnterAccTransfer_c'] == "1") {
+            $data['isEnterAccTransfer_c'] = "Yes";
+        } else if ($dbData['isEnterAccTransfer_c'] == "0") {
+            $data['isEnterAccTransfer_c'] = "No";
+        } else {
+            $data['isEnterAccTransfer_c'] = "";
+        }
+
+        $data['isOtherAccTransfer'] = "";
+        $data['isOtherAccTransfer_c'] = "";
+
+        if ($dbData['isOtherAccTransfer'] == "1") {
+            $data['isOtherAccTransfer'] = "Yes";
+        } else if ($dbData['isOtherAccTransfer'] == "0") {
+            $data['isOtherAccTransfer'] = "No";
+        }
+
+        if ($dbData['isOtherAccTransfer_c'] == "1") {
+            $data['isOtherAccTransfer_c'] = "Yes";
+        } else if ($dbData['isOtherAccTransfer_c'] == "0") {
+            $data['isOtherAccTransfer_c'] = "No";
+        } else {
+            $data['isOtherAccTransfer_c'] = "";
+        }
+
+        $data['isAccToCardTransfer'] = "";
+        $data['isAccToCardTransfer_c'] = "";
+
+        if ($dbData['isAccToCardTransfer'] == "1") {
+            $data['isAccToCardTransfer'] = "Yes";
+        } else if ($dbData['isAccToCardTransfer'] == "0") {
+            $data['isAccToCardTransfer'] = "No";
+        }
+
+        if ($dbData['isAccToCardTransfer_c'] == "1") {
+            $data['isAccToCardTransfer_c'] = "Yes";
+        } else if ($dbData['isAccToCardTransfer_c'] == "0") {
+            $data['isAccToCardTransfer_c'] = "No";
+        } else {
+            $data['isAccToCardTransfer_c'] = "";
+        }
+
+        $data['isCardToAccTransfer'] = "";
+        $data['isCardToAccTransfer_c'] = "";
+
+        if ($dbData['isCardToAccTransfer'] == "1") {
+            $data['isCardToAccTransfer'] = "Yes";
+        } else if ($dbData['isCardToAccTransfer'] == "0") {
+            $data['isCardToAccTransfer'] = "No";
+        }
+
+        if ($dbData['isCardToAccTransfer_c'] == "1") {
+            $data['isCardToAccTransfer_c'] = "Yes";
+        } else if ($dbData['isCardToAccTransfer_c'] == "0") {
+            $data['isCardToAccTransfer_c'] = "No";
+        } else {
+            $data['isCardToAccTransfer_c'] = "";
+        }
+
+        $data['isUtilityTransfer'] = "";
+        $data['isUtilityTransfer_c'] = "";
+
+        if ($dbData['isUtilityTransfer'] == "1") {
+            $data['isUtilityTransfer'] = "Yes";
+        } else if ($dbData['isUtilityTransfer'] == "0") {
+            $data['isUtilityTransfer'] = "No";
+        }
+
+        if ($dbData['isUtilityTransfer_c'] == "1") {
+            $data['isUtilityTransfer_c'] = "Yes";
+        } else if ($dbData['isUtilityTransfer_c'] == "0") {
+            $data['isUtilityTransfer_c'] = "No";
+        } else {
+            $data['isUtilityTransfer_c'] = "";
+        }
+
+        $data['isQrPayment'] = "";
+        $data['isQrPayment_c'] = "";
+
+        if ($dbData['isQrPayment'] == "1") {
+            $data['isQrPayment'] = "Yes";
+        } else if ($dbData['isQrPayment'] == "0") {
+            $data['isQrPayment'] = "No";
+        }
+
+        if ($dbData['isQrPayment_c'] == "1") {
+            $data['isQrPayment_c'] = "Yes";
+        } else if ($dbData['isQrPayment_c'] == "0") {
+            $data['isQrPayment_c'] = "No";
+        } else {
+            $data['isQrPayment_c'] = "";
+        }
+
         $data['appsUser'] = $dbData;
 
         // For delete account
@@ -174,9 +294,8 @@ class Client_registration_checker extends CI_Controller {
         } else {
             $data['accountInfo_c'] = json_encode((object) null);
         }
-        
-        //d($dbData);
 
+        //d($dbData);
 //        $reqTypeCode = "10";
 //
 //        if (!empty($dbData['clientId'])) {

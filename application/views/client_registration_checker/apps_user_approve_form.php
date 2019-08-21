@@ -19,7 +19,7 @@
 
                             <table class="table table-striped table-bordered">    
                                 <tr>
-                                    <th align="left" scope="row">Apps ID</th>
+                                    <th align="left" scope="row"  width="50%">Apps ID</th>
                                     <td><?php echo text_match($appsUser['eblSkyId'], $appsUser['eblSkyId_c']); ?></td>
                                 </tr>
 
@@ -114,6 +114,35 @@
                                 </tr>
 
                                 <tr>
+                                    <th align="left" scope="row">Own Account Transfer</th>
+                                    <td><?= text_match($isOwnAccTransfer, $isOwnAccTransfer_c) ?></td>
+                                </tr>
+                                <tr>
+                                    <th align="left" scope="row">PBL Account Transfer</th>
+                                    <td><?= text_match($isEnterAccTransfer, $isEnterAccTransfer_c) ?></td>
+                                </tr>
+                                <tr>
+                                    <th align="left" scope="row">Other Account Transfer</th>
+                                    <td><?= text_match($isOtherAccTransfer, $isOtherAccTransfer_c) ?></td>
+                                </tr>
+                                <tr>
+                                    <th align="left" scope="row">Account To Card Transfer</th>
+                                    <td><?= text_match($isAccToCardTransfer, $isAccToCardTransfer_c) ?></td>
+                                </tr>
+                                <tr>
+                                    <th align="left" scope="row">Card To Account Transfer</th>
+                                    <td><?= text_match($isCardToAccTransfer, $isCardToAccTransfer_c) ?></td>
+                                </tr>
+                                <tr>
+                                    <th align="left" scope="row">Utility Transaction</th>
+                                    <td><?= text_match($isUtilityTransfer, $isUtilityTransfer_c) ?></td>
+                                </tr>
+                                <tr>
+                                    <th align="left" scope="row">QR Payment</th>
+                                    <td><?= text_match($isQrPayment, $isQrPayment_c) ?></td>
+                                </tr>
+
+                                <tr>
                                     <th align="left" scope="row">Maker Action</th>
                                     <td><?php echo text_match($appsUser['makerAction'], $appsUser['makerAction_c']); ?></td>
                                 </tr>
@@ -187,7 +216,7 @@
 
                         <table class="table table-striped table-bordered">    
                             <tr>
-                                <th align="left" scope="row">APPS ID</th>
+                                <th align="left" scope="row" width="50%">APPS ID</th>
                                 <td><?= $appsUser['eblSkyId_c'] ?></td>
                             </tr>
 
@@ -293,8 +322,34 @@
                                 <td><?= $isLocked_c ?></td>
                             </tr>
 
-
-
+                            <tr>
+                                <th align="left" scope="row">Own Account Transfer</th>
+                                <td><?= $isOwnAccTransfer_c ?></td>
+                            </tr>
+                            <tr>
+                                <th align="left" scope="row">PBL Account Transfer</th>
+                                <td><?= $isEnterAccTransfer_c ?></td>
+                            </tr>
+                            <tr>
+                                <th align="left" scope="row">Other Account Transfer</th>
+                                <td><?= $isOtherAccTransfer_c ?></td>
+                            </tr>
+                            <tr>
+                                <th align="left" scope="row">Account To Card Transfer</th>
+                                <td><?= $isAccToCardTransfer_c ?></td>
+                            </tr>
+                            <tr>
+                                <th align="left" scope="row">Card To Account Transfer</th>
+                                <td><?= $isCardToAccTransfer_c ?></td>
+                            </tr>
+                            <tr>
+                                <th align="left" scope="row">Utility Transaction</th>
+                                <td><?= $isUtilityTransfer_c ?></td>
+                            </tr>
+                            <tr>
+                                <th align="left" scope="row">QR Payment</th>
+                                <td><?= $isQrPayment_c ?></td>
+                            </tr>
                             <tr>
                                 <th align="left" scope="row">Maker Action</th>
                                 <td><?= $appsUser['makerAction_c'] ?></td>
