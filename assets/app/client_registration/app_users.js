@@ -45,7 +45,7 @@ AppUsersModuleApp.controller('AppUsersAddController', ['$scope', '$http', '$rout
                 parmAddress: $scope.parmAddress,
                 billingAddress: $scope.billingAddress,
                 isOwnAccTransfer: $scope.isOwnAccTransfer,
-                isEnterAccTransfer: $scope.isEnterAccTransfer,
+                isInterAccTransfer: $scope.isInterAccTransfer,
                 isOtherAccTransfer: $scope.isOtherAccTransfer,
                 isAccToCardTransfer: $scope.isAccToCardTransfer,
                 isCardToAccTransfer: $scope.isCardToAccTransfer,
@@ -103,7 +103,7 @@ AppUsersModuleApp.controller('AppUsersAddController', ['$scope', '$http', '$rout
                         $scope.parmAddress = data.data.parmAddress;
                         $scope.billingAddress = data.data.billingAddress;
                         $scope.isOwnAccTransfer = app.parseInt(data.data.isOwnAccTransfer);
-                        $scope.isEnterAccTransfer = app.parseInt(data.data.isEnterAccTransfer);
+                        $scope.isInterAccTransfer = app.parseInt(data.data.isInterAccTransfer);
                         $scope.isOtherAccTransfer = app.parseInt(data.data.isOtherAccTransfer);
                         $scope.isAccToCardTransfer = app.parseInt(data.data.isAccToCardTransfer);
                         $scope.isCardToAccTransfer = app.parseInt(data.data.isCardToAccTransfer);

@@ -86,7 +86,7 @@ class Client_registration_model_checker extends CI_Model {
                           apps_users.isLocked as isLocked_c,
                           apps_users.isActive as isActive_c,
                           apps_users.isOwnAccTransfer as isOwnAccTransfer_c,
-                          apps_users.isEnterAccTransfer as isEnterAccTransfer_c,
+                          apps_users.isInterAccTransfer as isInterAccTransfer_c,
                           apps_users.isOtherAccTransfer as isOtherAccTransfer_c,
                           apps_users.isAccToCardTransfer as isAccToCardTransfer_c,
                           apps_users.isCardToAccTransfer as isCardToAccTransfer_c,

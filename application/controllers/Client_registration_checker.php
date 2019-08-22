@@ -176,21 +176,21 @@ class Client_registration_checker extends CI_Controller {
             $data['isOwnAccTransfer_c'] = "";
         }
 
-        $data['isEnterAccTransfer'] = "";
-        $data['isEnterAccTransfer_c'] = "";
+        $data['isInterAccTransfer'] = "";
+        $data['isInterAccTransfer_c'] = "";
 
-        if ($dbData['isEnterAccTransfer'] == "1") {
-            $data['isEnterAccTransfer'] = "Yes";
-        } else if ($dbData['isEnterAccTransfer'] == "0") {
-            $data['isEnterAccTransfer'] = "No";
+        if ($dbData['isInterAccTransfer'] == "1") {
+            $data['isInterAccTransfer'] = "Yes";
+        } else if ($dbData['isInterAccTransfer'] == "0") {
+            $data['isInterAccTransfer'] = "No";
         }
 
-        if ($dbData['isEnterAccTransfer_c'] == "1") {
-            $data['isEnterAccTransfer_c'] = "Yes";
-        } else if ($dbData['isEnterAccTransfer_c'] == "0") {
-            $data['isEnterAccTransfer_c'] = "No";
+        if ($dbData['isInterAccTransfer_c'] == "1") {
+            $data['isInterAccTransfer_c'] = "Yes";
+        } else if ($dbData['isInterAccTransfer_c'] == "0") {
+            $data['isInterAccTransfer_c'] = "No";
         } else {
-            $data['isEnterAccTransfer_c'] = "";
+            $data['isInterAccTransfer_c'] = "";
         }
 
         $data['isOtherAccTransfer'] = "";

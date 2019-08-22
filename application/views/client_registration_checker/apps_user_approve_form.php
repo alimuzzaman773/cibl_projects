@@ -119,7 +119,7 @@
                                 </tr>
                                 <tr>
                                     <th align="left" scope="row">PBL Account Transfer</th>
-                                    <td><?= text_match($isEnterAccTransfer, $isEnterAccTransfer_c) ?></td>
+                                    <td><?= text_match($isInterAccTransfer, $isInterAccTransfer_c) ?></td>
                                 </tr>
                                 <tr>
                                     <th align="left" scope="row">Other Account Transfer</th>
@@ -328,7 +328,7 @@
                             </tr>
                             <tr>
                                 <th align="left" scope="row">PBL Account Transfer</th>
-                                <td><?= $isEnterAccTransfer_c ?></td>
+                                <td><?= $isInterAccTransfer_c ?></td>
                             </tr>
                             <tr>
                                 <th align="left" scope="row">Other Account Transfer</th>

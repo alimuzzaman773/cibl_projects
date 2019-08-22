@@ -24,7 +24,7 @@ class Client_registration extends CI_Controller {
         $params['parmAddress'] = $this->input->post('parmAddress', TRUE);
         $params['billingAddress'] = $this->input->post('billingAddress', TRUE);
         $params['isOwnAccTransfer'] = $this->input->post('isOwnAccTransfer', true);
-        $params['isEnterAccTransfer'] = $this->input->post('isEnterAccTransfer', true);
+        $params['isInterAccTransfer'] = $this->input->post('isInterAccTransfer', true);
         $params['isOtherAccTransfer'] = $this->input->post('isOtherAccTransfer', true);
         $params['isAccToCardTransfer'] = $this->input->post('isAccToCardTransfer', true);
         $params['isCardToAccTransfer'] = $this->input->post('isCardToAccTransfer', true);

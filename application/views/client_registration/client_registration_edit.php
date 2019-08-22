@@ -115,7 +115,7 @@
                                     <input type="checkbox" class="checkbox" name="isOwnAccTransfer" id="isOwnAccTransfer" ng-model="isOwnAccTransfer" data-ng-true-value="1" data-ng-false-value="0"/>
                                 </td>
                                 <td align="center">
-                                    <input type="checkbox" class="checkbox" name="isEnterAccTransfer" id="isEnterAccTransfer" ng-model="isEnterAccTransfer" data-ng-true-value="1" data-ng-false-value="0"/>
+                                    <input type="checkbox" class="checkbox" name="isInterAccTransfer" id="isInterAccTransfer" ng-model="isInterAccTransfer" data-ng-true-value="1" data-ng-false-value="0"/>
                                 </td>
                                 <td align="center">
                                     <input type="checkbox" class="checkbox" name="isOtherAccTransfer" id="isOtherAccTransfer" ng-model="isOtherAccTransfer" data-ng-true-value="1" data-ng-false-value="0"/>
