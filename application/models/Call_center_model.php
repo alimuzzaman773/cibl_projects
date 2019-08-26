@@ -23,8 +23,8 @@ class Call_center_model extends CI_Model {
                 ->where('aum.isLocked', 0);
 
         if (ci_check_permission("callCenterChecker")):
-            $this->db->where("aum.isPublished", 0)
-                    ->where("aum.makerActionBy >", 0);
+            $this->db->where("aum.isPublished", 0);
+                    //->where("aum.makerActionBy >", 0);
         endif;
 
         if (isset($params['search']) && trim($params['search']) != ''):
@@ -152,13 +152,21 @@ class Call_center_model extends CI_Model {
         return false;
     }
 
-    function userApproveChecker($userId) {
+    function userApproveChecker($userId, $params=array()) {
         $userInfo = array(
             "makerAction" => 'Account Activation',
             "makerActionDt" => date("Y-m-d"),
             "makerActionTm" => date("H:i:s"),
-            "makerActionBy" => $this->my_session->userId,
+            "makerActionBy" => $this->my_session->userId
         );
+        $userInfo['isOwnAccTransfer'] = isset($params['isOwnAccTransfer'])? $params['isOwnAccTransfer'] : '1';
+        $userInfo['isInterAccTransfer'] = isset($params['isInterAccTransfer'])? $params['isInterAccTransfer'] : '1';
+        $userInfo['isOtherAccTransfer'] = isset($params['isOtherAccTransfer'])? $params['isOtherAccTransfer'] : '1';
+        $userInfo['isAccToCardTransfer'] = isset($params['isAccToCardTransfer'])? $params['isAccToCardTransfer'] : '1';
+        $userInfo['isCardToAccTransfer'] = isset($params['isCardToAccTransfer'])? $params['isCardToAccTransfer'] : '1';
+        $userInfo['isUtilityTransfer'] = isset($params['isUtilityTransfer'])? $params['isUtilityTransfer'] : '1';
+        $userInfo['isQrPayment'] = isset($params['isQrPayment'])? $params['isQrPayment'] : '1';
+        
         $this->db->where("skyId", $userId)
                 ->update("apps_users_mc", $userInfo);
         return array(

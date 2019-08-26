@@ -94,6 +94,54 @@
         </table>
     </div>
 
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr class="bg-primary">
+                        <td colspan="8">View Only Customer Registration</td>
+                    </tr>
+                    <tr>
+                        <th>User ID</th>
+                        <th>Own Account Transfer</th>
+                        <th>PBL Account Transfer</th>
+                        <th>Other Account Transfer</th>
+                        <th>Account To Card Transfer</th>
+                        <th>Card To Account</th>
+                        <th>Utility</th>
+                        <th>QR Payment</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{eblSkyId}}</td>
+                        <td align="center">
+                            <input type="checkbox" class="checkbox" name="isOwnAccTransfer" id="isOwnAccTransfer" ng-model="trOptions.isOwnAccTransfer" data-ng-true-value="1" data-ng-false-value="0"/>
+                        </td>
+                        <td align="center">
+                            <input type="checkbox" class="checkbox" name="isInterAccTransfer" id="isInterAccTransfer" ng-model="trOptions.isInterAccTransfer" data-ng-true-value="1" data-ng-false-value="0"/>
+                        </td>
+                        <td align="center">
+                            <input type="checkbox" class="checkbox" name="isOtherAccTransfer" id="isOtherAccTransfer" ng-model="trOptions.isOtherAccTransfer" data-ng-true-value="1" data-ng-false-value="0"/>
+                        </td>
+                        <td align="center">
+                            <input type="checkbox" class="checkbox" name="isAccToCardTransfer" id="isAccToCardTransfer" ng-model="trOptions.isAccToCardTransfer" data-ng-true-value="1" data-ng-false-value="0"/>
+                        </td>
+                        <td align="center">
+                            <input type="checkbox" class="checkbox" name="isCardToAccTransfer" id="isCardToAccTransfer" ng-model="trOptions.isCardToAccTransfer" data-ng-true-value="1" data-ng-false-value="0"/>
+                        </td>
+                        <td align="center">
+                            <input type="checkbox" class="checkbox" name="isUtilityTransfer" id="isUtilityTransfer" ng-model="trOptions.isUtilityTransfer" data-ng-true-value="1" data-ng-false-value="0"/>
+                        </td>
+                        <td align="center">
+                            <input type="checkbox" class="checkbox" name="isQrPayment" id="isQrPayment" ng-model="trOptions.isQrPayment" data-ng-true-value="1" data-ng-false-value="0"/>
+                        </td>
+                    </tr>
+                </tbody>                     
+            </table>
+        </div>
+    </div>
+    
     <div class="col-xs-12 col-sm-12 col-md-12" data-ng-if="user_accounts.length > 0">
         <table class="table table-striped table-bordered">
             <thead>

@@ -39,6 +39,7 @@ class Call_center extends CI_Controller {
         }
 
         $result = $this->call_center_model->getAllUsers($params);
+        
         if (!$result):
             $json = array(
                 "success" => false,
@@ -50,7 +51,6 @@ class Call_center extends CI_Controller {
             echo json_encode($json);
             die();
         endif;
-
         $data['success'] = true;
         $data['user_list'] = $result->result();
 
@@ -252,8 +252,15 @@ class Call_center extends CI_Controller {
     }
 
     function user_approve_checker($userId) {
+        $params['isOwnAccTransfer'] = $this->input->post("isOwnAccTransfer", true);
+        $params['isInterAccTransfer'] = $this->input->post("isInterAccTransfer", true);
+        $params['isOtherAccTransfer'] = $this->input->post("isOtherAccTransfer", true);
+        $params['isAccToCardTransfer'] = $this->input->post("isAccToCardTransfer", true);
+        $params['isCardToAccTransfer'] = $this->input->post("isCardToAccTransfer", true);
+        $params['isUtilityTransfer'] = $this->input->post("isUtilityTransfer", true);
+        $params['isQrPayment'] = $this->input->post("isQrPayment", true);
         $this->load->model(array('call_center_model'));
-        $updateInfo = $this->call_center_model->userApproveChecker((int) $userId);
+        $updateInfo = $this->call_center_model->userApproveChecker((int) $userId, $params);
         my_json_output($updateInfo);
     }
 

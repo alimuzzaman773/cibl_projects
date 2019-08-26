@@ -44,7 +44,16 @@ CallCenterModuleApp.controller('CallCenterController', ['$scope', '$http', '$rou
         $scope.per_page = 10;
         $scope.currentPageNumber = 1;
         $scope.uid = $routeParams.uid;
+        $scope.eblSkyId = '';
+/*        $scope.isOwnAccTransfer = "1";
+        $scope.isInterAccTransfer = "1";
+        $scope.isOtherAccTransfer = "1";
+        $scope.isAccToCardTransfer = "1";
+        $scope.isCardToAccTransfer = "1";
+        $scope.isUtilityTransfer = "1";
+        $scope.isQrPayment = "1";*/
         $scope.user = {};
+        $scope.trOptions = {}
 
         $scope.resetSkyId = null;
         $scope.otp_channel_pin = 'sms';
@@ -164,6 +173,15 @@ CallCenterModuleApp.controller('CallCenterController', ['$scope', '$http', '$rou
                     .success(function (data) {
                         $scope.user = data.user_info;
                         $scope.user_accounts = data.user_accounts;
+                        $scope.eblSkyId = data.user_info.eblSkyId;
+                        $scope.trOptions.isOwnAccTransfer = app.parseInt(data.user_info.isOwnAccTransfer);
+                        $scope.trOptions.isInterAccTransfer = app.parseInt(data.user_info.isInterAccTransfer);
+                        $scope.trOptions.isOtherAccTransfer = app.parseInt(data.user_info.isOtherAccTransfer);
+                        $scope.trOptions.isAccToCardTransfer = app.parseInt(data.user_info.isAccToCardTransfer);
+                        $scope.trOptions.isCardToAccTransfer = app.parseInt(data.user_info.isCardToAccTransfer);
+                        $scope.trOptions.isUtilityTransfer = app.parseInt(data.user_info.isUtilityTransfer);
+                        $scope.trOptions.isQrPayment = app.parseInt(data.user_info.isQrPayment);
+                        console.log(data.user_info);
                         app.hideModal();
                     })
                     .error(function () {
@@ -175,13 +193,22 @@ CallCenterModuleApp.controller('CallCenterController', ['$scope', '$http', '$rou
 
         $scope.approveUserChecker = function (userId)
         {
-            console.log("asdasdas");
             if (!confirm("Do you really want to activate this user for maker action?")) {
                 return false;
             }
+            
+            var $pData = {
+                isOwnAccTransfer: $scope.trOptions.isOwnAccTransfer,
+                isInterAccTransfer: $scope.trOptions.isInterAccTransfer,
+                isOtherAccTransfer: $scope.trOptions.isOtherAccTransfer,
+                isAccToCardTransfer: $scope.trOptions.isAccToCardTransfer,
+                isCardToAccTransfer: $scope.trOptions.isCardToAccTransfer,
+                isUtilityTransfer: $scope.trOptions.isUtilityTransfer,
+                isQrPayment: $scope.trOptions.isQrPayment
+            };
 
             app.showModal();
-            $http({method: 'post', url: app.baseUrl + 'api/call_center/user_approve_checker/' + userId})
+            $http({method: 'post', url: app.baseUrl + 'api/call_center/user_approve_checker/' + userId, data: jQuery.param($pData)})
                     .success(function (data) {
                         app.hideModal();
                         if (data.success == false) {
@@ -205,7 +232,7 @@ CallCenterModuleApp.controller('CallCenterController', ['$scope', '$http', '$rou
             }
 
             var $pData = {
-                otp_channel: jQuery("#otp_channel").val()
+                otp_channel: jQuery("#otp_channel").val(),
             };
 
             app.showModal();
