@@ -23,7 +23,7 @@ class Call_center_model extends CI_Model {
                 ->where('aum.isLocked', 0);
 
         if (ci_check_permission("callCenterChecker")):
-            $this->db->where("aum.isPublished", 0);
+            $this->db->where("aum.isPublished", 0)
                     ->where("aum.makerActionBy >", 0);
         endif;
 
