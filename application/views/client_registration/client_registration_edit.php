@@ -98,7 +98,6 @@
                                 <td colspan="8">View Only Customer Registration</td>
                             </tr>
                             <tr>
-                                <th>User ID</th>
                                 <th>Own Account Transfer</th>
                                 <th>PBL Account Transfer</th>
                                 <th>Other Account Transfer</th>
@@ -110,7 +109,6 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td>{{eblSkyId}}</td>
                                 <td align="center">
                                     <input type="checkbox" class="checkbox" name="isOwnAccTransfer" id="isOwnAccTransfer" ng-model="isOwnAccTransfer" data-ng-true-value="1" data-ng-false-value="0"/>
                                 </td>
