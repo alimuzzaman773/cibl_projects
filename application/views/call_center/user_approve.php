@@ -112,7 +112,7 @@
                         <th>QR Payment</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody  ng-show="(user.checkerActionBy <= 0 && user.makerActionBy <= 0)" ng-click="approveUserChecker(user.skyId)">
                     <tr>
                         <td>{{eblSkyId}}</td>
                         <td align="center">
@@ -137,7 +137,33 @@
                             <input type="checkbox" class="checkbox" name="isQrPayment" id="isQrPayment" ng-model="trOptions.isQrPayment" data-ng-true-value="1" data-ng-false-value="0"/>
                         </td>
                     </tr>
-                </tbody>                     
+                </tbody>
+                <tbody  ng-show="user.makerActionBy > 0 && user.checkerActionBy <= 0">
+                    <tr>
+                        <td>{{eblSkyId}}</td>
+                        <td align="center">
+                            {{(trOptions.isOwnAccTransfer == 1) ? 'Yes' : 'No'}}
+                        </td>
+                        <td align="center">
+                            {{(trOptions.isInterAccTransfer == 1) ? 'Yes' : 'No'}}
+                        </td>
+                        <td align="center">
+                            {{(trOptions.isOtherAccTransfer == 1) ? 'Yes' : 'No'}}
+                        </td>
+                        <td align="center">
+                            {{(trOptions.isAccToCardTransfer == 1) ? 'Yes' : 'No'}}
+                        </td>
+                        <td align="center">
+                            {{(trOptions.isCardToAccTransfer == 1) ? 'Yes' : 'No'}}
+                        </td>
+                        <td align="center">
+                            {{(trOptions.isUtilityTransfer == 1) ? 'Yes' : 'No'}}
+                        </td>
+                        <td align="center">
+                            {{(trOptions.isQrPayment == 1) ? 'Yes' : 'No'}}
+                        </td>
+                    </tr>
+                </tbody>                    
             </table>
         </div>
     </div>

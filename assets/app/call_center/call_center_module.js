@@ -181,7 +181,7 @@ CallCenterModuleApp.controller('CallCenterController', ['$scope', '$http', '$rou
                         $scope.trOptions.isCardToAccTransfer = app.parseInt(data.user_info.isCardToAccTransfer);
                         $scope.trOptions.isUtilityTransfer = app.parseInt(data.user_info.isUtilityTransfer);
                         $scope.trOptions.isQrPayment = app.parseInt(data.user_info.isQrPayment);
-                        console.log(data.user_info);
+                        console.log($scope.trOptions);
                         app.hideModal();
                     })
                     .error(function () {
