@@ -24,7 +24,7 @@ class Call_center_model extends CI_Model {
 
         if (ci_check_permission("callCenterChecker")):
             $this->db->where("aum.isPublished", 0);
-                    //->where("aum.makerActionBy >", 0);
+                    ->where("aum.makerActionBy >", 0);
         endif;
 
         if (isset($params['search']) && trim($params['search']) != ''):
