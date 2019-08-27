@@ -111,7 +111,7 @@
                         <th>QR Payment</th>
                     </tr>
                 </thead>
-                <tbody  ng-show="(user.checkerActionBy <= 0 && user.makerActionBy <= 0)" ng-click="approveUserChecker(user.skyId)">
+                <tbody  ng-show="(user.checkerActionBy <= 0 && user.makerActionBy <= 0)">
                     <tr>
                         <td align="center">
                             <input type="checkbox" class="checkbox" name="isOwnAccTransfer" id="isOwnAccTransfer" ng-model="trOptions.isOwnAccTransfer" data-ng-true-value="1" data-ng-false-value="0"/>
