@@ -95,7 +95,7 @@
                     <table class="table table-bordered">
                         <thead>
                             <tr class="bg-primary">
-                                <td colspan="8">View Only Customer Registration</td>
+                                <td colspan="7">View Only Customer Registration</td>
                             </tr>
                             <tr>
                                 <th>Own Account Transfer</th>

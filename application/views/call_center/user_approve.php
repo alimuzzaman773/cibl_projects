@@ -99,10 +99,9 @@
             <table class="table table-bordered">
                 <thead>
                     <tr class="bg-primary">
-                        <td colspan="8">View Only Customer Registration</td>
+                        <td colspan="7">View Only Customer Registration</td>
                     </tr>
                     <tr>
-                        <th>User ID</th>
                         <th>Own Account Transfer</th>
                         <th>PBL Account Transfer</th>
                         <th>Other Account Transfer</th>
@@ -114,7 +113,6 @@
                 </thead>
                 <tbody  ng-show="(user.checkerActionBy <= 0 && user.makerActionBy <= 0)" ng-click="approveUserChecker(user.skyId)">
                     <tr>
-                        <td>{{eblSkyId}}</td>
                         <td align="center">
                             <input type="checkbox" class="checkbox" name="isOwnAccTransfer" id="isOwnAccTransfer" ng-model="trOptions.isOwnAccTransfer" data-ng-true-value="1" data-ng-false-value="0"/>
                         </td>
@@ -140,7 +138,6 @@
                 </tbody>
                 <tbody  ng-show="user.makerActionBy > 0 && user.checkerActionBy <= 0">
                     <tr>
-                        <td>{{eblSkyId}}</td>
                         <td align="center">
                             {{(trOptions.isOwnAccTransfer == 1) ? 'Yes' : 'No'}}
                         </td>
