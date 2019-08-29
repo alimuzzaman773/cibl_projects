@@ -79,6 +79,7 @@ class Notification extends CI_Controller
             
             $crud->change_field_type('updateDtTm', 'hidden', $time);            
             $crud->change_field_type('creationDtTm', 'hidden', $time);            
+            $crud->change_field_type('receivers', 'hidden', 'all');
             
             $crud->add_action("Receivers", '', "notification/users", 'glyphicon glyphicon-user');
             
