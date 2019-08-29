@@ -11,7 +11,9 @@ var AppsUserCheckerModule = angular.module('AppsUserCheckerModule',["angularUtil
         $scope.searchParams = {
             isLocked: "",
             isActive: "",
-            search: ""
+            search: "",
+            trOptions: '',
+            viewOnlyBool: '1'
         };
 
         $scope.pagination = {
@@ -26,7 +28,9 @@ var AppsUserCheckerModule = angular.module('AppsUserCheckerModule',["angularUtil
             $scope.searchParams = {
                 isLocked: "",
                 isActive: "",
-                search: ""
+                search: "",
+                trOptions: '',
+                viewOnlyBool: '1'
             };
             $scope.getResultsPage(1);
             return false;
@@ -53,6 +57,16 @@ var AppsUserCheckerModule = angular.module('AppsUserCheckerModule',["angularUtil
             if ($scope.searchParams.isActive !== null
                 && $.trim($scope.searchParams.isActive) !== "") {
                 $params.isActive = $scope.searchParams.isActive;
+            }
+
+            if ($scope.searchParams.trOptions !== null 
+                && $.trim($scope.searchParams.trOptions) !== "") {
+                $params.trOptions = $scope.searchParams.trOptions;
+            }
+
+            if ($scope.searchParams.viewOnlyBool !== null 
+                && $.trim($scope.searchParams.viewOnlyBool) !== "") {
+                $params.viewOnlyBool = $scope.searchParams.viewOnlyBool;
             }
 
             $http({

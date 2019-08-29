@@ -45,15 +45,7 @@ CallCenterModuleApp.controller('CallCenterController', ['$scope', '$http', '$rou
         $scope.currentPageNumber = 1;
         $scope.uid = $routeParams.uid;
         $scope.eblSkyId = '';
-/*        $scope.isOwnAccTransfer = "1";
-        $scope.isInterAccTransfer = "1";
-        $scope.isOtherAccTransfer = "1";
-        $scope.isAccToCardTransfer = "1";
-        $scope.isCardToAccTransfer = "1";
-        $scope.isUtilityTransfer = "1";
-        $scope.isQrPayment = "1";*/
         $scope.user = {};
-        $scope.trOptions = {}
 
         $scope.resetSkyId = null;
         $scope.otp_channel_pin = 'sms';
@@ -79,7 +71,8 @@ CallCenterModuleApp.controller('CallCenterController', ['$scope', '$http', '$rou
             branch: '',
             is_regester: '',
             password_reset: '',
-            trOptions: ''
+            trOptions: '',
+            viewOnlyBool: '1'
         };
 
         $scope.pagination = {
@@ -98,7 +91,9 @@ CallCenterModuleApp.controller('CallCenterController', ['$scope', '$http', '$rou
                 status: '',
                 branch: '',
                 is_regester: '',
-                password_reset: ''
+                password_reset: '',
+                trOptions: '',
+                viewOnlyBool: '1'
             };
 
             $scope.getResultsPage(1);
@@ -143,6 +138,11 @@ CallCenterModuleApp.controller('CallCenterController', ['$scope', '$http', '$rou
             if ($scope.searchParams.trOptions !== null 
                 && $.trim($scope.searchParams.trOptions) !== "") {
                 $params.trOptions = $scope.searchParams.trOptions;
+            }
+
+            if ($scope.searchParams.viewOnlyBool !== null 
+                && $.trim($scope.searchParams.viewOnlyBool) !== "") {
+                $params.viewOnlyBool = $scope.searchParams.viewOnlyBool;
             }
 
             app.showModal();

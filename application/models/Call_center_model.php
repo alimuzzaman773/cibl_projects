@@ -70,14 +70,14 @@ class Call_center_model extends CI_Model {
             $this->db->where("aum.passwordReset", "1");
         endif;
 
-        if(isset($params['transferOptions']) && trim($params['transferOptions']) != '') {
-            $this->db->where('aum.'.$params['transferOptions'], 1);
+        if(isset($params['transferOptions']) && trim($params['transferOptions']) != '' &&
+            isset($params['viewOnlyBool']) && (int)$params['viewOnlyBool'] >= 0) {
+            $this->db->where('aum.'.$params['transferOptions'], $params['viewOnlyBool']);
         }
 
         $query = $this->db->order_by('aum.passwordReset', 'desc')
                 ->order_by('ra.created_on', 'desc')
                 ->get();
-
         return $query->num_rows() > 0 ? $query : false;
     }
 

@@ -29,6 +29,8 @@ class Client_registration_checker extends CI_Controller {
         $params['search'] = $this->input->get("search", true);
         $params['isLocked'] = $this->input->get("isLocked", true);
         $params['isActive'] = $this->input->get("isActive", true);
+        $params['transferOptions'] = $this->input->get('trOptions', true);
+        $params['viewOnlyBool'] = $this->input->get('viewOnlyBool', true);
 
         $data['total'] = array();
         $data['list'] = array();

@@ -22,6 +22,7 @@ class Call_center extends CI_Controller {
         $params['is_regester'] =  $this->input->get("is_regester", true);
         $params['password_reset'] =  $this->input->get("password_reset", true);
         $params['transferOptions'] = $this->input->get('trOptions', true);
+        $params['viewOnlyBool'] = $this->input->get('viewOnlyBool', true);
 
         $this->load->model("call_center_model");
         $data['total'] = 0;

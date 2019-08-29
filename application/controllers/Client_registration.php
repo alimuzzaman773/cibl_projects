@@ -28,6 +28,7 @@ class Client_registration extends CI_Controller {
         $p['limit'] = $this->input->get('limit', true);
         $p['offset'] = $this->input->get('offset', true);
         $p['transferOptions'] = $this->input->get('trOptions', true);
+        $p['viewOnlyBool'] = $this->input->get('viewOnlyBool', true);
         $p['search'] = $this->input->get("search", true);
 
         $filter = array(

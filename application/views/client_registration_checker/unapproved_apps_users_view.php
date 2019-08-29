@@ -30,6 +30,26 @@
                     <option value="0">Inactive</option>                    
                 </select>
             </div>
+            <div class="form-group col-sm-3 col-xs-6">
+                <label>View Only Options</label>
+                <select class="form-control" data-ng-model="searchParams.trOptions">
+                    <option value="">Show all</option>
+                    <option value="isOwnAccTransfer">Is Own Account Transfer</option>
+                    <option value="isInterAccTransfer">Is Inter Account Transfer</option>
+                    <option value="isOtherAccTransfer">Is Other Account Transfer</option>
+                    <option value="isAccToCardTransfer">Is Account To Card Transfer</option>
+                    <option value="isCardToAccTransfer">Is Card To Account Transfer</option>
+                    <option value="isUtilityTransfer">Is Utility Transfer</option>
+                    <option value="isQrPayment">Is QR Payment</option>
+                </select>
+            </div>
+            <div ng-if="searchParams.trOptions !== ''" class="form-group col-sm-2 col-xs-6">
+                <label>View Only State</label>
+                <select class="form-control" data-ng-model="searchParams.viewOnlyBool">
+                    <option value="1" selected>Yes</option>
+                    <option value="0">No</option>
+                </select>
+            </div>
             <div class="form-group col-xs-6 col-sm-2">
                 <div class="form-group">
                     <label style="display:block" class="hidden-xs">&nbsp;&nbsp;</label>
@@ -65,6 +85,7 @@
                             <th>Email</th>
                             <th>Gender</th>
                             <th>Branch</th>
+                            <th>View Only Options</th>
                             <th>Status</th>
                             <td>Action</td>
                         </tr>
@@ -87,6 +108,29 @@
                             <td>{{i.userEmail}}</td>
                             <td>{{i.gender}}</td>
                             <td>{{i.branchName}}</td>
+                            <td class="view-only">
+                                <span>Own Account Transfer:
+                                    <label>{{(i.isOwnAccTransfer == '1') ? 'Yes' : 'No'}}</label>
+                                </span>
+                                <span>Inter Account Transfer:
+                                    <label>{{(i.isInterAccTransfer == '1') ? 'Yes' : 'No'}}</label>
+                                </span>
+                                <span>Other Account Transfer:
+                                    <label>{{(i.isOtherAccTransfer == '1') ? 'Yes' : 'No'}}</label>
+                                </span>
+                                <span>Account to Card Transfer:
+                                    <label>{{(i.isAccToCardTransfer == '1') ? 'Yes' : 'No'}}</label>
+                                </span>
+                                <span>Card To Account Transfer:
+                                    <label>{{(i.isCardToAccTransfer == '1') ? 'Yes' : 'No'}}</label>
+                                </span>
+                                <span>Utility Transfer:
+                                    <label>{{(i.isUtilityTransfer == '1') ? 'Yes' : 'No'}}</label>
+                                </span>
+                                <span>QR Payment:
+                                    <label>{{(i.isQrPayment == '1') ? 'Yes' : 'No'}}</label>
+                                </span>
+                            </td>
                             <td>
                                 <span data-ng-class="{'text-success': i.mcStatus == '1', 'text-danger': i.mcStatus == '0'}">{{i.mcStatus=='1' ? 'Approved' : 'Wait for approve'}}</span>
                             </td>

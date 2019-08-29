@@ -153,6 +153,8 @@ AppUserModule.controller("AppUsersController", ["$scope", "$http", function ($sc
         isActive : '',
         isLocked : '',
         search : '',
+        trOptions: '',
+        viewOnlyBool: '1'
     };
 
     $scope.pagination = {
@@ -168,6 +170,8 @@ AppUserModule.controller("AppUsersController", ["$scope", "$http", function ($sc
             isActive : '',
             isLocked : '',
             search : '',
+            trOptions: '',
+            viewOnlyBool: '1'
         };
 
         $scope.getResultsPage(1);
@@ -199,6 +203,11 @@ AppUserModule.controller("AppUsersController", ["$scope", "$http", function ($sc
         if ($scope.searchParams.trOptions !== null 
             && $.trim($scope.searchParams.trOptions) !== "") {
             $params.trOptions = $scope.searchParams.trOptions;
+        }
+
+        if ($scope.searchParams.viewOnlyBool !== null 
+            && $.trim($scope.searchParams.viewOnlyBool) !== "") {
+            $params.viewOnlyBool = $scope.searchParams.viewOnlyBool;
         }
 
         app.showModal();

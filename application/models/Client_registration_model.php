@@ -52,15 +52,15 @@ class Client_registration_model extends CI_Model {
             $this->db->where('apps_users_mc.isActive', $p['isActive']);
         }
 
-        if(isset($p['transferOptions']) && trim($p['transferOptions']) != '') {
-            $this->db->where('apps_users_mc.'.$p['transferOptions'], 1);
+        if(isset($p['transferOptions']) && trim($p['transferOptions']) != '' &&
+            isset($p['viewOnlyBool']) && (int)$p['viewOnlyBool'] >= 0) {
+            $this->db->where('apps_users_mc.'.$p['transferOptions'], $p['viewOnlyBool']);
         }
 
         if (isset($p['limit']) && (int) $p['limit'] > 0) {
             $offset = (isset($p['offset']) && $p['offset'] != null) ? (int) $p['offset'] : 0;
             $this->db->limit($p['limit'], $offset);
         }
-
         $query = $this->db->get();
         return $query->num_rows() > 0 ? $query : false;
     }

@@ -78,9 +78,16 @@
                 <option value="isInterAccTransfer">Is Inter Account Transfer</option>
                 <option value="isOtherAccTransfer">Is Other Account Transfer</option>
                 <option value="isAccToCardTransfer">Is Account To Card Transfer</option>
-                <option value="isCardToAccTransfer">Is Card To Card Transfer</option>
+                <option value="isCardToAccTransfer">Is Card To Account Transfer</option>
                 <option value="isUtilityTransfer">Is Utility Transfer</option>
                 <option value="isQrPayment">Is QR Payment</option>
+            </select>
+        </div>
+        <div ng-if="searchParams.trOptions !== ''" class="form-group col-sm-2 col-xs-6">
+            <label>View Only State</label>
+            <select class="form-control" data-ng-model="searchParams.viewOnlyBool">
+                <option value="1" selected>Yes</option>
+                <option value="0">No</option>
             </select>
         </div>
         <div class="form-group col-xs-6 col-sm-2">

@@ -39,6 +39,11 @@ class Client_registration_model_checker extends CI_Model {
             $this->db->where('apps_users_mc.isActive', $params['isActive']);
         }
 
+        if(isset($params['transferOptions']) && trim($params['transferOptions']) != '' &&
+            isset($params['viewOnlyBool']) && (int)$params['viewOnlyBool'] >= 0) {
+            $this->db->where('apps_users_mc.'.$params['transferOptions'], $params['viewOnlyBool']);
+        }
+
         if (isset($params['limit']) && (int) $params['limit'] > 0) {
             $offset = (isset($params['offset']) && $params['offset'] != null) ? (int) $params['offset'] : 0;
             $this->db->limit($params['limit'], $offset);

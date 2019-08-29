@@ -9,40 +9,49 @@
 <div class="table-responsive" id="AppUserModule" data-ng-controller="AppUsersController as AppUsersController">
     <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="row">
-            <div class="form-group col-sm-3 col-xs-6">
+            <div class="form-group col-sm-4 col-xs-6">
                 <label>Search</label>
-                <input type="text" class="form-control" data-ng-model="searchParams.search" placeholder="Search by Apps ID, User Name, Customer ID, Father or Mother Name" />
+                <input type="text" class="form-control input-sm" data-ng-model="searchParams.search" placeholder="Search by Apps ID, User Name, Customer ID, Father or Mother Name" />
             </div>
-            <div class="form-group col-sm-2 col-xs-6">
+            <div class="form-group col-sm-3 col-xs-6">
                 <label>Is Locked?</label>
-                <select class="form-control" data-ng-model="searchParams.isLocked">
+                <select class="form-control input-sm" data-ng-model="searchParams.isLocked">
                     <option value=""></option>
                     <option value="1">Locked</option>                    
                     <option value="0">Unlocked</option>                    
                 </select>
             </div>
-            <div class="form-group col-sm-2 col-xs-6">
+            <div class="form-group col-sm-3 col-xs-6">
                 <label>Is Active?</label>
-                <select class="form-control" data-ng-model="searchParams.isActive">
+                <select class="form-control input-sm" data-ng-model="searchParams.isActive">
                     <option value=""></option>
                     <option value="1">Active</option>                    
                     <option value="0">Inactive</option>                    
                 </select>
             </div>
-            <div class="form-group col-sm-2 col-xs-6">
+        </div>
+        <div class="row">
+            <div class="form-group col-sm-3 col-xs-6">
                 <label>View Only Options</label>
-                <select class="form-control" data-ng-model="searchParams.trOptions">
+                <select class="form-control input-sm" data-ng-model="searchParams.trOptions">
                     <option value="">Show all</option>
                     <option value="isOwnAccTransfer">Is Own Account Transfer</option>
                     <option value="isInterAccTransfer">Is Inter Account Transfer</option>
                     <option value="isOtherAccTransfer">Is Other Account Transfer</option>
                     <option value="isAccToCardTransfer">Is Account To Card Transfer</option>
-                    <option value="isCardToAccTransfer">Is Card To Card Transfer</option>
+                    <option value="isCardToAccTransfer">Is Card To Account Transfer</option>
                     <option value="isUtilityTransfer">Is Utility Transfer</option>
                     <option value="isQrPayment">Is QR Payment</option>
                 </select>
             </div>
-            <div class="form-group col-sm-2 col-xs-6">
+            <div ng-if="searchParams.trOptions !== ''" class="form-group col-sm-2 col-xs-6">
+                <label>View Only State</label>
+                <select class="form-control input-sm" data-ng-model="searchParams.viewOnlyBool">
+                    <option value="1" selected>Yes</option>
+                    <option value="0">No</option>
+                </select>
+            </div>
+            <div class="form-group col-sm-3 col-xs-6">
                 <label style="display:block" class="hidden-xs">&nbsp;&nbsp;</label>
                 <button class="btn btn-primary btn-sm" data-ng-click="getResultsPage(1)">
                     <i class="glyphicon glyphicon-search"></i>
