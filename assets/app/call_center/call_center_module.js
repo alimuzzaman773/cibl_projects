@@ -78,7 +78,8 @@ CallCenterModuleApp.controller('CallCenterController', ['$scope', '$http', '$rou
             status: '',
             branch: '',
             is_regester: '',
-            password_reset: ''
+            password_reset: '',
+            trOptions: ''
         };
 
         $scope.pagination = {
@@ -137,6 +138,11 @@ CallCenterModuleApp.controller('CallCenterController', ['$scope', '$http', '$rou
                             && $.trim($scope.searchParams.to_date) !== "")) {
                 $params.from_date = $scope.searchParams.from_date;
                 $params.to_date = $scope.searchParams.to_date;
+            }
+
+            if ($scope.searchParams.trOptions !== null 
+                && $.trim($scope.searchParams.trOptions) !== "") {
+                $params.trOptions = $scope.searchParams.trOptions;
             }
 
             app.showModal();

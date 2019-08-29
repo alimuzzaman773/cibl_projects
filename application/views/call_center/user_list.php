@@ -70,17 +70,19 @@
                 <option value="1">New Request</option>
             </select>
         </div>
-        <!--
-        <div class="form-group col-sm-4 col-xs-6">
-            <label>Filter By:</label>
-            <select class="form-control" data-ng-model="searchParams.filter_by">
-                <option value="activation">Waiting Account Activation</option>
-                <option value="passwordReset">Waiting Password Reset</option>
-                <option value="activationPending24">Activation Pending More Than 24 Hours</option>
-                <option value="passwordResetPending24">Password Reset Request Pending More Than 24 Hours</option>
+        <div class="form-group col-sm-3 col-xs-6">
+            <label>View Only Options</label>
+            <select class="form-control" data-ng-model="searchParams.trOptions">
+                <option value="">Show all</option>
+                <option value="isOwnAccTransfer">Is Own Account Transfer</option>
+                <option value="isInterAccTransfer">Is Inter Account Transfer</option>
+                <option value="isOtherAccTransfer">Is Other Account Transfer</option>
+                <option value="isAccToCardTransfer">Is Account To Card Transfer</option>
+                <option value="isCardToAccTransfer">Is Card To Card Transfer</option>
+                <option value="isUtilityTransfer">Is Utility Transfer</option>
+                <option value="isQrPayment">Is QR Payment</option>
             </select>
         </div>
-        -->
         <div class="form-group col-xs-6 col-sm-2">
             <label style="display:block" class="hidden-xs">&nbsp;&nbsp;</label>
             <button class="btn btn-primary btn-sm" data-ng-click="getResultsPage(1)">
@@ -120,6 +122,7 @@
                         <th>Remarks</th>
                         <th>Branch</th>
                         <th>Registration Date</th>
+                        <th>View Only Options</th>
                         <!--
                         <th>Maker</th>
                         <th>Maker Date</th>
@@ -151,6 +154,29 @@
                         <td>{{i.remarks}}</td>
                         <td>{{i.branchName}}</td>
                         <td>{{i.created_on}}</td>
+                        <td class="view-only">
+                            <p>Own Account Transfer:
+                                <b>{{(i.isOwnAccTransfer == '1') ? 'Yes' : 'No'}}</b>
+                            </p>
+                            <p>Inter Account Transfer:
+                                <b>{{(i.isInterAccTransfer == '1') ? 'Yes' : 'No'}}</b>
+                            </p>
+                            <p>Other Account Transfer:
+                                <b>{{(i.isOtherAccTransfer == '1') ? 'Yes' : 'No'}}</b>
+                            </p>
+                            <p>Account to Card Transfer:
+                                <b>{{(i.isAccToCardTransfer == '1') ? 'Yes' : 'No'}}</b>
+                            </p>
+                            <p>Card To Account Transfer:
+                                <b>{{(i.isCardToAccTransfer == '1') ? 'Yes' : 'No'}}</b>
+                            </p>
+                            <p>Utility Transfer:
+                                <b>{{(i.isUtilityTransfer == '1') ? 'Yes' : 'No'}}</b>
+                            </p>
+                            <p>QR Payment:
+                                <b>{{(i.isQrPayment == '1') ? 'Yes' : 'No'}}</b>
+                            </p>
+                        </td>
                         <!--
                         <td>{{i.makerName}}</td>
                         <td>{{i.checkerActionDt}} {{i.checkerActionTm}}</td>

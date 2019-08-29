@@ -9,11 +9,11 @@
 <div class="table-responsive" id="AppUserModule" data-ng-controller="AppUsersController as AppUsersController">
     <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="row">
-            <div class="form-group col-sm-4 col-xs-6">
+            <div class="form-group col-sm-3 col-xs-6">
                 <label>Search</label>
                 <input type="text" class="form-control" data-ng-model="searchParams.search" placeholder="Search by Apps ID, User Name, Customer ID, Father or Mother Name" />
             </div>
-            <div class="form-group col-sm-3 col-xs-6">
+            <div class="form-group col-sm-2 col-xs-6">
                 <label>Is Locked?</label>
                 <select class="form-control" data-ng-model="searchParams.isLocked">
                     <option value=""></option>
@@ -21,7 +21,7 @@
                     <option value="0">Unlocked</option>                    
                 </select>
             </div>
-            <div class="form-group col-sm-3 col-xs-6">
+            <div class="form-group col-sm-2 col-xs-6">
                 <label>Is Active?</label>
                 <select class="form-control" data-ng-model="searchParams.isActive">
                     <option value=""></option>
@@ -29,7 +29,20 @@
                     <option value="0">Inactive</option>                    
                 </select>
             </div>
-            <div class="form-group col-xs-6 col-sm-2">
+            <div class="form-group col-sm-2 col-xs-6">
+                <label>View Only Options</label>
+                <select class="form-control" data-ng-model="searchParams.trOptions">
+                    <option value="">Show all</option>
+                    <option value="isOwnAccTransfer">Is Own Account Transfer</option>
+                    <option value="isInterAccTransfer">Is Inter Account Transfer</option>
+                    <option value="isOtherAccTransfer">Is Other Account Transfer</option>
+                    <option value="isAccToCardTransfer">Is Account To Card Transfer</option>
+                    <option value="isCardToAccTransfer">Is Card To Card Transfer</option>
+                    <option value="isUtilityTransfer">Is Utility Transfer</option>
+                    <option value="isQrPayment">Is QR Payment</option>
+                </select>
+            </div>
+            <div class="form-group col-sm-2 col-xs-6">
                 <label style="display:block" class="hidden-xs">&nbsp;&nbsp;</label>
                 <button class="btn btn-primary btn-sm" data-ng-click="getResultsPage(1)">
                     <i class="glyphicon glyphicon-search"></i>
@@ -62,6 +75,7 @@
                 <th>Email</th>
                 <th>Gender</th>
                 <th>Branch</th>
+                <th>View Only Options</th>
                 <th>Checker Comment</th>
                 <th>Checker Action</th>
                 <td>Action</td>
@@ -84,6 +98,29 @@
                 <td>{{a.userEmail}}</td>
                 <td>{{a.gender}}</td>
                 <td>{{a.branchName}}</td>
+                <td class="view-only">
+                    <span>Own Account Transfer:
+                        <label>{{(a.isOwnAccTransfer == '1') ? 'Yes' : 'No'}}</label>
+                    </span>
+                    <span>Inter Account Transfer:
+                        <label>{{(a.isInterAccTransfer == '1') ? 'Yes' : 'No'}}</label>
+                    </span>
+                    <span>Other Account Transfer:
+                        <label>{{(a.isOtherAccTransfer == '1') ? 'Yes' : 'No'}}</label>
+                    </span>
+                    <span>Account to Card Transfer:
+                        <label>{{(a.isAccToCardTransfer == '1') ? 'Yes' : 'No'}}</label>
+                    </span>
+                    <span>Card To Account Transfer:
+                        <label>{{(a.isCardToAccTransfer == '1') ? 'Yes' : 'No'}}</label>
+                    </span>
+                    <span>Utility Transfer:
+                        <label>{{(a.isUtilityTransfer == '1') ? 'Yes' : 'No'}}</label>
+                    </span>
+                    <span>QR Payment:
+                        <label>{{(a.isQrPayment == '1') ? 'Yes' : 'No'}}</label>
+                    </span>
+                </td>
                 <td>{{a.checkerActionComment}}</td>
                 <td>{{a.checkerAction}}</td>
                 <td>

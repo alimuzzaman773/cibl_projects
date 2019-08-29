@@ -196,6 +196,11 @@ AppUserModule.controller("AppUsersController", ["$scope", "$http", function ($sc
             $params.isActive = $scope.searchParams.isActive;
         }
 
+        if ($scope.searchParams.trOptions !== null 
+            && $.trim($scope.searchParams.trOptions) !== "") {
+            $params.trOptions = $scope.searchParams.trOptions;
+        }
+
         app.showModal();
         $http({
             method: "get",
@@ -205,6 +210,7 @@ AppUserModule.controller("AppUsersController", ["$scope", "$http", function ($sc
             app.hideModal();
             var $result = response.data;
             $scope.app_users = $result.app_users;
+            console.log($scope.app_users);
             $scope.totalCount = $result.total;
             $scope.currentPageNumber = pageNumber;
             $scope.pagination.current = $scope.currentPageNumber;
