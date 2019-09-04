@@ -9,11 +9,11 @@
 <div class="table-responsive" id="AppUserModule" data-ng-controller="AppUsersController as AppUsersController">
     <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="row">
-            <div class="form-group col-sm-4 col-xs-6">
+            <div class="form-group col-lg-4 col-xs-6">
                 <label>Search</label>
                 <input type="text" class="form-control input-sm" data-ng-model="searchParams.search" placeholder="Search by Apps ID, User Name, Customer ID, Father or Mother Name" />
             </div>
-            <div class="form-group col-sm-3 col-xs-6">
+            <div class="form-group col-lg-4 col-xs-6">
                 <label>Is Locked?</label>
                 <select class="form-control input-sm" data-ng-model="searchParams.isLocked">
                     <option value=""></option>
@@ -21,7 +21,7 @@
                     <option value="0">Unlocked</option>                    
                 </select>
             </div>
-            <div class="form-group col-sm-3 col-xs-6">
+            <div class="form-group col-lg-4 col-xs-6">
                 <label>Is Active?</label>
                 <select class="form-control input-sm" data-ng-model="searchParams.isActive">
                     <option value=""></option>
@@ -31,7 +31,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="form-group col-sm-3 col-xs-6">
+            <div class="form-group col-lg-4 col-xs-6">
                 <label>View Only Options</label>
                 <select class="form-control input-sm" data-ng-model="searchParams.trOptions">
                     <option value="">Show all</option>

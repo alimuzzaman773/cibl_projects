@@ -10,60 +10,60 @@
 
 <div class="container" id="AppsUserCheckerModule" data-ng-controller="AppsUserCheckerController">
     <div class="row">
-        <div class="form-group col-sm-4 col-xs-6">
-                <label>Search</label>
-                <input type="text" class="form-control input-sm" data-ng-model="searchParams.search" placeholder="Search by Apps ID, User Name, Customer ID, Father or Mother Name" />
+        <div class="form-group col-sm-3 col-xs-6">
+            <label>Search</label>
+            <input type="text" class="form-control input-sm" data-ng-model="searchParams.search" placeholder="Search by Apps ID, User Name, Customer ID, Father or Mother Name" />
+        </div>
+        <div class="form-group col-sm-3 col-xs-6">
+            <label>Is Locked?</label>
+            <select class="form-control input-sm" data-ng-model="searchParams.isLocked">
+                <option value=""></option>
+                <option value="1">Locked</option>                    
+                <option value="0">Unlocked</option>                    
+            </select>
+        </div>
+        <div class="form-group col-sm-3 col-xs-6">
+            <label>Is Active?</label>
+            <select class="form-control input-sm" data-ng-model="searchParams.isActive">
+                <option value=""></option>
+                <option value="1">Active</option>                    
+                <option value="0">Inactive</option>                    
+            </select>
+        </div>
+        <div class="form-group col-sm-3 col-xs-6">
+            <label>View Only Options</label>
+            <select class="form-control" data-ng-model="searchParams.trOptions">
+                <option value="">Show all</option>
+                <option value="isOwnAccTransfer">Is Own Account Transfer</option>
+                <option value="isInterAccTransfer">Is Inter Account Transfer</option>
+                <option value="isOtherAccTransfer">Is Other Account Transfer</option>
+                <option value="isAccToCardTransfer">Is Account To Card Transfer</option>
+                <option value="isCardToAccTransfer">Is Card To Account Transfer</option>
+                <option value="isUtilityTransfer">Is Utility Transfer</option>
+                <option value="isQrPayment">Is QR Payment</option>
+            </select>
+        </div>
+        <div ng-if="searchParams.trOptions !== ''" class="form-group col-sm-2 col-xs-6">
+            <label>View Only State</label>
+            <select class="form-control" data-ng-model="searchParams.viewOnlyBool">
+                <option value="1" selected>Yes</option>
+                <option value="0">No</option>
+            </select>
+        </div>
+        <div class="form-group col-xs-6 col-sm-2">
+            <div class="form-group">
+                <label style="display:block" class="hidden-xs">&nbsp;&nbsp;</label>
+                <button class="btn btn-primary btn-sm" data-ng-click="getResultsPage(1)">
+                    <i class="glyphicon glyphicon-search"></i>
+                </button>
+                <button class="btn btn-primary btn-sm" data-ng-click="resetSearch();">
+                    <i class="glyphicon glyphicon-refresh"></i> Reset
+                </button>
             </div>
-            <div class="form-group col-sm-3 col-xs-6">
-                <label>Is Locked?</label>
-                <select class="form-control input-sm" data-ng-model="searchParams.isLocked">
-                    <option value=""></option>
-                    <option value="1">Locked</option>                    
-                    <option value="0">Unlocked</option>                    
-                </select>
-            </div>
-            <div class="form-group col-sm-3 col-xs-6">
-                <label>Is Active?</label>
-                <select class="form-control input-sm" data-ng-model="searchParams.isActive">
-                    <option value=""></option>
-                    <option value="1">Active</option>                    
-                    <option value="0">Inactive</option>                    
-                </select>
-            </div>
-            <div class="form-group col-sm-3 col-xs-6">
-                <label>View Only Options</label>
-                <select class="form-control" data-ng-model="searchParams.trOptions">
-                    <option value="">Show all</option>
-                    <option value="isOwnAccTransfer">Is Own Account Transfer</option>
-                    <option value="isInterAccTransfer">Is Inter Account Transfer</option>
-                    <option value="isOtherAccTransfer">Is Other Account Transfer</option>
-                    <option value="isAccToCardTransfer">Is Account To Card Transfer</option>
-                    <option value="isCardToAccTransfer">Is Card To Account Transfer</option>
-                    <option value="isUtilityTransfer">Is Utility Transfer</option>
-                    <option value="isQrPayment">Is QR Payment</option>
-                </select>
-            </div>
-            <div ng-if="searchParams.trOptions !== ''" class="form-group col-sm-2 col-xs-6">
-                <label>View Only State</label>
-                <select class="form-control" data-ng-model="searchParams.viewOnlyBool">
-                    <option value="1" selected>Yes</option>
-                    <option value="0">No</option>
-                </select>
-            </div>
-            <div class="form-group col-xs-6 col-sm-2">
-                <div class="form-group">
-                    <label style="display:block" class="hidden-xs">&nbsp;&nbsp;</label>
-                    <button class="btn btn-primary btn-sm" data-ng-click="getResultsPage(1)">
-                        <i class="glyphicon glyphicon-search"></i>
-                    </button>
-                    <button class="btn btn-primary btn-sm" data-ng-click="resetSearch();">
-                        <i class="glyphicon glyphicon-refresh"></i> Reset
-                    </button>
-                </div>
-            </div>
+        </div>
     </div>
     <div class="col-md-12 col-sm-12 text-right" data-ng-show="totalCount > 0">        
-    <span class="label label-primary"> Displaying: {{ ((per_page * currentPageNumber) - (per_page - 1))}} to {{ upper_range()}} of {{ totalCount}}</span>            
+        <span class="label label-primary"> Displaying: {{ ((per_page * currentPageNumber) - (per_page - 1))}} to {{ upper_range()}} of {{ totalCount}}</span>            
     </div>
     <div class="row">
         <div class="col-md-12 col-xs-12">
@@ -71,7 +71,7 @@
                 <table class="table table-bordered table-condensed table-striped table-hover" >          
                     <thead>
                         <tr class="bg-primary">
-                           <th>SI#</th>
+                            <th>SI#</th>
                             <th>SKY ID</th>
                             <th>Apps ID</th>
                             <th>User ID</th>
@@ -141,12 +141,12 @@
                                     </button>
                                     <ul class="dropdown-menu">
                                         <?php if (ci_check_permission("canApproveAppsUser")): ?>
-                                        <li>
-                                            <a href="<?= base_url() ?>client_registration_checker/getAppsUserForApproval/{{i.skyId}}">
-                                                <i class="glyphicon glyphicon-pencil"></i> Approve
-                                            </a>
-                                        </li> 
-                                        <?php endif;?>
+                                            <li>
+                                                <a href="<?= base_url() ?>client_registration_checker/getAppsUserForApproval/{{i.skyId}}">
+                                                    <i class="glyphicon glyphicon-pencil"></i> Approve
+                                                </a>
+                                            </li> 
+                                        <?php endif; ?>
                                     </ul>
                                 </div>
                             </td>
@@ -176,11 +176,11 @@ ci_add_js(asset_url() . 'app/checker/apps_user_checker_module.js');
 <script type="text/javascript" charset="utf-8">
     var app = app || {};
     $("#fromDate, #toDate").datepicker({
-        dateFormat: 'yy-mm-dd'
-        //constrainInput: true
+    dateFormat: 'yy-mm-dd'
+            //constrainInput: true
     }).on('focusin', function () {
-        $(this).prop("readonly", true);
+    $(this).prop("readonly", true);
     }).on('focusout', function () {
-        $(this).prop("readonly", false);
+    $(this).prop("readonly", false);
     });
 </script>

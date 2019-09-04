@@ -27,11 +27,11 @@
 
 <div class="col-md-12 col-sm-12 col-xs-12">
     <div class="row">
-        <div class="form-group col-sm-3 col-xs-12">
+        <div class="form-group col-lg-3 col-xs-12">
             <label>Search</label>
             <input type="text" class="form-control" data-ng-model="searchParams.search" placeholder="Search by Apps ID, User Name, Customer ID, Father or Mother Name" title="Search by Apps ID, User Name, Customer ID, Father or Mother Name" />
         </div>
-        <div class="form-group col-sm-3 col-xs-12">
+        <div class="form-group col-lg-3 col-xs-12">
             <label>Branch</label>
             <select class="form-control" data-ng-model="searchParams.branch">
                 <option ng-repeat="branch in branch_list" value="{{branch.branchCode}}">{{branch.ATMName}}</option>
@@ -48,29 +48,29 @@
             </select>
         </div>
         -->
-        <div class="form-group col-sm-3 col-xs-12">
+        <div class="form-group col-lg-3 col-xs-12">
             <label>From Date</label>
             <input type="text" readonly="true" class="form-control" data-ng-model="searchParams.from_date" id="fromDate" />                
         </div>
-        <div class="form-group col-sm-3 col-xs-12">
+        <div class="form-group col-lg-3 col-xs-12">
             <label>To Date</label>
             <input type="text" readonly="true" class="form-control" data-ng-model="searchParams.to_date" id="toDate" />                
         </div>
-        <div class="form-group col-sm-3 col-xs-12">
+        <div class="form-group col-lg-2 col-xs-12">
             <label>Status (Registration)</label>
             <select class="form-control" data-ng-model="searchParams.is_regester">
                 <option value="1">Activated</option>
                 <option value="0">Waiting Activation</option>
             </select>
         </div>
-        <div class="form-group col-sm-3 col-xs-12">
+        <div class="form-group col-lg-2 col-xs-12">
             <label>Password Reset</label>
             <select class="form-control" data-ng-model="searchParams.password_reset">
                 <option value="0">Accepted</option>
                 <option value="1">New Request</option>
             </select>
         </div>
-        <div class="form-group col-sm-3 col-xs-6">
+        <div class="form-group col-lg-2 col-xs-6">
             <label>View Only Options</label>
             <select class="form-control" data-ng-model="searchParams.trOptions">
                 <option value="">Show all</option>
@@ -83,14 +83,14 @@
                 <option value="isQrPayment">Is QR Payment</option>
             </select>
         </div>
-        <div ng-if="searchParams.trOptions !== ''" class="form-group col-sm-2 col-xs-6">
+        <div ng-if="searchParams.trOptions !== ''" class="form-group col-lg-2 col-xs-6">
             <label>View Only State</label>
             <select class="form-control" data-ng-model="searchParams.viewOnlyBool">
                 <option value="1" selected>Yes</option>
                 <option value="0">No</option>
             </select>
         </div>
-        <div class="form-group col-xs-6 col-sm-2">
+        <div class="form-group col-xs-6 col-lg-2">
             <label style="display:block" class="hidden-xs">&nbsp;&nbsp;</label>
             <button class="btn btn-primary btn-sm" data-ng-click="getResultsPage(1)">
                 <i class="glyphicon glyphicon-search"></i>
