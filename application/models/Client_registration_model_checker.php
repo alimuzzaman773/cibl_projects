@@ -38,11 +38,39 @@ class Client_registration_model_checker extends CI_Model {
         if (isset($params['isActive']) && trim($params['isActive']) != '') {
             $this->db->where('apps_users_mc.isActive', $params['isActive']);
         }
+        
+        if (isset($params['isOwnAccTransfer']) && trim($params['isOwnAccTransfer']) != ''):
+            $this->db->where('apps_users_mc.isOwnAccTransfer', $params['isOwnAccTransfer']);
+        endif;
+        
+        if (isset($params['isInterAccTransfer']) && trim($params['isInterAccTransfer']) != ''):
+            $this->db->where('apps_users_mc.isInterAccTransfer', $params['isInterAccTransfer']);
+        endif;
+        
+        if (isset($params['isOtherAccTransfer']) && trim($params['isOtherAccTransfer']) != ''):
+            $this->db->where('apps_users_mc.isOtherAccTransfer', $params['isOtherAccTransfer']);
+        endif;
+        
+        if (isset($params['isAccToCardTransfer']) && trim($params['isAccToCardTransfer']) != ''):
+            $this->db->where('apps_users_mc.isActive', $params['isAccToCardTransfer']);
+        endif;
+        
+        if (isset($params['isCardToAccTransfer']) && trim($params['isCardToAccTransfer']) != ''):
+            $this->db->where('apps_users_mc.isCardToAccTransfer', $params['isCardToAccTransfer']);
+        endif;
+        
+        if (isset($params['isUtilityTransfer']) && trim($params['isUtilityTransfer']) != ''):
+            $this->db->where('apps_users_mc.isUtilityTransfer', $params['isUtilityTransfer']);
+        endif;
+        
+        if (isset($params['isQrPayment']) && trim($params['isQrPayment']) != ''):
+            $this->db->where('apps_users_mc.isQrPayment', $params['isQrPayment']);
+        endif;
 
-        if(isset($params['transferOptions']) && trim($params['transferOptions']) != '' &&
-            isset($params['viewOnlyBool']) && (int)$params['viewOnlyBool'] >= 0) {
-            $this->db->where('apps_users_mc.'.$params['transferOptions'], $params['viewOnlyBool']);
-        }
+//        if(isset($params['transferOptions']) && trim($params['transferOptions']) != '' &&
+//            isset($params['viewOnlyBool']) && (int)$params['viewOnlyBool'] >= 0) {
+//            $this->db->where('apps_users_mc.'.$params['transferOptions'], $params['viewOnlyBool']);
+//        }
 
         if (isset($params['limit']) && (int) $params['limit'] > 0) {
             $offset = (isset($params['offset']) && $params['offset'] != null) ? (int) $params['offset'] : 0;

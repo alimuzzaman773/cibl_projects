@@ -31,7 +31,66 @@
             </div>
         </div>
         <div class="row">
-            <div class="form-group col-lg-4 col-xs-6">
+            <div class="col-lg-12 col-xs-12">
+                <b>View Only Options</b>
+            </div>
+            <div class="form-group col-lg-2 col-xs-6">
+                <label>Is Own Account Transfer</label>
+                <select class="form-control input-sm" data-ng-model="searchParams.isOwnAccTransfer">
+                    <option value=""></option>
+                    <option value="1">Yes</option>                    
+                    <option value="0">No</option>                    
+                </select>
+            </div>
+            <div class="form-group col-lg-2 col-xs-6">
+                <label>Is Inter Account Transfer</label>
+                <select class="form-control input-sm" data-ng-model="searchParams.isInterAccTransfer">
+                    <option value=""></option>
+                    <option value="1">Yes</option>                    
+                    <option value="0">No</option>                    
+                </select>
+            </div>
+            <div class="form-group col-lg-2 col-xs-6">
+                <label>Is Other Account Transfer</label>
+                <select class="form-control input-sm" data-ng-model="searchParams.isOtherAccTransfer">
+                    <option value=""></option>
+                    <option value="1">Yes</option>                    
+                    <option value="0">No</option>                    
+                </select>
+            </div>
+            <div class="form-group col-lg-2 col-xs-6">
+                <label>Is Account to Card Transfer</label>
+                <select class="form-control input-sm" data-ng-model="searchParams.isAccToCardTransfer">
+                    <option value=""></option>
+                    <option value="1">Yes</option>                    
+                    <option value="0">No</option>                    
+                </select>
+            </div>
+            <div class="form-group col-lg-2 col-xs-6">
+                <label>Is Card to Account Transfer</label>
+                <select class="form-control input-sm" data-ng-model="searchParams.isCardToAccTransfer">
+                    <option value=""></option>
+                    <option value="1">Yes</option>                    
+                    <option value="0">No</option>                    
+                </select>
+            </div>
+            <div class="form-group col-lg-2 col-xs-6">
+                <label>Is Utility Transfer</label>
+                <select class="form-control input-sm" data-ng-model="searchParams.isUtilityTransfer">
+                    <option value=""></option>
+                    <option value="1">Yes</option>                    
+                    <option value="0">No</option>                    
+                </select>
+            </div>
+            <div class="form-group col-lg-2 col-xs-6">
+                <label>Is QR Payment</label>
+                <select class="form-control input-sm" data-ng-model="searchParams.isQrPayment">
+                    <option value=""></option>
+                    <option value="1">Yes</option>                    
+                    <option value="0">No</option>                    
+                </select>
+            </div>
+<!--            <div class="form-group col-lg-4 col-xs-6">
                 <label>View Only Options</label>
                 <select class="form-control input-sm" data-ng-model="searchParams.trOptions">
                     <option value="">Show all</option>
@@ -50,7 +109,7 @@
                     <option value="1" selected>Yes</option>
                     <option value="0">No</option>
                 </select>
-            </div>
+            </div>-->
             <div class="form-group col-sm-3 col-xs-6">
                 <label style="display:block" class="hidden-xs">&nbsp;&nbsp;</label>
                 <button class="btn btn-primary btn-sm" data-ng-click="getResultsPage(1)">

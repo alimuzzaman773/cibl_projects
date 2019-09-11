@@ -10,11 +10,11 @@
 
 <div class="container" id="AppsUserCheckerModule" data-ng-controller="AppsUserCheckerController">
     <div class="row">
-        <div class="form-group col-sm-3 col-xs-6">
+        <div class="form-group col-lg-4 col-xs-6">
             <label>Search</label>
             <input type="text" class="form-control input-sm" data-ng-model="searchParams.search" placeholder="Search by Apps ID, User Name, Customer ID, Father or Mother Name" />
         </div>
-        <div class="form-group col-sm-3 col-xs-6">
+        <div class="form-group col-lg-4 col-xs-6">
             <label>Is Locked?</label>
             <select class="form-control input-sm" data-ng-model="searchParams.isLocked">
                 <option value=""></option>
@@ -22,7 +22,7 @@
                 <option value="0">Unlocked</option>                    
             </select>
         </div>
-        <div class="form-group col-sm-3 col-xs-6">
+        <div class="form-group col-lg-4 col-xs-6">
             <label>Is Active?</label>
             <select class="form-control input-sm" data-ng-model="searchParams.isActive">
                 <option value=""></option>
@@ -30,26 +30,87 @@
                 <option value="0">Inactive</option>                    
             </select>
         </div>
-        <div class="form-group col-sm-3 col-xs-6">
-            <label>View Only Options</label>
-            <select class="form-control" data-ng-model="searchParams.trOptions">
-                <option value="">Show all</option>
-                <option value="isOwnAccTransfer">Is Own Account Transfer</option>
-                <option value="isInterAccTransfer">Is Inter Account Transfer</option>
-                <option value="isOtherAccTransfer">Is Other Account Transfer</option>
-                <option value="isAccToCardTransfer">Is Account To Card Transfer</option>
-                <option value="isCardToAccTransfer">Is Card To Account Transfer</option>
-                <option value="isUtilityTransfer">Is Utility Transfer</option>
-                <option value="isQrPayment">Is QR Payment</option>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 col-xs-12">
+            <b>View Only Options</b>
+        </div>
+        <div class="form-group col-lg-2 col-xs-6">
+            <label>Is Own Account Transfer</label>
+            <select class="form-control input-sm" data-ng-model="searchParams.isOwnAccTransfer">
+                <option value=""></option>
+                <option value="1">Yes</option>                    
+                <option value="0">No</option>                    
             </select>
         </div>
-        <div ng-if="searchParams.trOptions !== ''" class="form-group col-sm-2 col-xs-6">
-            <label>View Only State</label>
-            <select class="form-control" data-ng-model="searchParams.viewOnlyBool">
-                <option value="1" selected>Yes</option>
-                <option value="0">No</option>
+        <div class="form-group col-lg-2 col-xs-6">
+            <label>Is Inter Account Transfer</label>
+            <select class="form-control input-sm" data-ng-model="searchParams.isInterAccTransfer">
+                <option value=""></option>
+                <option value="1">Yes</option>                    
+                <option value="0">No</option>                    
             </select>
         </div>
+        <div class="form-group col-lg-2 col-xs-6">
+            <label>Is Other Account Transfer</label>
+            <select class="form-control input-sm" data-ng-model="searchParams.isOtherAccTransfer">
+                <option value=""></option>
+                <option value="1">Yes</option>                    
+                <option value="0">No</option>                    
+            </select>
+        </div>
+        <div class="form-group col-lg-2 col-xs-6">
+            <label>Is Account to Card Transfer</label>
+            <select class="form-control input-sm" data-ng-model="searchParams.isAccToCardTransfer">
+                <option value=""></option>
+                <option value="1">Yes</option>                    
+                <option value="0">No</option>                    
+            </select>
+        </div>
+        <div class="form-group col-lg-2 col-xs-6">
+            <label>Is Card to Account Transfer</label>
+            <select class="form-control input-sm" data-ng-model="searchParams.isCardToAccTransfer">
+                <option value=""></option>
+                <option value="1">Yes</option>                    
+                <option value="0">No</option>                    
+            </select>
+        </div>
+        <div class="form-group col-lg-2 col-xs-6">
+            <label>Is Utility Transfer</label>
+            <select class="form-control input-sm" data-ng-model="searchParams.isUtilityTransfer">
+                <option value=""></option>
+                <option value="1">Yes</option>                    
+                <option value="0">No</option>                    
+            </select>
+        </div>
+        <div class="form-group col-lg-2 col-xs-6">
+            <label>Is QR Payment</label>
+            <select class="form-control input-sm" data-ng-model="searchParams.isQrPayment">
+                <option value=""></option>
+                <option value="1">Yes</option>                    
+                <option value="0">No</option>                    
+            </select>
+        </div>
+        <!--        <div class="form-group col-sm-3 col-xs-6">
+                    <label>View Only Options</label>
+                    <select class="form-control" data-ng-model="searchParams.trOptions">
+                        <option value="">Show all</option>
+                        <option value="isOwnAccTransfer">Is Own Account Transfer</option>
+                        <option value="isInterAccTransfer">Is Inter Account Transfer</option>
+                        <option value="isOtherAccTransfer">Is Other Account Transfer</option>
+                        <option value="isAccToCardTransfer">Is Account To Card Transfer</option>
+                        <option value="isCardToAccTransfer">Is Card To Account Transfer</option>
+                        <option value="isUtilityTransfer">Is Utility Transfer</option>
+                        <option value="isQrPayment">Is QR Payment</option>
+                    </select>
+                </div>
+                <div ng-if="searchParams.trOptions !== ''" class="form-group col-sm-2 col-xs-6">
+                    <label>View Only State</label>
+                    <select class="form-control" data-ng-model="searchParams.viewOnlyBool">
+                        <option value="1" selected>Yes</option>
+                        <option value="0">No</option>
+                    </select>
+                </div>-->
         <div class="form-group col-xs-6 col-sm-2">
             <div class="form-group">
                 <label style="display:block" class="hidden-xs">&nbsp;&nbsp;</label>

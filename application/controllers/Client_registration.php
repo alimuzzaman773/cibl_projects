@@ -27,8 +27,13 @@ class Client_registration extends CI_Controller {
         $p['get_count'] = (bool) $this->input->get("get_count", true);
         $p['limit'] = $this->input->get('limit', true);
         $p['offset'] = $this->input->get('offset', true);
-        $p['transferOptions'] = $this->input->get('trOptions', true);
-        $p['viewOnlyBool'] = $this->input->get('viewOnlyBool', true);
+        $p['isOwnAccTransfer'] = $this->input->get('isOwnAccTransfer', true);
+        $p['isInterAccTransfer'] = $this->input->get('isInterAccTransfer', true);
+        $p['isOtherAccTransfer'] = $this->input->get('isOtherAccTransfer', true);
+        $p['isAccToCardTransfer'] = $this->input->get('isAccToCardTransfer', true);
+        $p['isCardToAccTransfer'] = $this->input->get('isCardToAccTransfer', true);
+        $p['isUtilityTransfer'] = $this->input->get('isUtilityTransfer', true);
+        $p['isQrPayment'] = $this->input->get('isQrPayment', true);
         $p['search'] = $this->input->get("search", true);
 
         $filter = array(

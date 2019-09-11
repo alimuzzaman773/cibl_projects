@@ -27,11 +27,11 @@
 
 <div class="col-md-12 col-sm-12 col-xs-12">
     <div class="row">
-        <div class="form-group col-lg-3 col-xs-12">
+        <div class="form-group col-lg-2 col-xs-12">
             <label>Search</label>
             <input type="text" class="form-control" data-ng-model="searchParams.search" placeholder="Search by Apps ID, User Name, Customer ID, Father or Mother Name" title="Search by Apps ID, User Name, Customer ID, Father or Mother Name" />
         </div>
-        <div class="form-group col-lg-3 col-xs-12">
+        <div class="form-group col-lg-2 col-xs-12">
             <label>Branch</label>
             <select class="form-control" data-ng-model="searchParams.branch">
                 <option ng-repeat="branch in branch_list" value="{{branch.branchCode}}">{{branch.ATMName}}</option>
@@ -48,11 +48,11 @@
             </select>
         </div>
         -->
-        <div class="form-group col-lg-3 col-xs-12">
+        <div class="form-group col-lg-2 col-xs-12">
             <label>From Date</label>
             <input type="text" readonly="true" class="form-control" data-ng-model="searchParams.from_date" id="fromDate" />                
         </div>
-        <div class="form-group col-lg-3 col-xs-12">
+        <div class="form-group col-lg-2 col-xs-12">
             <label>To Date</label>
             <input type="text" readonly="true" class="form-control" data-ng-model="searchParams.to_date" id="toDate" />                
         </div>
@@ -70,7 +70,68 @@
                 <option value="1">New Request</option>
             </select>
         </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 col-xs-12">
+            <b>View Only Options</b>
+        </div>
         <div class="form-group col-lg-2 col-xs-6">
+            <label>Is Own Account Transfer</label>
+            <select class="form-control input-sm" data-ng-model="searchParams.isOwnAccTransfer">
+                <option value=""></option>
+                <option value="1">Yes</option>                    
+                <option value="0">No</option>                    
+            </select>
+        </div>
+        <div class="form-group col-lg-2 col-xs-6">
+            <label>Is Inter Account Transfer</label>
+            <select class="form-control input-sm" data-ng-model="searchParams.isInterAccTransfer">
+                <option value=""></option>
+                <option value="1">Yes</option>                    
+                <option value="0">No</option>                    
+            </select>
+        </div>
+        <div class="form-group col-lg-2 col-xs-6">
+            <label>Is Other Account Transfer</label>
+            <select class="form-control input-sm" data-ng-model="searchParams.isOtherAccTransfer">
+                <option value=""></option>
+                <option value="1">Yes</option>                    
+                <option value="0">No</option>                    
+            </select>
+        </div>
+        <div class="form-group col-lg-2 col-xs-6">
+            <label>Is Account to Card Transfer</label>
+            <select class="form-control input-sm" data-ng-model="searchParams.isAccToCardTransfer">
+                <option value=""></option>
+                <option value="1">Yes</option>                    
+                <option value="0">No</option>                    
+            </select>
+        </div>
+        <div class="form-group col-lg-2 col-xs-6">
+            <label>Is Card to Account Transfer</label>
+            <select class="form-control input-sm" data-ng-model="searchParams.isCardToAccTransfer">
+                <option value=""></option>
+                <option value="1">Yes</option>                    
+                <option value="0">No</option>                    
+            </select>
+        </div>
+        <div class="form-group col-lg-2 col-xs-6">
+            <label>Is Utility Transfer</label>
+            <select class="form-control input-sm" data-ng-model="searchParams.isUtilityTransfer">
+                <option value=""></option>
+                <option value="1">Yes</option>                    
+                <option value="0">No</option>                    
+            </select>
+        </div>
+        <div class="form-group col-lg-2 col-xs-6">
+            <label>Is QR Payment</label>
+            <select class="form-control input-sm" data-ng-model="searchParams.isQrPayment">
+                <option value=""></option>
+                <option value="1">Yes</option>                    
+                <option value="0">No</option>                    
+            </select>
+        </div>
+<!--        <div class="form-group col-lg-2 col-xs-6">
             <label>View Only Options</label>
             <select class="form-control" data-ng-model="searchParams.trOptions">
                 <option value="">Show all</option>
@@ -89,7 +150,7 @@
                 <option value="1" selected>Yes</option>
                 <option value="0">No</option>
             </select>
-        </div>
+        </div>-->
         <div class="form-group col-xs-6 col-lg-2">
             <label style="display:block" class="hidden-xs">&nbsp;&nbsp;</label>
             <button class="btn btn-primary btn-sm" data-ng-click="getResultsPage(1)">
@@ -152,7 +213,7 @@
                         <td>{{i.concentrationName}}</td>
                         <td>{{i.userName}}</td>
                         <td>{{i.fatherName}}</td>
-                         <td>{{i.motherName}}</td>
+                        <td>{{i.motherName}}</td>
                         <td>{{i.userEmail}}</td>
                         <td>{{i.userMobNo1}}</td>
                         <td>{{i.currAddress}}</td>
@@ -208,19 +269,19 @@
                                             <i class="glyphicon glyphicon-flash"></i> Details
                                         </a>
                                     </li>
-									<!--
-                                    <li data-ng-if="i.isRejected != '1' && i.isPublished == '1'">
-                                        <a style="cursor: pointer" ng-click="sendPasswordResetPin(i.skyId);">
-                                            <i class="glyphicon glyphicon-send"></i> Send Password Reset Pin
-                                        </a>
-                                    </li>
-									-->
+                                    <!--
+<li data-ng-if="i.isRejected != '1' && i.isPublished == '1'">
+    <a style="cursor: pointer" ng-click="sendPasswordResetPin(i.skyId);">
+        <i class="glyphicon glyphicon-send"></i> Send Password Reset Pin
+    </a>
+</li>
+                                    -->
                                     <li data-ng-if="i.isRejected != '1' && i.passwordReset == '1' && i.isPublished == '1'">
                                         <a style="cursor: pointer" ng-click="showResetModal(i.skyId, 'pin_send');">
                                             <i class="glyphicon glyphicon-send"></i> Send Password Reset Pin
                                         </a>
                                     </li>
-                                    
+
                                     <!--
                                     <li data-ng-if="i.isPublished == '0'">
                                         <a style="cursor: pointer" ng-click="showResetModal(i.skyId, 'pin_resend');">

@@ -149,13 +149,18 @@ AppUserModule.controller("AppUsersController", ["$scope", "$http", function ($sc
     };
     
 
-    $scope.searchParams = {
-        isActive : '',
-        isLocked : '',
-        search : '',
-        trOptions: '',
-        viewOnlyBool: '1'
-    };
+        $scope.searchParams = {
+            isActive: '',
+            isLocked: '',
+            search: '',
+            isOwnAccTransfer: '',
+            isInterAccTransfer: '',
+            isOtherAccTransfer: '',
+            isAccToCardTransfer: '',
+            isCardToAccTransfer: '',
+            isUtilityTransfer: '',
+            isQrPayment: ''
+        };
 
     $scope.pagination = {
         current: 1
@@ -170,6 +175,13 @@ AppUserModule.controller("AppUsersController", ["$scope", "$http", function ($sc
             isActive : '',
             isLocked : '',
             search : '',
+            isOwnAccTransfer: '',
+            isInterAccTransfer: '',
+            isOtherAccTransfer: '',
+            isAccToCardTransfer: '',
+            isCardToAccTransfer: '',
+            isUtilityTransfer: '',
+            isQrPayment: '',
             trOptions: '',
             viewOnlyBool: '1'
         };
@@ -200,16 +212,49 @@ AppUserModule.controller("AppUsersController", ["$scope", "$http", function ($sc
             $params.isActive = $scope.searchParams.isActive;
         }
 
-        if ($scope.searchParams.trOptions !== null 
-            && $.trim($scope.searchParams.trOptions) !== "") {
-            $params.trOptions = $scope.searchParams.trOptions;
+        if ($scope.searchParams.isOwnAccTransfer !== null
+                && $.trim($scope.searchParams.isOwnAccTransfer) !== "") {
+            $params.isOwnAccTransfer = $scope.searchParams.isOwnAccTransfer;
         }
-
-        if ($scope.searchParams.viewOnlyBool !== null 
-            && $.trim($scope.searchParams.viewOnlyBool) !== "") {
-            $params.viewOnlyBool = $scope.searchParams.viewOnlyBool;
+        
+        if ($scope.searchParams.isInterAccTransfer !== null
+                && $.trim($scope.searchParams.isInterAccTransfer) !== "") {
+            $params.isInterAccTransfer = $scope.searchParams.isInterAccTransfer;
         }
-
+        
+        if ($scope.searchParams.isOtherAccTransfer !== null
+                && $.trim($scope.searchParams.isOtherAccTransfer) !== "") {
+            $params.isOtherAccTransfer = $scope.searchParams.isOtherAccTransfer;
+        }
+        
+        if ($scope.searchParams.isAccToCardTransfer !== null
+                && $.trim($scope.searchParams.isAccToCardTransfer) !== "") {
+            $params.isAccToCardTransfer = $scope.searchParams.isAccToCardTransfer;
+        }
+        
+        if ($scope.searchParams.isCardToAccTransfer !== null
+                && $.trim($scope.searchParams.isCardToAccTransfer) !== "") {
+            $params.isCardToAccTransfer = $scope.searchParams.isCardToAccTransfer;
+        }
+        
+        if ($scope.searchParams.isUtilityTransfer !== null
+                && $.trim($scope.searchParams.isUtilityTransfer) !== "") {
+            $params.isUtilityTransfer = $scope.searchParams.isUtilityTransfer;
+        }
+        
+        if ($scope.searchParams.isQrPayment !== null
+                && $.trim($scope.searchParams.isQrPayment) !== "") {
+            $params.isQrPayment = $scope.searchParams.isQrPayment;
+        }
+//        if ($scope.searchParams.trOptions !== null 
+//            && $.trim($scope.searchParams.trOptions) !== "") {
+//            $params.trOptions = $scope.searchParams.trOptions;
+//        }
+//
+//        if ($scope.searchParams.viewOnlyBool !== null 
+//            && $.trim($scope.searchParams.viewOnlyBool) !== "") {
+//            $params.viewOnlyBool = $scope.searchParams.viewOnlyBool;
+//        }
         app.showModal();
         $http({
             method: "get",
