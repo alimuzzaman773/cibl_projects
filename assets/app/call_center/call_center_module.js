@@ -49,6 +49,16 @@ CallCenterModuleApp.controller('CallCenterController', ['$scope', '$http', '$rou
 
         $scope.resetSkyId = null;
         $scope.otp_channel_pin = 'sms';
+        
+        $scope.trOptions = {
+            isOwnAccTransfer: '',
+            isInterAccTransfer: '',
+            isOtherAccTransfer: '',
+            isAccToCardTransfer: '',
+            isCardToAccTransfer: '',
+            isUtilityTransfer: '',
+            isQrPayment: ''
+        };
 
         $scope.pin_sending_url = null;
         $scope.showResetModal = function ($skyId, $type) {
