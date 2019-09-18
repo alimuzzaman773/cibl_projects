@@ -69,11 +69,43 @@ class Call_center_model extends CI_Model {
         if (isset($params['password_reset']) && $params['password_reset'] == 1):
             $this->db->where("aum.passwordReset", "1");
         endif;
+        
+        if (isset($params['isOwnAccTransfer']) && trim($params['isOwnAccTransfer']) != ''):
+            $this->db->where('aum.isOwnAccTransfer', $params['isOwnAccTransfer']);
+        endif;
+        
+        if (isset($params['isInterAccTransfer']) && trim($params['isInterAccTransfer']) != ''):
+            $this->db->where('aum.isInterAccTransfer', $params['isInterAccTransfer']);
+        endif;
+        
+        if (isset($params['isOtherAccTransfer']) && trim($params['isOtherAccTransfer']) != ''):
+            $this->db->where('aum.isOtherAccTransfer', $params['isOtherAccTransfer']);
+        endif;
+        
+        if (isset($params['isAccToCardTransfer']) && trim($params['isAccToCardTransfer']) != ''):
+            $this->db->where('aum.isActive', $params['isAccToCardTransfer']);
+        endif;
+        
+        if (isset($params['isCardToAccTransfer']) && trim($params['isCardToAccTransfer']) != ''):
+            $this->db->where('aum.isCardToAccTransfer', $params['isCardToAccTransfer']);
+        endif;
+        
+        if (isset($params['isUtilityTransfer']) && trim($params['isUtilityTransfer']) != ''):
+            $this->db->where('aum.isUtilityTransfer', $params['isUtilityTransfer']);
+        endif;
+        
+        if (isset($params['isQrPayment']) && trim($params['isQrPayment']) != ''):
+            $this->db->where('aum.isQrPayment', $params['isQrPayment']);
+        endif;
+
+//        if(isset($params['transferOptions']) && trim($params['transferOptions']) != '' &&
+//            isset($params['viewOnlyBool']) && (int)$params['viewOnlyBool'] >= 0) {
+//            $this->db->where('aum.'.$params['transferOptions'], $params['viewOnlyBool']);
+//        }
 
         $query = $this->db->order_by('aum.passwordReset', 'desc')
                 ->order_by('ra.created_on', 'desc')
                 ->get();
-
         return $query->num_rows() > 0 ? $query : false;
     }
 

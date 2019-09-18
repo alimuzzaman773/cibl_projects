@@ -21,6 +21,15 @@ class Call_center extends CI_Controller {
         $params['status'] = $this->input->get('status', true);
         $params['is_regester'] =  $this->input->get("is_regester", true);
         $params['password_reset'] =  $this->input->get("password_reset", true);
+        $params['isOwnAccTransfer'] = $this->input->get('isOwnAccTransfer', true);
+        $params['isInterAccTransfer'] = $this->input->get('isInterAccTransfer', true);
+        $params['isOtherAccTransfer'] = $this->input->get('isOtherAccTransfer', true);
+        $params['isAccToCardTransfer'] = $this->input->get('isAccToCardTransfer', true);
+        $params['isCardToAccTransfer'] = $this->input->get('isCardToAccTransfer', true);
+        $params['isUtilityTransfer'] = $this->input->get('isUtilityTransfer', true);
+        $params['isQrPayment'] = $this->input->get('isQrPayment', true);
+//        $params['transferOptions'] = $this->input->get('trOptions', true);
+//        $params['viewOnlyBool'] = $this->input->get('viewOnlyBool', true);
 
         $this->load->model("call_center_model");
         $data['total'] = 0;

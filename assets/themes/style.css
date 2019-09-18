@@ -611,3 +611,16 @@ fieldset[disabled] .btn-primary.active {
 .bold {
     font-weight: bold;
 }
+
+.view-only {
+    white-space: nowrap;
+}
+
+.view-only span {
+    margin: 0px 0px 3px 0px;
+    display: block;
+}
+/*
+.view-only label {
+    text-align: right;
+}*/

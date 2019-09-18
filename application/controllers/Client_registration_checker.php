@@ -29,6 +29,13 @@ class Client_registration_checker extends CI_Controller {
         $params['search'] = $this->input->get("search", true);
         $params['isLocked'] = $this->input->get("isLocked", true);
         $params['isActive'] = $this->input->get("isActive", true);
+        $params['isOwnAccTransfer'] = $this->input->get('isOwnAccTransfer', true);
+        $params['isInterAccTransfer'] = $this->input->get('isInterAccTransfer', true);
+        $params['isOtherAccTransfer'] = $this->input->get('isOtherAccTransfer', true);
+        $params['isAccToCardTransfer'] = $this->input->get('isAccToCardTransfer', true);
+        $params['isCardToAccTransfer'] = $this->input->get('isCardToAccTransfer', true);
+        $params['isUtilityTransfer'] = $this->input->get('isUtilityTransfer', true);
+        $params['isQrPayment'] = $this->input->get('isQrPayment', true);
 
         $data['total'] = array();
         $data['list'] = array();

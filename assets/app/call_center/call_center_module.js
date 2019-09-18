@@ -45,18 +45,20 @@ CallCenterModuleApp.controller('CallCenterController', ['$scope', '$http', '$rou
         $scope.currentPageNumber = 1;
         $scope.uid = $routeParams.uid;
         $scope.eblSkyId = '';
-/*        $scope.isOwnAccTransfer = "1";
-        $scope.isInterAccTransfer = "1";
-        $scope.isOtherAccTransfer = "1";
-        $scope.isAccToCardTransfer = "1";
-        $scope.isCardToAccTransfer = "1";
-        $scope.isUtilityTransfer = "1";
-        $scope.isQrPayment = "1";*/
         $scope.user = {};
-        $scope.trOptions = {}
 
         $scope.resetSkyId = null;
         $scope.otp_channel_pin = 'sms';
+        
+        $scope.trOptions = {
+            isOwnAccTransfer: '',
+            isInterAccTransfer: '',
+            isOtherAccTransfer: '',
+            isAccToCardTransfer: '',
+            isCardToAccTransfer: '',
+            isUtilityTransfer: '',
+            isQrPayment: ''
+        };
 
         $scope.pin_sending_url = null;
         $scope.showResetModal = function ($skyId, $type) {
@@ -78,7 +80,14 @@ CallCenterModuleApp.controller('CallCenterController', ['$scope', '$http', '$rou
             status: '',
             branch: '',
             is_regester: '',
-            password_reset: ''
+            password_reset: '',
+            isOwnAccTransfer: '',
+            isInterAccTransfer: '',
+            isOtherAccTransfer: '',
+            isAccToCardTransfer: '',
+            isCardToAccTransfer: '',
+            isUtilityTransfer: '',
+            isQrPayment: ''
         };
 
         $scope.pagination = {
@@ -97,7 +106,14 @@ CallCenterModuleApp.controller('CallCenterController', ['$scope', '$http', '$rou
                 status: '',
                 branch: '',
                 is_regester: '',
-                password_reset: ''
+                password_reset: '',
+                isOwnAccTransfer: '',
+                isInterAccTransfer: '',
+                isOtherAccTransfer: '',
+                isAccToCardTransfer: '',
+                isCardToAccTransfer: '',
+                isUtilityTransfer: '',
+                isQrPayment: ''
             };
 
             $scope.getResultsPage(1);
@@ -138,6 +154,51 @@ CallCenterModuleApp.controller('CallCenterController', ['$scope', '$http', '$rou
                 $params.from_date = $scope.searchParams.from_date;
                 $params.to_date = $scope.searchParams.to_date;
             }
+
+            if ($scope.searchParams.isOwnAccTransfer !== null
+                    && $.trim($scope.searchParams.isOwnAccTransfer) !== "") {
+                $params.isOwnAccTransfer = $scope.searchParams.isOwnAccTransfer;
+            }
+
+            if ($scope.searchParams.isInterAccTransfer !== null
+                    && $.trim($scope.searchParams.isInterAccTransfer) !== "") {
+                $params.isInterAccTransfer = $scope.searchParams.isInterAccTransfer;
+            }
+
+            if ($scope.searchParams.isOtherAccTransfer !== null
+                    && $.trim($scope.searchParams.isOtherAccTransfer) !== "") {
+                $params.isOtherAccTransfer = $scope.searchParams.isOtherAccTransfer;
+            }
+
+            if ($scope.searchParams.isAccToCardTransfer !== null
+                    && $.trim($scope.searchParams.isAccToCardTransfer) !== "") {
+                $params.isAccToCardTransfer = $scope.searchParams.isAccToCardTransfer;
+            }
+
+            if ($scope.searchParams.isCardToAccTransfer !== null
+                    && $.trim($scope.searchParams.isCardToAccTransfer) !== "") {
+                $params.isCardToAccTransfer = $scope.searchParams.isCardToAccTransfer;
+            }
+
+            if ($scope.searchParams.isUtilityTransfer !== null
+                    && $.trim($scope.searchParams.isUtilityTransfer) !== "") {
+                $params.isUtilityTransfer = $scope.searchParams.isUtilityTransfer;
+            }
+
+            if ($scope.searchParams.isQrPayment !== null
+                    && $.trim($scope.searchParams.isQrPayment) !== "") {
+                $params.isQrPayment = $scope.searchParams.isQrPayment;
+            }
+
+//            if ($scope.searchParams.trOptions !== null
+//                    && $.trim($scope.searchParams.trOptions) !== "") {
+//                $params.trOptions = $scope.searchParams.trOptions;
+//            }
+//
+//            if ($scope.searchParams.viewOnlyBool !== null
+//                    && $.trim($scope.searchParams.viewOnlyBool) !== "") {
+//                $params.viewOnlyBool = $scope.searchParams.viewOnlyBool;
+//            }
 
             app.showModal();
             $http({method: 'get', url: app.baseUrl + 'api/call_center/user_list', params: $params})
@@ -196,7 +257,7 @@ CallCenterModuleApp.controller('CallCenterController', ['$scope', '$http', '$rou
             if (!confirm("Do you really want to activate this user for maker action?")) {
                 return false;
             }
-            
+
             var $pData = {
                 isOwnAccTransfer: $scope.trOptions.isOwnAccTransfer,
                 isInterAccTransfer: $scope.trOptions.isInterAccTransfer,
@@ -409,7 +470,7 @@ CallCenterModuleApp.controller('RequestAccountController', ['$scope', '$http', '
         };
 
         $scope.getResultsPage = function (pageNumber, childId) {
-            
+
             var $params = {
                 limit: $scope.per_page,
                 offset: $scope.per_page * (pageNumber - 1),

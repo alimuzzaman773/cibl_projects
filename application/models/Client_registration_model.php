@@ -51,12 +51,39 @@ class Client_registration_model extends CI_Model {
         if (isset($p['isActive']) && trim($p['isActive']) != '') {
             $this->db->where('apps_users_mc.isActive', $p['isActive']);
         }
+        
+        if (isset($p['isOwnAccTransfer']) && trim($p['isOwnAccTransfer']) != ''):
+            $this->db->where('apps_users_mc.isOwnAccTransfer', $p['isOwnAccTransfer']);
+        endif;
+        
+        if (isset($p['isInterAccTransfer']) && trim($p['isInterAccTransfer']) != ''):
+            $this->db->where('apps_users_mc.isInterAccTransfer', $p['isInterAccTransfer']);
+        endif;
+        
+        if (isset($p['isOtherAccTransfer']) && trim($p['isOtherAccTransfer']) != ''):
+            $this->db->where('apps_users_mc.isOtherAccTransfer', $p['isOtherAccTransfer']);
+        endif;
+        
+        if (isset($p['isAccToCardTransfer']) && trim($p['isAccToCardTransfer']) != ''):
+            $this->db->where('apps_users_mc.isActive', $p['isAccToCardTransfer']);
+        endif;
+        
+        if (isset($p['isCardToAccTransfer']) && trim($p['isCardToAccTransfer']) != ''):
+            $this->db->where('apps_users_mc.isCardToAccTransfer', $p['isCardToAccTransfer']);
+        endif;
+        
+        if (isset($p['isUtilityTransfer']) && trim($p['isUtilityTransfer']) != ''):
+            $this->db->where('apps_users_mc.isUtilityTransfer', $p['isUtilityTransfer']);
+        endif;
+        
+        if (isset($p['isQrPayment']) && trim($p['isQrPayment']) != ''):
+            $this->db->where('apps_users_mc.isQrPayment', $p['isQrPayment']);
+        endif;
 
         if (isset($p['limit']) && (int) $p['limit'] > 0) {
             $offset = (isset($p['offset']) && $p['offset'] != null) ? (int) $p['offset'] : 0;
             $this->db->limit($p['limit'], $offset);
         }
-
         $query = $this->db->get();
         return $query->num_rows() > 0 ? $query : false;
     }
