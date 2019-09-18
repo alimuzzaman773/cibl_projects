@@ -31,12 +31,15 @@ class Transaction_limit_setup_model_checker extends CI_Model {
                            apps_users_group.pbDayTxnLim as pbDayTxnLim_c,
                            apps_users_group.pbNoOfTxn as pbNoOfTxn_c,
 
+                           apps_users_group.ccMinTxnLim as ccMinTxnLim_c,
+                           apps_users_group.ccMaxTxnLim as ccMaxTxnLim_c,
+                           apps_users_group.ccDayTxnLim as ccDayTxnLim_c,
+                           apps_users_group.ccNoOfTxn as ccNoOfTxn_c,
 
                            apps_users_group.eatMinTxnLim as eatMinTxnLim_c,
                            apps_users_group.eatMaxTxnLim as eatMaxTxnLim_c,
                            apps_users_group.eatDayTxnLim as eatDayTxnLim_c,
                            apps_users_group.eatNoOfTxn as eatNoOfTxn_c,
-
 
                            apps_users_group.obtMinTxnLim as obtMinTxnLim_c,
                            apps_users_group.obtMaxTxnLim as obtMaxTxnLim_c,

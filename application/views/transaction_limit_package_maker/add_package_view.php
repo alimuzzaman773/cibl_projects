@@ -24,7 +24,8 @@
                 <input style="margin-right: 15px" type="checkbox" name="packageName[]" value="1"><label> Own Account Transfer</label><br>
                 <input style="margin-right: 15px" type="checkbox" name="packageName[]" value="2"><label> PBL Account Transfer</label><br>
                 <input style="margin-right: 15px" type="checkbox" name="packageName[]" value="3"><label> Other Bank Transfer</label><br>
-                <input style="margin-right: 15px" type="checkbox" name="packageName[]" value="4"><label> Bills Pay</label>                
+                <input style="margin-right: 15px" type="checkbox" name="packageName[]" value="4"><label> Bills Pay</label><br>            
+                <input style="margin-right: 15px" type="checkbox" name="packageName[]" value="5"><label> Credit Card Payment</label>                
             </div>
 
             <br><br>

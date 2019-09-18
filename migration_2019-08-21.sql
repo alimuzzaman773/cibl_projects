@@ -1,8 +1,11 @@
-/**
- * Author:  shahid
- * Created: Aug 21, 2019
- */
+ALTER TABLE `apps_users_group` ADD `ccMinTxnLim` DECIMAL(10) NOT NULL AFTER `obtEffectiveData`, ADD `ccMaxTxnLim` DECIMAL(10) NOT NULL AFTER `ccMinTxnLim`, ADD `ccDayTxnLim` DECIMAL(10) NOT NULL AFTER `ccMaxTxnLim`, ADD `ccNoOfTxn` INT NOT NULL AFTER `ccDayTxnLim`, ADD `ccEffectiveDate` DATE NOT NULL AFTER `ccNoOfTxn`, ADD `ccEffectiveData` VARCHAR(200) NOT NULL AFTER `ccEffectiveDate`;
+ALTER TABLE `apps_users_group_mc` ADD `ccMinTxnLim` DECIMAL(10) NOT NULL AFTER `obtEffectiveData`, ADD `ccMaxTxnLim` DECIMAL(10) NOT NULL AFTER `ccMinTxnLim`, ADD `ccDayTxnLim` DECIMAL(10) NOT NULL AFTER `ccMaxTxnLim`, ADD `ccNoOfTxn` INT NOT NULL AFTER `ccDayTxnLim`, ADD `ccEffectiveDate` DATE NOT NULL AFTER `ccNoOfTxn`, ADD `ccEffectiveData` VARCHAR(200) NOT NULL AFTER `ccEffectiveDate`
 
-ALTER TABLE `apps_users` ADD `isOwnAccTransfer` TINYINT(1) NOT NULL DEFAULT '1' AFTER `userName2`, ADD `isInterAccTransfer` TINYINT(1) NOT NULL DEFAULT '1' AFTER `isOwnAccTransfer`, ADD `isOtherAccTransfer` TINYINT(1) NOT NULL DEFAULT '1' AFTER `isInterAccTransfer`, ADD `isAccToCardTransfer` TINYINT(1) NOT NULL DEFAULT '1' AFTER `isOtherAccTransfer`, ADD `isCardToAccTransfer` TINYINT(1) NOT NULL DEFAULT '1' AFTER `isAccToCardTransfer`, ADD `isUtilityTransfer` TINYINT(1) NOT NULL DEFAULT '1' AFTER `isCardToAccTransfer`, ADD `isQrPayment` TINYINT(1) NOT NULL DEFAULT '1' AFTER `isUtilityTransfer`;
+ALTER TABLE `apps_users_group_mc` CHANGE `ccMinTxnLim` `ccMinTxnLim` DECIMAL(10,2) NOT NULL;
+ALTER TABLE `apps_users_group_mc` CHANGE `ccMaxTxnLim` `ccMaxTxnLim` DECIMAL(10,2) NOT NULL;
+ALTER TABLE `apps_users_group_mc` CHANGE `ccDayTxnLim` `ccDayTxnLim` DECIMAL(10,2) NOT NULL;
 
-ALTER TABLE `apps_users_mc` ADD `isOwnAccTransfer` TINYINT(1) NOT NULL DEFAULT '1' AFTER `userName2`, ADD `isInterAccTransfer` TINYINT(1) NOT NULL DEFAULT '1' AFTER `isOwnAccTransfer`, ADD `isOtherAccTransfer` TINYINT(1) NOT NULL DEFAULT '1' AFTER `isInterAccTransfer`, ADD `isAccToCardTransfer` TINYINT(1) NOT NULL DEFAULT '1' AFTER `isOtherAccTransfer`, ADD `isCardToAccTransfer` TINYINT(1) NOT NULL DEFAULT '1' AFTER `isAccToCardTransfer`, ADD `isUtilityTransfer` TINYINT(1) NOT NULL DEFAULT '1' AFTER `isCardToAccTransfer`, ADD `isQrPayment` TINYINT(1) NOT NULL DEFAULT '1' AFTER `isUtilityTransfer`;
+
+ALTER TABLE `apps_users_group` CHANGE `ccMinTxnLim` `ccMinTxnLim` DECIMAL(10,2) NOT NULL;
+ALTER TABLE `apps_users_group` CHANGE `ccMaxTxnLim` `ccMaxTxnLim` DECIMAL(10,2) NOT NULL;
+ALTER TABLE `apps_users_group` CHANGE `ccDayTxnLim` `ccDayTxnLim` DECIMAL(10,2) NOT NULL;

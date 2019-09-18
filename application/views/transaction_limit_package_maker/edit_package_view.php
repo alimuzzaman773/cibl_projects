@@ -34,6 +34,7 @@
         <input style="margin-right: 15px" type="checkbox" id="ebl" name="packageName[]" value="2"><label> PBL Account Transfer</label><br>
         <input style="margin-right: 15px" type="checkbox" id="other" name="packageName[]" value="3"><label> Other Bank Transfer</label><br>
         <input style="margin-right: 15px" type="checkbox" id="bill" name="packageName[]" value="4"><label> Bills Pay</label><br>
+        <input style="margin-right: 15px" type="checkbox" id="card" name="packageName[]" value="5"><label> Credit Card Payment</label><br>
 
         <br><br>
         <button type="submit" class="btn btn-success">Next</button>
@@ -102,6 +103,10 @@ input {
 
     if(initialData.obtMinTxnLim > 0){
         document.getElementById("other").checked = true;
+    }
+    
+    if(initialData.ccMinTxnLim > 0){
+        document.getElementById("card").checked = true;
     }
 
     document.getElementById("reason").value = "<?php echo $checkerActionComment ?>";
