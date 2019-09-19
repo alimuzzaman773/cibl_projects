@@ -167,7 +167,8 @@
                 SelectedActionName = selectedActionName.value;
                 var GlobalLimit = globalLimit.value;
 
-                var dataToSave = {"group_id": groupId,
+                var dataToSave = {
+                    "group_id": groupId,
                     "group_name": GroupName,
                     "groupDescription": GroupDescription,
                     "globalLimit": GlobalLimit,
@@ -271,9 +272,10 @@
                         }
                     }
                 }
+                
+                console.log(dataToSave);
 
-
-                if (own === true && ebl === true && ob === true && bill === true) {
+                if (own === true && ebl === true && ob === true && bill === true && card === true) {
 
                     $.ajax({
                         type: "POST",

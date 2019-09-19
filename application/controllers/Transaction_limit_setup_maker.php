@@ -263,7 +263,7 @@ class Transaction_limit_setup_maker extends CI_Controller {
         $eblAccount = isset($_POST['ebl_acc_transfer']) ? $_POST['ebl_acc_transfer'] : array();
         $otherBank = isset($_POST['other_bank_transfer']) ? $_POST['other_bank_transfer'] : array();
         $billsPay = isset($_POST['bills_pay']) ? $_POST['bills_pay'] : array();
-        $creditCardPay = isset($_POST['credit_card_payment']) ? $_POST['credit_card_payment'] : array();
+        $creditCardPay = isset($_POST['card_pay']) ? $_POST['card_pay'] : array();
         $ownAccount = array_slice($ownAccount, 2);
         $eblAccount = array_slice($eblAccount, 2);
         $otherBank = array_slice($otherBank, 2);
