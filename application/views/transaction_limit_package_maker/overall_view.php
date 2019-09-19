@@ -25,6 +25,7 @@
                     <th style="text-align: center" >PBL Account Transfer</th>
                     <th style="text-align: center" >Other Bank Transfer</th>
                     <th style="text-align: center" >Bills Pay</th>
+                    <th style="text-align: center" >Credit Card Payment</th>
                     <th style="text-align: center" >Active/Inactive</th>
                     <th style="text-align: center" >Status</th>
                     <th style="text-align: center" >Checker Comment</th>
@@ -47,6 +48,9 @@
                     </td>
                     <td style="text-align:center">
                         <i class="glyphicon glyphicon-check" data-ng-if="text.pbMinTxnLim > 0"></i>
+                    </td>
+                    <td style="text-align:center">
+                        <i class="glyphicon glyphicon-check" data-ng-if="text.ccMinTxnLim > 0"></i>
                     </td>
                     <td>
                         <span data-ng-class="{'text-success': text.isActive == '1', 'text-danger': text.isActive == '0'}">{{text.isActive=='1' ? 'Active' : 'Inactive'}}</span>
