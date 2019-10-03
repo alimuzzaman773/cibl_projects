@@ -65,7 +65,7 @@ class Client_registration_model extends CI_Model {
         endif;
         
         if (isset($p['isAccToCardTransfer']) && trim($p['isAccToCardTransfer']) != ''):
-            $this->db->where('apps_users_mc.isActive', $p['isAccToCardTransfer']);
+            $this->db->where('apps_users_mc.isAccToCardTransfer', $p['isAccToCardTransfer']);
         endif;
         
         if (isset($p['isCardToAccTransfer']) && trim($p['isCardToAccTransfer']) != ''):
