@@ -57,8 +57,10 @@
 
                             <table width="100" border="0" cellpadding="2">
                                 <tr>
-                                    <td width="100"><button class="btn btn-success" onclick="writeReason(); return false;">Write New Reason</button></td>
-                                    <td width="100"><button class="btn btn-success" onclick="cancelReason(); return false;">Cancel Reason</button></td>
+                                    <td width="100"><button class="btn btn-success" onclick="writeReason();
+                                            return false;">Write New Reason</button></td>
+                                    <td width="100"><button class="btn btn-success" onclick="cancelReason();
+                                            return false;">Cancel Reason</button></td>
                                 </tr>
                             </table>
 
@@ -232,6 +234,12 @@
                 change.dayLimit = group.pbDayTxnLim;
                 change.perDay = group.pbNoOfTxn;
             }
+            if (change.packageId == 5) {
+                change.min = group.ccMinTxnLim;
+                change.max = group.ccMaxTxnLim;
+                change.dayLimit = group.ccDayTxnLim;
+                change.perDay = group.ccNoOfTxn;
+            }
         })
 
         $.each(self.publishes(), function (i, publish)
@@ -265,6 +273,13 @@
                 publish.max_c = group.pbMaxTxnLim_c;
                 publish.dayLimit_c = group.pbDayTxnLim_c;
                 publish.perDay_c = group.pbNoOfTxn_c;
+            }
+
+            if (publish.packageId_c == 5) {
+                publish.min_c = group.ccMinTxnLim_c;
+                publish.max_c = group.ccMaxTxnLim_c;
+                publish.dayLimit_c = group.ccDayTxnLim_c;
+                publish.perDay_c = group.ccNoOfTxn_c;
             }
         })
     }

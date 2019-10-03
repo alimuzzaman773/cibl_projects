@@ -93,11 +93,13 @@
                 var eblAccount = [];
                 var otherBank = [];
                 var billsPay = [];
+                var cardPay = [];
                 var obj = {
                     "1": ownAccount,
                     "2": eblAccount,
                     "3": otherBank,
-                    "4": billsPay
+                    "4": billsPay,
+                    "5": cardPay
                 };
                 $("#assignPackage tr").each(function () {
                     var tableData = $(this).find('td');
@@ -128,7 +130,8 @@
                     "own_acc_transfer": ownAccount,
                     "ebl_acc_transfer": eblAccount,
                     "other_bank_transfer": otherBank,
-                    "bills_pay": billsPay
+                    "bills_pay": billsPay,
+                    "card_pay": cardPay
 
                 };
 
@@ -136,6 +139,7 @@
                 var ebl = true;
                 var ob = true;
                 var bill = true;
+                var card = true;
                 var type = "";
 
                 for (var i = 2; i < ownAccount.length; i++) {
@@ -206,9 +210,26 @@
                         }
                     }
                 }
+                
+                  for (var i = 2; i < billsPay.length; i++) {
+                    type = "Credit Card Payment";
+                    var billCheck = dataValidate(billsPay[i], type, i);
+                    if (billCheck) {
+                        alert(billCheck);
+                        //sweetAlert("", billCheck, "error");
+                        card = false;
+                        break;
+                    } else {
+                        if (card === false) {
+                            card = false;
+                        } else {
+                            card = true;
+                        }
+                    }
+                }
 
 
-                if (own === true && ebl === true && ob === true && bill === true) {
+                if (own === true && ebl === true && ob === true && bill === true && card === true) {
 
                     $.ajax({
                         type: "POST",

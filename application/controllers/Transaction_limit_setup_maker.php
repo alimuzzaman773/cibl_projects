@@ -56,6 +56,10 @@ class Transaction_limit_setup_maker extends CI_Controller {
                         $array[] = array('packageId' => $value,
                             'packageName' => "Bills Pay");
                     }
+                    if ($value == 5) {
+                        $array[] = array('packageId' => $value,
+                            'packageName' => "Credit Card Payment");
+                    }
                 }
                 $data['packages'] = json_encode($array);
                 $data["body_template"] = "transaction_limit_package_maker/add_limit_view.php";
@@ -72,15 +76,17 @@ class Transaction_limit_setup_maker extends CI_Controller {
         $groupName = $_POST['group_name'];
         $groupDescription = $_POST['groupDescription'];
         $globalLimit = $_POST['globalLimit'];
-        
+
         $ownAccount = isset($_POST['own_acc_transfer']) ? $_POST['own_acc_transfer'] : array();
         $eblAccount = isset($_POST['ebl_acc_transfer']) ? $_POST['ebl_acc_transfer'] : array();
         $otherBank = isset($_POST['other_bank_transfer']) ? $_POST['other_bank_transfer'] : array();
         $billsPay = isset($_POST['bills_pay']) ? $_POST['bills_pay'] : array();
+        $creditCardPay = isset($_POST['card_pay']) ? $_POST['card_pay'] : array();
         $ownAccount = array_slice($ownAccount, 2);
         $eblAccount = array_slice($eblAccount, 2);
         $otherBank = array_slice($otherBank, 2);
         $billsPay = array_slice($billsPay, 2);
+        $creditCardPay = array_slice($creditCardPay, 2);
 
         $dbData['userGroupName'] = $groupName;
         $dbData['groupDescription'] = $groupDescription;
@@ -110,6 +116,12 @@ class Transaction_limit_setup_maker extends CI_Controller {
         $dbData['obtNoOfTxn'] = 0;
         $dbData['obtEffectiveDate'] = "";
 
+        $dbData['ccMinTxnLim'] = 0.00;
+        $dbData['ccMaxTxnLim'] = 0.00;
+        $dbData['ccDayTxnLim'] = 0.00;
+        $dbData['ccNoOfTxn'] = 0;
+        $dbData['ccEffectiveDate'] = "";
+
         if (!empty($ownAccount)) {
             $dbData['oatMinTxnLim'] = $ownAccount[0];
             $dbData['oatMaxTxnLim'] = $ownAccount[1];
@@ -124,6 +136,14 @@ class Transaction_limit_setup_maker extends CI_Controller {
             $dbData['pbDayTxnLim'] = $billsPay[2];
             $dbData['pbNoOfTxn'] = $billsPay[3];
             $dbData['pbEffectiveDate'] = date("y-m-d");
+        }
+
+        if (!empty($creditCardPay)) {
+            $dbData['ccMinTxnLim'] = $creditCardPay[0];
+            $dbData['ccMaxTxnLim'] = $creditCardPay[1];
+            $dbData['ccDayTxnLim'] = $creditCardPay[2];
+            $dbData['ccNoOfTxn'] = $creditCardPay[3];
+            $dbData['ccEffectiveDate'] = date("y-m-d");
         }
 
         if (!empty($eblAccount)) {
@@ -224,6 +244,10 @@ class Transaction_limit_setup_maker extends CI_Controller {
                 $array[] = array('packageId' => $value,
                     'packageName' => "Bills Pay");
             }
+            if ($value == 5) {
+                $array[] = array('packageId' => $value,
+                    'packageName' => "Credit Card Payment");
+            }
         }
         $data['packages'] = json_encode($array);
         $data['body_template'] = 'transaction_limit_package_maker/edit_limit_view.php';
@@ -239,10 +263,12 @@ class Transaction_limit_setup_maker extends CI_Controller {
         $eblAccount = isset($_POST['ebl_acc_transfer']) ? $_POST['ebl_acc_transfer'] : array();
         $otherBank = isset($_POST['other_bank_transfer']) ? $_POST['other_bank_transfer'] : array();
         $billsPay = isset($_POST['bills_pay']) ? $_POST['bills_pay'] : array();
+        $creditCardPay = isset($_POST['card_pay']) ? $_POST['card_pay'] : array();
         $ownAccount = array_slice($ownAccount, 2);
         $eblAccount = array_slice($eblAccount, 2);
         $otherBank = array_slice($otherBank, 2);
         $billsPay = array_slice($billsPay, 2);
+        $creditCardPay = array_slice($creditCardPay, 2);
 
         $currentDate = date("y-m-d");
 
@@ -274,6 +300,12 @@ class Transaction_limit_setup_maker extends CI_Controller {
         $dbData['obtNoOfTxn'] = 0;
         $dbData['obtEffectiveDate'] = "";
 
+        $dbData['ccMinTxnLim'] = 0.00;
+        $dbData['ccMaxTxnLim'] = 0.00;
+        $dbData['ccDayTxnLim'] = 0.00;
+        $dbData['ccNoOfTxn'] = 0;
+        $dbData['ccEffectiveDate'] = "";
+
         if (!empty($ownAccount)) {
             $dbData['oatMinTxnLim'] = $ownAccount[0];
             $dbData['oatMaxTxnLim'] = $ownAccount[1];
@@ -304,6 +336,14 @@ class Transaction_limit_setup_maker extends CI_Controller {
             $dbData['obtDayTxnLim'] = $otherBank[2];
             $dbData['obtNoOfTxn'] = $otherBank[3];
             $dbData['obtEffectiveDate'] = $currentDate;
+        }
+
+        if (!empty($creditCardPay)) {
+            $dbData['ccMinTxnLim'] = $creditCardPay[0];
+            $dbData['ccMaxTxnLim'] = $creditCardPay[1];
+            $dbData['ccDayTxnLim'] = $creditCardPay[2];
+            $dbData['ccNoOfTxn'] = $creditCardPay[3];
+            $dbData['ccEffectiveDate'] = date("y-m-d");
         }
 
         $dbData['mcStatus'] = 0;

@@ -92,7 +92,11 @@ class Transaction_limit_setup_checker extends CI_Controller {
             $changedDataArray[] = array('packageId' => 4,
                 'packageName' => "Bills Pay");
         }
-
+        if ($dbData['ccMinTxnLim'] != 0.00) {
+            $changedDataArray[] = array('packageId' => 5,
+                'packageName' => "Credit Card Payment");
+        }
+        
         $PublisherDataArray = array();
 
         if ($dbData['oatMinTxnLim_c'] > 0.00) {
@@ -110,6 +114,10 @@ class Transaction_limit_setup_checker extends CI_Controller {
         if ($dbData['pbMinTxnLim_c'] > 0.00) {
             $PublisherDataArray[] = array('packageId_c' => 4,
                 'packageName_c' => "Bills Pay");
+        }
+        if ($dbData['ccMinTxnLim_c'] > 0.00) {
+            $PublisherDataArray[] = array('packageId_c' => 5,
+                'packageName_c' => "Credit Card Payment");
         }
 
         $data['changedPackages'] = json_encode($changedDataArray);

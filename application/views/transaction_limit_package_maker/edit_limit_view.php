@@ -120,6 +120,13 @@
                 record.dayLimit = group.pbDayTxnLim;
                 record.perDay = group.pbNoOfTxn;
             }
+            
+              if (record.packageId == 5) {
+                record.min = group.ccMinTxnLim;
+                record.max = group.ccMaxTxnLim;
+                record.dayLimit = group.ccDayTxnLim;
+                record.perDay = group.ccNoOfTxn;
+            }
         })
 
 
@@ -131,11 +138,13 @@
                 var eblAccount = [];
                 var otherBank = [];
                 var billsPay = [];
+                var cardPayment = [];
                 var obj = {
                     "1": ownAccount,
                     "2": eblAccount,
                     "3": otherBank,
-                    "4": billsPay
+                    "4": billsPay,
+                    "5": cardPayment
                 };
                 $("#assignPackage tr").each(function () {
                     var tableData = $(this).find('td');
@@ -158,7 +167,8 @@
                 SelectedActionName = selectedActionName.value;
                 var GlobalLimit = globalLimit.value;
 
-                var dataToSave = {"group_id": groupId,
+                var dataToSave = {
+                    "group_id": groupId,
                     "group_name": GroupName,
                     "groupDescription": GroupDescription,
                     "globalLimit": GlobalLimit,
@@ -166,12 +176,15 @@
                     "own_acc_transfer": ownAccount,
                     "ebl_acc_transfer": eblAccount,
                     "other_bank_transfer": otherBank,
-                    "bills_pay": billsPay};
+                    "bills_pay": billsPay,
+                    "card_pay": cardPayment
+                };
 
                 var own = true;
                 var ebl = true;
                 var ob = true;
                 var bill = true;
+                var card = true;
                 var type = "";
 
                 for (var i = 2; i < ownAccount.length; i++) {
@@ -242,9 +255,27 @@
                         }
                     }
                 }
+                
+                for (var i = 2; i < cardPayment.length; i++) {
+                    type = "Credit Card Payment";
+                    var cardCheck = dataValidate(cardPayment[i], type, i);
+                    if (cardCheck) {
+                        alert(cardCheck);
+                        //sweetAlert("", billCheck, "error");
+                        card = false;
+                        break;
+                    } else {
+                        if (card === false) {
+                            card = false;
+                        } else {
+                            card = true;
+                        }
+                    }
+                }
+                
+                console.log(dataToSave);
 
-
-                if (own === true && ebl === true && ob === true && bill === true) {
+                if (own === true && ebl === true && ob === true && bill === true && card === true) {
 
                     $.ajax({
                         type: "POST",
