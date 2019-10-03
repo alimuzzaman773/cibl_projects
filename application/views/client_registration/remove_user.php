@@ -92,15 +92,15 @@
                 </thead>    
                 <tr>
                     <th>SI#</th>
+                    <th>Branch Code</th>
                     <th>Account No</th>
-                    <th>Account Type</th>
                     <th>Product Name</th>
                     <th>Currency</th>
                 </tr>
                 <tr data-ng-repeat="ua in user_accounts track by $index">
                     <td>{{$index + 1}}</td>
+                    <td>{{ua.accBranchCode}}</td>
                     <td>{{ua.accNo}}</td>
-                    <td>{{ua.accTypeName}} ({{ua.accTypeCode}})</td>
                     <td>{{ua.accName}}</td>
                     <td>{{ua.accCurrency}}</td>
                 </tr>

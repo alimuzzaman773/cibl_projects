@@ -159,6 +159,7 @@
                                     <table class="table table-striped table-bordered">
                                         <thead>
                                             <tr>
+                                                <th style="text-align:center">Branch Code</th>
                                                 <th style="text-align:center">Account Number</th>
 <!--                                                <th style="text-align:center">Account Type</th>-->
                                                 <th style="text-align:center">Product Name</th>
@@ -167,6 +168,7 @@
                                         </thead>
                                         <tbody data-bind="foreach: changedAccounts">
                                             <tr>
+                                                <td style="text-align:center" data-bind="text:branchCode"></td>
                                                 <td style="text-align:center" data-bind="text:accNo"></td>
 <!--                                                <td style="text-align:center" data-bind="text:accType"></td>-->
                                                 <td style="text-align:center" data-bind="text:accName"></td>
@@ -368,16 +370,16 @@
                                 <table class="table table-striped table-bordered">
                                     <thead>
                                         <tr>
+                                            <th style="text-align:center">Branch Code</th>
                                             <th style="text-align:center">Account Number</th>
-<!--                                            <th style="text-align:center">Account Type</th>-->
                                             <th style="text-align:center">Product Name</th>
                                             <th style="text-align:center">Currency</th>
                                         </tr>
                                     </thead>
                                     <tbody data-bind="foreach: publishedAccounts">
                                         <tr>
+                                            <td style="text-align:center" data-bind="text:branchCode"></td>
                                             <td style="text-align:center" data-bind="text:accNo"></td>
-<!--                                            <td style="text-align:center" data-bind="text:accType"></td>-->
                                             <td style="text-align:center" data-bind="text:accName"></td>
                                             <td style="text-align:center" data-bind="text:accCurrency"></td>
                                         </tr>

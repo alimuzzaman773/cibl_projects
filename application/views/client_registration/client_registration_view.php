@@ -1,5 +1,5 @@
 <h1 class="title-underlined">
-    Apps User
+    Apps User 
     <?php if (ci_check_permission("canAddAppUser")): ?>
         <a href="<?php echo base_url() . 'apps_users/addAppsUser/Add'; ?>" class="btn btn-primary pull-right hidden">
             <i class="glyphicon glyphicon-plus"></i> Add User

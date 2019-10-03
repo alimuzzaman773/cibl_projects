@@ -83,7 +83,7 @@ class Call_center_model extends CI_Model {
         endif;
         
         if (isset($params['isAccToCardTransfer']) && trim($params['isAccToCardTransfer']) != ''):
-            $this->db->where('aum.isActive', $params['isAccToCardTransfer']);
+            $this->db->where('aum.isAccToCardTransfer', $params['isAccToCardTransfer']);
         endif;
         
         if (isset($params['isCardToAccTransfer']) && trim($params['isCardToAccTransfer']) != ''):

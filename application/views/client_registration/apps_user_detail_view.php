@@ -1,4 +1,13 @@
-<h1 class="title-underlined">Apps User</h1>
+<div class="row">
+    <div class="col-sm-12">
+        <h2 class="title-underlined ng-scope">
+            Apps User Details
+            <a href="<?php echo base_url() . 'client_registration/index'; ?>" class="btn btn-primary pull-right btn-sm">
+                <i class="glyphicon glyphicon-plus"></i> Apps User List
+            </a>
+        </h2>
+    </div>
+</div>
 <input type="hidden" name="skyId" id="skyId" value="<?= $userInfo['skyId'] ?>" />
 <div class="clearfix table-responsive">
     <table class="table table-striped table-bordered">
@@ -106,16 +115,16 @@
         <table class="table table-striped table-bordered">
             <thead>
                 <tr class="bg-primary">
+                    <th style="text-align:center">Branch Code</th>
                     <th style="text-align:center">Account Number</th>
-                    <th style="text-align:center">Account Type</th>
                     <th style="text-align:center">Product Name</th>
                     <th style="text-align:center">Currency</th>
                 </tr>
             </thead>
             <tbody data-bind="foreach: accounts">
                 <tr>
+                    <td style="text-align:center" data-bind="text:branchCode"></td>
                     <td style="text-align:center" data-bind="text:accNo"></td>
-                    <td style="text-align:center" data-bind="text:accType"></td>
                     <td style="text-align:center" data-bind="text:accName"></td>
                     <td style="text-align:center" data-bind="text:accCurrency"></td>
                 </tr>
@@ -127,7 +136,6 @@
         <b>No Data Found</b>
     </div>
 </div>
-
 
 <div class="clearfix table-responsive">
     <h3>Device Information</h3>
@@ -171,8 +179,8 @@
         self.devices = ko.observableArray(deviceInfo);
 
         $.each(self.accounts(), function (i, account) {  //build the checkboxes as observable
+            account.branchCode = account.branchCode;
             account.accNo = account.accNo;
-                        account.accType = account.accType;
             account.accName = account.accName;
             account.accCurrency = account.accCurrency;
         });
