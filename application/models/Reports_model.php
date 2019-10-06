@@ -504,4 +504,20 @@ class Reports_model extends CI_Model {
         return false;
     }
 
+    function getRequestLogReport($params = array()) {
+        $this->db->select("x.*", false);
+
+        $this->db->from('xml_logs x');
+
+        if (isset($params['fromdate']) && isset($params['todate']) && $params['fromdate'] != null && $params['todate'] != null):
+            $this->db->where("(DATE(x.created) between " . $this->db->escape($params['fromdate']) . " AND " . $this->db->escape($params['todate']) . ")");
+        endif;
+
+        $this->db->order_by("x.id", "DESC");
+        $sql = $this->db->get_compiled_select();
+
+        $query = $this->db->query($sql);
+        return $query->num_rows() > 0 ? $query : false;
+    }
+
 }

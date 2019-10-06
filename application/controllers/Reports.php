@@ -383,20 +383,20 @@ class Reports extends MX_Controller {
 
         $data['pageTitle'] = "Call Center User List Report";
         $data['base_url'] = base_url();
-        
+
         $this->load->model("call_center_model");
 
         $data['css_files'] = array();
         $data['js_files'] = array();
 
         $data['user_list'] = $this->db->get("admin_users")->result();
-        
+
         $branch = $this->call_center_model->getAllBranch();
         $data['branch_list'] = array();
         if ($branch):
             $data['branch_list'] = $branch->result();
         endif;
-        
+
         $data['body_template'] = "reports/call_center_report.php";
         $this->load->view('site_template.php', $data);
     }
@@ -433,7 +433,7 @@ class Reports extends MX_Controller {
         $this->load->view('site_template.php', $data);
     }
 
-    function utility_bill_report(){
+    function utility_bill_report() {
         /** initialization * */
         $data['css'] = "";
 
@@ -446,6 +446,21 @@ class Reports extends MX_Controller {
         $data['js_files'] = array();
 
         $data['body_template'] = "reports/utility_bill_report.php";
+        $this->load->view('site_template.php', $data);
+    }
+
+    function request_log_report() {
+        /** initialization * */
+        $data['css'] = "";
+        $data['js'] = "";
+
+        $data['pageTitle'] = "Request Log Report";
+        $data['base_url'] = base_url();
+
+        $data['css_files'] = array();
+        $data['js_files'] = array();
+
+        $data['body_template'] = "reports/request_log_report.php";
         $this->load->view('site_template.php', $data);
     }
 

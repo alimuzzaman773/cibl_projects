@@ -159,7 +159,7 @@
                                                 <?php endif; ?>
                                                 <!--
                                                 <?php if (ci_check_permission("canViewBillerSetupMenu")): ?>
-                                                                    <li><a href="<?= base_url() . 'biller_setup_maker' ?>">Biller Setup</a></li>
+                                                                        <li><a href="<?= base_url() . 'biller_setup_maker' ?>">Biller Setup</a></li>
                                                 <?php endif; ?>
                                                 -->
                                                 <?php if (ci_check_permission("canViewLimitPackgaeMenu")): ?>
@@ -193,7 +193,7 @@
                                                 <?php endif; ?>
                                                 <!--
                                                 <?php if (ci_check_permission("canViewBillerSetupAuthorizationMenu")): ?>
-                                                                        <li><a href="<?= base_url() . 'biller_setup_checker' ?>">Biller Setup Authorization</a></li>
+                                                                            <li><a href="<?= base_url() . 'biller_setup_checker' ?>">Biller Setup Authorization</a></li>
                                                 <?php endif; ?>
                                                 -->
                                                 <?php if (ci_check_permission("canViewPinResetAuthorizationMenu")): ?>
@@ -241,7 +241,7 @@
                                                 <?php endif; ?>
                                                 <!--
                                                 <?php if (ci_check_permission("canViewBillerSetupMenu")): ?>
-                                                                        <li><a href="<?= base_url() . 'bill_type_setup' ?>">Bill Type Setup</a></li>
+                                                                            <li><a href="<?= base_url() . 'bill_type_setup' ?>">Bill Type Setup</a></li>
                                                 <?php endif; ?>
                                                 -->
                                                 <li><a href="<?= base_url() . 'account_type/index' ?>">Account Categories Setup</a></li>
@@ -309,6 +309,7 @@
                                             <li><a href="<?= base_url() . 'reports/priority_request' ?>">Priority Request</a></li>
                                             <li><a href="<?= base_url() . 'reports/product_request' ?>">Product Request</a></li>
                                             <li><a href="<?= base_url() . 'reports/banking_request' ?>">Banking Request</a></li>
+                                            <li><a href="<?= base_url() . 'reports/request_log_report' ?>">Request Log Report</a></li>
                                         </ul>
                                         <!--
                                          <ul class="col-md-2 col-xs-12 list-unstyled">
