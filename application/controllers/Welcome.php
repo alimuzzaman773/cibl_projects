@@ -7,14 +7,13 @@ class Welcome extends CI_Controller {
     function dpdc_cancel() {
         $this->load->library("utility_services");
         $info = array(
-            "type"=>"dpdc",
+            "type" => "dpdc",
             "transaction_id" => "PBLAPP20190114651",
-            
         );
         $result = $this->utility_services->billCancel($info);
         d($result);
     }
-    
+
     function sms_test() {
         $this->load->library("sms_service");
 
@@ -99,13 +98,25 @@ class Welcome extends CI_Controller {
     function password() {
         $this->load->library("BOcrypter");
         $enc = $this->bocrypter->Encrypt("123456");
-        echo  $enc. " :: " .$this->bocrypter->Decrypt($enc);
-        
+        echo $enc . " :: " . $this->bocrypter->Decrypt($enc);
+
         $result = $this->db->get("admin_users");
         foreach ($result->result() as $r):
             echo "<b>{$r->adminUserName}:</b> " . $this->bocrypter->Decrypt($r->encryptedPassword) . "<br/>";
         endforeach;
     }
 
+    function sbl_data() {
+        $query = $this->db->get('mytable');
+        foreach ($query->result() as $r) {
+            echo $r->title;
+            
+            $a = array();
+            foreach (explode('|', $data) as $k => $p) {
+                $a[]['aa'] = $p;
+            }
+            print_r($a);
+        }
+    }
 
 }

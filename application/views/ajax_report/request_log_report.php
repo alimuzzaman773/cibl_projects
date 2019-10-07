@@ -22,11 +22,11 @@ $this->load->view("ajax_report/render_report_parameters.php", $params);
                 <tr>
                     <td><?= ($sl++) ?></td>
                     <td><?= $r->created ?></td>          
-                    <td><?= $r->source ?></td>
-                    <td><?= $r->url ?></td>
-                    <td><?= $r->method_name ?></td>
-                    <td><?= $r->requestXml ?></td>
-                    <td><?= $r->responseXml ?></td>
+                    <td style="word-break: break-all;"><?= $r->source ?></td>
+                    <td style="word-break: break-all;"><?= $r->url ?></td>
+                    <td style="word-break: break-all;"><?= $r->method_name ?></td>
+                    <td style="word-break: break-all;width: 400px;"><?= $r->requestXml ?></td>
+                    <td style="width: 400px;word-break: break-all;"><?= $r->responseXml ?></td>
                 </tr>
             <?php endforeach; ?>
             <?php if (count($result) <= 0): ?>
