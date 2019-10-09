@@ -15,6 +15,7 @@ $this->load->view("ajax_report/render_report_parameters.php", $params);
                 <th>File Name</th>
                 <th>Amount</th>
                 <th>Status</th>
+                <th>Status Log</th>
             </tr>
         </thead>
         <tbody>
@@ -33,6 +34,7 @@ $this->load->view("ajax_report/render_report_parameters.php", $params);
                     <td><?= $i->fileName ?></td>
                     <td align="right"><?= $i->amount ?></td>
                     <td><?= ($i->isSuccess == "Y") ? "Success" : "Failed" ?></td>
+                    <td><?= json_display_html($i->data) ?></td>
                 </tr>
                 <?php
             }
