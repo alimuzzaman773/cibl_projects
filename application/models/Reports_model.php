@@ -506,8 +506,14 @@ class Reports_model extends CI_Model {
 
     function getRequestLogReport($params = array()) {
         $this->db->select("x.*", false);
-
         $this->db->from('xml_logs x');
+
+        if (isset($params['search']) && trim($params['search']) != ""):
+            $this->db->group_start()
+                    ->or_like("x.requestXml", $params['search'], 'both')
+                    ->or_like("x.responseXml", $params['search'], 'both')
+                    ->group_end();
+        endif;
 
         if (isset($params['fromdate']) && isset($params['todate']) && $params['fromdate'] != null && $params['todate'] != null):
             $this->db->where("(DATE(x.created) between " . $this->db->escape($params['fromdate']) . " AND " . $this->db->escape($params['todate']) . ")");

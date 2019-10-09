@@ -21,7 +21,15 @@
                     <input type="text" class="form-control input-sm" required  value="" name="todate" id="todate" />
                 </div>
             </td>
-        </tr>  
+        </tr>
+        <tr>
+            <td><b>Search</b></td>
+            <td>
+                <div class="col-md-3">
+                    <input type="text" class="form-control input-sm" value="" name="search" id="search" />
+                </div>
+            </td>
+        </tr> 
         <tr>
             <td></td>
             <td>
@@ -46,59 +54,59 @@ $this->load->view("utility/output.php", array("reportDivId" => "reportDiv"))
 <script type="text/javascript" src="<?= $base_url . ASSETS_FOLDER ?>js/utility.js" charset="utf-8"></script>
 <script type="text/javascript" src="<?= $base_url . ASSETS_FOLDER ?>js/jquery.validation/jquery.validate.min.js"></script>
 <script type="text/javascript">
-    var form = null;
-    $(document).ready(function (e) {
-        //populateBranchList("branchId");
-        $("#myform").validate();
+                        var form = null;
+                        $(document).ready(function (e) {
+                            //populateBranchList("branchId");
+                            $("#myform").validate();
 
-        $("#fromdate").datepicker({yearRange: 'c-10:c+10', dateFormat: 'yy-mm-dd', changeMonth: true, changeYear: true}).on('focusin', function () {
-            $(this).prop("readonly", true);
-        }).on('focusout', function () {
-            $(this).prop("readonly", false);
-        });
-        $("#todate").datepicker({yearRange: 'c-10:c+10', dateFormat: 'yy-mm-dd', changeMonth: true, changeYear: true}).on('focusin', function () {
-            $(this).prop("readonly", true);
-        }).on('focusout', function () {
-            $(this).prop("readonly", false);
-        });
-    });
+                            $("#fromdate").datepicker({yearRange: 'c-10:c+10', dateFormat: 'yy-mm-dd', changeMonth: true, changeYear: true}).on('focusin', function () {
+                                $(this).prop("readonly", true);
+                            }).on('focusout', function () {
+                                $(this).prop("readonly", false);
+                            });
+                            $("#todate").datepicker({yearRange: 'c-10:c+10', dateFormat: 'yy-mm-dd', changeMonth: true, changeYear: true}).on('focusin', function () {
+                                $(this).prop("readonly", true);
+                            }).on('focusout', function () {
+                                $(this).prop("readonly", false);
+                            });
+                        });
 
-    var checkForm = function ()
-    {
-        if ($("#myform").valid()) {
-            return true;
-        }
-        return false;
-    };
+                        var checkForm = function ()
+                        {
+                            if ($("#myform").valid()) {
+                                return true;
+                            }
+                            return false;
+                        };
 
-    var generateReport = function (dom)
-    {
-        if (!checkForm()) {
-            return false;
-        }
+                        var generateReport = function (dom)
+                        {
+                            if (!checkForm()) {
+                                return false;
+                            }
 
-        $("#report-options").hide();
+                            $("#report-options").hide();
 
-        var btn = $(dom);
-        var btnhtml = btn.attr("value");
-        btn.attr("disabled", "disabled").attr("value", "Generating...");
-        var formData = $("#myform").serialize();
-        $.ajax({
-            url: '<?= $base_url . 'ajax_report/request_log_report/' ?>',
-            type: 'post',
-            data: formData,
-            dataType: 'json',
-            success: function (data) {
-                console.log(data);
-                btn.removeAttr("disabled").attr("value", btnhtml);
-                $("#reportDiv").html(data.msg).show();
-                $("#report-options").show();
-            },
-            error: function (data) {
-                btn.removeAttr("disabled").attr("value", btnhtml);
-                alert("There was a problem. Please try again later.");
-            }
-        });
-        return false;
-    };
+                            var btn = $(dom);
+                            var btnhtml = btn.attr("value");
+                            btn.attr("disabled", "disabled").attr("value", "Generating...");
+                            var formData = $("#myform").serialize();
+                            $.ajax({
+                                url: '<?= $base_url . 'ajax_report/request_log_report/' ?>',
+                                type: 'post',
+                                data: formData,
+                                dataType: 'json',
+                                success: function (data) {
+                                    console.log(data);
+                                    btn.removeAttr("disabled").attr("value", btnhtml);
+                                    $("#reportDiv").html(data.msg).show();
+                                    $("#report-options").show();
+                                },
+                                error: function (data) {
+                                    btn.removeAttr("disabled").attr("value", btnhtml);
+                                    alert("There was a problem. Please try again later.");
+                                }
+                            });
+                            return false;
+                        };
 </script>

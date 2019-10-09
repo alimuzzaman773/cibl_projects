@@ -1,4 +1,4 @@
-<h2 class="center">Fund Transfer Details Report</h2>
+<h2 class="center"><?= $pageTitle ?></h2>
 <form name="myform" id="myform" method="get" target="_blank" action="<?= $base_url . 'ajax_report/utility_bills_report/' ?>">
     <table class="table table-bordered table-condensed table-hover table-striped apps_transaction" cellpadding="0" cellspacing="1" border="0" style="width:100%">
         <thead>

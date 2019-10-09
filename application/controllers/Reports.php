@@ -423,7 +423,7 @@ class Reports extends MX_Controller {
 
         $data['js'] = "";
 
-        $data['pageTitle'] = "Fund Transfer Report";
+        $data['pageTitle'] = "Fund Transfer Details Report";
         $data['base_url'] = base_url();
 
         $data['css_files'] = array();
@@ -439,7 +439,7 @@ class Reports extends MX_Controller {
 
         $data['js'] = "";
 
-        $data['pageTitle'] = "Fund Transfer Report";
+        $data['pageTitle'] = "Utility Bill Details Report";
         $data['base_url'] = base_url();
 
         $data['css_files'] = array();
