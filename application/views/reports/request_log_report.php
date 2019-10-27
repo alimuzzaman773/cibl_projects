@@ -29,7 +29,21 @@
                     <input type="text" class="form-control input-sm" value="" name="search" id="search" />
                 </div>
             </td>
-        </tr> 
+        </tr>
+        <tr>
+            <td><b>Limit</b></td>
+            <td>
+                <div class="col-md-3">
+                    <select class="form-control input-sm" name="limit" id="limit">
+                        <option value="0">Show all</option>
+                        <option value="25" selected>25</option>
+                        <option value="50">50</option>
+                        <option value="75">75</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
+            </td>
+        </tr>
         <tr>
             <td></td>
             <td>

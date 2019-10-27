@@ -519,6 +519,10 @@ class Reports_model extends CI_Model {
             $this->db->where("(DATE(x.created) between " . $this->db->escape($params['fromdate']) . " AND " . $this->db->escape($params['todate']) . ")");
         endif;
 
+        if (isset($params['limit']) && (int) $params['limit'] > 0):
+            $this->db->limit($params['limit'], 0);
+        endif;
+
         $this->db->order_by("x.id", "DESC");
         $sql = $this->db->get_compiled_select();
 

@@ -323,6 +323,7 @@ class Ajax_report extends MX_Controller {
         $p['fromdate'] = $this->input->get_post("fromdate", true);
         $p['todate'] = $this->input->get_post("todate", true);
         $p['search'] = $this->input->get_post("search", true);
+        $p['limit'] = $this->input->get_post("limit", true);
 
         $this->load->model("reports_model");
 
