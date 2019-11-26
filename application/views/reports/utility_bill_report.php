@@ -46,9 +46,10 @@
                         <option value="wasa">WASA</option>
                         <option value="ois">OIS</option>
                         <option value="buft">BUFT</option>
-                        <option value="titas_meter">Titas Meter</option>
-                        <option value="titas_non_meter">Titas Non Meter</option>
-                        <option value="titas_demand_note">Titas Demand Note</option>
+                        <option value="lankabangla">Lankabangla</option>
+                        <option value="wasa_new_connection">WASA New Connection</option>
+                        <option value="wasa_demand_note">WASA Demand Note</option>
+                        <option value="wasa_general_bill">WASA General Bill</option>
                     </select>
                 </div>
             </td>
