@@ -7,6 +7,9 @@ $this->load->view("ajax_report/render_report_parameters.php", $params);
             <thead>
                 <tr class="bg-primary">
                     <th>SL</th>
+                    <th>APPS ID</th>
+                    <th>Name</th>
+                    <th>Mobile</th>
                     <th>Date</th>
                     <th>Transaction Reference No.</th>
                     <th>Utility Name</th>
@@ -17,6 +20,7 @@ $this->load->view("ajax_report/render_report_parameters.php", $params);
                     <th>LPC Amount</th>
                     <th>Narration</th>
                     <th>Status</th>
+                    <th>Lankabangla File Sent</th>
                 </tr>
             </thead>
             <?php
@@ -25,17 +29,21 @@ $this->load->view("ajax_report/render_report_parameters.php", $params);
                 foreach ($result as $r) {
                     ?>
                     <tr>
-                       <td><?= $si++ ?></td>
+                        <td><?= $si++ ?></td>
+                        <td><?= $r->eblSkyId ?></td>
+                        <td><?= $r->userName ?></td>
+                        <td><?= $r->mobileNo ?></td>
                         <td><?= $r->created ?></td>
-                        <td><?= $r->transaction_id?></td>
+                        <td><?= $r->transaction_id ?></td>
                         <td><?= $r->utility_name ?></td>
-                        <td><?=$r->from_account ?></td>
-                        <td><?=$r->bpt_amount?></td>
+                        <td><?= $r->from_account ?></td>
+                        <td><?= $r->bpt_amount ?></td>
                         <td><?= $r->vt_amount ?></td>
                         <td><?= $r->st_amount ?></td>
                         <td><?= $r->lt_amount ?></td>
                         <td><?= $r->bpt_narration ?></td>
                         <td><?= $r->isSuccess ?></td>
+                        <td><?= $r->utility_name == 'lankabangla' ? $r->file_sent : "" ?></td>
                     </tr> 
                     <?php
                 }
