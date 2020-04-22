@@ -14,6 +14,7 @@ $this->load->view("ajax_report/render_report_parameters.php", $params);
                     <th>Transaction Reference No.</th>
                     <th>Utility Name</th>
                     <th>From Account</th>
+                    <th>To Account</th>
                     <th>BPT Amount</th>
                     <th>Vat Amount</th>
                     <th>Stamp Amount</th>
@@ -37,6 +38,18 @@ $this->load->view("ajax_report/render_report_parameters.php", $params);
                         <td><?= $r->transaction_id ?></td>
                         <td><?= $r->utility_name ?></td>
                         <td><?= $r->from_account ?></td>
+                        <td>
+                            <?php
+                            $requestInfo = json_decode($r->request_data, true);
+                            if ($r->utility_name == "lankabangla" && isset($requestInfo["cardNo"])):
+                                echo $requestInfo["cardNo"];
+                            endif;
+                            
+                            if ($r->utility_name == "top_up"):
+                                echo $r->entity_number;
+                            endif;
+                            ?>
+                        </td>
                         <td><?= $r->bpt_amount ?></td>
                         <td><?= $r->vt_amount ?></td>
                         <td><?= $r->st_amount ?></td>
@@ -50,7 +63,7 @@ $this->load->view("ajax_report/render_report_parameters.php", $params);
             } else {
                 ?>
                 <tr>
-                    <td colspan="23">No data found.</td>
+                    <td colspan="15">No data found.</td>
                 </tr>
             <?php } ?>  
         </table>
