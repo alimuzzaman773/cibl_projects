@@ -8,6 +8,7 @@ $this->load->view("ajax_report/render_report_parameters.php", $params);
                 <th>SI</th>
                 <th>Transaction Date</th>
                 <th>Transaction Type</th>
+                <th>Currency</th>
                 <th>From Account</th>
                 <th>To Account</th>
                 <th>Routing Number</th>
@@ -20,25 +21,32 @@ $this->load->view("ajax_report/render_report_parameters.php", $params);
         </thead>
         <tbody>
             <?php
-            $sl = 1;
-            foreach ($result as $i) {
+            if ($result) {
+                $si = 1;
+                foreach ($result as $i) {
+                    ?>
+                    <tr>
+                        <td><?= ($si++) ?></td>
+                        <td><?= $i->creationDtTm ?></td>
+                        <td><?= get_trn_type($i->trnType) ?></td>
+                        <td><?= $i->currency ?></td>
+                        <td><?= $i->fromAccNo ?></td>
+                        <td><?= $i->toAccNo ?></td>
+                        <td><?= $i->rcvrRtNo ?></td>
+                        <td><?= $i->crossRefNo > 0 ? $i->crossRefNo : '' ?></td>
+                        <td><?= $i->fileName ?></td>
+                        <td align="right"><?= $i->amount ?></td>
+                        <td><?= ($i->isSuccess == "Y") ? "Success" : "Failed" ?></td>
+                        <td><?= json_display_html($i->data) ?></td>
+                    </tr>
+                    <?php
+                }
+            } else {
                 ?>
                 <tr>
-                    <td><?= ($sl++) ?></td>
-                    <td><?= $i->creationDtTm ?></td>
-                    <td><?= get_trn_type($i->trnType) ?></td>
-                    <td><?= $i->fromAccNo ?></td>
-                    <td><?= $i->toAccNo ?></td>
-                    <td><?= $i->rcvrRtNo ?></td>
-                    <td><?= $i->crossRefNo > 0 ? $i->crossRefNo : '' ?></td>
-                    <td><?= $i->fileName ?></td>
-                    <td align="right"><?= $i->amount ?></td>
-                    <td><?= ($i->isSuccess == "Y") ? "Success" : "Failed" ?></td>
-                    <td><?= json_display_html($i->data) ?></td>
+                    <td colspan="12">No data found.</td>
                 </tr>
-                <?php
-            }
-            ?>
+            <?php } ?>
         </tbody>
     </table>
 </div>
