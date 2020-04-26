@@ -43,13 +43,16 @@
                         <option value="dpdc">DPDC</option>
                         <option value="desco">DESCO</option>
                         <option value="top_up">Mobile Recharge</option>
-                        <option value="wasa">WASA</option>
-                        <option value="ois">OIS</option>
-                        <option value="buft">BUFT</option>
                         <option value="lankabangla">Lankabangla</option>
+                        <option value="ois">OIS</option>
+                        <option value="wasa">WASA</option>
                         <option value="wasa_new_connection">WASA New Connection</option>
                         <option value="wasa_demand_note">WASA Demand Note</option>
                         <option value="wasa_general_bill">WASA General Bill</option>
+                        <option value="buft">BUFT</option>
+                        <option value="buft_admission">BUFT Admission</option>
+                        <option value="buft_old_sms">BUFT Old SMS</option>
+                        <option value="buft_ucam">BUFT UCAM</option>
                     </select>
                 </div>
             </td>
@@ -80,59 +83,59 @@ $this->load->view("utility/output.php", array("reportDivId" => "reportDiv"))
 <script type="text/javascript" src="<?= $base_url . ASSETS_FOLDER ?>js/utility.js" charset="utf-8"></script>
 <script type="text/javascript" src="<?= $base_url . ASSETS_FOLDER ?>js/jquery.validation/jquery.validate.min.js"></script>
 <script type="text/javascript">
-    var form = null;
-    $(document).ready(function (e) {
-        //populateBranchList("branchId");
-        $("#myform").validate();
+                        var form = null;
+                        $(document).ready(function (e) {
+                            //populateBranchList("branchId");
+                            $("#myform").validate();
 
-        $("#fromdate").datepicker({yearRange: 'c-10:c+10', dateFormat: 'yy-mm-dd', changeMonth: true, changeYear: true}).on('focusin', function () {
-            $(this).prop("readonly", true);
-        }).on('focusout', function () {
-            $(this).prop("readonly", false);
-        });
-        $("#todate").datepicker({yearRange: 'c-10:c+10', dateFormat: 'yy-mm-dd', changeMonth: true, changeYear: true}).on('focusin', function () {
-            $(this).prop("readonly", true);
-        }).on('focusout', function () {
-            $(this).prop("readonly", false);
-        });
-    });
+                            $("#fromdate").datepicker({yearRange: 'c-10:c+10', dateFormat: 'yy-mm-dd', changeMonth: true, changeYear: true}).on('focusin', function () {
+                                $(this).prop("readonly", true);
+                            }).on('focusout', function () {
+                                $(this).prop("readonly", false);
+                            });
+                            $("#todate").datepicker({yearRange: 'c-10:c+10', dateFormat: 'yy-mm-dd', changeMonth: true, changeYear: true}).on('focusin', function () {
+                                $(this).prop("readonly", true);
+                            }).on('focusout', function () {
+                                $(this).prop("readonly", false);
+                            });
+                        });
 
-    var checkForm = function ()
-    {
-        if ($("#myform").valid()) {
-            return true;
-        }
-        return false;
-    };
+                        var checkForm = function ()
+                        {
+                            if ($("#myform").valid()) {
+                                return true;
+                            }
+                            return false;
+                        };
 
-    var generateReport = function (dom)
-    {
-        if (!checkForm()) {
-            return false;
-        }
+                        var generateReport = function (dom)
+                        {
+                            if (!checkForm()) {
+                                return false;
+                            }
 
-        $("#report-options").hide();
+                            $("#report-options").hide();
 
-        var btn = $(dom);
-        var btnhtml = btn.attr("value");
-        btn.attr("disabled", "disabled").attr("value", "Generating...");
-        var formData = $("#myform").serialize();
-        $.ajax({
-            url: '<?= $base_url . 'ajax_report/utility_bills_report/' ?>',
-            type: 'post',
-            data: formData,
-            dataType: 'json',
-            success: function (data) {
-                console.log(data);
-                btn.removeAttr("disabled").attr("value", btnhtml);
-                $("#reportDiv").html(data.msg).show();
-                $("#report-options").show();
-            },
-            error: function (data) {
-                btn.removeAttr("disabled").attr("value", btnhtml);
-                alert("There was a problem. Please try again later.");
-            }
-        });
-        return false;
-    };
+                            var btn = $(dom);
+                            var btnhtml = btn.attr("value");
+                            btn.attr("disabled", "disabled").attr("value", "Generating...");
+                            var formData = $("#myform").serialize();
+                            $.ajax({
+                                url: '<?= $base_url . 'ajax_report/utility_bills_report/' ?>',
+                                type: 'post',
+                                data: formData,
+                                dataType: 'json',
+                                success: function (data) {
+                                    console.log(data);
+                                    btn.removeAttr("disabled").attr("value", btnhtml);
+                                    $("#reportDiv").html(data.msg).show();
+                                    $("#report-options").show();
+                                },
+                                error: function (data) {
+                                    btn.removeAttr("disabled").attr("value", btnhtml);
+                                    alert("There was a problem. Please try again later.");
+                                }
+                            });
+                            return false;
+                        };
 </script>

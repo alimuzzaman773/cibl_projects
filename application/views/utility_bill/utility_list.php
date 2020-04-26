@@ -27,14 +27,17 @@
                 <option value="">Please select</option>
                 <option value="dpdc">DPDC</option>
                 <option value="desco">DESCO</option>
-                <option value="top_up">Mobile Top-Up</option>
-                <option value="wasa">WASA</option>
-                <option value="ois">OIS</option>
-                <option value="buft">BUFT</option>
+                <option value="top_up">Mobile Recharge</option>
                 <option value="lankabangla">Lankabangla</option>
+                <option value="ois">OIS</option>
+                <option value="wasa">WASA</option>
                 <option value="wasa_new_connection">WASA New Connection</option>
                 <option value="wasa_demand_note">WASA Demand Note</option>
                 <option value="wasa_general_bill">WASA General Bill</option>
+                <option value="buft">BUFT</option>
+                <option value="buft_admission">BUFT Admission</option>
+                <option value="buft_old_sms">BUFT Old SMS</option>
+                <option value="buft_ucam">BUFT UCAM</option>
             </select>
         </div>
         <div class="col-2 col-sm-2 col-md-2">
