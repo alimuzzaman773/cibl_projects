@@ -16,6 +16,7 @@ $this->load->view("ajax_report/render_report_parameters.php", $params);
                 <th>File Name</th>
                 <th>Amount</th>
                 <th>Status</th>
+                <th>Source</th>
                 <th>Status Log</th>
             </tr>
         </thead>
@@ -37,6 +38,7 @@ $this->load->view("ajax_report/render_report_parameters.php", $params);
                         <td><?= $i->fileName ?></td>
                         <td align="right"><?= $i->amount ?></td>
                         <td><?= ($i->isSuccess == "Y") ? "Success" : "Failed" ?></td>
+                        <td><?= $i->source ?></td>
                         <td><?= json_display_html($i->data) ?></td>
                     </tr>
                     <?php
@@ -44,7 +46,7 @@ $this->load->view("ajax_report/render_report_parameters.php", $params);
             } else {
                 ?>
                 <tr>
-                    <td colspan="12">No data found.</td>
+                    <td colspan="13">No data found.</td>
                 </tr>
             <?php } ?>
         </tbody>
