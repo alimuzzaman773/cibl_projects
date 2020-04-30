@@ -235,8 +235,8 @@ class Cron extends MX_Controller {
             }
 
             $mailer->setFrom("nopreply@premierbankltd.com", "Premier Bank Ltd");
-            $mailer->Subject = "Bill collection data files for Lanka-Bangla Visa & Master Credit cards at Premier Bank on " . date("d/m/Y");
-            $mailer->Body = "<b>Dear Sir,</b><br><br>Please receive the Lanka-Bangla Credit Card Bill collection data files at Premier Bank 25/11/2019 for Visa & Master Credit card.<br><br><br>Inform us (IT Division) if the given file format is not appropriate according to your requirement.";
+            $mailer->Subject = "i-Banking Bill collection data files for Lanka-Bangla Visa & Master Credit cards at Premier Bank on " . date("d/m/Y");
+            $mailer->Body = "<b>Dear Sir,</b><br><br>Please receive the Lanka-Bangla Credit Card Bill collection data files at Premier Bank " . date("d/m/Y") . " for Visa & Master Credit card.<br><br><br>Inform us (IT Division) if the given file format is not appropriate according to your requirement.";
             set_smtp_config($mailer);
 
             if (!$mailer->send()) {
