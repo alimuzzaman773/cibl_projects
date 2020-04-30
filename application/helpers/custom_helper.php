@@ -123,7 +123,7 @@ if (!function_exists('set_smtp_config')) {
         //$mailer->SMTPSecure = 'ssl';
         //$mailer->SMTPAutoTLS = FALSE;
 
-        $mailer->Host = '192.168.1.128';
+        $mailer->Host = '192.168.1.50';
         $mailer->Port = 25;
         //$mailer->Username = 'testuser103@premierbankltd.com';
         //$mailer->Password = 'Asdf1234';
