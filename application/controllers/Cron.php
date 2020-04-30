@@ -222,9 +222,9 @@ class Cron extends MX_Controller {
             $date = date("ymd");
 
             $files = array(
-                LANKABANGLA_FTP . 'pbl_vis_' . $date . '.xls',
-                LANKABANGLA_FTP . 'pbl_mas_' . $date . '.xls',
-                LANKABANGLA_FTP . 'pbl_mas_' . $date . '.txt'
+                LANKABANGLA_FTP . 'pbl.ibank_vis_' . $date . '.xls',
+                LANKABANGLA_FTP . 'pbl.ibank_mas_' . $date . '.xls',
+                LANKABANGLA_FTP . 'pbl.ibank_mas_' . $date . '.txt'
             );
 
             foreach ($files as $file) {
