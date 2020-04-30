@@ -139,7 +139,8 @@ if (!function_exists('set_smtp_config')) {
 }
 
 if (!function_exists("get_trn_type")) {
-    function get_trn_type($trnType){
+
+    function get_trn_type($trnType) {
         switch ($trnType) {
             case '05':
                 return 'Account To Card Fund Transfer';
@@ -158,12 +159,39 @@ if (!function_exists("get_trn_type")) {
                 break;
         }
     }
+
 }
 
 
 if (!function_exists("get_client_id")) {
 
     function get_client_id() {
-        return rand(1111111111,time());
+        return rand(1111111111, time());
     }
+
+}
+
+if (!function_exists('getLankabangaCardType')) {
+
+    function getLankabangaCardType($cardNumber) {
+        $binNumber = substr($cardNumber, 0, 1);
+
+        $type = "";
+        switch ($binNumber) {
+            case 4:
+                $type = "VISA";
+                break;
+
+            case 5:
+                $type = "MASTER";
+                break;
+
+            default :
+                $type = "";
+                break;
+        }
+
+        return $type;
+    }
+
 }
