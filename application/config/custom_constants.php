@@ -140,3 +140,17 @@ define('CBS_URL', "http://192.168.1.153:86/api/");
 define('CBS_STACK_HOLDER', "Admin");
 define('CBS_USER_ID', "admin");
 define('CBS_PASSWORD', "1");
+
+//Lankabangla Configuration
+define("LANKABANGLA_GL_ACCOUNT", "010413100002837");
+define('LANKABANGLA_URL', "http://ws.lankabangla.com:8010/lbflapis/");
+define('LANKABANGLA_FTP', "/home/lankabangla/");
+define('LANKABANGLA_USERNAME', "lbfl");
+define('LANKABANGLA_PASSWORD', "559bc2a7b989d0a4325b7661d077a2f6");
+define('LANKABANGLA_TO_EMAIL', array("ccpayment@lankabangla.com", "mohtasim@lankabangla.com", "saif@lankabangla.com"));
+define('LANKABANGLA_CC_EMAIL', array("grpmis@premierbankltd.com"));
+
+define('LANKABANGLA_FTP_HOST', "103.122.100.68");
+define('LANKABANGLA_FTP_PORT', "1000");
+define('LANKABANGLA_FTP_USERNAME', "primerbank01");
+define('LANKABANGLA_FTP_PASSWORD', "primerbank@01#lbfl");
