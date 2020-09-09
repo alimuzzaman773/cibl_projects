@@ -18,6 +18,7 @@ $this->load->view("ajax_report/render_report_parameters.php", $params);
                 <th>Status</th>
                 <th>Source</th>
                 <th>Status Log</th>
+                <th>IsReverse</th>
             </tr>
         </thead>
         <tbody>
@@ -40,13 +41,14 @@ $this->load->view("ajax_report/render_report_parameters.php", $params);
                         <td><?= ($i->isSuccess == "Y") ? "Success" : "Failed" ?></td>
                         <td><?= $i->source ?></td>
                         <td><?= json_display_html($i->data) ?></td>
+                        <td><?= $i->isReverse ?></td>
                     </tr>
                     <?php
                 }
             } else {
                 ?>
                 <tr>
-                    <td colspan="13">No data found.</td>
+                    <td colspan="14">No data found.</td>
                 </tr>
             <?php } ?>
         </tbody>
