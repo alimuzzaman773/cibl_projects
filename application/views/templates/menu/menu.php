@@ -165,9 +165,6 @@
                                                 <?php if (ci_check_permission("canViewLimitPackgaeMenu")): ?>
                                                     <li><a href="<?= base_url() . 'transaction_limit_setup_maker' ?>">Transaction Package Limit</a></li>
                                                 <?php endif; ?>
-                                                <?php if (ci_check_permission("canViewPasswordPolicyMenu")): ?>
-                                                    <li class="hide"><a href="<?= base_url() . 'validation_setup' ?>">Password Policy</a></li>
-                                                <?php endif; ?>
                                                 <?php if (ci_check_permission("canViewPermissionMenu")): ?>
                                                     <li class="hide"><a href="<?= base_url() ?>permission">Permission</a></li>
                                                 <?php endif; ?>
@@ -233,6 +230,9 @@
                                         <?php if (ci_check_permission("canViewConfigurationMenu")): ?>
                                             <ul class="col-md-2 col-xs-12 list-unstyled">
                                                 <li><p><b>Configuration</b></p></li>
+                                                <?php if (ci_check_permission("canViewPasswordPolicyMenu")): ?>
+                                                    <li><a href="<?= base_url() . 'validation_setup' ?>">Password Policy</a></li>
+                                                <?php endif; ?>
                                                 <?php if (ci_check_permission("canViewPasswordPolicyMenu")): ?>
                                                     <li><a href="<?= base_url() . 'password_policy_setup' ?>">Password Policy Setup</a></li>
                                                 <?php endif; ?>

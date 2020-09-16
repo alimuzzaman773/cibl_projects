@@ -18,7 +18,7 @@ class Validation_setup extends CI_Controller {
             $crud = new grocery_CRUD();
             $crud->set_theme(TABLE_THEME);
             $crud->set_subject('Password Policy');
-            $crud->set_table('validation_group_mc');
+            $crud->set_table('validation_group');
 
             $codes = $this->getValidationCodes();
             $crud->field_type('vCodes', 'multiselect', $codes);
