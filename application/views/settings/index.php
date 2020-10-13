@@ -90,15 +90,15 @@
         </thead>
         <tbody>
             <tr>    
-                <td><b>Maximum Amount Per Transaction</b></td>
-                <td>
-                    <input type="number" min="0" class='form-control' name="rtgs_ft[rtgs_max]" value="<?= (int) $this->settings_model->getItem('rtgs_max', $settings['rtgs_ft']) ?>" />
-                </td>
-            </tr>
-            <tr>    
                 <td><b>Minimum Amount Per Transaction</b></td>
                 <td>
                     <input type="number" min="0" class='form-control' name="rtgs_ft[rtgs_min]" value="<?= (int) $this->settings_model->getItem('rtgs_min', $settings['rtgs_ft']) ?>" />
+                </td>
+            </tr>
+            <tr>    
+                <td><b>Maximum Amount Per Transaction</b></td>
+                <td>
+                    <input type="number" min="0" class='form-control' name="rtgs_ft[rtgs_max]" value="<?= (int) $this->settings_model->getItem('rtgs_max', $settings['rtgs_ft']) ?>" />
                 </td>
             </tr>
             <tr>    
