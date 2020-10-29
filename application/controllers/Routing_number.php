@@ -61,5 +61,90 @@ class Routing_number extends CI_Controller {
             show_error($e->getMessage() . ' --- ' . $e->getTraceAsString());
         }
     }
+    
+    function rtgs($params = null) {
+        $this->my_session->authorize("canViewRoutingNumberMenu");
+        try {
+            $crud = new grocery_CRUD();
+            $crud->set_theme(TABLE_THEME);
+            $crud->set_subject('RTGS Routing Number');
+            $crud->set_table('rtgs_routing');
+
+            $crud->columns('bankName', 'bankCode', 'branchName', 'branchCode', 'routingNo');
+            $crud->display_as('bankName', 'Bank Name')
+                    ->display_as('bankCode', 'Bank Code')
+                    ->display_as('branchName', 'Branch Name')
+                    ->display_as('branchCode', 'Branch Code')
+                    ->display_as('routingNo', 'Routing Number');
+
+            //$crud->set_rules('branchCode', 'Branch Code', 'trim|required|xss_clean|min_length[1]|callback__checkDuplicateBranchCode');
+            $crud->set_rules('routingNo', 'Routing Number', 'trim|required|xss_clean|min_length[1]|callback__checkDuplicateRoutingNo');
+
+            if (!ci_check_permission("canAddRoutingNumber")):
+                $crud->unset_add();
+            endif;
+
+            if (!ci_check_permission("canEditRoutingNumber")):
+                $crud->unset_edit();
+            endif;
+            $crud->unset_print();
+            //$crud->unset_add_fields('createdBy');
+
+            $output = $crud->render();
+            $output->css = "";
+            $output->js = "";
+            $output->pageTitle = "RTGS Routing Number";
+            $output->base_url = base_url();
+
+            $output->body_template = "routing_number/rtgs_routing_list.php";
+            $this->load->view("site_template.php", $output);
+        } catch (Exception $e) {
+            show_error($e->getMessage() . ' --- ' . $e->getTraceAsString());
+        }
+    }
+    
+//    function _checkDuplicateBranchCode($branchCode) {
+//        if (trim($this->input->post("branchCode", true)) == "") {
+//            $this->form_validation->set_message("_checkDuplicateBranchCode", "Branch Code is required");
+//            return false;
+//        }
+//
+//        $ugId = (int) $this->uri->segment(4);
+//        $this->db->select("*")
+//                ->from("rtgs_routing")
+//                ->where("branchCode", $branchCode);
+//        if ($ugId > 0):
+//            $this->db->where_not_in("rrId", array($ugId));
+//        endif;
+//        $result = $this->db->get();
+//        if ($result->num_rows() > 0):
+//            $this->form_validation->set_message("_checkDuplicateBranchCode", "Please enter a different Branch Code.");
+//            return false;
+//        else:
+//            return true;
+//        endif;
+//    }
+    
+    function _checkDuplicateRoutingNo($routingNo) {
+        if (trim($this->input->post("routingNo", true)) == "") {
+            $this->form_validation->set_message("_checkDuplicateRoutingNo", "Routing Number is required");
+            return false;
+        }
+
+        $ugId = (int) $this->uri->segment(4);
+        $this->db->select("*")
+                ->from("rtgs_routing")
+                ->where("routingNo", $routingNo);
+        if ($ugId > 0):
+            $this->db->where_not_in("rrId", array($ugId));
+        endif;
+        $result = $this->db->get();
+        if ($result->num_rows() > 0):
+            $this->form_validation->set_message("_checkDuplicateRoutingNo", "Please enter a different routing number.");
+            return false;
+        else:
+            return true;
+        endif;
+    }
 
 }

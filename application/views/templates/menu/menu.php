@@ -238,6 +238,7 @@
                                                 <?php endif; ?>
                                                 <?php if (ci_check_permission("canViewRoutingNumberMenu")): ?>
                                                     <li><a href="<?= base_url() . 'routing_number' ?>">Routing Number Setup</a></li>
+                                                    <li><a href="<?= base_url() . 'routing_number/rtgs' ?>">RTGS Routing Number Setup</a></li>
                                                 <?php endif; ?>
                                                 <!--
                                                 <?php if (ci_check_permission("canViewBillerSetupMenu")): ?>
