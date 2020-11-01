@@ -44,6 +44,7 @@
                         <option value="06">Own Account Fund Transfer</option>
                         <option value="07">Within Bank Fund Transfer</option>
                         <option value="08">Other Bank Fund Transfer</option>
+                        <option value="rtgs">RTGS Fund Transfer</option>
                     </select>
                 </div>
             </td>
