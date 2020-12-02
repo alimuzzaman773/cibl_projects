@@ -129,7 +129,7 @@ class Admin_login extends CI_Controller {
         if (!empty($DBdata)) {
             
             $mailData["to"] = $this->bocrypter->Decrypt($DBdata['email']);
-            $mailData["from"] = "simple@ebl-com.bd";
+            $mailData["from"] = "nopreply@premierbankltd.com";
             $mailData["fromName"] = "PMONEY";
             $mailData["subject"] = "Retrieve Forgotten Password";
             $mailData['body'] = "<p>Dear Sir/Madam,</p>
