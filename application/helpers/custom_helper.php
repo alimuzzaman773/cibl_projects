@@ -152,7 +152,10 @@ if (!function_exists("get_trn_type")) {
                 return 'Within Bank Fund Transfer';
                 break;
             case '08':
-                return 'Other Bank Fund Transfer';
+                return 'Other Bank Fund Transfer (BEFTN)';
+                break;
+            case 'rtgs':
+                return 'Other Bank Fund Transfer (RTGS)';
                 break;
             default:
                 return 'not found';

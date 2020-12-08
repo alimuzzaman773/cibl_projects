@@ -43,8 +43,8 @@
                         <option value="05">Account To Card Fund Transfer</option>
                         <option value="06">Own Account Fund Transfer</option>
                         <option value="07">Within Bank Fund Transfer</option>
-                        <option value="08">Other Bank Fund Transfer</option>
-                        <option value="rtgs">RTGS Fund Transfer</option>
+                        <option value="08">Other Bank Fund Transfer (BEFTN)</option>
+                        <option value="rtgs">Other Bank Fund Transfer (RTGS)</option>
                     </select>
                 </div>
             </td>
