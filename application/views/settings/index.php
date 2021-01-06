@@ -81,6 +81,46 @@
         <thead>
             <tr class="bg-primary">
                 <th colspan="2">
+                    Nagad Transaction Limit
+                    <?php
+                    $settings['nagad_payment'] = (isset($settings['nagad_payment']) ? $settings['nagad_payment'] : array());
+                    ?>
+                </th>
+            </tr>        
+        </thead>
+        <tbody>
+            <tr>
+                <td><b>Maximum Number of Transaction</b></td>
+                <td>
+                    <input type="number" min="0" class="form-control input-sm" name="nagad_payment[max_trn]" value="<?= $this->settings_model->getItem('max_trn', $settings['nagad_payment']) ?>">
+                    <small class=''>Maximum transaction per day for Nagad payment</small>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Minimum Amount</b></td>
+                <td>
+                    <input type="number" min="0" class="form-control input-sm" name="nagad_payment[min_amount]" value="<?= $this->settings_model->getItem('min_amount', $settings['nagad_payment']) ?>">
+                    <small class=''>Minimum amount per transaction for Nagad payment</small>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Maximum Amount</b></td>
+                <td>
+                    <input type="number" min="0" class="form-control input-sm" name="nagad_payment[max_amount]" value="<?= $this->settings_model->getItem('max_amount', $settings['nagad_payment']) ?>">
+                    <small class=''>Maximum amount per transaction for Nagad payment</small>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Maximum Amount Per Day</b></td>
+                <td>
+                    <input type="number" min="0" class="form-control input-sm" name="nagad_payment[max_amount_per_day]" value="<?= $this->settings_model->getItem('max_amount_per_day', $settings['nagad_payment']) ?>">
+                    <small class=''>Maximum amount per day for Nagad payment</small>
+                </td>
+            </tr>
+        </tbody>
+        <thead>
+            <tr class="bg-primary">
+                <th colspan="2">
                     RTGS Fund Transfer
                     <?php
                     $settings['rtgs_ft'] = (isset($settings['rtgs_ft']) ? $settings['rtgs_ft'] : array());
