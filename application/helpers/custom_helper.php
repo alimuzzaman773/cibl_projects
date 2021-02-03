@@ -157,6 +157,9 @@ if (!function_exists("get_trn_type")) {
             case 'rtgs':
                 return 'Other Bank Fund Transfer (RTGS)';
                 break;
+            case 'nagad':
+                return 'NAGAD Fund Transfer';
+                break;
             default:
                 return 'not found';
                 break;

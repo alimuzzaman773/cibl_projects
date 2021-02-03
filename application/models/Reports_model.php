@@ -410,7 +410,7 @@ class Reports_model extends CI_Model {
     }
 
     function getFundTransferDetails($params = array()) {
-        $trn_type = array('05', '06', '07', '08', 'rtgs');
+        $trn_type = array('05', '06', '07', '08', 'rtgs', 'nagad');
         if (isset($params['count']) && $params['count'] == true) {
             $this->db->select("COUNT(t.transferId) as total");
         } else {

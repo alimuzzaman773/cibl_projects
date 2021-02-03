@@ -45,6 +45,7 @@
                         <option value="07">Within Bank Fund Transfer</option>
                         <option value="08">Other Bank Fund Transfer (BEFTN)</option>
                         <option value="rtgs">Other Bank Fund Transfer (RTGS)</option>
+                        <option value="nagad">NAGAD Transfer</option>
                     </select>
                 </div>
             </td>
