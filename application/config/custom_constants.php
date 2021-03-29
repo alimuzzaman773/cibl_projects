@@ -154,3 +154,5 @@ define('LANKABANGLA_FTP_HOST', "103.122.100.68");
 define('LANKABANGLA_FTP_PORT', "1000");
 define('LANKABANGLA_FTP_USERNAME', "primerbank01");
 define('LANKABANGLA_FTP_PASSWORD', "primerbank@01#lbfl");
+
+define('INHOUSE_CBS_URL', "http://192.168.1.153:50912/api/");

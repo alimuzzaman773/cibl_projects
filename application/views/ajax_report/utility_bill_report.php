@@ -63,7 +63,7 @@ $this->load->view("ajax_report/render_report_parameters.php", $params);
             } else {
                 ?>
                 <tr>
-                    <td colspan="15">No data found.</td>
+                    <td colspan="16">No data found.</td>
                 </tr>
             <?php } ?>  
         </table>

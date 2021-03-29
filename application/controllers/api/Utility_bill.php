@@ -11,7 +11,6 @@ class Utility_bill extends CI_Controller {
     }
 
     function get_utility_bill_list() {
-
         $params['limit'] = (int) $this->input->get("limit", true);
         $params['offset'] = (int) $this->input->get("offset", true);
         $params['search'] = $this->input->get("search", true);
