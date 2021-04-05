@@ -53,7 +53,7 @@ class Lankabangla_model extends CI_Model {
                 $vr++;
             }
             
-            $visaFileName = 'pbl.ibank_vis_' . $date . '.xls';
+            $visaFileName = 'pbl_ibank_vis_' . $date . '.xls';
             $files[] = $visaFileName;
             
             $visaWriter = PHPExcel_IOFactory::createWriter($visaExcel, 'Excel5');
