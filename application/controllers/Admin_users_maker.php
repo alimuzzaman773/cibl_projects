@@ -54,6 +54,7 @@ class Admin_users_maker extends CI_Controller {
         $data['passwordResetTms'] = 0;
         $data['email'] = $this->bocrypter->Encrypt($this->input->post('email'));
         $data['dob'] = $this->input->post('dob');
+        $data['adUserName'] = $this->input->post('adUserName');
         $data['mcStatus'] = 0;
         $data['makerAction'] = $this->input->post('selectedActionName');
         $data['makerActionCode'] = 'add';
@@ -76,6 +77,18 @@ class Admin_users_maker extends CI_Controller {
             $data["body_template"] = "admin_users_maker/add_new_admin_users.php";
             $this->load->view('site_template.php', $data);
         } else {
+            // Check AD USER
+            $adUserCheck = $this->admin_users_model_maker->getAdUser($data['adUserName']);
+            if ($adUserCheck):
+                $data['message'] = 'The AD User "' . $data['adUserName'] . '" already exists';
+                $data['userGroups'] = $this->admin_users_model_maker->getAllGroups();
+
+                $data["pageTitle"] = "Add Admin User";
+                $data["body_template"] = "admin_users_maker/add_new_admin_users.php";
+                $this->load->view('site_template.php', $data);
+                return;
+            endif;
+
             $this->admin_users_model_maker->insertAdminUserInfo($data);
             redirect('admin_users_maker');
         }
@@ -115,21 +128,29 @@ class Admin_users_maker extends CI_Controller {
         $data['adminUserGroup'] = $this->input->post('group');
         $data['email'] = $this->bocrypter->Encrypt($email);
         $data['dob'] = $this->input->post('dob');
+        $data['adUserName'] = $this->input->post('adUserName');
         $data['mcStatus'] = 0;
         $data['makerAction'] = $this->input->post('selectedActionName');
         $data['makerActionCode'] = 'edit';
         $data['makerActionDt'] = date("y-m-d");
         $data['makerActionTm'] = date("G:i:s");
         $data['makerActionBy'] = $this->my_session->adminUserId;
-
-
-
+        
         $userNameCheck = $this->admin_users_model_maker->checkIfUserExist($adminUserId, $data); // To check if user exists
 
         if ($userNameCheck > 0) {
             $message = 'The user "' . $data['adminUserName'] . '" already exists';
             $this->editUser($adminUserId, $data['makerAction'], $message);
         } else {
+            // CHECK AD USER
+            $adUserCheck = $this->admin_users_model_maker->checkIfAdUserExist($adminUserId, $data);
+
+            if ($adUserCheck > 0):
+                $message = 'The AD user "' . $data['adUserName'] . '" already exists';
+                $this->editUser($adminUserId, $data['makerAction'], $message);
+                return;
+            endif;
+            
             $this->admin_users_model_maker->updateAdminUserInfo($data, $adminUserId);
             redirect('admin_users_maker');
         }

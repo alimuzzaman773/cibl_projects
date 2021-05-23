@@ -16,6 +16,10 @@
                 <th width="213" align="left" scope="row">User ID</th>
                 <td><input class="form-control input-sm" type="text" name="userId" id="userId" value="<?= $adminUserData['adminUserName'] ?>" size="20" /></td>
             </tr>
+            <tr>
+                <th width="213" align="left" scope="row">AD UserName</th>
+                <td><input class="form-control input-sm" type="text" name="adUserName" id="adUserName" value="<?= $adminUserData['adUserName'] ?>" size="20" /></td>
+            </tr>
             <tr>                       
                 <th align="left" scope="">Select Group Name</th>
                 <td>

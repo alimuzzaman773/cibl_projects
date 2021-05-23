@@ -48,11 +48,25 @@ class Admin_users_model_maker extends CI_Model {
         $query = $this->db->get_where('admin_users_mc', array('adminUserName' => $data));
         return $query->result();
     }
+    
+    public function getAdUser($data) {
+        $query = $this->db->get_where('admin_users_mc', array('adUserName' => $data));
+        return $query->result();
+    }
 
     public function checkIfUserExist($id, $data) {
         $adminUserId = $id;
         $adminUserName = $data['adminUserName'];
         $this->db->where("adminUserName = '$adminUserName' AND adminUserId != '$adminUserId'");
+        $this->db->from('admin_users_mc');
+        $count = $this->db->count_all_results();
+        return $count;
+    }
+    
+    public function checkIfAdUserExist($id, $data) {
+        $adminUserId = $id;
+        $adUserName = $data['adUserName'];
+        $this->db->where("adUserName = '$adUserName' AND adminUserId != '$adminUserId'");
         $this->db->from('admin_users_mc');
         $count = $this->db->count_all_results();
         return $count;

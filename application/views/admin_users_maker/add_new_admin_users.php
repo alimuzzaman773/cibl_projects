@@ -16,6 +16,10 @@
                 <td><input class="form-control input-sm" type="text" name="userId" id="userId"/></td>
             </tr>
             <tr>
+                <th align="left" scope="row">AD UserName</th>
+                <td><input class="form-control input-sm" type="text" name="adUserName" id="adUserName"/></td>
+            </tr>
+            <tr>
                 <th align="left" scope="row">Password</th>
                 <td><input class="form-control input-sm" type="password" name="password1" id="pass1" size="20" /></td>
             </tr>
@@ -58,33 +62,33 @@
 <script type="text/javascript">
 
 
-    $(function() {
+        $(function () {
 
             $("#addUser").addClass("active");
             $("#usersCollape").addClass("btn-primary");
 
-        $.validator.addMethod("userId", function(value, element)
+            $.validator.addMethod("userId", function (value, element)
             {
                 return this.optional(element) || /^[a-zA-Z0-9\x21-\x7E]{3,40}$/i.test(value);
             }, "User ID are 3-40 characters, Space not Supported");
 
 
-        $.validator.addMethod("fullName", function(value, element)
+            $.validator.addMethod("fullName", function (value, element)
             {
                 return this.optional(element) || /[a-z A-Z 0-9]/.test(value);
             }, "User ID are 3-40 characters");
 
 
-            
-         /**
-          * @todo check password regex
-          */   
-        /*$.validator.addMethod("password", function(value, element)
-            {
-                return this.optional(element) ||
-                        /^(?=[\x21-\x7E]*[0-9])(?=[\x21-\x7E]*[A-Z])(?=[\x21-\x7E]*[a-z])(?=[\x21-\x7E]*[\x21-\x2F|\x3A-\x40|\x5B-\x60|\x7B-\x7E])[\x21-\x7E]{8}$/.test(value);
-            }, "Password should be exactly 8 characters with at least one upper case and special character and numeric.");
-        */
+
+            /**
+             * @todo check password regex
+             */
+            /*$.validator.addMethod("password", function(value, element)
+             {
+             return this.optional(element) ||
+             /^(?=[\x21-\x7E]*[0-9])(?=[\x21-\x7E]*[A-Z])(?=[\x21-\x7E]*[a-z])(?=[\x21-\x7E]*[\x21-\x2F|\x3A-\x40|\x5B-\x60|\x7B-\x7E])[\x21-\x7E]{8}$/.test(value);
+             }, "Password should be exactly 8 characters with at least one upper case and special character and numeric.");
+             */
         });
 
 

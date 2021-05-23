@@ -24,6 +24,7 @@ class Admin_users_model_checker extends CI_Model {
                 . 'admin_users.fullName as fullName_c, '
                 . 'admin_users.adminUserId as adminUserId_c, '
                 . 'admin_users.adminUserName as adminUserName_c, '
+                . 'admin_users.adUserName as adUserName_c, '
                 . 'admin_users.email as email_c, '
                 . 'admin_users.dob as dob_c, '
                 . 'admin_users.mcStatus as mcStatus_c, '

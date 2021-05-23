@@ -41,6 +41,10 @@
                                     <td><?php echo text_match($adminUser['adminUserName'], $adminUser['adminUserName_c']) ?></td>
                                 </tr>
                                 <tr>
+                                    <th align="left" scope="row">AD User Name</th>
+                                    <td><?php echo text_match($adminUser['adUserName'], $adminUser['adUserName_c']) ?></td>
+                                </tr>
+                                <tr>
                                     <th align="left" scope="row">User Group Name</th>
                                     <td><?php echo text_match($adminUser['mcAdminUserGroupName'], $adminUser['mainAdminUserGroupName']) ?></td>
                                 </tr>
@@ -107,6 +111,10 @@
                             <tr>
                                 <th align="left" scope="row">User ID</th>
                                 <td><?= $adminUser['adminUserName_c'] ?></td>
+                            </tr>
+                            <tr>
+                                <th align="left" scope="row">AD User Name</th>
+                                <td><?= $adminUser['adUserName_c'] ?></td>
                             </tr>
 
                             <tr>

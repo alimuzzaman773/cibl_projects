@@ -18,6 +18,7 @@
                             <th>SL#</th>
                             <th>Name</th>
                             <th>Admin User Name</th>
+                            <th>AD User Name</th>
                             <th>Admin User Group</th>
                             <th>Maker Action</th>
                             <th>Status</th>
@@ -29,6 +30,7 @@
                             <td>{{($index + 1)}}</td>
                             <td>{{i.fullName}}</td>
                             <td>{{i.adminUserName}}</td>
+                            <td>{{i.adUserName}}</td>
                             <td>{{i.userGroupName}}</td>
                             <td>{{i.makerAction}}</td>
                             <td>

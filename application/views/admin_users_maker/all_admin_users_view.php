@@ -23,6 +23,7 @@
                             <th>User Name</th>
                             <th>Admin User Group</th>
                             <th>Email</th>
+                            <th>AD User Name</th>
                             <th>Lock/Unlock</th>
                             <th>Active/Inactive</th>
                             <th>Status</th>
@@ -40,6 +41,7 @@
                             <td>{{i.adminUserName}}</td>
                             <td>{{i.userGroupName}}</td>
                             <td>{{i.email}}</td>
+                            <td>{{i.adUserName}}</td>
                             <td>
                                 <span data-ng-class="{'text-danger': i.isLocked == '1', 'text-success': i.isLocked == '0'}">{{i.isLocked=='1' ? 'Locked' : 'Unlocked'}}</span>
                             </td>
@@ -97,7 +99,7 @@
                             </td>
                         </tr>
                         <tr data-ng-show="data.length <= 0">
-                            <td colspan="9">No data found</td>
+                            <td colspan="13">No data found</td>
                         </tr>
                     </tbody>
                 </table>               
