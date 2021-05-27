@@ -177,7 +177,12 @@ class Client_registration extends CI_Controller {
         if (isset($_GET['skyId'])) {
             $skyId = $_GET['skyId'];
             $data['userInfo'] = $this->client_registration_model->getAppsUsersById($skyId); // decision needed whether to show from main table or shadow            
-            $data['deviceInfo'] = json_encode($this->client_registration_model->getDeviceBySkyid($skyId));
+
+            if (!$data['userInfo']):
+                show_404();
+            endif;
+
+            $data['deviceInfo'] = $this->client_registration_model->getDeviceBySkyid($skyId);
 
             $accountInfo = $this->login_model->checkAccount($data['userInfo']);
             foreach ($accountInfo as $k => $a):
@@ -186,7 +191,7 @@ class Client_registration extends CI_Controller {
                 endif;
             endforeach;
 
-            $data['accountInfo'] = json_encode($accountInfo);
+            $data['accountInfo'] = $accountInfo;
 
             $data['body_template'] = 'client_registration/apps_user_detail_view.php';
             $this->load->view('site_template.php', $data);

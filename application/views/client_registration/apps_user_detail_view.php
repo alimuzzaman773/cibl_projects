@@ -111,7 +111,7 @@
     </table>
 
     <h3>Account Information</h3>
-    <div id="showAccounts" data-bind="visible: accounts().length > 0" class="table-responsive">
+    <div class="table-responsive">
         <table class="table table-striped table-bordered">
             <thead>
                 <tr class="bg-primary">
@@ -121,25 +121,35 @@
                     <th style="text-align:center">Currency</th>
                 </tr>
             </thead>
-            <tbody data-bind="foreach: accounts">
-                <tr>
-                    <td style="text-align:center" data-bind="text:branchCode"></td>
-                    <td style="text-align:center" data-bind="text:accNo"></td>
-                    <td style="text-align:center" data-bind="text:accName"></td>
-                    <td style="text-align:center" data-bind="text:accCurrency"></td>
-                </tr>
+            <tbody>
+                <?php
+                if (count($accountInfo) > 0):
+                    foreach ($accountInfo as $r):
+                        ?>
+                        <tr>
+                            <td><?= $r["branchCode"] ?></td>
+                            <td><?= $r["accNo"] ?></td>
+                            <td><?= $r["accName"] ?></td>
+                            <td><?= $r["accCurrency"] ?></td>
+                        </tr>
+                        <?php
+                    endforeach;
+                else:
+                    ?>
+                    <tr>
+                        <td colspan="4">No data found</td>
+                    </tr>
+                <?php
+                endif;
+                ?>
             </tbody>
         </table>
-    </div>
-
-    <div class="well" data-bind="visible: accounts().length == 0">
-        <b>No Data Found</b>
     </div>
 </div>
 
 <div class="clearfix table-responsive">
     <h3>Device Information</h3>
-    <div id="showAccounts" data-bind="visible: devices().length > 0">
+    <div class="table-responsive">
         <table class="table table-striped table-bordered">
             <thead>
                 <tr class="bg-primary">
@@ -149,60 +159,30 @@
                     <th style="text-align:center">Verify Date</th>
                 </tr>
             </thead>
-            <tbody data-bind="foreach: devices">
-                <tr>
-                    <td style="text-align:center" data-bind="text:eblSkyId"></td>
-                    <td style="text-align:center" data-bind="text:identifier"></td>
-                    <td style="text-align:center" data-bind="text:isVaryfied, style:{color: verifyColor}"></td>
-                    <td style="text-align:center" data-bind="text:varyfiedDtTm"></td>
-                </tr>
+            <tbody>
+                <?php
+                if (count($deviceInfo) > 0):
+                    foreach ($deviceInfo as $r):
+                        ?>
+                        <tr>
+                            <td><?= $r["eblSkyId"] ?></td>
+                            <td><?= $r["identifier"] ?></td>
+                            <td><?= $r["isVaryfied"] ?></td>
+                            <td><?= $r["varyfiedDtTm"] ?></td>
+                        </tr>
+                        <?php
+                    endforeach;
+                else:
+                    ?>
+                    <tr>
+                        <td colspan="4">No device found</td>
+                    </tr>
+                <?php
+                endif;
+                ?>
             </tbody>
         </table>
     </div>
-
-    <div class="well" data-bind="visible: devices().length == 0">
-        <h4>No Device Added Yet</h4>
-    </div>
-
     <br>
     <button style="display: block;" id="back" data-bind="click :$root.back" class="btn btn-success">Back</button>
 </div>
-
-
-<script type="text/javascript" charset="utf-8">
-    var accountInfo = jQuery.parseJSON('<?= $accountInfo ?>');
-    var deviceInfo = jQuery.parseJSON('<?= $deviceInfo ?>');
-
-    var vm = function () {
-        var self = this;
-        self.accounts = ko.observableArray(accountInfo);
-        self.devices = ko.observableArray(deviceInfo);
-
-        $.each(self.accounts(), function (i, account) {  //build the checkboxes as observable
-            account.branchCode = account.branchCode;
-            account.accNo = account.accNo;
-            account.accName = account.accName;
-            account.accCurrency = account.accCurrency;
-        });
-
-        $.each(self.devices(), function(i, device) { 
-            device.eblSkyId = device.eblSkyId;
-            device.imeiNo = device.imeiNo;
-
-            if(device.isVaryfied === "1"){
-                device.isVaryfied = "YES";
-                device.verifyColor = ko.observable("green")
-            }else if(device.isVaryfied === "0"){
-                device.isVaryfied = "NO";
-                device.verifyColor = ko.observable("red")
-            }
-            device.varyfiedDtTm = device.varyfiedDtTm;
-        });
-        
-        self.back = function(item){
-            window.location = "<?php echo base_url(); ?>client_registration";
-        };
-    };
-    ko.applyBindings(new vm());
-</script>
-
