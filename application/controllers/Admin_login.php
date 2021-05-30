@@ -39,7 +39,7 @@ class Admin_login extends CI_Controller {
         /* Post Method update for Security 28 aug 16 */
         $username = $this->input->post('username', true);
         $password = $this->input->post('password');
-        $authtype = $this->input->post("authType", true);
+        $authType = $this->input->post("authType", true);
 
         $result = $this->my_session->log_in($username, $password, $authType);
 
