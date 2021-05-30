@@ -1,0 +1,8 @@
+<?php
+define('ad_port','3376');
+define('ad_host','27.147.135.164');
+define('ad_base_dn','DC=pbl,DC=COM');
+define('ad_username','');
+define('ad_password','');
+
+

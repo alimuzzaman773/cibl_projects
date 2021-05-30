@@ -198,4 +198,60 @@ class Client_registration extends CI_Controller {
         my_json_output($result);
     }
 
+    function get_ad_user()
+    {
+        $params = $this->input->post(NULL, true);
+        
+        // Construct new Adldap instance.
+        $ad = new \Adldap\Adldap();
+        // Create a configuration array.
+        $config = [  
+          'port' => ad_port,
+          // An array of your LDAP hosts. You can use either
+          // the host name or the IP address of your host.
+          'hosts'    => [''.ad_host],
+
+          // The base distinguished name of your domain to perform searches upon.
+          'base_dn'  => ad_base_dn,
+
+          // The account to use for querying / modifying LDAP records. This
+          // does not need to be an admin account. This can also
+          // be a full distinguished name of the user account.
+          'username' => ad_username,
+          'password' => ad_password,
+        ];
+        
+        // Add a connection provider to Adldap.
+        $ad->addProvider($config);
+        
+        try {
+            $data = [
+                'success' => false
+            ];
+            // If a successful connection is made to your server, the provider will be returned.
+            $provider = $ad->connect();
+            $search = $provider->search();
+            
+            // Performing a query.
+            $results = $provider->search()->find($params['user']);
+            if($results):
+                $person = $results->getAttributes();
+                $data['success'] = true;
+                $data['email'] = $results['mail'][0];
+                $data['name'] = $results['cn'][0];
+                $data['surname'] = $results['sn'][0];
+                $data['givenname'] = $results['givenname'][0];
+            else:
+                $data['msg'] = 'No user found';
+            endif;
+            
+            my_json_output($data);
+
+        } catch (\Adldap\Auth\BindException $e) {
+
+            // There was an issue binding / connecting to the server.
+            my_json_output(['success' => false, "msg" => $e->getMessage(), "ex" => true]);
+        }
+    }
+    
 }

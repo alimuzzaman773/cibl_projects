@@ -1,4 +1,5 @@
 <?php
+require 'custom/custom_config.php';
 
 date_default_timezone_set('Asia/Dhaka');
 

@@ -1,8 +1,18 @@
-<h2 class="title-underlined"><?= $pageTitle ?></h2>
+<h2 class="title-underlined">
+<?= $pageTitle ?>
+</h2>
 <?php if (trim($message) != ''): ?>
     <div class="alert alert-success"><?php echo $message ?></div>
 <?php endif; ?>
 
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-inline form-group">
+                <input type="text" id="searchUser" name="searchUser" class="form-control" />
+                <button class="btn btn-info" onclick="searchUser();">Search</button>
+            </div>
+        </div>
+    </div>
 <form method="post" style="" id="userForm" name="userForm" action="<?php echo base_url(); ?>admin_users_maker/insertNewUser">
     <input hidden class="textbox" type="text" name="selectedActionName" id="selectedActionName" value="<?= $selectedActionName ?>">
     <fieldset>
@@ -13,7 +23,10 @@
             </tr>
             <tr>
                 <th align="left" scope="row">User ID</th>
-                <td><input class="form-control input-sm" type="text" name="userId" id="userId"/></td>
+                <td>
+                    <input class="form-control input-sm" type="text" name="userId" id="userId"/>
+                    <small class="important">Application user name</small>
+                </td>
             </tr>
             <tr>
                 <th align="left" scope="row">AD UserName</th>
@@ -60,7 +73,40 @@
 
 
 <script type="text/javascript">
-
+        var searchUser = function()
+        {
+            if($.trim($("#searchUser").val()) == ''){
+                return false;
+            }
+            
+            var $user = $.trim($("#searchUser").val());
+            app.showModal();
+            
+            $.ajax({
+                type: 'POST',
+                url: app.baseUrl+ 'api/client_registration/get_ad_user',
+                data: {
+                    user: $user
+                },
+                dataType: 'json',
+                success : function(data){
+                    app.hideModal();
+                    console.log(data);
+                    if(!data.success){
+                        alert("No data found. ".data.msg);
+                        return false;
+                    }
+                    
+                    $("#fullName").val(data.name);
+                    $("#email").val(data.email);
+                },
+                error : function(data){
+                    app.hideModal();
+                    console.log("errere");
+                }
+            });
+            return false;
+        }
 
         $(function () {
 
@@ -91,7 +137,7 @@
              */
         });
 
-
+         
 
         function submitForm() {
 

@@ -361,13 +361,13 @@ Class My_session {
         try 
         {
             $LDAPUserDomain = "@pbl";
-            $LDAPHost = "192.168.1.2";              //Your LDAP server DNS Name or IP Address
+            $LDAPHost = "27.147.135.164"; // "192.168.1.2";              //Your LDAP server DNS Name or IP Address
             $dn = "DC=pbl,DC=COM";          //Put your Base DN here
             $LDAPUser = $user_name;            //A valid Active Directory login
             $LDAPUserPassword = $password;
             $LDAPFieldsToFind = array("*");         //Search Felids, Wildcard Supported for returning all values
 
-            $cnx = ldap_connect($LDAPHost) or die("Could not connect to LDAP");
+            $cnx = ldap_connect($LDAPHost, 3376) or die("Could not connect to LDAP");
             ldap_set_option($cnx, LDAP_OPT_PROTOCOL_VERSION, 3);    //Set the LDAP Protocol used by your AD service
             ldap_set_option($cnx, LDAP_OPT_REFERRALS, 0);           //This was necessary for my AD to do anything
             $l = @ldap_bind($cnx,$LDAPUser.$LDAPUserDomain,$LDAPUserPassword) or die("Could not bind to LDAP");
@@ -386,7 +386,8 @@ Class My_session {
         {
             return array(
                 'success' => false,
-                'msg' => $e->getMessage()
+                'msg' => $e->getMessage(),
+                'ex' => ''
             );
         }
         

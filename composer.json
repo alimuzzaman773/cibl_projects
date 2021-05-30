@@ -9,6 +9,7 @@
     ],
    "require": {
         "phpseclib/mcrypt_compat": "^1.0",
-        "freedsx/ldap": "^0.0"
+        "freedsx/ldap": "^0.6",
+        "adldap2/adldap2": "^10.3"
     }
 }
