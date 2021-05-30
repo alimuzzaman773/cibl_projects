@@ -197,12 +197,11 @@ Class My_session {
             return false;
         }
 
+        $this->unSetLoginError();
+        $row = $result->row_array();
         
         if($authType == 'appAuth'):
             $encryptedpassword = $CI->bocrypter->Encrypt($password);
-
-            $this->unSetLoginError();
-            $row = $result->row_array();
 
             $dbPass = $CI->bocrypter->Decrypt($row['encryptedPassword']);
             if($dbPass == false || trim($dbPass) == ''):
