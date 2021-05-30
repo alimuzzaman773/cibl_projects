@@ -129,5 +129,25 @@ class Admin_users_model_maker extends CI_Model {
         $this->db->where('adminUserId', $id);
         $this->db->update('admin_users_mc', $data);
     }
+    
+    public function checkUserInformation($p = []) 
+    {
+        $this->db->select('admin_users.*, admin_users_group.*');
+        $this->db->from('admin_users');
+        $this->db->join('admin_users_group', 'admin_users.adminUserGroup = admin_users_group.userGroupId', "left");
+        $this->db->where('admin_users.isActive', 1);
+        $this->db->where('admin_users_group.isActive', 1);
+        
+        if(isset($p['adminUserName']) && trim($p['adminUserName']) != ''):
+            $this->db->where('adminUserName', $p['adminUserName']);            
+        endif;
+        
+        if(isset($p['adUserName']) && trim($p['adUserName']) != ''):
+            $this->db->where('adUserName', $p['adUserName']);            
+        endif;
+        
+        $query = $this->db->get();
+        return $query->num_rows() > 0 ?$query : false;
+    }
 
 }

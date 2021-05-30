@@ -19,6 +19,15 @@
                 <span class="glyphicon glyphicon-eye-open form-control-feedback"></span>
             </div>
             <div class="form-group">
+                <label>
+                    <input type="radio" name="authType" value="adAuth" checked /> AD Authentication 
+                </label>
+                <br />
+                <label>
+                    <input type="radio" name="authType" value="appAuth" /> Application Authentication 
+                </label>
+            </div>
+            <div class="form-group">
                 <button type="submit" name="login" class="btn btn-primary btn-block">
                     <i class="glyphicon glyphicon-check"></i> Log In
                 </button>

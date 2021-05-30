@@ -166,47 +166,65 @@ Class My_session {
           return $_SESSION['permissions']; */
     }
 
-    public function log_in($user_name, $password) {
+    public function log_in($user_name, $password, $authType = 'appAuth') {
         $CI = & get_instance();
         $CI->load->model("admin_users_model_maker");
         $CI->load->library('BOcrypter');
+        
+        if(trim($user_name) == ''):
+            $this->setLoginError("Username was not provided");
+            return false;
+        endif;
+        
+        if(trim($password) == ''):
+            $this->setLoginError("Password was not provided");
+            return false;
+        endif;
 
         //$result = $CI->users->checkUser($user_name, $password);
-        $result = $CI->admin_users_model_maker->checkUsernamePassword($user_name);
+        $uParams = [];
+        if($authType == 'appAuth'):
+            $uParams['adminUserName'] = $user_name;
+        endif;
+        
+        if($authType == 'adAuth'):
+            $uParams['adUserName'] = $user_name;
+        endif;
+        
+        $result = $CI->admin_users_model_maker->checkUserInformation($user_name);
         if (!$result) {
             $this->setLoginError("No user found");
             return false;
         }
 
-        $encryptedpassword = $CI->bocrypter->Encrypt($password);
+        
+        if($authType == 'appAuth'):
+            $encryptedpassword = $CI->bocrypter->Encrypt($password);
 
-        $this->unSetLoginError();
-        $row = $result->row_array();
+            $this->unSetLoginError();
+            $row = $result->row_array();
 
-        $dbPass = $CI->bocrypter->Decrypt($row['encryptedPassword']);
-        if($dbPass == false || trim($dbPass) == ''):
-            $this->setLoginError("User password is not set in the system");
-            return false;
-        endif;
-        
-        /*if ($row['adminUserName'] != $user_name) {
-            $this->setLoginError("Username did not match");
-            return false;
-        }*/
-        
-        //&& $row['encryptedPassword'] != $encryptedpassword
-        if(trim($password) == ''):
-            $this->setLoginError("Password was not provided");
-            return false;
-        endif;
-        
-        if($dbPass !== $password):
-            $this->setLoginError("Password did not match");
-            return false;
+            $dbPass = $CI->bocrypter->Decrypt($row['encryptedPassword']);
+            if($dbPass == false || trim($dbPass) == ''):
+                $this->setLoginError("User password is not set in the system");
+                return false;
+            endif;
+
+
+            if($dbPass !== $password):
+                $this->setLoginError("Password did not match");
+                return false;
+            endif;
+
+        elseif($authType == 'adAuth'):
+            $adAuthResponse = $this->checkAdAuth($user_name, $password);
+            if(!$adAuthResponse['success']):
+                $this->setLoginError("AD authentication failed. ".$adAuthResponse['msg']);
+                return false;
+            endif;
         endif;
 
         $this->setSessionVars($row);
-
         return $return = array(
             "success" => true,
             "forgotPassword" => (int) $row['forgotPassword']
@@ -337,6 +355,43 @@ Class My_session {
         $this->language['id'] = $languageId;
         $this->language['code'] = $languageCode;
         $_SESSION['session_language'] = $this->language;
+    }
+    
+    function checkAdAuth($user_name, $password)
+    {
+        try 
+        {
+            $LDAPUserDomain = "@pbl";
+            $LDAPHost = "192.168.1.2";              //Your LDAP server DNS Name or IP Address
+            $dn = "DC=pbl,DC=COM";          //Put your Base DN here
+            $LDAPUser = $user_name;            //A valid Active Directory login
+            $LDAPUserPassword = $password;
+            $LDAPFieldsToFind = array("*");         //Search Felids, Wildcard Supported for returning all values
+
+            $cnx = ldap_connect($LDAPHost) or die("Could not connect to LDAP");
+            ldap_set_option($cnx, LDAP_OPT_PROTOCOL_VERSION, 3);    //Set the LDAP Protocol used by your AD service
+            ldap_set_option($cnx, LDAP_OPT_REFERRALS, 0);           //This was necessary for my AD to do anything
+            $l = @ldap_bind($cnx,$LDAPUser.$LDAPUserDomain,$LDAPUserPassword) or die("Could not bind to LDAP");
+            if($l == true):
+                return array(
+                    'success' => true
+                );
+            endif;
+
+            return array(
+                'success' => false,
+                'msg' => ldap_error($cnx)
+            );
+        }
+        catch(Exception $e)
+        {
+            return array(
+                'success' => false,
+                'msg' => $e->getMessage()
+            );
+        }
+        
+            
     }
 
 }
