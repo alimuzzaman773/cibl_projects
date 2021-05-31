@@ -209,7 +209,7 @@ class Client_registration extends CI_Controller {
           'port' => ad_port,
           // An array of your LDAP hosts. You can use either
           // the host name or the IP address of your host.
-          'hosts'    => [''.ad_host],
+          'hosts'    => [ad_host],
 
           // The base distinguished name of your domain to perform searches upon.
           'base_dn'  => ad_base_dn,
@@ -237,7 +237,7 @@ class Client_registration extends CI_Controller {
             if($results):
                 $person = $results->getAttributes();
                 $data['success'] = true;
-                $data['email'] = $results['mail'][0];
+                $data['email'] = $results->getAttribute('mail')[0];//$results['mail'][0];
                 $data['name'] = $results['cn'][0];
                 $data['surname'] = $results['sn'][0];
                 $data['givenname'] = $results['givenname'][0];
