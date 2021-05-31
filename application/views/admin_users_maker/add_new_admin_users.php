@@ -99,6 +99,7 @@
                     
                     $("#fullName").val(data.name);
                     $("#email").val(data.email);
+                    $("#userId").val($user);
                 },
                 error : function(data){
                     app.hideModal();

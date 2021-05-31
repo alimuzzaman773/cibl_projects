@@ -233,7 +233,8 @@ class Client_registration extends CI_Controller {
             $search = $provider->search();
             
             // Performing a query.
-            $results = $provider->search()->find($params['user']);
+            //$results = $provider->search()->find($params['user']);
+            $results = $provider->search()->where('samaccountname', '=', $params['user'])->get();
             if($results):
                 $person = $results->getAttributes();
                 $data['success'] = true;
