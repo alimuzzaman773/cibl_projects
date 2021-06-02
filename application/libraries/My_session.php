@@ -191,7 +191,7 @@ Class My_session {
             $uParams['adUserName'] = $user_name;
         endif;
         
-        $result = $CI->admin_users_model_maker->checkUserInformation($user_name);
+        $result = $CI->admin_users_model_maker->checkUserInformation($uParams);
         if (!$result) {
             $this->setLoginError("No user found");
             return false;
@@ -199,6 +199,7 @@ Class My_session {
 
         $this->unSetLoginError();
         $row = $result->row_array();
+       // d($CI->db->last_query());
         
         if($authType == 'appAuth'):
             $encryptedpassword = $CI->bocrypter->Encrypt($password);
