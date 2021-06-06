@@ -93,7 +93,7 @@
                     app.hideModal();
                     console.log(data);
                     if(!data.success){
-                        alert("No data found. ".data.msg);
+                        alert("No data found. "+data.msg);
                         return false;
                     }
                     

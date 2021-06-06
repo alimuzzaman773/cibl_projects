@@ -73,11 +73,16 @@ class Admin_users_maker extends CI_Controller {
             $data['message'] = 'The User "' . $data['adminUserName'] . '" already exists';
             $data['userGroups'] = $this->admin_users_model_maker->getAllGroups();
 
+            
+            
             $data["pageTitle"] = "Add Admin User";
             $data["body_template"] = "admin_users_maker/add_new_admin_users.php";
             $this->load->view('site_template.php', $data);
-        } else {
-            // Check AD USER
+            die();
+        } 
+        
+        // Check AD USER
+        if(trim($data['adUserName']) != ''):
             $adUserCheck = $this->admin_users_model_maker->getAdUser($data['adUserName']);
             if ($adUserCheck):
                 $data['message'] = 'The AD User "' . $data['adUserName'] . '" already exists';
@@ -86,12 +91,13 @@ class Admin_users_maker extends CI_Controller {
                 $data["pageTitle"] = "Add Admin User";
                 $data["body_template"] = "admin_users_maker/add_new_admin_users.php";
                 $this->load->view('site_template.php', $data);
-                return;
+                die();
             endif;
-
-            $this->admin_users_model_maker->insertAdminUserInfo($data);
-            redirect('admin_users_maker');
-        }
+        endif;
+            
+        $this->admin_users_model_maker->insertAdminUserInfo($data);
+        redirect('admin_users_maker');
+        
     }
 
     public function editUser($data, $selectedActionName = NULL, $message = NULL) {
@@ -141,19 +147,25 @@ class Admin_users_maker extends CI_Controller {
         if ($userNameCheck > 0) {
             $message = 'The user "' . $data['adminUserName'] . '" already exists';
             $this->editUser($adminUserId, $data['makerAction'], $message);
-        } else {
-            // CHECK AD USER
+            die();
+        } 
+        
+        if(trim($data['adUserName']) != ''):
             $adUserCheck = $this->admin_users_model_maker->checkIfAdUserExist($adminUserId, $data);
 
             if ($adUserCheck > 0):
                 $message = 'The AD user "' . $data['adUserName'] . '" already exists';
                 $this->editUser($adminUserId, $data['makerAction'], $message);
-                return;
+                die();
             endif;
+        endif;
+        
+        // CHECK AD USER
             
-            $this->admin_users_model_maker->updateAdminUserInfo($data, $adminUserId);
-            redirect('admin_users_maker');
-        }
+        $this->admin_users_model_maker->updateAdminUserInfo($data, $adminUserId);
+        redirect('admin_users_maker');
+            
+        
     }
 
     public function adminUserActive() {

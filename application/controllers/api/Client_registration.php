@@ -198,7 +198,45 @@ class Client_registration extends CI_Controller {
         my_json_output($result);
     }
 
-    function get_ad_user()
+    function get_ad_user() {
+        $params = $this->input->post(NULL, true);
+
+        $LDAPUserDomain = "@pbl";
+        $ldapPort = ad_port;
+        $LDAPHost = ad_host;              //Your LDAP server DNS Name or IP Address
+        $dn = ad_base_dn;          //Put your Base DN here
+        $LDAPUser = ad_username;             //A valid Active Directory login
+        $LDAPUserPassword = ad_password;
+        $LDAPFieldsToFind = array("*");         //Search Felids, Wildcard Supported for returning all values
+
+        $cnx = ldap_connect($LDAPHost, $ldapPort) or die("Could not connect to LDAP");
+        ldap_set_option($cnx, LDAP_OPT_PROTOCOL_VERSION, 3);    //Set the LDAP Protocol used by your AD service
+        ldap_set_option($cnx, LDAP_OPT_REFERRALS, 0);           //This was necessary for my AD to do anything
+        $l = ldap_bind($cnx, $LDAPUser . $LDAPUserDomain, $LDAPUserPassword) or my_json_output(['msg' => "Could not bind to LDAP", 'success' => false]);
+
+
+        error_reporting(E_ALL ^ E_NOTICE);
+
+        $SearchFor = $params['user'];
+        $SearchField = "samaccountname";
+
+        $filter = "($SearchField=$SearchFor)";    //Wildcard is * Remove it if you want an exact match
+        $sr = ldap_search($cnx, $dn, $filter, $LDAPFieldsToFind);
+        $info = ldap_get_entries($cnx, $sr);
+
+        if ($info['count'] <= 0):
+            my_json_output(['success' => false, 'msg' => 'no data found']);
+        endif;
+        
+        $data['success'] = true;
+        $data['email'] = $info['0']['mail'];
+        $data['name'] = $info['0']['cn'][0];
+        $data['surname'] = $info['0']['sn'][0];
+        $data['givenname'] = $info['0']['givenname'][0];
+        my_json_output($data);
+    }
+
+    function get_ad_users()
     {
         $params = $this->input->post(NULL, true);
         
@@ -228,20 +266,23 @@ class Client_registration extends CI_Controller {
             $data = [
                 'success' => false
             ];
+            
             // If a successful connection is made to your server, the provider will be returned.
             $provider = $ad->connect();
-            $search = $provider->search();
-            
             // Performing a query.
-            //$results = $provider->search()->find($params['user']);
+            //$results = $provider->search()->findOrFail($params['user']);
+            //d($results);
+            
             $results = $provider->search()->where('samaccountname', '=', $params['user'])->get();
+            d($results);
             if($results):
-                $person = $results->getAttributes();
-                $data['success'] = true;
+                $data = ($results);
+                //$person = $results->getAttributes();
+                /*$data['success'] = true;
                 $data['email'] = $results->getAttribute('mail')[0];//$results['mail'][0];
                 $data['name'] = $results['cn'][0];
                 $data['surname'] = $results['sn'][0];
-                $data['givenname'] = $results['givenname'][0];
+                $data['givenname'] = $results['givenname'][0];*/
             else:
                 $data['msg'] = 'No user found';
             endif;
