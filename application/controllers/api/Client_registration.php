@@ -229,7 +229,7 @@ class Client_registration extends CI_Controller {
         endif;
         
         $data['success'] = true;
-        $data['email'] = $info['0']['mail'];
+        $data['email'] = $info['0']['mail'][0];
         $data['name'] = $info['0']['cn'][0];
         $data['surname'] = $info['0']['sn'][0];
         $data['givenname'] = $info['0']['givenname'][0];
