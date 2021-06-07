@@ -18,6 +18,120 @@
         <thead>
             <tr class="bg-primary">
                 <th colspan="2">
+                    Enable and Disable Services
+                    <?php $settings['service_list'] = (isset($settings['service_list']) ? $settings['service_list'] : array()); ?>
+                </th>
+            </tr>        
+        </thead>
+        <tbody>
+            <tr>
+                <td><b>On/Off Top-up</b></td>
+                <td>
+                    <input type="number" min="0" max="1" class="form-control input-sm" name="service_list[topup]" value="<?= $this->settings_model->getItem('topup', $settings['service_list']) ?>">
+                    <small class=''><b>value 0 = OFF, 1 = Allow top-up</b></small>
+                    <input type="text" class="form-control input-sm" name="service_list[topup_msg]" value="<?= $this->settings_model->getItem('topup_msg', $settings['service_list']) ?>" placeholder="Set message for customer">
+                </td>
+            </tr>
+            <tr>
+                <td><b>On/Off bKash</b></td>
+                <td>
+                    <input type="number" min="0" max="1" class="form-control input-sm" name="service_list[bkash]" value="<?= $this->settings_model->getItem('bkash', $settings['service_list']) ?>">
+                    <small class=''><b>value 0 = OFF, 1 = Allow Transaction</b></small>
+                    <input type="text" class="form-control input-sm" name="service_list[bkash_msg]" value="<?= $this->settings_model->getItem('bkash_msg', $settings['service_list']) ?>" placeholder="Set message for customer">
+                </td>
+            </tr>
+            <tr>
+                <td><b>On/Off NAGAD</b></td>
+                <td>
+                    <input type="number" min="0" max="1" class="form-control input-sm" name="service_list[nagad]" value="<?= $this->settings_model->getItem('nagad', $settings['service_list']) ?>">
+                    <small class=''><b>value 0 = OFF, 1 = Allow Transaction</b></small>
+                    <input type="text" class="form-control input-sm" name="service_list[nagad_msg]" value="<?= $this->settings_model->getItem('nagad_msg', $settings['service_list']) ?>" placeholder="Set message for customer">
+                </td>
+            </tr>
+            <tr>
+                <td><b>On/Off Own Account Transfer</b></td>
+                <td>
+                    <input type="number" min="0" max="1" class="form-control input-sm" name="service_list[ownacc]" value="<?= $this->settings_model->getItem('ownacc', $settings['service_list']) ?>">
+                    <small class=''><b>value 0 = OFF, 1 = Allow Transaction</b></small>
+                    <input type="text" class="form-control input-sm" name="service_list[ownacc_msg]" value="<?= $this->settings_model->getItem('ownacc_msg', $settings['service_list']) ?>" placeholder="Set message for customer">
+                </td>
+            </tr>
+            <tr>
+                <td><b>On/Off Within Bank</b></td>
+                <td>
+                    <input type="number" min="0" max="1" class="form-control input-sm" name="service_list[within_acc]" value="<?= $this->settings_model->getItem('within_acc', $settings['service_list']) ?>">
+                    <small class=''><b>value 0 = OFF, 1 = Allow Transaction</b></small>
+                    <input type="text" class="form-control input-sm" name="service_list[within_acc_msg]" value="<?= $this->settings_model->getItem('within_acc_msg', $settings['service_list']) ?>" placeholder="Set message for customer">
+                </td>
+            </tr>
+            <tr>
+                <td><b>On/Off BEFTN</b></td>
+                <td>
+                    <input type="number" min="0" max="1" class="form-control input-sm" name="service_list[beftn]" value="<?= $this->settings_model->getItem('beftn', $settings['service_list']) ?>">
+                    <small class=''><b>value 0 = OFF, 1 = Allow Transaction</b></small>
+                    <input type="text" class="form-control input-sm" name="service_list[beftn_msg]" value="<?= $this->settings_model->getItem('beftn_msg', $settings['service_list']) ?>" placeholder="Set message for customer">
+                </td>
+            </tr>
+            <tr>
+                <td><b>On/Off Account to Card</b></td>
+                <td>
+                    <input type="number" min="0" max="1" class="form-control input-sm" name="service_list[acc_to_card]" value="<?= $this->settings_model->getItem('acc_to_card', $settings['service_list']) ?>">
+                    <small class=''><b>value 0 = OFF, 1 = Allow Transaction</b></small>
+                    <input type="text" class="form-control input-sm" name="service_list[acc_to_card_msg]" value="<?= $this->settings_model->getItem('acc_to_card_msg', $settings['service_list']) ?>" placeholder="Set message for customer">
+                </td>
+            </tr>
+            <tr>
+                <td><b>On/Off DPDC</b></td>
+                <td>
+                    <input type="number" min="0" max="1" class="form-control input-sm" name="service_list[dpdc]" value="<?= $this->settings_model->getItem('dpdc', $settings['service_list']) ?>">
+                    <small class=''><b>value 0 = OFF, 1 = Allow Transaction</b></small>
+                    <input type="text" class="form-control input-sm" name="service_list[dpdc_msg]" value="<?= $this->settings_model->getItem('dpdc_msg', $settings['service_list']) ?>" placeholder="Set message for customer">
+                </td>
+            </tr>
+            <tr>
+                <td><b>On/Off DESCO</b></td>
+                <td>
+                    <input type="number" min="0" max="1" class="form-control input-sm" name="service_list[desco]" value="<?= $this->settings_model->getItem('desco', $settings['service_list']) ?>">
+                    <small class=''><b>value 0 = OFF, 1 = Allow Transaction</b></small>
+                    <input type="text" class="form-control input-sm" name="service_list[desco_msg]" value="<?= $this->settings_model->getItem('desco_msg', $settings['service_list']) ?>" placeholder="Set message for customer">
+                </td>
+            </tr>
+            <tr>
+                <td><b>On/Off WASA</b></td>
+                <td>
+                    <input type="number" min="0" max="1" class="form-control input-sm" name="service_list[wasa]" value="<?= $this->settings_model->getItem('wasa', $settings['service_list']) ?>">
+                    <small class=''><b>value 0 = OFF, 1 = Allow Transaction</b></small>
+                    <input type="text" class="form-control input-sm" name="service_list[wasa_msg]" value="<?= $this->settings_model->getItem('wasa_msg', $settings['service_list']) ?>" placeholder="Set message for customer">
+                </td>
+            </tr>
+            <tr>
+                <td><b>On/Off OIS</b></td>
+                <td>
+                    <input type="number" min="0" max="1" class="form-control input-sm" name="service_list[ois]" value="<?= $this->settings_model->getItem('ois', $settings['service_list']) ?>">
+                    <small class=''><b>value 0 = OFF, 1 = Allow Transaction</b></small>
+                    <input type="text" class="form-control input-sm" name="service_list[ois_msg]" value="<?= $this->settings_model->getItem('ois_msg', $settings['service_list']) ?>" placeholder="Set message for customer">
+                </td>
+            </tr>
+            <tr>
+                <td><b>On/Off BUFT</b></td>
+                <td>
+                    <input type="number" min="0" max="1" class="form-control input-sm" name="service_list[buft]" value="<?= $this->settings_model->getItem('buft', $settings['service_list']) ?>">
+                    <small class=''><b>value 0 = OFF, 1 = Allow Transaction</b></small>
+                    <input type="text" class="form-control input-sm" name="service_list[buft_msg]" value="<?= $this->settings_model->getItem('buft_msg', $settings['service_list']) ?>" placeholder="Set message for customer">
+                </td>
+            </tr>
+            <tr>
+                <td><b>On/Off Lankabangla</b></td>
+                <td>
+                    <input type="number" min="0" max="1" class="form-control input-sm" name="service_list[lankabangla]" value="<?= $this->settings_model->getItem('lankabangla', $settings['service_list']) ?>">
+                    <small class=''><b>value 0 = OFF, 1 = Allow Transaction</b></small>
+                    <input type="text" class="form-control input-sm" name="service_list[lankabangla_msg]" value="<?= $this->settings_model->getItem('lankabangla_msg', $settings['service_list']) ?>" placeholder="Set message for customer">
+                </td>
+            </tr>
+        </tbody>
+        <thead>
+            <tr class="bg-primary">
+                <th colspan="2">
                     Mobile Top-Up
                     <?php $settings['top_up'] = (isset($settings['top_up']) ? $settings['top_up'] : array()); ?>
                 </th>
