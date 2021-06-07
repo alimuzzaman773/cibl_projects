@@ -12,7 +12,7 @@
                 <td>
                     <div class="form-inline form-group">
                         <input type="text" id="searchUser" name="searchUser" class="form-control" placeholder="Search by username" autocomplete="off"  />
-                            <button class="btn btn-info" onclick="searchUser();">Domain Search</button>
+                            <a href='#' type="button" class="btn btn-info" onclick="app.searchUser();">Domain Search</a>
                     </div>
                 </td>
             </tr>
@@ -69,7 +69,10 @@
 
 <script type="text/javascript">
 
-    var searchUser = function()
+        var app = app || {};
+        
+    $(function() {
+        app.searchUser = function()
         {
             if($.trim($("#searchUser").val()) == ''){
                 return false;
@@ -104,8 +107,6 @@
             });
             return false;
         };
-        
-    $(function() {
              
         $("#addUser").addClass("active");
         $("#usersCollape").addClass("btn-primary");

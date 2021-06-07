@@ -9,7 +9,7 @@ class Admin_users_model_checker extends CI_Model {
     public function getUnapprovedUsers() {
         $this->db->order_by("adminUserId", "desc");
         $this->db->where('admin_users_mc.mcStatus =', 0);
-        $this->db->where('adminUserId !=', 1);
+       // $this->db->where('adminUserId !=', 1);
         //$this->db->where('admin_users_mc.makerActionBy !=', $this->my_session->adminUserId); // Told me Arif Vai
         $this->db->select('admin_users_mc.*, admin_users_group.userGroupName');
         $this->db->from('admin_users_mc');

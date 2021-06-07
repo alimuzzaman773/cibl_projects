@@ -19,7 +19,7 @@
                 <td>
                     <div class="form-inline form-group">
                         <input type="text" id="searchUser" name="searchUser" class="form-control" placeholder="Search by username" autocomplete="off" />
-                            <button class="btn btn-info" onclick="searchUser();">Domain Search</button>
+                            <a href='#' type="button" class="btn btn-info" onclick="app.searchUser();">Domain Search</a>
                     </div>
                 </td>
             </tr>
@@ -79,43 +79,45 @@
 
 
 <script type="text/javascript">
-        var searchUser = function()
-        {
-            if($.trim($("#searchUser").val()) == ''){
+        var app = app || {};
+        $(function () {
+            
+            app.searchUser = function()
+            {
+                if($.trim($("#searchUser").val()) == ''){
+                    return false;
+                }
+
+                var $user = $.trim($("#searchUser").val());
+                app.showModal();
+
+                $.ajax({
+                    type: 'POST',
+                    url: app.baseUrl+ 'api/client_registration/get_ad_user',
+                    data: {
+                        user: $user
+                    },
+                    dataType: 'json',
+                    success : function(data){
+                        app.hideModal();
+                        console.log(data);
+                        if(!data.success){
+                            alert("No data found. "+data.msg);
+                            return false;
+                        }
+
+                        $("#fullName").val(data.name);
+                        $("#email").val(data.email);
+                        $("#userId").val($user);
+                    },
+                    error : function(data){
+                        app.hideModal();
+                        console.log("errere");
+                    }
+                });
                 return false;
             }
-            
-            var $user = $.trim($("#searchUser").val());
-            app.showModal();
-            
-            $.ajax({
-                type: 'POST',
-                url: app.baseUrl+ 'api/client_registration/get_ad_user',
-                data: {
-                    user: $user
-                },
-                dataType: 'json',
-                success : function(data){
-                    app.hideModal();
-                    console.log(data);
-                    if(!data.success){
-                        alert("No data found. "+data.msg);
-                        return false;
-                    }
-                    
-                    $("#fullName").val(data.name);
-                    $("#email").val(data.email);
-                    $("#userId").val($user);
-                },
-                error : function(data){
-                    app.hideModal();
-                    console.log("errere");
-                }
-            });
-            return false;
-        }
 
-        $(function () {
 
             $("#addUser").addClass("active");
             $("#usersCollape").addClass("btn-primary");
