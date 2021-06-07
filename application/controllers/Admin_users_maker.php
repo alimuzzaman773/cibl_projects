@@ -47,7 +47,7 @@ class Admin_users_maker extends CI_Controller {
         $data['adminUserGroup'] = $this->input->post('group');
         $data['passwordSetDtTm'] = 0;
         $data['passwordSalt'] = 12;
-        $data['encryptedPassword'] = $this->bocrypter->Encrypt($password);
+        $data['encryptedPassword'] = trim($password) != '' ? $this->bocrypter->Encrypt($password) : NULL;
         $data['passwordChangeTms'] = 0;
         $data['passwordChangeDtTm'] = 0;
         $data['isReset'] = 0;

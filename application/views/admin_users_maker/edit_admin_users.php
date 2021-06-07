@@ -2,19 +2,20 @@
 <?php if (trim($message) != ''): ?>
     <div class="alert alert-success"><?php echo $message ?></div>
 <?php endif; ?>
-<div class="row">
-    <div class="col-md-12">
-        <div class="form-inline form-group">
-            <input type="text" id="searchUser" name="searchUser" class="form-control" />
-            <button class="btn btn-info" onclick="searchUser();">Search</button>
-        </div>
-    </div>
-</div>
 <form method="post" style="" id="userForm" name="userForm" action="<?php echo base_url(); ?>admin_users_maker/updateAdminUser">
     <input hidden type="text" name="adminUserId" id="adminUserId" value="<?= $adminUserData['adminUserId'] ?>" size="20" />
     <input hidden class="textbox" type="text" name="selectedActionName" id="selectedActionName" value="<?= $selectedActionName ?>">
     <fieldset>
         <table class="table table-condensed table-bordered table-striped">
+            <tr>
+                <th width="213" align="left" scope="row">Search Domain User</th>
+                <td>
+                    <div class="form-inline form-group">
+                        <input type="text" id="searchUser" name="searchUser" class="form-control" placeholder="Search by username" autocomplete="off"  />
+                            <button class="btn btn-info" onclick="searchUser();">Domain Search</button>
+                    </div>
+                </td>
+            </tr>
             <tr>
                 <th width="213" align="left" scope="row">Full Name</th>
                 <td><input class="form-control input-sm" type="text" name="fullName" id="fullName" value="<?= $adminUserData['fullName'] ?>" size="20" /></td>

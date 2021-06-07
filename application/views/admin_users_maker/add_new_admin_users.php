@@ -7,16 +7,22 @@
 
     <div class="row">
         <div class="col-md-12">
-            <div class="form-inline form-group">
-                <input type="text" id="searchUser" name="searchUser" class="form-control" />
-                <button class="btn btn-info" onclick="searchUser();">Search</button>
-            </div>
+            
         </div>
     </div>
 <form method="post" style="" id="userForm" name="userForm" action="<?php echo base_url(); ?>admin_users_maker/insertNewUser">
     <input hidden class="textbox" type="text" name="selectedActionName" id="selectedActionName" value="<?= $selectedActionName ?>">
     <fieldset>
         <table class="table table-condensed table-bordered table-striped">
+            <tr>
+                <th width="213" align="left" scope="row">Search Domain User</th>
+                <td>
+                    <div class="form-inline form-group">
+                        <input type="text" id="searchUser" name="searchUser" class="form-control" placeholder="Search by username" autocomplete="off" />
+                            <button class="btn btn-info" onclick="searchUser();">Domain Search</button>
+                    </div>
+                </td>
+            </tr>
             <tr>
                 <th width="150" align="left" scope="row">Full Name</th>
                 <td><input class="form-control input-sm" type="text" name="fullName" id="fullName"/></td>
@@ -150,8 +156,8 @@
                     userId: "required userId",
                     //password1: "required password",
                     //password2: "required password",
-                    password1: "required",
-                    password2: "required",
+                    //password1: "required",
+                    //password2: "required",
                     email: {
                         required: true,
                         email: true,
@@ -182,7 +188,7 @@
 
             var isValid = $("#userForm").valid();
 
-            if (isValid) {
+            /*if (isValid) {
                 var pass1 = document.getElementById("pass1").value;
                 var pass2 = document.getElementById("pass2").value;
 
@@ -196,7 +202,7 @@
                 } else {
                     alert("Password Mismatch");
                 }
-            }
+            }*/
         }
 
 </script>
