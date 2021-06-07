@@ -58,7 +58,7 @@
             </tr>            
         </table>
     </fieldset>
-    <input type="button"  value="Update" onclick="submitForm()" class="btn btn-success"/>
+    <input type="submit"  value="Update" onclick="submitForm()" class="btn btn-success"/>
     <a href="<?php echo base_url(); ?>admin_users_maker" class="btn btn-success"><i class="icon-plus icon-white"></i><span>Cancel</span></a> 
 </form>
 
