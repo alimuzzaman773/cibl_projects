@@ -21,6 +21,8 @@ $this->load->view("ajax_report/render_report_parameters.php", $params);
                     <th style="text-align: right">Vat Amount</th>
                     <th style="text-align: right">Stamp Amount</th>
                     <th style="text-align: right">LPC Amount</th>
+                    <th style="text-align: right">Other1 Amount</th>
+                    <th style="text-align: right">Other2 Amount</th>
                     <th style="text-align: right">Total Amount</th>
                     <th>Narration</th>
                     <th>Status</th>
@@ -31,6 +33,15 @@ $this->load->view("ajax_report/render_report_parameters.php", $params);
             if ($result) {
                 $si = 1;
                 $total = 0;
+                // WASA TYPE
+                $wasa_type = [
+                            'general_bill',
+                            'new_connection_fees',
+                            'new_connection_demand_note',
+                            'tubewell_fees',
+                            'tubewell_demand_note'
+                        ];
+                
                 foreach ($result as $r) {
                     $total += $r->bpt_amount;
                     $requestInfo = json_decode($r->request_data, true);
@@ -65,6 +76,11 @@ $this->load->view("ajax_report/render_report_parameters.php", $params);
                                 $acc = @$resInfo->data->data->account_number ? @$resInfo->data->data->account_number : NULL;
                                 echo $acc;
                             endif;
+                            
+                            if (in_array($r->utility_name, $wasa_type) && isset($resInfo->data->data->zone_code)):
+                                $acc = @$resInfo->data->data->account_number ? @$resInfo->data->data->account_number : NULL;
+                                echo $acc;
+                            endif;
                             ?>
                         </td>
                         <?php
@@ -83,9 +99,9 @@ $this->load->view("ajax_report/render_report_parameters.php", $params);
                                     echo "<td style='text-align: right'>{$bill_amount}</td>";
                                     echo "<td style='text-align: right'>{$vat_amount}</td>";
                                     echo "<td style='text-align: right'>{$stamp_amount}</td>";
-                                    echo "<td></td>";
+                                    echo "<td></td><td></td><td></td>";
                                 else:
-                                    echo "<td></td><td></td><td></td><td></td><td></td><td></td>";
+                                    echo "<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>";
                                 endif;
                                 continue;
                             case "desco":
@@ -103,15 +119,37 @@ $this->load->view("ajax_report/render_report_parameters.php", $params);
                                     echo "<td style='text-align: right'>{$vat_amount}</td>";
                                     echo "<td style='text-align: right'>{$stamp_amount}</td>";
                                     echo "<td style='text-align: right'>{$lpc_amount}</td>";
+                                    echo "<td></td><td></td>";
                                 else:
-                                    echo "<td></td><td></td><td></td><td></td><td></td><td></td>";
+                                    echo "<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>";
+                                endif;
+                                continue;
+                                case (in_array($r->utility_name, $wasa_type)):
+                                    if (isset($resInfo->data->data->zone_code)):
+                                    $bill_number = @$resInfo->data->data->bill_number ? @$resInfo->data->data->bill_number : NULL;
+                                    $zone = @$resInfo->data->data->zone_code ? @$resInfo->data->data->zone_code : NULL;
+                                    $bill_amount = @$resInfo->data->data->bill_amount ? @$resInfo->data->data->bill_amount : 0.00;
+                                    $vat_amount = @$resInfo->data->data->vat_amount ? @$resInfo->data->data->vat_amount : 0.00;
+                                    $other1_amount = @$resInfo->data->data->other1_amount ? @$resInfo->data->data->other1_amount : 0.00;
+                                    $other2_amount = @$resInfo->data->data->other2_amount ? @$resInfo->data->data->other2_amount : 0.00;
+
+                                    echo "<td>{$bill_number}</td>";
+                                    echo "<td style='text-align: right'>{$zone}</td>";
+                                    echo "<td style='text-align: right'>{$bill_amount}</td>";
+                                    echo "<td style='text-align: right'>{$vat_amount}</td>";
+                                    echo "<td></td><td></td>";
+                                    echo "<td style='text-align: right'>{$other1_amount}</td>";
+                                    echo "<td style='text-align: right'>{$other2_amount}</td>";
+                                else:
+                                    echo "<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>";
                                 endif;
                                 continue;
                             default:
                                 echo "<td></td><td></td><td></td>"
                                 . "<td style='text-align: right'>{$r->vt_amount}</td>"
                                 . "<td style='text-align: right'>{$r->st_amount}</td>"
-                                . "<td style='text-align: right'>{$r->lt_amount}</td>";
+                                . "<td style='text-align: right'>{$r->lt_amount}</td>"
+                                . "<td></td><td></td>";
                         }
                         ?>
                         <td style="text-align: right"><?= $r->bpt_amount ?></td>
@@ -123,14 +161,14 @@ $this->load->view("ajax_report/render_report_parameters.php", $params);
                 }
                 ?>
                 <tr>
-                    <td colspan="15" style="text-align: right"><b>Total:</b></td>
+                    <td colspan="17" style="text-align: right"><b>Total:</b></td>
                     <td colspan="4"><?= number_format($total, 2) ?></td>
                 </tr>
                 <?php
             } else {
                 ?>
                 <tr>
-                    <td colspan="19">No data found.</td>
+                    <td colspan="21">No data found.</td>
                 </tr>
             <?php } ?>  
         </table>
