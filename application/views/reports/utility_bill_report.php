@@ -46,7 +46,7 @@
                         <option value="nagad">NAGAD</option>
                         <option value="lankabangla">Lankabangla</option>
                         <option value="ois">OIS</option>
-                        <option value="wasa_general_bill">WASA General Bill</option>
+                        <option value="general_bill">WASA General Bill</option>
                         <option value="new_connection_fees">WASA New Connection From Fees</option>
                         <option value="new_connection_demand_note">WASA New Connection Demand Note</option>
                         <option value="tubewell_fees">WASA Tube-well From Fees</option>
