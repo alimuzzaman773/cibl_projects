@@ -35,13 +35,13 @@ $this->load->view("ajax_report/render_report_parameters.php", $params);
                 $total = 0;
                 // WASA TYPE
                 $wasa_type = [
-                            'general_bill',
-                            'new_connection_fees',
-                            'new_connection_demand_note',
-                            'tubewell_fees',
-                            'tubewell_demand_note'
-                        ];
-                
+                    'general_bill',
+                    'new_connection_fees',
+                    'new_connection_demand_note',
+                    'tubewell_fees',
+                    'tubewell_demand_note'
+                ];
+
                 foreach ($result as $r) {
                     $total += $r->bpt_amount;
                     $requestInfo = json_decode($r->request_data, true);
@@ -66,17 +66,17 @@ $this->load->view("ajax_report/render_report_parameters.php", $params);
                             if ($r->utility_name == "top_up"):
                                 echo $r->entity_number;
                             endif;
-                            
+
                             if ($r->utility_name == "dpdc" && isset($resInfo->data->data->zone_code)):
                                 $acc = @$resInfo->data->data->account_number ? @$resInfo->data->data->account_number : NULL;
                                 echo $acc;
                             endif;
-                            
+
                             if ($r->utility_name == "desco" && isset($resInfo->data->data->zone_code)):
                                 $acc = @$resInfo->data->data->account_number ? @$resInfo->data->data->account_number : NULL;
                                 echo $acc;
                             endif;
-                            
+
                             if (in_array($r->utility_name, $wasa_type) && isset($resInfo->data->data->zone_code)):
                                 $acc = @$resInfo->data->data->account_number ? @$resInfo->data->data->account_number : NULL;
                                 echo $acc;
@@ -124,8 +124,8 @@ $this->load->view("ajax_report/render_report_parameters.php", $params);
                                     echo "<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>";
                                 endif;
                                 continue;
-                                case (in_array($r->utility_name, $wasa_type)):
-                                    if (isset($resInfo->data->data->zone_code)):
+                            case (in_array($r->utility_name, $wasa_type)):
+                                if (isset($resInfo->data->data->zone_code)):
                                     $bill_number = @$resInfo->data->data->bill_number ? @$resInfo->data->data->bill_number : NULL;
                                     $zone = @$resInfo->data->data->zone_code ? @$resInfo->data->data->zone_code : NULL;
                                     $bill_amount = @$resInfo->data->data->bill_amount ? @$resInfo->data->data->bill_amount : 0.00;
