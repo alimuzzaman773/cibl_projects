@@ -159,7 +159,7 @@
                                                 <?php endif; ?>
                                                 <!--
                                                 <?php if (ci_check_permission("canViewBillerSetupMenu")): ?>
-                                                                        <li><a href="<?= base_url() . 'biller_setup_maker' ?>">Biller Setup</a></li>
+                                                                            <li><a href="<?= base_url() . 'biller_setup_maker' ?>">Biller Setup</a></li>
                                                 <?php endif; ?>
                                                 -->
                                                 <?php if (ci_check_permission("canViewLimitPackgaeMenu")): ?>
@@ -190,7 +190,7 @@
                                                 <?php endif; ?>
                                                 <!--
                                                 <?php if (ci_check_permission("canViewBillerSetupAuthorizationMenu")): ?>
-                                                                            <li><a href="<?= base_url() . 'biller_setup_checker' ?>">Biller Setup Authorization</a></li>
+                                                                                <li><a href="<?= base_url() . 'biller_setup_checker' ?>">Biller Setup Authorization</a></li>
                                                 <?php endif; ?>
                                                 -->
                                                 <?php if (ci_check_permission("canViewPinResetAuthorizationMenu")): ?>
@@ -242,7 +242,7 @@
                                                 <?php endif; ?>
                                                 <!--
                                                 <?php if (ci_check_permission("canViewBillerSetupMenu")): ?>
-                                                                            <li><a href="<?= base_url() . 'bill_type_setup' ?>">Bill Type Setup</a></li>
+                                                                                <li><a href="<?= base_url() . 'bill_type_setup' ?>">Bill Type Setup</a></li>
                                                 <?php endif; ?>
                                                 -->
                                                 <li><a href="<?= base_url() . 'account_type/index' ?>">Account Categories Setup</a></li>
@@ -296,8 +296,7 @@
                                             <li><p><b>Transaction Reports</b></p></li>
                                             <li><a href="<?= base_url() . 'reports/fund_transfer_details' ?>">Fund Transfer</a></li>
                                             <li><a href="<?= base_url() . 'reports/utility_bill_report' ?>">Utility Bill Details Report</a></li>
-                                            <!-- <li><a href="<?= base_url() . 'reports/fund_transfer' ?>">Fund Transfer</a></li>
-                                            <li><a href="<?= base_url() . 'reports/other_fund_transfer' ?>">Other Fund Transfer</a></li> -->
+                                            <li><a href="<?= base_url() . 'reports/dpdc_zonewise_report' ?>">DPDC Zone Wise Report</a></li>
                                         </ul>
                                         <!--
                                         <ul class="col-md-2 col-xs-12 list-unstyled">

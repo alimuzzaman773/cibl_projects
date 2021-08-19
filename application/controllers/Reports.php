@@ -464,4 +464,20 @@ class Reports extends MX_Controller {
         $this->load->view('site_template.php', $data);
     }
 
+    function dpdc_zonewise_report() {
+        /** initialization * */
+        $data['css'] = "";
+
+        $data['js'] = "";
+
+        $data['pageTitle'] = "DPDC Zone Wise Report";
+        $data['base_url'] = base_url();
+
+        $data['css_files'] = array();
+        $data['js_files'] = array();
+
+        $data['body_template'] = "reports/dpdc_zonewise_report.php";
+        $this->load->view('site_template.php', $data);
+    }
+
 }

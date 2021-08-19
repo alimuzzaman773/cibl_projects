@@ -355,4 +355,44 @@ class Ajax_report extends MX_Controller {
         die();
     }
 
+    function dpdc_zonewise_report() {
+        $p['fromdate'] = $this->input->get_post("fromdate", true);
+        $p['todate'] = $this->input->get_post("todate", true);
+        $p['transaction_status'] = $this->input->get_post("transaction_status", true);
+
+        $this->load->model("reports_model");
+
+        $data['result'] = array();
+
+        $result = $this->reports_model->getDpdcZoneWiseReport($p);
+        if ($result['success']):
+            $data['result'] = $result['result'];
+        endif;
+        //d($data['result']);
+        $data['params'] = array("reportHeader" => 'DPDC Zone Wise Report');
+        if ($result):
+            $data['params']['reportParams'] = array("From" => $p['fromdate'], "To" => $p['todate']);
+            if (trim($p['transaction_status']) != ''):
+                $data['params']['reportParams']["Status"] = $p['transaction_status'];
+            endif;
+        endif;
+
+        $data['base_url'] = base_url();
+        //var_dump($result->result());
+        $report = $this->load->view("ajax_report/dpdc_zonewise_report.php", $data, true);
+
+        if ((int) $this->input->get_post("report_download_flag", true) == 1) {
+            $this->__download($report, $this->input->get_post("report_download_format", true), $this->input->get_post("__layout__", true));
+            exit();
+        }
+
+        $json['success'] = true;
+        $json['msg'] = $report;
+        $json['query'] = $this->db->last_query();
+        $json['p'] = $p;
+        $json['result'] = $result;
+        echo json_encode($json);
+        die();
+    }
+
 }
