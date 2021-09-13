@@ -153,7 +153,9 @@ Class Merchant_accounts extends CI_Controller {
     }
 
     function set_insert_callback($post_array) {
-        $this->setSchoolInfo($post_array);
+        if(isset($post_array['schoolSession']['sessionId'])):
+            $this->setSchoolInfo($post_array);
+        endif;
 
         $this->load->library("BOcrypter");
 
