@@ -25,7 +25,9 @@ $this->load->view("ajax_report/render_report_parameters.php", $params);
             <?php
             if ($result) {
                 $si = 1;
+                $total = 0;
                 foreach ($result as $i) {
+                    $total += $i->amount;
                     ?>
                     <tr>
                         <td><?= ($si++) ?></td>
@@ -45,6 +47,13 @@ $this->load->view("ajax_report/render_report_parameters.php", $params);
                     </tr>
                     <?php
                 }
+                ?>
+                <tr>
+                    <td colspan="9" align="right"><b>Total Amount:</b></td>
+                    <td align="right"><?= number_format($total, 2); ?></td>
+                    <td colspan="5"></td>
+                </tr>
+                <?php
             } else {
                 ?>
                 <tr>
