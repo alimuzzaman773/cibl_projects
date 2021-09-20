@@ -29,6 +29,7 @@ Class My_session {
     var $companyId = null;
     var $adminUserId = null;
     var $group = null;
+    var $merchantId = null;
 
     function __construct() {
         session_save_path(ABS_SERVER_PATH . SITE_FOLDER . "sessions_files");
@@ -85,6 +86,7 @@ Class My_session {
             $this->userInfo = $_SESSION['session_userInfo'] = array('userId' => $userinfo['adminUserId'], "companyId" => $userinfo['company_id']);
             $this->companyId = $this->userInfo['companyId'];
             $this->language = $_SESSION['session_language'] = array("id" => 0, "code" => "en");
+            $this->merchantId = $_SESSION['merchantId'] = $_SESSION['session_merchantId'] = $userinfo['merchantId'];
         else:
             $this->permissions = $_SESSION['permissions']; // = (isset($_SESSION['permisssions']))? $_SESSION['permissions']:""; 
             $this->group = $_SESSION['group'] = $_SESSION['userGroupName'];
@@ -96,6 +98,7 @@ Class My_session {
             $this->userInfo = $_SESSION['session_userInfo'];
             $this->companyId = $this->userInfo['companyId'];
             $this->language = $_SESSION['session_language'];
+            $this->merchantId = $_SESSION['merchantId'] = $_SESSION['session_merchantId'];
         endif;
 
         $this->logged_in = $_SESSION['logged_in'] = TRUE;
@@ -112,6 +115,7 @@ Class My_session {
     private function unsetSessionVars() {
         $this->logged_in = $_SESSION['logged_in'] = FALSE;
         $this->userName = $_SESSION['session_userName'] = "Guest";
+        $this->merchantId = $_SESSION['session_merchantId'] = null;
         $this->permissions = null;
         $this->userId = null;
         $this->userGroupId = null;
@@ -132,6 +136,7 @@ Class My_session {
         unset($_SESSION['session_userLevel']);
         unset($_SESSION['session_language']);
         unset($_SESSION['session_time']);
+        unset($_SESSION['session_merchantId']);
     }
 
     private function createPermissionArray($parray) {

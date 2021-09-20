@@ -50,6 +50,10 @@ define("TBL_BO_ACTIVITY_LOG", DB_PREFIX . "bo_activity_log");
 define("TBL_SSL_BILL_PAYMENT", DB_PREFIX . "ssl_bill_payment");
 define('TBL_APPS_TRANSACTION', DB_PREFIX . "apps_transaction");
 define("TBL_FILES", DB_PREFIX . "files");
+define("TBL_MERCHANT_ACCOUNTS", DB_PREFIX . "merchant_accounts");
+define("TBL_MERCHANT_ACCOUNTS_MC", DB_PREFIX . "merchant_accounts_mc");
+define("TBL_MERCHANT_TERMINALS", DB_PREFIX . "merchant_terminals");
+define("TBL_MERCHANT_TERMINALS_MC", DB_PREFIX . "merchant_terminals_mc");
 
 
 // All Constant Variables:

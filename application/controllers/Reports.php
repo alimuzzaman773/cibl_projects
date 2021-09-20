@@ -480,4 +480,27 @@ class Reports extends MX_Controller {
         $this->load->view('site_template.php', $data);
     }
 
+    function qr_transaction() {
+        /** initialization * */
+        $data['css'] = "";
+
+        $data['js'] = "";
+
+        $data['merchantAddresses'] = array();
+
+        $merchantAddress = $this->reports_model->getMerchantBranches();
+        if ($merchantAddress):
+            $data['merchantAddresses'] = $merchantAddress->result();
+        endif;
+
+        $data['pageTitle'] = "QR Transactions Report";
+        $data['base_url'] = base_url();
+
+        $data['css_files'] = array();
+        $data['js_files'] = array();
+
+        $data['body_template'] = "reports/qr_transaction.php";
+        $this->load->view('site_template.php', $data);
+    }
+
 }

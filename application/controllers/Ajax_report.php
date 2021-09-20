@@ -395,4 +395,49 @@ class Ajax_report extends MX_Controller {
         die();
     }
 
+    function qr_transaction() {
+        $p['fromdate'] = $this->input->get_post("fromdate", true);
+        $p['todate'] = $this->input->get_post("todate", true);
+        $p['eblSkyId'] = $this->input->get_post("eblSkyId", true);
+        $p['status'] = $this->input->get_post("transaction_status", true);
+        $p['merchantAddress'] = $this->input->get_post("merchant_address", true);
+        $p['paymentStatus'] = $this->input->get_post("payment_status", true);
+        $p['transaction_id'] = $this->input->get_post("transaction_id", true);
+        $p['merchantId'] = $this->my_session->merchantId;
+
+        $this->load->model("reports_model");
+
+        $data['result'] = array();
+
+        $result = $this->reports_model->getQRTransansaction($p);
+        if ($result):
+            $data['result'] = $result->result();
+        endif;
+        //d($data['result']);
+        $data['params'] = array("reportHeader" => 'QR Transaction');
+        if ($result):
+            $data['params']['reportParams'] = array("From" => $p['fromdate'], "To" => $p['todate']);
+
+            if (trim($p['eblSkyId']) != ''):
+                $data['params']['reportParams']["PLANET ID"] = $p['eblSkyId'];
+            endif;
+        endif;
+
+        $data['base_url'] = base_url();
+        //var_dump($result->result());
+        $report = $this->load->view("ajax_report/qr_transaction.php", $data, true);
+
+        if ((int) $this->input->get_post("report_download_flag", true) == 1) {
+            $this->__download($report, $this->input->get_post("report_download_format", true), $this->input->get_post("__layout__", true));
+            exit();
+        }
+
+        $json['success'] = true;
+        $json['msg'] = $report;
+        $json['p'] = $p;
+        $json['q'] = $this->db->last_query();
+        echo json_encode($json);
+        die();
+    }
+
 }

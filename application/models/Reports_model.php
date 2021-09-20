@@ -688,4 +688,64 @@ class Reports_model extends CI_Model {
         }
     }
 
+    function getMerchantBranches() {
+        $this->db->select('DISTINCT(merchantAddress)');
+        $this->db->from('merchant_accounts');
+        $result = $this->db->get();
+        return $result->num_rows() > 0 ? $result : false;
+    }
+
+    function getQRTransansaction($params) {
+
+        $this->db->select('qr.*,'
+                        . 'tn.amount,tn.cfId, tn.eblSkyId, tn.fromAccNo, tn.toAccNo, tn.narration, tn.trnType, tn.transactionMode, tn.warning, tn.crossRefNo, '
+                        . 'au.clientId, au.userName, '
+                        . 'mr.merchantId, mr.merchantName, mr.merchantAccountNo, mr.merchantAddress, ad.adminUserName', FALSE)
+                ->from("qr_transactions" . " qr")
+                ->join("apps_transaction" . " tn", "qr.transferId = tn.transferId", "left")
+                ->join("merchant_accounts" . " mr", "qr.merchantId = mr.merchantId", "left")
+                ->join("apps_users" . " au", "au.skyId = tn.skyId", "left")
+                ->join("admin_users" . " ad", "ad.adminUserId = qr.createdBy", "left");
+
+        if (isset($params['transaction_id']) && (int) $params['transaction_id']):
+            $this->db->where("qr.transferId", $params['transaction_id']);
+        endif;
+
+        if (isset($params['status']) && trim($params['status']) != ""):
+            $this->db->where("qr.isSuccess", $params['status']);
+        endif;
+
+        if (isset($params['paymentStatus']) && trim($params['paymentStatus']) != ""):
+            $this->db->where("qr.paymentStatus", $params['paymentStatus']);
+        endif;
+
+        if (isset($params['merchantAddress']) && trim($params['merchantAddress']) != ""):
+            $this->db->where("mr.merchantAddress", $params['merchantAddress']);
+        endif;
+
+        if (isset($params['eblSkyId']) && trim($params['eblSkyId']) != ""):
+            $this->db->where("tn.eblSkyId", $params['eblSkyId']);
+        endif;
+
+        if (isset($params['fromdate']) && isset($params['todate']) && $params['fromdate'] != null && $params['todate'] != null):
+            $this->db->where("(DATE(tn.creationDtTm) between " . $this->db->escape($params['fromdate']) . " AND " . $this->db->escape($params['todate']) . ")");
+        endif;
+
+        if (isset($params['limit']) && (int) $params['limit'] > 0):
+            $offset = (isset($params['offset'])) ? $params['offset'] : 0;
+            $this->db->limit($params['limit'], $offset);
+        endif;
+
+        if (isset($params['merchantId']) && (int) $params['merchantId'] > 0):
+            $this->db->where("qr.merchantId", $params['merchantId']);
+        endif;
+
+        $result = $this->db->order_by("tn.transferId", "DESC")
+                ->get();
+        if ($result->num_rows() > 0) {
+            return $result;
+        }
+        return false;
+    }
+
 }
