@@ -25,7 +25,7 @@ $config['modules_locations'] = array(
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = '';
+$config['base_url'] = 'https://localhost/pbl_bo/';
 
 /*
 |--------------------------------------------------------------------------
