@@ -624,3 +624,8 @@ fieldset[disabled] .btn-primary.active {
 .view-only label {
     text-align: right;
 }*/
+#qrcode > img {
+    margin:auto;
+    text-align: center;
+    margin: 5% auto 5% auto ;
+}

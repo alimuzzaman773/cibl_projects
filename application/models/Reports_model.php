@@ -531,4 +531,221 @@ class Reports_model extends CI_Model {
         return $query->num_rows() > 0 ? $query : false;
     }
 
+    function getUtilityBillSummary($params = array()) {
+
+        $this->db->select('p.*, bpt.fromAccNo as bpt_from_ac, bpt.toAccNo as bpt_to_ac, bpt.amount as bpt_amount, bpt.trnReference as bpt_trnReference, bpt.isSuccess as bpt_isSuccess, bpt.narration as bpt_narration, bpt.isSuccess as bpt_success,bpt.warning as bpt_warning, bpt.reason as bpt_reason,'
+                . 'a.skyId, a.eblSkyId, a.userName, DATE(p.created) as transactionDate', FALSE);
+
+        $this->db->from(TBL_SSL_BILL_PAYMENT . " p")
+                ->join(TBL_APPS_TRANSACTION . " bpt", "bpt.transferId = p.bp_transfer_id", "left")
+                ->join("apps_users" . " a", "a.skyId = p.skyId", "left");
+//->where("p.isSuccess", "Y");
+
+        if (isset($params['payment_id']) && (int) $params['payment_id']):
+            $this->db->where("p.payment_id", $params['payment_id']);
+        endif;
+
+        if (isset($params['skyId']) && (int) $params['skyId']):
+            $this->db->where("p.skyId", $params['skyId']);
+        endif;
+
+        if (isset($params['utility']) && trim($params['utility']) != ""):
+            $this->db->where("p.utility_name", $params['utility']);
+        endif;
+
+        if (isset($params['userId']) && trim($params['userId']) != ""):
+            $this->db->where("a.eblSkyId", $params['userId']);
+        endif;
+
+        if (isset($params['userId']) && trim($params['userId']) != ""):
+            $this->db->where("a.eblSkyId", $params['userId']);
+        endif;
+
+        if (isset($params['transaction_status']) && trim($params['transaction_status']) != ''):
+            if ($params['transaction_status'] == 'n') {
+                $this->db->where("p.isSuccess", 'N');
+                $this->db->where("bpt.isSuccess", 'N');
+            }
+            if ($params['transaction_status'] == 2) {
+                $this->db->where("p.isSuccess", 'Y');
+                $this->db->where("bpt.isSuccess", 'Y');
+            }
+            if ($params['transaction_status'] == 3) {
+                $this->db->where("p.isSuccess", 'Y');
+                $this->db->where("bpt.isSuccess", 'N');
+            }
+            if ($params['transaction_status'] == 4) {
+                $this->db->where("p.isSuccess", 'N');
+                $this->db->where("bpt.isSuccess", 'Y');
+            }
+        endif;
+
+        if (isset($params['search']) && trim($params['search']) != ""):
+            $this->db->group_start()
+                    ->or_like("bpt.fromAccNo", $params['search'], 'both')
+                    ->or_like("bpt.amount", $params['search'], 'both')
+                    ->group_end();
+        endif;
+
+        if (isset($params['fromdate']) && isset($params['todate']) && $params['fromdate'] != null && $params['todate'] != null):
+            $this->db->where("(DATE(p.created) between " . $this->db->escape($params['fromdate']) . " AND " . $this->db->escape($params['todate']) . ")");
+        endif;
+
+        if (isset($params['limit']) && (int) $params['limit'] > 0):
+            $offset = (isset($params['offset'])) ? $params['offset'] : 0;
+            $this->db->limit($params['limit'], $offset);
+        endif;
+
+        $result = $this->db->order_by("p.payment_id", "DESC")->get();
+
+        if ($result->num_rows() > 0) {
+            return $result;
+        }
+        return false;
+    }
+
+    function getDpdcZoneWiseReport($p = []) {
+        $data['result'] = array();
+        $trn_arr = array();
+        $report = array();
+
+        $p['utility'] = 'dpdc';
+        //$result = $this->getUtilityBillList($p);
+        $result = $this->getUtilityBillSummary($p);
+        //d($result->result());
+        if ($result):
+            foreach ($result->result() as $r) {
+                $bRes = json_decode($r->bill_response);
+                if (!isset($bRes->data->data->zone_code) || trim($bRes->data->data->zone_code) == ''):
+                    continue;
+                endif;
+                $trn_arr[] = array(
+                    'zone_code' => @$bRes->data->data->zone_code ? @$bRes->data->data->zone_code : NULL,
+                    'bill_amount' => @$bRes->data->data->bill_amount ? @$bRes->data->data->bill_amount : 0,
+                    'vat_amount' => @$bRes->data->data->vat_amount ? @$bRes->data->data->vat_amount : 0,
+                    'stamp_amount' => @$bRes->data->data->stamp_amount ? @$bRes->data->data->stamp_amount : 0,
+                    'total_amount' => @$bRes->data->data->total_amount ? @$bRes->data->data->total_amount : 0,
+                        //'utility_name' => $r->utility_name
+                );
+            }
+        endif;
+
+        if (count($trn_arr) <= 0):
+            return array(
+                'success' => false,
+                'q' => $this->db->last_query(),
+                't' => $trn_arr
+            );
+        endif;
+
+        $tempTableName = "temp_" . strtolower(__FUNCTION__) . time();
+        try {
+            $this->db->trans_begin();
+            $tempTableQuery = "CREATE temporary TABLE {$tempTableName} (
+                                zone_code varchar(10) NOT NULL,
+                                bill_amount decimal(14,2) not null,
+                                vat_amount decimal(14,2) not null,
+                                stamp_amount decimal(14,2) not null,
+                                total_amount decimal(14,2) not null,
+                                INDEX zone_index (zone_code)
+                                )";
+            $this->db->query($tempTableQuery);
+            $q[] = $this->db->last_query();
+
+            $this->db->reset_query();
+            $this->db->insert_batch($tempTableName, $trn_arr);
+            $q[] = $this->db->last_query();
+
+            $this->db->reset_query();
+
+            $this->db->select("zone_code, count(zone_code) as totalItem, "
+                            . "sum(bill_amount) as totalBillAmount,"
+                            . "sum(vat_amount) as totalVatAmount,"
+                            . "sum(stamp_amount) as totalStampAmount,"
+                            . "sum(total_amount) as totalTotalAmount", false)
+                    ->from($tempTableName)
+                    ->group_by("zone_code");
+            //->limit(1);
+
+            $result = $this->db->get();
+
+            if ($result->num_rows() > 0):
+                return array(
+                    'success' => true,
+                    'result' => $result->result()
+                );
+            endif;
+            return array(
+                'success' => false,
+                'msg' => 'No data found',
+                'q' => $q
+            );
+        } catch (Exception $e) {
+            return array(
+                "success" => false,
+                "msg" => $e->getMessage()
+            );
+        }
+    }
+
+    function getMerchantBranches() {
+        $this->db->select('DISTINCT(merchantAddress)');
+        $this->db->from('merchant_accounts');
+        $result = $this->db->get();
+        return $result->num_rows() > 0 ? $result : false;
+    }
+
+    function getQRTransansaction($params) {
+
+        $this->db->select('qr.*,'
+                        . 'tn.amount,tn.cfId, tn.eblSkyId, tn.fromAccNo, tn.toAccNo, tn.narration, tn.trnType, tn.transactionMode, tn.warning, tn.crossRefNo, '
+                        . 'au.clientId, au.userName, '
+                        . 'mr.merchantId, mr.merchantName, mr.merchantAccountNo, mr.merchantAddress, ad.adminUserName', FALSE)
+                ->from("qr_transactions" . " qr")
+                ->join("apps_transaction" . " tn", "qr.transferId = tn.transferId", "left")
+                ->join("merchant_accounts" . " mr", "qr.merchantId = mr.merchantId", "left")
+                ->join("apps_users" . " au", "au.skyId = tn.skyId", "left")
+                ->join("admin_users" . " ad", "ad.adminUserId = qr.createdBy", "left");
+
+        if (isset($params['transaction_id']) && (int) $params['transaction_id']):
+            $this->db->where("qr.transferId", $params['transaction_id']);
+        endif;
+
+        if (isset($params['status']) && trim($params['status']) != ""):
+            $this->db->where("qr.isSuccess", $params['status']);
+        endif;
+
+        if (isset($params['paymentStatus']) && trim($params['paymentStatus']) != ""):
+            $this->db->where("qr.paymentStatus", $params['paymentStatus']);
+        endif;
+
+        if (isset($params['merchantAddress']) && trim($params['merchantAddress']) != ""):
+            $this->db->where("mr.merchantAddress", $params['merchantAddress']);
+        endif;
+
+        if (isset($params['eblSkyId']) && trim($params['eblSkyId']) != ""):
+            $this->db->where("tn.eblSkyId", $params['eblSkyId']);
+        endif;
+
+        if (isset($params['fromdate']) && isset($params['todate']) && $params['fromdate'] != null && $params['todate'] != null):
+            $this->db->where("(DATE(tn.creationDtTm) between " . $this->db->escape($params['fromdate']) . " AND " . $this->db->escape($params['todate']) . ")");
+        endif;
+
+        if (isset($params['limit']) && (int) $params['limit'] > 0):
+            $offset = (isset($params['offset'])) ? $params['offset'] : 0;
+            $this->db->limit($params['limit'], $offset);
+        endif;
+
+        if (isset($params['merchantId']) && (int) $params['merchantId'] > 0):
+            $this->db->where("qr.merchantId", $params['merchantId']);
+        endif;
+
+        $result = $this->db->order_by("tn.transferId", "DESC")
+                ->get();
+        if ($result->num_rows() > 0) {
+            return $result;
+        }
+        return false;
+    }
+
 }

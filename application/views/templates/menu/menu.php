@@ -159,7 +159,7 @@
                                                 <?php endif; ?>
                                                 <!--
                                                 <?php if (ci_check_permission("canViewBillerSetupMenu")): ?>
-                                                                        <li><a href="<?= base_url() . 'biller_setup_maker' ?>">Biller Setup</a></li>
+                                                                                    <li><a href="<?= base_url() . 'biller_setup_maker' ?>">Biller Setup</a></li>
                                                 <?php endif; ?>
                                                 -->
                                                 <?php if (ci_check_permission("canViewLimitPackgaeMenu")): ?>
@@ -167,6 +167,12 @@
                                                 <?php endif; ?>
                                                 <?php if (ci_check_permission("canViewPermissionMenu")): ?>
                                                     <li class="hide"><a href="<?= base_url() ?>permission">Permission</a></li>
+                                                <?php endif; ?>
+                                                <?php if (ci_check_permission("canViewMerchantAccountsMenu")): ?>
+                                                    <li><a href="<?= base_url() . 'merchant_accounts/index' ?>">Merchant Accounts</a></li>
+                                                <?php endif; ?>
+                                                <?php if (ci_check_permission("canViewMerchantTerminalsMenu")): ?>
+                                                    <li><a href="<?= base_url() . 'merchant_terminals/index' ?>">Merchant Terminals</a></li>
                                                 <?php endif; ?>
                                             </ul>
                                         <?php endif; ?>
@@ -190,7 +196,7 @@
                                                 <?php endif; ?>
                                                 <!--
                                                 <?php if (ci_check_permission("canViewBillerSetupAuthorizationMenu")): ?>
-                                                                            <li><a href="<?= base_url() . 'biller_setup_checker' ?>">Biller Setup Authorization</a></li>
+                                                                                        <li><a href="<?= base_url() . 'biller_setup_checker' ?>">Biller Setup Authorization</a></li>
                                                 <?php endif; ?>
                                                 -->
                                                 <?php if (ci_check_permission("canViewPinResetAuthorizationMenu")): ?>
@@ -204,9 +210,14 @@
                                                 <?php if (ci_check_permission("canViewPasswordPolicyAuthorizationMenu")): ?>
                                                     <li class="hidden"><a href="<?= base_url() . 'password_policy_checker' ?>">Password Policy Authorization</a></li>
                                                 <?php endif; ?>
-
                                                 <?php if (ci_check_permission("canViewAppsUserDeleteAuthorizationMenu")): ?>
                                                     <li><a class="hidden" href="<?= base_url() . 'apps_user_delete_checker' ?>">Apps User Delete Authorization</a></li>
+                                                <?php endif; ?>
+                                                <?php if (ci_check_permission("canViewMerchantAccountsAuthorizationMenu")): ?>
+                                                    <li><a href="<?= base_url() . 'merchant_accounts_checker' ?>">Merchant Accounts Authorization</a></li>
+                                                <?php endif; ?>
+                                                <?php if (ci_check_permission("canViewMerchantTerminalsAuthorizationMenu")): ?>
+                                                    <li><a href="<?= base_url() . 'merchant_terminals_checker' ?>">Merchant Terminal Authorization</a></li>
                                                 <?php endif; ?>
                                             </ul>
                                         <?php endif; ?>
@@ -242,7 +253,7 @@
                                                 <?php endif; ?>
                                                 <!--
                                                 <?php if (ci_check_permission("canViewBillerSetupMenu")): ?>
-                                                                            <li><a href="<?= base_url() . 'bill_type_setup' ?>">Bill Type Setup</a></li>
+                                                                                        <li><a href="<?= base_url() . 'bill_type_setup' ?>">Bill Type Setup</a></li>
                                                 <?php endif; ?>
                                                 -->
                                                 <li><a href="<?= base_url() . 'account_type/index' ?>">Account Categories Setup</a></li>
@@ -296,8 +307,7 @@
                                             <li><p><b>Transaction Reports</b></p></li>
                                             <li><a href="<?= base_url() . 'reports/fund_transfer_details' ?>">Fund Transfer</a></li>
                                             <li><a href="<?= base_url() . 'reports/utility_bill_report' ?>">Utility Bill Details Report</a></li>
-                                            <!-- <li><a href="<?= base_url() . 'reports/fund_transfer' ?>">Fund Transfer</a></li>
-                                            <li><a href="<?= base_url() . 'reports/other_fund_transfer' ?>">Other Fund Transfer</a></li> -->
+                                            <li><a href="<?= base_url() . 'reports/dpdc_zonewise_report' ?>">DPDC Zone Wise Report</a></li>
                                         </ul>
                                         <!--
                                         <ul class="col-md-2 col-xs-12 list-unstyled">
@@ -368,6 +378,30 @@
                                         <ul class="col-md-2 col-xs-12 list-unstyled">
                                             <li><p><b>Bill Payment</b></p></li>
                                             <li><a href="<?= base_url() . 'utility_bill/#/utility_list' ?>">Bill Payment</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>    
+                    </ul>
+                </li>
+            <?php endif; ?>
+            <?php if (ci_check_permission("canViewMerchantPaymentMenu")): ?>
+                <li class="dropdown yamm-fw">
+                    <a href="#" id="dropModules" role="button" data-toggle="dropdown">Merchant Payment<b class="caret"></b></a>
+                    <ul id="dropModules" class="dropdown-menu" role="menu" aria-labelledby="dropModules">                    
+                        <li class="">
+                            <div class="yamm-content">
+                                <div class="row">                                    
+                                    <div class="clearfix mb">
+                                        <ul class="col-md-2 col-xs-12 list-unstyled">
+                                            <li><p><b>Transaction Module</b></p></li>
+                                            <?php if (ci_check_permission("canViewMerchantPayment")): ?>
+                                                <li><a href="<?= base_url() . 'qr_payment/#/transaction_list' ?>">Merchant Payment List</a></li>
+                                            <?php endif; ?>
+                                            <?php if (ci_check_permission("canViewMerchantPayment")): ?>
+                                                <li><a href="<?= base_url() . 'reports/qr_transaction' ?>">Merchant Payment Report</a></li>
+                                            <?php endif; ?>
                                         </ul>
                                     </div>
                                 </div>
