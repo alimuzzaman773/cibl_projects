@@ -18,6 +18,7 @@ class Admin_users_checker extends CI_Controller {
     public function index() {
         $this->my_session->authorize("canViewAdminUserAuthorization");
         $data['adminUsers'] = json_encode($this->admin_users_model_checker->getUnapprovedUsers());
+        
         $data['pageTitle'] = 'Admin User Checker';
         $data["body_template"] = "admin_users_checker/all_user_view.php";
         $this->load->view('site_template.php', $data);
