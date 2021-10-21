@@ -153,6 +153,8 @@
                                                 <?php if (ci_check_permission("canViewAppsUserCreateMenu")): ?>
                                                     <li><a href="<?= base_url() . 'client_registration/index' ?>">Apps users</a></li>
                                                 <?php endif; ?>
+                                                    
+                                                     <li><a href="<?= base_url() . 'apps_users_mc/index' ?>">Apps Users MC</a></li>
 
                                                 <?php if (ci_check_permission("canViewPinCreateMenu")): ?>
                                                     <li><a class="hidden" href="<?= base_url() . 'pin_generation/viewPinByAction' ?>">Pin</a></li>
