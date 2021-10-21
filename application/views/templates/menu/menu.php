@@ -269,6 +269,9 @@
                                                 <?php //if (ci_check_permission("canViewApplicationSettingsMenu")): ?>
                                                 <li><a href="<?= base_url() . 'settings' ?>"> Application settings</a></li>
                                                 <?php //endif; ?>
+                                                <?php //if (ci_check_permission("canViewCardGl")): ?>
+                                                <li><a href="<?= base_url() . 'card_gl' ?>"> Card GL</a></li>
+                                                <?php //endif; ?>
                                             </ul>
                                         <?php endif; ?>
                                         <?php if (ci_check_permission("canViewLogMenu")): ?>

@@ -283,6 +283,36 @@
                 </td>
             </tr>
         </tbody>
+        
+        <thead>
+            <tr class="bg-primary">
+                <th colspan="2">
+                    Card Transaction
+                </th>
+            </tr>        
+        </thead>
+        <tbody>
+            <tr>    
+                <td><b>Processing Fee (Non-Staff)</b></td>
+                <td>
+                    <input type="number" min="0" step="0.01" class='form-control' name="card_transaction[processing_fee]" value="<?= $this->settings_model->getItem('processing_fee', $settings['card_transaction']) ?>" />
+                    <small class=''></small>
+                </td>
+            </tr>
+            <tr>    
+                <td><b>Processing Fee (Staff)</b></td>
+                <td>
+                    <input type="number" min="0" step="0.01" class='form-control' name="card_transaction[processing_fee_staff]" value="<?= $this->settings_model->getItem('processing_fee_staff', $settings['card_transaction']) ?>">
+                </td>
+            </tr>
+            <tr>    
+                <td><b>Processing Fee Vat (%)</b></td>
+                <td>
+                    <input type="number" min="0" class='form-control' name="card_transaction[processing_fee_vat]" value="<?= $this->settings_model->getItem('processing_fee_vat', $settings['card_transaction']) ?>">
+                </td>
+            </tr>
+        </tbody>
+        
         <tr>
             <td></td>
             <td>

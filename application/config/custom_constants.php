@@ -56,6 +56,7 @@ define("TBL_MERCHANT_ACCOUNTS", DB_PREFIX . "merchant_accounts");
 define("TBL_MERCHANT_ACCOUNTS_MC", DB_PREFIX . "merchant_accounts_mc");
 define("TBL_MERCHANT_TERMINALS", DB_PREFIX . "merchant_terminals");
 define("TBL_MERCHANT_TERMINALS_MC", DB_PREFIX . "merchant_terminals_mc");
+define("TBL_CARD_GL_NEW", DB_PREFIX . "card_gl_new");
 
 
 // All Constant Variables:
