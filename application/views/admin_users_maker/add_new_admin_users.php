@@ -49,7 +49,7 @@
             <tr>                       
                 <th align="left" scope="">Select Group Name</th>
                 <td>
-                    <select id="group" name="group"  class="form-control">
+                    <select id="group" name="group"  class="form-control" required>
                         <option value="">Select a Group</option>                      
                         <?php foreach ($userGroups as $item) { ?>
                             <option value="<?= $item->userGroupId ?>"><?= $item->userGroupName ?></option>
@@ -109,6 +109,7 @@
                         $("#fullName").val(data.name);
                         $("#email").val(data.email);
                         $("#userId").val($user);
+                        $("#adUserName").val($user);
                     },
                     error : function(data){
                         app.hideModal();

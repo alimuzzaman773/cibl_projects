@@ -13,7 +13,7 @@ class Admin_users_model_checker extends CI_Model {
         //$this->db->where('admin_users_mc.makerActionBy !=', $this->my_session->adminUserId); // Told me Arif Vai
         $this->db->select('admin_users_mc.*, admin_users_group.userGroupName');
         $this->db->from('admin_users_mc');
-        $this->db->join('admin_users_group', 'admin_users_mc.adminUserGroup = admin_users_group.userGroupId');
+        $this->db->join('admin_users_group', 'admin_users_mc.adminUserGroup = admin_users_group.userGroupId', "left");
         $query = $this->db->get();
         return $query->result();
     }

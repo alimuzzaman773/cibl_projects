@@ -27,7 +27,7 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 *.sublime-project
 
 /cgi-bin/
-
+/composer.lock
 /.htaccess
 /admin-panel/
 
@@ -52,3 +52,4 @@ demos/
 demos/*
 
 error_log.log
+composer.lock
