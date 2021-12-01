@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Vue</title>
+    </head>
+    <body>
+        <div id="learningVueApp">
+            {{message}}
+            <input v-model="message" />
+            <div v-bind:title="message">
+                Hover your mouse over me for a few seconds
+                to see my dynamically bound title!
+            </div>
+            <div v-if="seen">
+                Now you see me !
+                </span>
+                <!--                <input type="radio" value="1" v-model="seen"> yes
+                                <input type="radio" value="0" v-model="seen"> no-->
+
+            </div>
+            <button v-on:click="reverseMessage">Reverse</button>
+            <span style="color: red">{{InputText}}</span>
+            <input v-model="InputText">
+            <div>
+                <ul>
+                    <li v-for="todo in todos">{{todo.text}}</li>
+                </ul>
+            </div>
+            <div id="todo-list-app">
+                <ol>
+                    <todo-item
+                        v-for="item in groceryList"
+                        v-bind:todo="item"
+                        v-bind:key="item.id"
+                        ></todo-item>
+                </ol>
+            </div>
+        </div>
+        <!--<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>-->
+        <script src="https://unpkg.com/vue@next"></script>
+        <script src="custom.js"></script>
+    </body>
+</html>

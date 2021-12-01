@@ -1,1 +1,0 @@
-ALTER TABLE `delete_activity_log` CHANGE `activityJson` `activityJson` LONGTEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;

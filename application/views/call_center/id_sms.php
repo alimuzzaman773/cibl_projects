@@ -1,1 +1,0 @@
-Dear User, your Mobile Banking account has been activated. Your PBL Apps ID is <?=$eblSkyId?>. You will get your One Time PIN in another message. Helpline 16230.

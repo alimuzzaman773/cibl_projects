@@ -1,2 +1,0 @@
-ALTER TABLE `apps_users` ADD `callCenterApprove` ENUM('unapproved','pending','approved','published') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'unapproved' AFTER `homeBranchCode`;
-ALTER TABLE `apps_users_mc` ADD `callCenterApprove` ENUM('unapproved','pending','approved','published') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'unapproved' AFTER `homeBranchCode`;
